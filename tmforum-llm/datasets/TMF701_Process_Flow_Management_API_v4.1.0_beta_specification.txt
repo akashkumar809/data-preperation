@@ -1,0 +1,6087 @@
+ 
+ãTM Forum 2022. All Rights Reserved. 
+Orange Restricted 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+TMF701 ProcessFlow API REST 
+Specification 
+ 
+ 
+ 
+ 
+ 
+TMF701 
+Release 21.5.0 
+January 2022  
+ 
+ 
+Latest Update: TM Forum Release 21.5.0 Member Evaluation 
+Version 4.1.0 
+IPR Mode: RAND 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 2 sur 118 
+ 
+Orange Restricted 
+NOTICE 
+Copyright © TM Forum 2019. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 3 sur 118 
+ 
+Orange Restricted 
+Table of Contents 
+NOTICE 
+2 
+Table of Contents 
+3 
+List of Tables 4 
+Introduction 
+5 
+SAMPLE USE CASES 
+8 
+Support of polymorphism and extension patterns 
+9 
+RESOURCE MODEL 10 
+Managed Entity and Task Resource Models ........................................................................................... 10 
+FIRST resource ...................................................................................... Error! Bookmark not defined. 
+Notification Resource Models .................................................................................................................. 47 
+First Notification ...................................................................................... Error! Bookmark not defined. 
+API OPERATIONS 
+56 
+VERB  url ................................................................................................... Error! Bookmark not defined. 
+API NOTIFICATIONS 114 
+Register listener ..................................................................................................................................... 114 
+Unregister listener ................................................................................................................................. 115 
+Publish Event to listener ........................................................................................................................ 115 
+Acknowledgements 
+117 
+Release History ..................................................................................................................................... 117 
+Contributors to Document ...................................................................................................................... 117 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 4 sur 118 
+ 
+Orange Restricted 
+List of Tables 
+ 
+N/A 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 5 sur 118 
+ 
+Orange Restricted 
+Introduction 
+ 
+The following document is the specification of the REST API for ProcessFlow Management. It includes the 
+model definition as well as all available operations. Possible actions are creating, updating, and retrieving 
+ProcessFlow, ProcessFlowSpecification, TaskFlow and TaskFlowSpecification.  
+ 
+ProcessFlow definition vs execution: 
+ 
+ProcessFlowSpecification & 
+TaskFlowSpecification 
+ProcessFlow & TaskFlow 
+Design-time 
+Run-time 
+A business process is modeled (via BPMN or 
+other): a ProcessFlowSpecification (made of 
+TaskFlowSpecification) describes the business 
+process.  
+ 
+The ProcessFlow orchestration defines for 
+ProcessFlowSpecification & 
+TaskFlowSpecification: 
+• 
+interaction(s) with business 
+entitySpecification 
+• 
+characteristicSpecification(s) 
+• 
+list of channel(s) where process could be 
+run 
+• 
+associated party role(s) specification 
+potentially involved 
+A processFlow is created when we require to 
+execute a ProcessFlowSpecification instance. 
+Process/Task 
+• 
+Triggered business entities creation & 
+update 
+• 
+Valued characteristic 
+• 
+Listed the channel where the 
+interaction(s) occurred 
+• 
+Associated party role identifier involved 
+in the Process/task 
+• 
+… 
+Our proposal: add a capability to define 
+processFlow via a processFlow specification 
+(same taskFlow specification) 
+ 
+ 
+The TMF701 ProcessFlow API allows management of business process definition and execution: 
+ 
+• A ProcessFlowSpecification will define an orchestration of TaskFlowSpecification. A TaskFlow 
+Specification could be re-use by several ProcessFlowSpecification 
+• A ProcessFlow will describe an orchestration of TaskFlow. A TaskFlow is unique to one given 
+ProcessFlow and cannot exist independently from it. 
+• TaskFlow could be completed automatically (rules, event triggered, process delegation) or 
+requiring manual action 
+ 
+ProcessFlow API manages ProcessFlow, ProcessFlowSpecification, TaskFlow and TaskFlowSpecification 
+resources: 
+• 
+A ProcessFlowSpecification is a business process specification described in in BPMN engine or hard 
+coded. It describes relationship with other entity specification but also party involved in this 
+specification design. 
+• 
+A ProcessFlow represents an instance of a pre-designed ProcessFlowSpecification. It defines a start 
+point, a sequence of TaskFlow (that could be dynamically instantiated) and end point(s). Entities 
+involved in the process completion could be related to the ProcessFlow) 
+• 
+A TaskFlowSpecification is a business process task specification – in other words, a “work” 
+description to be done within a ProcessFlowSpecification 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 6 sur 118 
+ 
+Orange Restricted 
+• 
+A taskFlow is an instantiation of a TaskFlowSpecification. It could an automated work (send an 
+email, execute a business rule, wait for an event triggered by an external system) or an human work (a 
+form to be completed).  
+ 
+TMF701 ProcessFlow API performs the following operations on ProcessFlowSpecification resource: 
+• 
+Retrieval of a ProcessFlowSpecification or a collection of ProcessFlowSpecification(s) depending on 
+filter criteria 
+• 
+Creation of a ProcessFlowSpecification 
+• 
+Updation a ProcessFlowSpecification 
+• 
+Deletion of ProcessFlowSpecification  
+• 
+Notification of events on ProcessFlowSpecification 
+o 
+ProcessFlowSpecification creation 
+o 
+ProcessFlowSpecification status change 
+o 
+ProcessFlowSpecification deletion 
+o 
+ProcessFlowSpecification attribute value change 
+…on TaskFlowSpecification resource: 
+• 
+Retrieval of a TaskFlowSpecification or a collection of TaskFlowSpecification(s) depending on filter 
+criteria 
+• 
+Creation of TaskFlowSpecification 
+• 
+Update of a TaskFlowSpecification 
+• 
+Notification of events on TaskFlowSpecification 
+o 
+TaskFlowSpecification creation 
+o 
+TaskFlowSpecification status change 
+o 
+TaskFlowSpecification deletion 
+o 
+TaskFlowSpecification attribute value change 
+…  on ProcessFlow resource: 
+• 
+Retrieval of a ProcessFlow or a collection of ProcessFlow(s) depending on filter criteria 
+• 
+Creation of a ProcessFlow  
+• 
+Deletion of ProcessFlow (for administration purposes) 
+• 
+Notification of events on ProcessFlow 
+o 
+ProcessFlow creation 
+o 
+ProcessFlow status change 
+o 
+ProcessFlow deletion 
+o 
+ProcessFlow attribute value change 
+And on TaskFlow resource: 
+• 
+Retrieval of a TaskFlow or a collection of TaskFlow (s) depending on filter criteria 
+• 
+Creation of ProcessFlow 
+• 
+Partial update of a TaskFlow  
+• 
+Notification of events on TaskFlow 
+o 
+TaskFlow creation 
+o 
+TaskFlow status change 
+o 
+TaskFlow deletion 
+o 
+TaskFlow information required 
+o 
+TaskFlow attribute value change 
+ 
+ 
+The following assumptions were considered in the development of this document: 
+• 
+The processFlow API should relie on a bpmn tool but nothing prevent to have it from an hard-coded 
+component. 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 7 sur 118 
+ 
+Orange Restricted 
+ 
+Note on future changes: 
+ 
+To accommodate backward compatibility for this 4.1 version we keep existing ProcessFlowSpecification and 
+TaskFlowSpecification ‘simple’ attributes in respectively ProcessFlow and TaskFlow resources. We introduce 
+ProcessFlowSpecificationRef and TaskFlowSpecificationRef ‘complex’ attributes to allow relationship to newly 
+introduce ProcessFlowSpecification and TaskFlowSpecification resource. 
+ 
+Moving forward in v5 we will only keep ProcessFlowSpecification and TaskFlowSpecification attributes but defined 
+them with complex attributes. 
+ 
+V4.1: 
+ 
+ 
+V5.0: 
+ 
+ 
+ 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 8 sur 118 
+ 
+Orange Restricted 
+SAMPLE USE CASES 
+To illustrate JSON we’ll use the following example of a definition of a ProcessFlowSpecification featuring 5 
+TaskFlowSpecification (tfs99, tfs0, tfs1, tfs2 and tfs3). For the processFlow & taskFlow examples we use instances of 
+theses. 
+ 
+We’ll use an orderCapture process that will manage a ‘shoppingCart’ initialization and completion. The process is 
+very simple: 
+• 
+The orderCapture process is launches with contextual information about the party interaction but also 
+customer identification if present. 
+• 
+A productOffering may be passed in this request. If not the first task is to ask for one. 
+• 
+A product id from the inventory could be pass for modification change (not described). 
+• 
+Once commercial eligibility done, a shoppingCart is initialized. 
+• 
+After shopping cart configuration and user acknowledgement, a task is performed to check cart 
+completion and if it’s succesful a orderCompletion processFlow is launched. 
+These examples are only for illustration purpose and they must not be considered as process guideline. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 9 sur 118 
+ 
+Orange Restricted 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance an OrderCaptureProcess and a BillDisputeProcess inheriting properties from ProcessFlow entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+ProcessFlow instances some may be instances of OrderCaptureProcess where other could be instances of 
+BillDisputeProcess. The @type gives this information. All resources and sub-resources of this API have a @type 
+attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities (like for instance a ProcessFlowRef object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as OrderCaptureProcessRef or BillDisputeProcessRef, and not the class 
+type of the referred object. However since reference classes are rarely sub-classed, @type is generally not useful in 
+reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 10 sur 118 
+ 
+Orange Restricted 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Process Flow Specification resource 
+ProcessFlowSpecification is a class that allow to describe a processFlow design. A ProcessFlow instance 
+as used in TMF701 will use a ProcessFlowSpecification as reference. 
+Resource model 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 11 sur 118 
+ 
+Orange Restricted 
+ 
+Field descriptions 
+ProcessFlowSpecification fields 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 12 sur 118 
+ 
+Orange Restricted 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines 
+additional attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class 
+Extensible name. 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). 
+Attachments that may be of relevance to this 
+processFlowSpecification, such as picture, document, media. 
+This could be for example a how-to o a faq to explain this 
+processFlowSpecification. 
+channel 
+A list of channel references (ChannelRef [*]). A list of 
+channel(s) where this processFlowSpecification instance 
+could be executed. 
+description 
+A string. Description of the processFlowSpecification. 
+lastUpdate 
+A date time (DateTime). Date and time of the last update of 
+the processFlowspecification. 
+lifecycleStatus 
+A string. Used to indicate the current lifecycle status of this 
+processFlowSpecification. 
+name 
+A string. Name given to the processFlowSpecification. 
+processFlowSpecificationCharacteristic A list of characteristic specifications 
+(CharacteristicSpecification [*]). List of characteristics that the 
+processFlowSpecification can take. 
+processFlowSpecificationRelationship 
+A list of process flow specification relationships 
+(ProcessFlowSpecificationRelationship [*]). Relationship to 
+another processFlowSpecification. 
+relatedEntitySpecification 
+A list of related entity specifications 
+(RelatedEntitySpecification [*]). A list of entity specification 
+that will be managed by this processFlowSpecification. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Parties who manage 
+or otherwise have an interest in this processFlowSpecification. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 13 sur 118 
+ 
+Orange Restricted 
+taskFlowSpecification 
+A list of task flow specification references 
+(TaskFlowSpecificationRef [*]). A list of taskFlowSpecification 
+that will be managed by this processFlowSpecification. 
+validFor 
+A time period. The period for which this REST resource is 
+valid. 
+version 
+A string. processFlowSpecification version. 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. An attachment complements the description of an element, for 
+example through a document, a video, a picture. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+url 
+An uri (Uri). Remote reference to the content if web-addressable. 
+name 
+A string. The name of the attachment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if 
+embedded, encoded as base64. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+CharacteristicSpecification sub-resource 
+This class defines a characteristic specification. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 14 sur 118 
+ 
+Orange Restricted 
+@valueSchemaLocation 
+A string. This (optional) field provides a link to the schema describing 
+the value type. 
+configurable 
+A boolean. If true, the Boolean indicates that the target Characteristic 
+is configurable. 
+description 
+A string. A narrative that explains the CharacteristicSpecification. 
+extensible 
+A boolean. An indicator that specifies that the values for the 
+characteristic can be extended by adding new values when 
+instantiating a characteristic for a resource. 
+id 
+A string. Unique ID for the characteristic. 
+isUnique 
+A boolean. Specifies if the value of this characteristic is unique across 
+all entities instantiated from the specification that uses this 
+characteristc. For example, consider a ProductSpecification for a set-
+top box, with a CharacteristicSpecification cardID. Each set-top box 
+must have a different value for cardID, so this isUnique attribute 
+would be set to true for the characteristic. 
+maxCardinality 
+An integer. The maximum number of instances a CharacteristicValue 
+can take on. For example, zero to five phone numbers in a group 
+calling plan, where five is the value for the maxCardinality. 
+minCardinality 
+An integer. The minimum number of instances a CharacteristicValue 
+can take on. For example, zero to five phone numbers in a group 
+calling plan, where zero is the value for the minCardinality. 
+name 
+A string. A word, term, or phrase by which this characteristic 
+specification is known and distinguished from other characteristic 
+specifications. 
+regex 
+A string. A rule or principle represented in regular expression used to 
+derive the value of a characteristic value. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as 
+numeric, text and so forth. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible 
+name. 
+charSpecRelationship 
+A list of characteristic specification relationships 
+(CharacteristicSpecificationRelationship [*]). An aggregation, 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 15 sur 118 
+ 
+Orange Restricted 
+migration, substitution, dependency or exclusivity relationship 
+between/among Specification Characteristics. 
+characteristicValueSpecification A list of characteristic value specifications 
+(CharacteristicValueSpecification [*]). A 
+CharacteristicValueSpecification object is used to define a set of 
+attributes, each of which can be assigned to a corresponding set of 
+attributes in a CharacteristicSpecification object. The values of the 
+attributes in the CharacteristicValueSpecification object describe the 
+values of the attributes that a corresponding Characteristic object can 
+take on. 
+validFor 
+A time period. The period of time for which a characteristic is 
+applicable. 
+CharacteristicSpecificationRelationship sub-resource 
+An aggregation, migration, substitution, dependency or exclusivity relationship between/among 
+Characteristic specifications. The specification characteristic is embedded within the specification whose 
+ID and href are in this entity, and identified by its ID. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicSpecificationId A string. Unique identifier of the characteristic within the specification. 
+name 
+A string. Name of the target characteristic within the specification. 
+parentSpecificationHref 
+An uri (Uri). Hyperlink reference to the parent specification containing the 
+target characteristic. 
+parentSpecificationId 
+A string. Unique identifier of the parent specification containing the target 
+characteristic. 
+relationshipType 
+A string. Type of relationship such as aggregation, migration, substitution, 
+dependency, exclusivity. 
+validFor 
+A time period. The period for which the object is valid. 
+CharacteristicValueSpecification sub-resource 
+specification of a value (number or text or an object) that can be assigned to a Characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 16 sur 118 
+ 
+Orange Restricted 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+isDefault 
+A boolean. If true, the Boolean Indicates if the value is the default value for a 
+characteristic. 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the valueFrom 
+and valueTo attributes. If applicable, possible values are "open", "closed", 
+"closedBottom" and "closedTop". 
+regex 
+A string. A regular expression constraint for given value. 
+unitOfMeasure 
+A string. A length, surface, volume, dry measure, liquid measure, money, 
+weight, time, and the like. In general, a determinate quantity or magnitude of 
+the kind designated, taken as a standard of comparison for others of the same 
+kind, in assigning to them numerical values, as 1 foot, 1 yard, 1 mile, 1 square 
+foot. 
+validFor 
+A time period. The period of time for which a value is applicable. 
+value 
+An any (Any). A discrete value that the characteristic can take on, or the actual 
+value of the characteristic. 
+valueFrom 
+An integer. The low range value that a characteristic can take on. 
+valueTo 
+An integer. The upper range value that a characteristic can take on. 
+valueType 
+A string. A kind of value that the characteristic value can take on, such as 
+numeric, text and so forth. 
+ProcessFlowSpecificationRelationship sub-resource 
+A relationship (triggers, delegates, etc...) between/among ProcessFlow specifications. 
+href 
+A string. Reference of the target ProcessFlowSpecification. 
+id 
+A string. Unique identifier of target ProcessFlowSpecification. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+associationSpec 
+An association spec reference (AssociationSpecRef). reference to an 
+AssociationSpecification object. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 17 sur 118 
+ 
+Orange Restricted 
+name 
+A string. The name given to the target ProcessFlow specification instance. 
+relationshipType 
+A string. Type of relationship such as triggers, delegates, etc. 
+validFor 
+A time period. The period for which the ProcessFlowSpecificationRelationship 
+is valid. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedEntitySpecification sub-resource 
+A reference to an entity specification, where the type of the entity specification is not known in advance. 
+version 
+A string. EntitySpecification version. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. The role of an entity specification. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 18 sur 118 
+ 
+Orange Restricted 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+AssociationSpecRef relationship 
+reference to an AssociationSpecification object. 
+href 
+A string. Hyperlink reference to the target AssociationSpecification. 
+id 
+A string. reference id to the target AssociationSpecification. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+ChannelRef relationship 
+The channel to which the resource reference to. e.g. channel for selling product offerings, channel for 
+opening a trouble ticket etc.. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the channel. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TaskFlowSpecificationRef relationship 
+A reference to a TaskFlowSpecification defined design-time. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 19 sur 118 
+ 
+Orange Restricted 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlowSpecification' resource object 
+{ 
+    "id": "1", 
+    "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+    "description": "Description of the order capture process for all channels", 
+    "lastUpdate": "2021-12-30T09:42:25.747Z", 
+    "lifecycleStatus": "active", 
+    "name": "orderCapture", 
+    "version": "v2.3", 
+    "attachment": [ 
+        { 
+            "id": "4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "href": "http://host/Attachment/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "attachmentType": "pdf", 
+            "content": "business process pdf", 
+            "description": "description of the business process with examples", 
+            "mimeType": "pdf", 
+            "name": "pfs-1-doc", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 2423, 
+                "units": "Mb" 
+            }, 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 20 sur 118 
+ 
+Orange Restricted 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        } 
+    ], 
+    "processFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "pfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "pfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "processFlowSpecificationRelationship": [ 
+        { 
+            "id": "2", 
+            "href": ".../processFlowManagement/v4/ProcessFlowSpecification/2", 
+            "name": "orderCompletion", 
+            "relationshipType": "triggers", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationRelationship" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 21 sur 118 
+ 
+Orange Restricted 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        { 
+            "id": "17", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/17", 
+            "name": "party interation", 
+            "role": "interacts", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "PartyInteraction" 
+        }, 
+        { 
+            "id": "1", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/1", 
+            "name": "requester as individual", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "3", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/3", 
+            "name": "requester as organization", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecification": [ 
+        { 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 22 sur 118 
+ 
+Orange Restricted 
+            "id": "tfs1", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+            "name": "SCinit", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs99", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs99", 
+            "name": "selectMainOffer", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs0", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs0", 
+            "name": "checkEligibility", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs3", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs3", 
+            "name": "checkSC", 
+            "@type": "TaskFlowSpecification" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "ProcessFlowSpecification" 
+} 
+Task Flow Specification resource 
+TaskFlowSpecification is a class that allow to describe a TaskFlow specification design. A TaskFlow 
+instance as used in TMF701 will use a TaskFlowSpecification as reference. 
+Resource model 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 23 sur 118 
+ 
+Orange Restricted 
+ 
+Field descriptions 
+TaskFlowSpecification fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible 
+name. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 24 sur 118 
+ 
+Orange Restricted 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). 
+Attachments that may be of relevance to this 
+TaskFlowSpecification, such as picture, document, media. This 
+could be for example a how-to or a faq to explain this 
+TaskFlowSpecification. 
+channel 
+A list of channel references (ChannelRef [*]). A list of channel(s) 
+where this TaskFlowSpecification instance could be executed. 
+description 
+A string. Description of the TaskFlowSpecification. 
+lastUpdate 
+A date time (DateTime). Date and time of the last update of the 
+TaskFlowspecification. 
+lifecycleStatus 
+A string. Used to indicate the current lifecycle status of this 
+TaskFlowSpecification. 
+name 
+A string. Name given to the TaskFlowSpecification. 
+relatedEntitySpecification 
+A list of related entity specifications (RelatedEntitySpecification 
+[*]). A list of entity specification that will be managed by this 
+TaskFlowSpecification. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Parties who manage or 
+otherwise have an interest in this TaskFlowSpecification. 
+relatedProcessFlowSpecification 
+A list of related entity specifications (RelatedEntitySpecification 
+[*]). A related ProcessFlowSpecification (for example when the 
+taskFlowSpecification completion required another 
+ProcessFLowSpecification to be triggered & completed). 
+taskFlowSpecification 
+A list of task flow specifications (TaskFlowSpecification [*]). 
+Relationship to sub-TaskFlowSpecification. 
+taskFlowSpecificationCharacteristic A list of characteristic specifications (CharacteristicSpecification 
+[*]). List of characteristics that the TaskFlowSpecification can 
+take. 
+taskFlowSpecificationRelationship 
+A list of task flow specification relationships 
+(TaskFlowSpecificationRelationship [*]). Relationship to another 
+TaskFlowSpecification from a same ProcessFlowSpecification. 
+taskFlowSpecificationType 
+A string. Type of the TaskFlowSpecification like send task, receive 
+task, user task, manual task, script task, business rule task. 
+validFor 
+A time period. The period for which this REST resource is valid. 
+version 
+A string. TaskFlowSpecification version. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 25 sur 118 
+ 
+Orange Restricted 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. An attachment complements the description of an element, for 
+example through a document, a video, a picture. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+url 
+An uri (Uri). Remote reference to the content if web-addressable. 
+name 
+A string. The name of the attachment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if 
+embedded, encoded as base64. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+CharacteristicSpecification sub-resource 
+This class defines a characteristic specification. 
+@valueSchemaLocation 
+A string. This (optional) field provides a link to the schema describing 
+the value type. 
+configurable 
+A boolean. If true, the Boolean indicates that the target Characteristic 
+is configurable. 
+description 
+A string. A narrative that explains the CharacteristicSpecification. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 26 sur 118 
+ 
+Orange Restricted 
+extensible 
+A boolean. An indicator that specifies that the values for the 
+characteristic can be extended by adding new values when 
+instantiating a characteristic for a resource. 
+id 
+A string. Unique ID for the characteristic. 
+isUnique 
+A boolean. Specifies if the value of this characteristic is unique across 
+all entities instantiated from the specification that uses this 
+characteristc. For example, consider a ProductSpecification for a set-
+top box, with a CharacteristicSpecification cardID. Each set-top box 
+must have a different value for cardID, so this isUnique attribute 
+would be set to true for the characteristic. 
+maxCardinality 
+An integer. The maximum number of instances a CharacteristicValue 
+can take on. For example, zero to five phone numbers in a group 
+calling plan, where five is the value for the maxCardinality. 
+minCardinality 
+An integer. The minimum number of instances a CharacteristicValue 
+can take on. For example, zero to five phone numbers in a group 
+calling plan, where zero is the value for the minCardinality. 
+name 
+A string. A word, term, or phrase by which this characteristic 
+specification is known and distinguished from other characteristic 
+specifications. 
+regex 
+A string. A rule or principle represented in regular expression used to 
+derive the value of a characteristic value. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as 
+numeric, text and so forth. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible 
+name. 
+charSpecRelationship 
+A list of characteristic specification relationships 
+(CharacteristicSpecificationRelationship [*]). An aggregation, 
+migration, substitution, dependency or exclusivity relationship 
+between/among Specification Characteristics. 
+characteristicValueSpecification A list of characteristic value specifications 
+(CharacteristicValueSpecification [*]). A 
+CharacteristicValueSpecification object is used to define a set of 
+attributes, each of which can be assigned to a corresponding set of 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 27 sur 118 
+ 
+Orange Restricted 
+attributes in a CharacteristicSpecification object. The values of the 
+attributes in the CharacteristicValueSpecification object describe the 
+values of the attributes that a corresponding Characteristic object can 
+take on. 
+validFor 
+A time period. The period of time for which a characteristic is 
+applicable. 
+CharacteristicSpecificationRelationship sub-resource 
+An aggregation, migration, substitution, dependency or exclusivity relationship between/among 
+Characteristic specifications. The specification characteristic is embedded within the specification whose 
+ID and href are in this entity, and identified by its ID. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicSpecificationId A string. Unique identifier of the characteristic within the specification. 
+name 
+A string. Name of the target characteristic within the specification. 
+parentSpecificationHref 
+An uri (Uri). Hyperlink reference to the parent specification containing the 
+target characteristic. 
+parentSpecificationId 
+A string. Unique identifier of the parent specification containing the target 
+characteristic. 
+relationshipType 
+A string. Type of relationship such as aggregation, migration, substitution, 
+dependency, exclusivity. 
+validFor 
+A time period. The period for which the object is valid. 
+CharacteristicValueSpecification sub-resource 
+specification of a value (number or text or an object) that can be assigned to a Characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+isDefault 
+A boolean. If true, the Boolean Indicates if the value is the default value for a 
+characteristic. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 28 sur 118 
+ 
+Orange Restricted 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the valueFrom 
+and valueTo attributes. If applicable, possible values are "open", "closed", 
+"closedBottom" and "closedTop". 
+regex 
+A string. A regular expression constraint for given value. 
+unitOfMeasure 
+A string. A length, surface, volume, dry measure, liquid measure, money, 
+weight, time, and the like. In general, a determinate quantity or magnitude of 
+the kind designated, taken as a standard of comparison for others of the same 
+kind, in assigning to them numerical values, as 1 foot, 1 yard, 1 mile, 1 square 
+foot. 
+validFor 
+A time period. The period of time for which a value is applicable. 
+value 
+An any (Any). A discrete value that the characteristic can take on, or the actual 
+value of the characteristic. 
+valueFrom 
+An integer. The low range value that a characteristic can take on. 
+valueTo 
+An integer. The upper range value that a characteristic can take on. 
+valueType 
+A string. A kind of value that the characteristic value can take on, such as 
+numeric, text and so forth. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedEntitySpecification sub-resource 
+A reference to an entity specification, where the type of the entity specification is not known in advance. 
+version 
+A string. EntitySpecification version. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 29 sur 118 
+ 
+Orange Restricted 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. The role of an entity specification. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+TaskFlowSpecificationRelationship sub-resource 
+A relationship between TaskFlow specifications. 
+href 
+A string. Reference of the target TaskFlowSpecification. 
+id 
+A string. Unique identifier of target TaskFlowSpecification. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+associationSpec 
+An association spec reference (AssociationSpecRef). reference to an 
+AssociationSpecification object. 
+name 
+A string. The name given to the target TaskFlow specification instance. 
+relationshipType 
+A string. Type of relationship such as triggers, delegates, etc. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 30 sur 118 
+ 
+Orange Restricted 
+validFor 
+A time period. The period for which the TaskFlowSpecificationRelationship is 
+valid. 
+AssociationSpecRef relationship 
+reference to an AssociationSpecification object. 
+href 
+A string. Hyperlink reference to the target AssociationSpecification. 
+id 
+A string. reference id to the target AssociationSpecification. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+ChannelRef relationship 
+The channel to which the resource reference to. e.g. channel for selling product offerings, channel for 
+opening a trouble ticket etc.. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the channel. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowSpecification' resource object 
+{ 
+    "id": "tfs2", 
+    "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+    "description": "Shopping cart configuration", 
+    "lastUpdate": "2021-12-30T13:03:57.839Z", 
+    "lifecycleStatus": "active", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 31 sur 118 
+ 
+Orange Restricted 
+    "name": "configureSC", 
+    "taskFlowSpecificationType": "manual", 
+    "version": "1", 
+    "taskFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "tfs2-1", 
+            "configurable": true, 
+            "description": "A object defining an array of simplified Shopping cart item(s)", 
+            "extensible": true, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 1, 
+            "name": "SimplifiedShoppingCartItem", 
+            "characteristicValueSpecification": [ 
+                { 
+                    "valueType": "SimplifiedShoppingCartItemSchema", 
+                    "validFor": { 
+                        "startDateTime": "1985-04-12T23:20:50.52Z" 
+                    }, 
+                    "@type": "ObjectCharacteristicValueSpecification", 
+                    "value": { 
+                        "simplifiedCartItem": { 
+                            "type": "array", 
+                            "items": { 
+                                "type": "object", 
+                                "required": [ 
+                                    "id", 
+                                    "action" 
+                                ], 
+                                "properties": { 
+                                    "id": { 
+                                        "type": "string", 
+                                        "description": "Identifier of the shopping cart item" 
+                                    }, 
+                                    "product.id": { 
+                                        "type": "string", 
+                                        "description": "Identifier of the Product from the inventory." 
+                                    }, 
+                                    "productOffering.id": { 
+                                        "type": "string", 
+                                        "description": "Identifier of the Product Offering from the catalog." 
+                                    }, 
+                                    "action": { 
+                                        "type": "string", 
+                                        "description": "Action to be performed on this item - could be add, change or remove." 
+                                    }, 
+                                    "quantity": { 
+                                        "type": "integer", 
+                                        "description": "Quantity associated with this item - by default 1 is considered." 
+                                    } 
+                                } 
+                            } 
+                        } 
+                    } 
+                } 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 32 sur 118 
+ 
+Orange Restricted 
+            ], 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "taskFlowSpecificationRelationship": [ 
+        { 
+            "id": "tfs3", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs3", 
+            "name": "checkSC", 
+            "relationshipType": "next", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationRelationship" 
+        } 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 33 sur 118 
+ 
+Orange Restricted 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "TaskFlowSpecification" 
+} 
+Process Flow resource 
+ 
+Resource model 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 34 sur 118 
+ 
+Orange Restricted 
+ 
+Lifecycle 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 35 sur 118 
+ 
+Orange Restricted 
+ 
+Field descriptions 
+ProcessFlow fields 
+href 
+A string. Reference of the ProcessFlow. 
+id 
+A string. Identifier of the Process flow. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+channel 
+A list of channel references (ChannelRef [*]). A list of channel(s) where 
+this processFlow is executed. 
+characteristic 
+A list of characteristics (Characteristic [*]). A list of characteristic(s) 
+associated to this processFlow. 
+href 
+A string. Reference of the ProcessFlow. 
+id 
+A string. Identifier of the Process flow. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 36 sur 118 
+ 
+Orange Restricted 
+processFlowDate 
+A date time (DateTime). Is the date when the processFlow was created 
+in basse (timestamp). 
+processFlowSpecification 
+A string. Identifier of the Process flow specification. 
+processFlowSpecificationRef A process flow specification reference (ProcessFlowSpecificationRef). A 
+reference to a ProcessFlowSpecification defined design-time. 
+relatedEntity 
+A list of related entities (RelatedEntity [*]). A list of related entity(ies) to 
+this processFlow. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of related party(ies) to 
+this processFlow. 
+state 
+A process flow state type (ProcessFlowStateType). State of the 
+ProcessFlow: described in the state machine diagram. 
+taskFlow 
+A list of task flow references (TaskFlowRef [*]). A list of taskflow related 
+to this processFlow. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 37 sur 118 
+ 
+Orange Restricted 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+RelatedEntity sub-resource 
+A reference to an entity, where the type of the entity is not known in advance. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. The role of an entity. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+ChannelRef relationship 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 38 sur 118 
+ 
+Orange Restricted 
+The channel to which the resource reference to. e.g. channel for selling product offerings, channel for 
+opening a trouble ticket etc.. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the channel. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ProcessFlowSpecificationRef relationship 
+A reference to a ProcessFlowSpecification defined design-time. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TaskFlowRef relationship 
+ 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 39 sur 118 
+ 
+Orange Restricted 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlow' resource object 
+{ 
+    "id": "4fd-ty56-gg55", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55", 
+    "processFlowSpecificationRef": { 
+        "id": "1", 
+        "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+        "name": "orderCapture", 
+        "@type": "ProcessFlowSpecificationRef", 
+        "@referredType": "ProcessFlowSpecification" 
+    }, 
+    "processFlowDate": "2019-04-11T14:52:21.823Z", 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore", 
+            "@type": "Channel" 
+        } 
+    ], 
+    "characteristic": [ 
+        { 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "value": "TMF Mobile 20" 
+        } 
+    ], 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+            "href": ".../shoppingCartManagement/v4/shoppingCart/qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart", 
+            "@type": "RelatedEntity" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "456-f69", 
+            "href": ".../partyManagement/v4/individual/456-f69", 
+            "name": "Jean Pontus", 
+            "role": "Customer", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 40 sur 118 
+ 
+Orange Restricted 
+    "state": "active", 
+    "taskFlow": [ 
+        { 
+            "id": "4fd-ty56-gg55-1", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-1", 
+            "@type": "TaskFlow" 
+        }, 
+        { 
+            "id": "4fd-ty56-gg55-2", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-2", 
+            "@type": "TaskFlow" 
+        }, 
+        { 
+            "id": "4fd-ty56-gg55-3", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-3", 
+            "@type": "TaskFlow" 
+        }, 
+        { 
+            "id": "4fd-ty56-gg55-4", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-4", 
+            "@type": "TaskFlow" 
+        } 
+    ], 
+    "@type": "ProcessFlow", 
+    "@baseType": "ProcessFlow" 
+} 
+Task Flow resource 
+ 
+Resource model 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 41 sur 118 
+ 
+Orange Restricted 
+ 
+Lifecycle 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 42 sur 118 
+ 
+Orange Restricted 
+ 
+Field descriptions 
+TaskFlow fields 
+href 
+A string. Reference of the taskFlow. 
+id 
+A string. Identifier of the taskFlow. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+channel 
+A list of channel references (ChannelRef [*]). A list of channel(s) where this 
+taskFlow is executed. 
+characteristic 
+A list of characteristics (Characteristic [*]). A list of characteristic(s) 
+associated to this taskFlow. 
+completionDate 
+A date time (DateTime). Effective completion date for this task. 
+completionMethod 
+A string. TaskFlow completion method. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 43 sur 118 
+ 
+Orange Restricted 
+href 
+A string. Reference of the taskFlow. 
+id 
+A string. Identifier of the taskFlow. 
+isMandatory 
+A boolean. Indicate mandatory TaskFlow. 
+priority 
+An integer. TaskFlow priority. 
+relatedEntity 
+A list of related entities (RelatedEntity [*]). A list of related entity(ies) to this 
+taskFlow. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of related party(ies) to this 
+task. 
+requestedCompletionDate A date time (DateTime). Requested completion date for this task. 
+requestedStartDate 
+A date time (DateTime). Requested start date for this task. 
+startDate 
+A date time (DateTime). Effective start date for this task. 
+state 
+A task flow state type (TaskFlowStateType). State of the taskFlow: 
+described in the state machine diagram. 
+taskFlowRelationship 
+A list of task flow relationships (TaskFlowRelationship [*]). A list of 
+taskFlows related to this taskFlow. 
+taskFlowSpecification 
+A string. Reference of the TaskFlowSpecification. 
+taskFlowSpecificationRef 
+A task flow specification reference (TaskFlowSpecificationRef). A reference 
+to a TaskFlowSpecification defined design-time. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 44 sur 118 
+ 
+Orange Restricted 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+RelatedEntity sub-resource 
+A reference to an entity, where the type of the entity is not known in advance. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. The role of an entity. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 45 sur 118 
+ 
+Orange Restricted 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+TaskFlowRelationship sub-resource 
+Describes relationship between taskFlow. 
+relationshipType 
+A string. The type of taskFlow relationship (requires, triggers, etc.). 
+taskFlow 
+A task flow reference (TaskFlowRef). The taskFlow being referred to. 
+ChannelRef relationship 
+The channel to which the resource reference to. e.g. channel for selling product offerings, channel for 
+opening a trouble ticket etc.. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the channel. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TaskFlowRef relationship 
+ 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 46 sur 118 
+ 
+Orange Restricted 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+TaskFlowSpecificationRef relationship 
+A reference to a TaskFlowSpecification defined design-time. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlow' resource object 
+{ 
+    "id": "4fd-ty56-gg55-3", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-3", 
+    "completionMethod": "automatic", 
+    "isMandatory": true, 
+    "priority": 0, 
+    "taskFlowSpecificationRef": { 
+        "id": "tfs1", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+        "name": "SCinit", 
+        "@type": "TaskFlowSpecificationRef", 
+        "@referredType": "TaskFlowSpecification" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+            "href": ".../shoppingCartManagement/v4/shoppingCart/qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart", 
+            "@type": "RelatedEntity" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 47 sur 118 
+ 
+Orange Restricted 
+        } 
+    ], 
+    "state": "completed", 
+    "taskFlowRelationship": [ 
+        { 
+            "relationshipType": "nextTask", 
+            "taskFlow": { 
+                "id": "4fd-ty56-gg55-4", 
+                "href": ".../processFlowManagement/v1/taskFlow/4fd-ty56-gg55-4", 
+                "@type": "TaskFlow" 
+            } 
+        } 
+    ], 
+    "@type": "TaskFlow", 
+    "@baseType": "TaskFlow" 
+} 
+ 
+Notification Resource Models 
+ 
+17 notifications are defined for this API 
+Notifications related to ProcessFlowSpecification: 
+    - ProcessFlowSpecificationCreateEvent 
+    - ProcessFlowSpecificationStateChangeEvent 
+    - ProcessFlowSpecificationDeleteEvent 
+    - ProcessFlowSpecificationAttributeValueChangeEvent 
+Notifications related to TaskFlowSpecification: 
+    - TaskFlowSpecificationCreateEvent 
+    - TaskFlowSpecificationStateChangeEvent 
+    - TaskFlowSpecificationDeleteEvent 
+    - TaskFlowSpecificationAttributeValueChangeEvent 
+Notifications related to ProcessFlow: 
+    - ProcessFlowCreateEvent 
+    - ProcessFlowStateChangeEvent 
+    - ProcessFlowDeleteEvent 
+    - ProcessFlowAttributeValueChangeEvent 
+Notifications related to TaskFlow: 
+    - TaskFlowCreateEvent 
+    - TaskFlowStateChangeEvent 
+    - TaskFlowDeleteEvent 
+    - TaskFlowAttributeValueChangeEvent 
+    - TaskFlowInformationRequiredEvent 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 48 sur 118 
+ 
+Orange Restricted 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event 
+structure containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and 
+the name of the resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to 
+the resource concerned by the notification using the resource name as access field ("resourceName" 
+placeholder). 
+ 
+Process Flow Specification Create Event 
+Notification ProcessFlowSpecificationCreateEvent case for resource ProcessFlowSpecification 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 49 sur 118 
+ 
+Orange Restricted 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlowSpecificationCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowSpecificationCreateEvent", 
+     "event": { 
+        "processFlowSpecification" :  
+            {-- SEE ProcessFlowSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Process Flow Specification State Change Event 
+Notification ProcessFlowSpecificationStateChangeEvent case for resource ProcessFlowSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 
+'ProcessFlowSpecificationStateChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowSpecificationStateChangeEvent", 
+     "event": { 
+        "processFlowSpecification" :  
+            {-- SEE ProcessFlowSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Process Flow Specification Delete Event 
+Notification ProcessFlowSpecificationDeleteEvent case for resource ProcessFlowSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlowSpecificationDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowSpecificationDeleteEvent", 
+     "event": { 
+        "processFlowSpecification" :  
+            {-- SEE ProcessFlowSpecification RESOURCE SAMPLE --} 
+    } 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 50 sur 118 
+ 
+Orange Restricted 
+} 
+ 
+Process Flow Specification Attribute Value Change Event 
+Notification ProcessFlowSpecificationAttributeValueChangeEvent case for resource 
+ProcessFlowSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 
+'ProcessFlowSpecificationAttributeValueChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowSpecificationAttributeValueChangeEvent", 
+     "event": { 
+        "processFlowSpecification" :  
+            {-- SEE ProcessFlowSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow Specification Create Event 
+Notification TaskFlowSpecificationCreateEvent case for resource TaskFlowSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowSpecificationCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowSpecificationCreateEvent", 
+     "event": { 
+        "taskFlowSpecification" :  
+            {-- SEE TaskFlowSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow Specification State Change Event 
+Notification TaskFlowSpecificationStateChangeEvent case for resource TaskFlowSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowSpecificationStateChangeEvent' 
+notification event object 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 51 sur 118 
+ 
+Orange Restricted 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowSpecificationStateChangeEvent", 
+     "event": { 
+        "taskFlowSpecification" :  
+            {-- SEE TaskFlowSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow Specification Delete Event 
+Notification TaskFlowSpecificationDeleteEvent case for resource TaskFlowSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowSpecificationDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowSpecificationDeleteEvent", 
+     "event": { 
+        "taskFlowSpecification" :  
+            {-- SEE TaskFlowSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow Specification Attribute Value Change Event 
+Notification TaskFlowSpecificationAttributeValueChangeEvent case for resource TaskFlowSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 
+'TaskFlowSpecificationAttributeValueChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowSpecificationAttributeValueChangeEvent", 
+     "event": { 
+        "taskFlowSpecification" :  
+            {-- SEE TaskFlowSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Process Flow Create Event 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 52 sur 118 
+ 
+Orange Restricted 
+Notification ProcessFlowCreateEvent case for resource ProcessFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlowCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowCreateEvent", 
+     "event": { 
+        "processFlow" :  
+            {-- SEE ProcessFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Process Flow State Change Event 
+Notification ProcessFlowStateChangeEvent case for resource ProcessFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlowStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowStateChangeEvent", 
+     "event": { 
+        "processFlow" :  
+            {-- SEE ProcessFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Process Flow Delete Event 
+Notification ProcessFlowDeleteEvent case for resource ProcessFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlowDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowDeleteEvent", 
+     "event": { 
+        "processFlow" :  
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 53 sur 118 
+ 
+Orange Restricted 
+            {-- SEE ProcessFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Process Flow Attribute Value Change Event 
+Notification ProcessFlowAttributeValueChangeEvent case for resource ProcessFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'ProcessFlowAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProcessFlowAttributeValueChangeEvent", 
+     "event": { 
+        "processFlow" :  
+            {-- SEE ProcessFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow Create Event 
+Notification TaskFlowCreateEvent case for resource TaskFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowCreateEvent", 
+     "event": { 
+        "taskFlow" :  
+            {-- SEE TaskFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow State Change Event 
+Notification TaskFlowStateChangeEvent case for resource TaskFlow 
+Json representation sample 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 54 sur 118 
+ 
+Orange Restricted 
+We provide below the json representation of an example of a 'TaskFlowStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowStateChangeEvent", 
+     "event": { 
+        "taskFlow" :  
+            {-- SEE TaskFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow Delete Event 
+Notification TaskFlowDeleteEvent case for resource TaskFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowDeleteEvent", 
+     "event": { 
+        "taskFlow" :  
+            {-- SEE TaskFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Task Flow Attribute Value Change Event 
+Notification TaskFlowAttributeValueChangeEvent case for resource TaskFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowAttributeValueChangeEvent", 
+     "event": { 
+        "taskFlow" :  
+            {-- SEE TaskFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 55 sur 118 
+ 
+Orange Restricted 
+Task Flow Information Required Event 
+Notification TaskFlowInformationRequiredEvent case for resource TaskFlow 
+Json representation sample 
+We provide below the json representation of an example of a 'TaskFlowInformationRequiredEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TaskFlowInformationRequiredEvent", 
+     "event": { 
+        "taskFlow" :  
+            {-- SEE TaskFlow RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 56 sur 118 
+ 
+Orange Restricted 
+ API OPERATIONS 
+Only available operations are displayed: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET ProcessFlowSpecification 
+GET TaskFlowSpecification 
+GET ProcessFlow 
+GET TaskFlow 
+GET must be used to retrieve a 
+representation of a resource. 
+ 
+Create Entity 
+POST ProcessFlowSpecification 
+POST TaskFlowSpecification 
+POST Taskflow 
+POST ProcessFlow 
+POST must be used to create a 
+new resource 
+Partial Update of an Entity 
+PATCH ProcessFlowSpecification 
+PATCH TaskFlowSpecification 
+PATCH TaskFlow 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE 
+ProcessFlowSpecification 
+DELETE TaskFlowSpecification 
+DELETE ProcessFlow 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Process Flow Specification 
+List process flow specifications 
+  GET /processFlowSpecification?fields=...&{filtering} 
+Description 
+This operation list process flow specification entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 57 sur 118 
+ 
+Orange Restricted 
+Usage Samples 
+Here's an example of a request for retrieving a list of process flow specification with id, href, description, 
+last update date, status, name and version. The given criteria is processFlowSpecification lifectcle status. 
+ 
+Request 
+ 
+GET /tmf-
+api/processFlowManagement/v4/processFlowSpecification?fields=id,href,description,lastUpdate,lifecycleStatus,name,v
+ersion&lifecycleStatus=active 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "1", 
+        "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+        "description": "Description of the order capture process for all channels", 
+        "lastUpdate": "2021-12-30T09:42:25.747Z", 
+        "lifecycleStatus": "active", 
+        "name": "orderCapture", 
+        "version": "v2.3" 
+    }, 
+    { 
+        "id": "2", 
+        "href": ".../processFlowManagement/v4/ProcessFlowSpecification/2", 
+        "description": "Description of the order completion process for all channels", 
+        "lastUpdate": "2021-12-30T09:42:25.747Z", 
+        "lifecycleStatus": "active", 
+        "name": "orderCompletion", 
+        "version": "v1.4" 
+    }, 
+    { 
+        "id": "8", 
+        "href": ".../processFlowManagement/v4/ProcessFlowSpecification/8", 
+        "description": "Description of the welcome process for all channels", 
+        "lastUpdate": "2021-12-30T09:42:25.747Z", 
+        "lifecycleStatus": "active", 
+        "name": "welcome", 
+        "version": "v7.2" 
+    } 
+] 
+ 
+Retrieve process flow specification 
+  GET /processFlowSpecification/{id}?fields=...&{filtering} 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 58 sur 118 
+ 
+Orange Restricted 
+Description 
+This operation retrieves a process flow specification entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a process flow specification. The given criteria is the 
+ProcessFlowSpecification id (1). 
+ 
+Request 
+ 
+GET /tmf-api/processFlowManagement/v4/processFlowSpecification/1 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "1", 
+    "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+    "description": "Description of the order capture process for all channels", 
+    "lastUpdate": "2021-12-30T09:42:25.747Z", 
+    "lifecycleStatus": "active", 
+    "name": "orderCapture", 
+    "version": "v2.3", 
+    "attachment": [ 
+        { 
+            "id": "4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "href": "http://host/Attachment/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "attachmentType": "pdf", 
+            "content": "business process pdf", 
+            "description": "description of the business process with examples", 
+            "mimeType": "pdf", 
+            "name": "pfs-1-doc", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 2423, 
+                "units": "Mb" 
+            }, 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 59 sur 118 
+ 
+Orange Restricted 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        } 
+    ], 
+    "processFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "pfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "pfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "processFlowSpecificationRelationship": [ 
+        { 
+            "id": "2", 
+            "href": ".../processFlowManagement/v4/ProcessFlowSpecification/2", 
+            "name": "orderCompletion", 
+            "relationshipType": "triggers", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 60 sur 118 
+ 
+Orange Restricted 
+            }, 
+            "@type": "ProcessFlowSpecificationRelationship" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        { 
+            "id": "17", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/17", 
+            "name": "party interation", 
+            "role": "interacts", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "PartyInteraction" 
+        }, 
+        { 
+            "id": "1", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/1", 
+            "name": "requester as individual", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "3", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/3", 
+            "name": "requester as organization", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 61 sur 118 
+ 
+Orange Restricted 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecification": [ 
+        { 
+            "id": "tfs1", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+            "name": "SCinit", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs99", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs99", 
+            "name": "selectMainOffer", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs0", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs0", 
+            "name": "checkEligibility", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs3", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs3", 
+            "name": "checkSC", 
+            "@type": "TaskFlowSpecification" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "ProcessFlowSpecification" 
+} 
+ 
+Create process flow specification 
+  POST /processFlowSpecification 
+Description 
+This operation creates a process flow specification entity. 
+Mandatory and Non Mandatory Attributes 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 62 sur 118 
+ 
+Orange Restricted 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ProcessFlowSpecification, including any possible rule conditions and applicable default values. Notice that 
+it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@schemaLocation 
+ 
+@type 
+ 
+attachment 
+ 
+channel 
+ 
+description 
+ 
+lifecycleStatus 
+ 
+processFlowSpecificationCharacteristic  
+processFlowSpecificationRelationship 
+ 
+relatedEntitySpecification 
+ 
+relatedParty 
+ 
+taskFlowSpecification 
+ 
+validFor 
+ 
+version 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships 
+when creating a ProcessFlowSpecification resource. 
+Context 
+Mandatory Sub-Attributes 
+relatedParty 
+id, @referredType 
+relatedEntity 
+id, role, @referredType 
+ 
+Usage Samples 
+Here's an example of a request for creating a process flow specification - the result is 
+processFlowspecification 1. 
+ 
+Request 
+ 
+POST /tmf-api/processFlowManagement/v4/processFlowSpecification 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Description of the order capture process for all channels", 
+    "name": "orderCapture", 
+    "version": "v2.3", 
+    "attachment": [ 
+        { 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 63 sur 118 
+ 
+Orange Restricted 
+            "id": "4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "attachmentType": "pdf", 
+            "content": "business process pdf", 
+            "description": "description of the business process with examples", 
+            "mimeType": "pdf", 
+            "name": "pfs-1-doc", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 2423, 
+                "units": "Mb" 
+            }, 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        } 
+    ], 
+    "processFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "pfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "pfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 64 sur 118 
+ 
+Orange Restricted 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "processFlowSpecificationRelationship": [ 
+        { 
+            "id": "2", 
+            "name": "orderCompletion", 
+            "relationshipType": "triggers", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationRelationship" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        { 
+            "id": "17", 
+            "name": "party interation", 
+            "role": "interacts", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "PartyInteraction" 
+        }, 
+        { 
+            "id": "1", 
+            "name": "requester as individual", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "requester as organization", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 65 sur 118 
+ 
+Orange Restricted 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecification": [ 
+        { 
+            "id": "tfs1", 
+            "name": "SCinit", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs99", 
+            "name": "selectMainOffer", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs0", 
+            "name": "checkEligibility", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs2", 
+            "name": "configureSC", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs3", 
+            "name": "checkSC", 
+            "@type": "TaskFlowSpecification" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "ProcessFlowSpecification" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 66 sur 118 
+ 
+Orange Restricted 
+{ 
+    "id": "1", 
+    "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+    "description": "Description of the order capture process for all channels", 
+    "lastUpdate": "2021-12-30T09:42:25.747Z", 
+    "lifecycleStatus": "active", 
+    "name": "orderCapture", 
+    "version": "v2.3", 
+    "attachment": [ 
+        { 
+            "id": "4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "href": "http://host/Attachment/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "attachmentType": "pdf", 
+            "content": "business process pdf", 
+            "description": "description of the business process with examples", 
+            "mimeType": "pdf", 
+            "name": "pfs-1-doc", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 2423, 
+                "units": "Mb" 
+            }, 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        } 
+    ], 
+    "processFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "pfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 67 sur 118 
+ 
+Orange Restricted 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "pfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "processFlowSpecificationRelationship": [ 
+        { 
+            "id": "2", 
+            "href": ".../processFlowManagement/v4/ProcessFlowSpecification/2", 
+            "name": "orderCompletion", 
+            "relationshipType": "triggers", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationRelationship" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        { 
+            "id": "17", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/17", 
+            "name": "party interation", 
+            "role": "interacts", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "PartyInteraction" 
+        }, 
+        { 
+            "id": "1", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/1", 
+            "name": "requester as individual", 
+            "role": "requester", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 68 sur 118 
+ 
+Orange Restricted 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "3", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/3", 
+            "name": "requester as organization", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecification": [ 
+        { 
+            "id": "tfs1", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+            "name": "SCinit", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs99", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs99", 
+            "name": "selectMainOffer", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs0", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs0", 
+            "name": "checkEligibility", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 69 sur 118 
+ 
+Orange Restricted 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs3", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs3", 
+            "name": "checkSC", 
+            "@type": "TaskFlowSpecification" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "ProcessFlowSpecification" 
+} 
+ 
+Patch process flow specification 
+  PATCH /processFlowSpecification/{id} 
+Description 
+This operation allows partial updates of a process flow specification entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies to 
+the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on 
+their usage. 
+Patchable Attributes 
+Rule 
+attachment 
+ 
+channel 
+ 
+description 
+ 
+lifecycleStatus 
+ 
+name 
+ 
+processFlowSpecificationCharacteristic  
+processFlowSpecificationRelationship 
+ 
+relatedEntitySpecification 
+ 
+relatedParty 
+ 
+taskFlowSpecification 
+ 
+validFor 
+ 
+version 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 70 sur 118 
+ 
+Orange Restricted 
+Non Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+lastUpdate 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating process flow specification 1 - Change version and add a new 
+channel - the full resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/processFlowManagement/v4/processFlowSpecification/1 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "id": "1", 
+    "description": "Description of the order capture process for all channels", 
+    "lifecycleStatus": "active", 
+    "name": "orderCapture", 
+    "version": "v3.0", 
+    "attachment": [ 
+        { 
+            "id": "4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "attachmentType": "pdf", 
+            "content": "business process pdf", 
+            "description": "description of the business process with examples", 
+            "mimeType": "pdf", 
+            "name": "pfs-1-doc", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 2423, 
+                "units": "Mb" 
+            }, 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 71 sur 118 
+ 
+Orange Restricted 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        }, 
+        { 
+            "id": "4", 
+            "name": "TMF_TV_App" 
+        } 
+    ], 
+    "processFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "pfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "pfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "processFlowSpecificationRelationship": [ 
+        { 
+            "id": "2", 
+            "href": ".../processFlowManagement/v4/ProcessFlowSpecification/2", 
+            "name": "orderCompletion", 
+            "relationshipType": "triggers", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationRelationship" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 72 sur 118 
+ 
+Orange Restricted 
+        { 
+            "id": "24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        { 
+            "id": "17", 
+            "name": "party interation", 
+            "role": "interacts", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "PartyInteraction" 
+        }, 
+        { 
+            "id": "1", 
+            "name": "requester as individual", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "requester as organization", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecification": [ 
+        { 
+            "id": "tfs1", 
+            "name": "SCinit", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 73 sur 118 
+ 
+Orange Restricted 
+        { 
+            "id": "tfs99", 
+            "name": "selectMainOffer", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs0", 
+            "name": "checkEligibility", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs2", 
+            "name": "configureSC", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs3", 
+            "name": "checkSC", 
+            "@type": "TaskFlowSpecification" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "ProcessFlowSpecification" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "1", 
+    "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+    "description": "Description of the order capture process for all channels", 
+    "lastUpdate": "2021-12-30T09:42:25.747Z", 
+    "lifecycleStatus": "active", 
+    "name": "orderCapture", 
+    "version": "v3.0", 
+    "attachment": [ 
+        { 
+            "id": "4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "href": "http://host/Attachment/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "attachmentType": "pdf", 
+            "content": "business process pdf", 
+            "description": "description of the business process with examples", 
+            "mimeType": "pdf", 
+            "name": "pfs-1-doc", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 2423, 
+                "units": "Mb" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 74 sur 118 
+ 
+Orange Restricted 
+            }, 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        }, 
+        { 
+            "id": "4", 
+            "name": "TMF_TV_App" 
+        } 
+    ], 
+    "processFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "pfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "pfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 75 sur 118 
+ 
+Orange Restricted 
+        } 
+    ], 
+    "processFlowSpecificationRelationship": [ 
+        { 
+            "id": "2", 
+            "href": ".../processFlowManagement/v4/ProcessFlowSpecification/2", 
+            "name": "orderCompletion", 
+            "relationshipType": "triggers", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationRelationship" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        { 
+            "id": "17", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/17", 
+            "name": "party interation", 
+            "role": "interacts", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "PartyInteraction" 
+        }, 
+        { 
+            "id": "1", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/1", 
+            "name": "requester as individual", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "3", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/3", 
+            "name": "requester as organization", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 76 sur 118 
+ 
+Orange Restricted 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecification": [ 
+        { 
+            "id": "tfs1", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+            "name": "SCinit", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs99", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs99", 
+            "name": "selectMainOffer", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs0", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs0", 
+            "name": "checkEligibility", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs3", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs3", 
+            "name": "checkSC", 
+            "@type": "TaskFlowSpecification" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "ProcessFlowSpecification" 
+} 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 77 sur 118 
+ 
+Orange Restricted 
+ 
+Here's an example of a request for updating process flow specification 1 - Change version and add a new 
+channel - the full resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/processFlowManagement/v4/processFlowSpecification/1 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "replace", 
+        "path": "version", 
+        "value": "v3.0" 
+    }, 
+    { 
+        "op": "add", 
+        "path": "channel", 
+        "value": { 
+            "id": "4", 
+            "name": "TMF_TV_App" 
+        } 
+    } 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "1", 
+    "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+    "description": "Description of the order capture process for all channels", 
+    "lastUpdate": "2021-12-30T09:42:25.747Z", 
+    "lifecycleStatus": "active", 
+    "name": "orderCapture", 
+    "version": "v3.0", 
+    "attachment": [ 
+        { 
+            "id": "4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "href": "http://host/Attachment/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "attachmentType": "pdf", 
+            "content": "business process pdf", 
+            "description": "description of the business process with examples", 
+            "mimeType": "pdf", 
+            "name": "pfs-1-doc", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 2423, 
+                "units": "Mb" 
+            }, 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 78 sur 118 
+ 
+Orange Restricted 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+    ], 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        }, 
+        { 
+            "id": "2", 
+            "name": "TMFRetailStore" 
+        }, 
+        { 
+            "id": "3", 
+            "name": "TMFMobileAppStore" 
+        }, 
+        { 
+            "id": "4", 
+            "name": "TMF_TV_App" 
+        } 
+    ], 
+    "processFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "pfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "pfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationCharacteristic" 
+        } 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 79 sur 118 
+ 
+Orange Restricted 
+    ], 
+    "processFlowSpecificationRelationship": [ 
+        { 
+            "id": "2", 
+            "href": ".../processFlowManagement/v4/ProcessFlowSpecification/2", 
+            "name": "orderCompletion", 
+            "relationshipType": "triggers", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "ProcessFlowSpecificationRelationship" 
+        } 
+    ], 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        { 
+            "id": "17", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/17", 
+            "name": "party interation", 
+            "role": "interacts", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "PartyInteraction" 
+        }, 
+        { 
+            "id": "1", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/1", 
+            "name": "requester as individual", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "3", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/3", 
+            "name": "requester as organization", 
+            "role": "requester", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 80 sur 118 
+ 
+Orange Restricted 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecification": [ 
+        { 
+            "id": "tfs1", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+            "name": "SCinit", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs99", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs99", 
+            "name": "selectMainOffer", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs0", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs0", 
+            "name": "checkEligibility", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "@type": "TaskFlowSpecification" 
+        }, 
+        { 
+            "id": "tfs3", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs3", 
+            "name": "checkSC", 
+            "@type": "TaskFlowSpecification" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "ProcessFlowSpecification" 
+} 
+ 
+Delete process flow specification 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 81 sur 118 
+ 
+Orange Restricted 
+  DELETE /processFlowSpecification/{id} 
+Description 
+This operation deletes a process flow specification entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a process flow specification. 
+ 
+Request 
+ 
+DELETE /tmf-api/processFlowManagement/v4/processFlowSpecification/1 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Task Flow Specification 
+List task flow specifications 
+  GET /taskFlowSpecification?fields=...&{filtering} 
+Description 
+This operation list task flow specification entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of Task flow specification with id, href, name, 
+taskFlowSpecificationType, and lifecycleStatus. The given criteria is TaskFlowSpecification lifecycle 
+status. 
+ 
+Request 
+ 
+GET /tmf-
+api/processFlowManagement/v4/taskFlowSpecification?fields=id,href,name,taskFlowSpecificationType,lifecycleStatus&l
+ifecycleStatus=active 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 82 sur 118 
+ 
+Orange Restricted 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "tfs1", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+        "name": "SCinit", 
+        "taskFlowSpecificationType": "automatic", 
+        "lifecycleStatus": "active" 
+    }, 
+    { 
+        "id": "tfs99", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs99", 
+        "name": "selectMainOffer", 
+        "taskFlowSpecificationType": "manual", 
+        "lifecycleStatus": "active" 
+    }, 
+    { 
+        "id": "tfs0", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs0", 
+        "name": "checkEligibility", 
+        "taskFlowSpecificationType": "automatic", 
+        "lifecycleStatus": "active" 
+    }, 
+    { 
+        "id": "tfs2", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+        "name": "configureSC", 
+        "taskFlowSpecificationType": "manual", 
+        "lifecycleStatus": "active" 
+    }, 
+    { 
+        "id": "tfs3", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs3", 
+        "name": "checkSC", 
+        "taskFlowSpecificationType": "automatic", 
+        "lifecycleStatus": "active" 
+    } 
+] 
+ 
+Retrieve task flow specification 
+  GET /taskFlowSpecification/{id}?fields=...&{filtering} 
+Description 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 83 sur 118 
+ 
+Orange Restricted 
+This operation retrieves a task flow specification entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a TaskFlowspecification. The given criteria is the 
+TaskFlowspecification id (tfs1). 
+ 
+Request 
+ 
+GET /tmf-api/processFlowManagement/v4/taskFlowSpecification/tfs1 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "tfs1", 
+    "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+    "description": "Initialization of a shopping cart entity from a product offering.id or a product.id", 
+    "lastUpdate": "2021-12-30T13:41:09.755Z", 
+    "lifecycleStatus": "active", 
+    "name": "SCinit", 
+    "taskFlowSpecificationType": "automatic", 
+    "version": "1", 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 84 sur 118 
+ 
+Orange Restricted 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "tfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "taskFlowSpecificationRelationship": [ 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "relationshipType": "next", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationRelationship" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 85 sur 118 
+ 
+Orange Restricted 
+    }, 
+    "@type": "TaskFlowSpecification" 
+} 
+ 
+Create task flow specification 
+  POST /taskFlowSpecification 
+Description 
+This operation creates a task flow specification entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TaskFlowSpecification, including any possible rule conditions and applicable default values. Notice that it 
+is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@schemaLocation 
+ 
+@type 
+ 
+attachment 
+ 
+channel 
+ 
+description 
+ 
+lifecycleStatus 
+ 
+relatedEntitySpecification 
+ 
+relatedParty 
+ 
+relatedProcessFlowSpecification 
+ 
+taskFlowSpecification 
+ 
+taskFlowSpecificationCharacteristic  
+taskFlowSpecificationRelationship 
+ 
+taskFlowSpecificationType 
+ 
+validFor 
+ 
+version 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships 
+when creating a TaskFlowSpecification resource. 
+Context 
+Mandatory Sub-Attributes 
+relatedParty 
+id, @referredType 
+relatedEntity 
+id, role, @referredType 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 86 sur 118 
+ 
+Orange Restricted 
+Usage Samples 
+Here's an example of a request for creating a TaskFlowspecification - the result is TaskFlowspecification 
+tfs1. 
+ 
+Request 
+ 
+POST /tmf-api/processFlowManagement/v4/taskFlowSpecification 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Initialization of a shopping cart entity from a product offering.id or a product.id", 
+    "lifecycleStatus": "active", 
+    "name": "SCinit", 
+    "taskFlowSpecificationType": "automatic", 
+    "version": "1", 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "tfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 87 sur 118 
+ 
+Orange Restricted 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "taskFlowSpecificationRelationship": [ 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "relationshipType": "next", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationRelationship" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "TaskFlowSpecification" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "tfs1", 
+    "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+    "description": "Initialization of a shopping cart entity from a product offering.id or a product.id", 
+    "lastUpdate": "2021-12-30T13:41:09.755Z", 
+    "lifecycleStatus": "active", 
+    "name": "SCinit", 
+    "taskFlowSpecificationType": "automatic", 
+    "version": "1", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 88 sur 118 
+ 
+Orange Restricted 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "tfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 89 sur 118 
+ 
+Orange Restricted 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "taskFlowSpecificationRelationship": [ 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "relationshipType": "next", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationRelationship" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "TaskFlowSpecification" 
+} 
+ 
+Patch task flow specification 
+  PATCH /taskFlowSpecification/{id} 
+Description 
+This operation allows partial updates of a task flow specification entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies to 
+the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on 
+their usage. 
+Patchable Attributes 
+Rule 
+attachment 
+ 
+channel 
+ 
+description 
+ 
+lifecycleStatus 
+ 
+name 
+ 
+relatedEntitySpecification 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 90 sur 118 
+ 
+Orange Restricted 
+relatedParty 
+ 
+relatedProcessFlowSpecification 
+ 
+taskFlowSpecification 
+ 
+taskFlowSpecificationCharacteristic  
+taskFlowSpecificationRelationship 
+ 
+taskFlowSpecificationType 
+ 
+validFor 
+ 
+version 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+lastUpdate 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating TaskFlowspecification 1 - Change version and add a new 
+characteristic specification - the full resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/processFlowManagement/v4/taskFlowSpecification/1 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "id": "tfs1", 
+    "description": "Initialization of a shopping cart entity from a product offering.id or a product.id", 
+    "name": "SCinit", 
+    "version": "2", 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 91 sur 118 
+ 
+Orange Restricted 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "tfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-3", 
+            "configurable": true, 
+            "description": "identification of a promotion from the catalog", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "promotionId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 92 sur 118 
+ 
+Orange Restricted 
+        } 
+    ], 
+    "taskFlowSpecificationRelationship": [ 
+        { 
+            "id": "tfs2", 
+            "name": "configureSC", 
+            "relationshipType": "next", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationRelationship" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "TaskFlowSpecification" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "tfs1", 
+    "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+    "description": "Initialization of a shopping cart entity from a product offering.id or a product.id", 
+    "lastUpdate": "2021-12-31T13:41:09.755Z", 
+    "lifecycleStatus": "active", 
+    "name": "SCinit", 
+    "taskFlowSpecificationType": "automatic", 
+    "version": "2", 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 93 sur 118 
+ 
+Orange Restricted 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "tfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-3", 
+            "configurable": true, 
+            "description": "identification of a promotion from the catalog", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "promotionId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        } 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 94 sur 118 
+ 
+Orange Restricted 
+    ], 
+    "taskFlowSpecificationRelationship": [ 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "relationshipType": "next", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationRelationship" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "TaskFlowSpecification" 
+} 
+ 
+ 
+Here's an example of a request for updating TaskFlowspecification 1 - Change version and add a new 
+characteristic specification  - the full resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/processFlowManagement/v4/taskFlowSpecification/1 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "replace", 
+        "path": "version", 
+        "value": "2" 
+    }, 
+    { 
+        "op": "add", 
+        "path": "taskFlowSpecificationCharacteristic", 
+        "value": { 
+            "id": "tfs-1-chat-3", 
+            "configurable": true, 
+            "description": "identification of a promotion from the catalog", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "promotionId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        } 
+    } 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 95 sur 118 
+ 
+Orange Restricted 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "tfs1", 
+    "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+    "description": "Initialization of a shopping cart entity from a product offering.id or a product.id", 
+    "lastUpdate": "2021-12-31T13:41:09.755Z", 
+    "lifecycleStatus": "active", 
+    "name": "SCinit", 
+    "taskFlowSpecificationType": "automatic", 
+    "version": "2", 
+    "relatedEntitySpecification": [ 
+        { 
+            "id": "24", 
+            "href": "../entityCatalogManagement/v4/entitySpecification/24", 
+            "name": "ShoppingCart", 
+            "role": "Support", 
+            "version": "1", 
+            "@type": "RelatedEntitySpecification", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "../partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "ProcessFlowDesigner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "99", 
+            "href": "../partyManagement/v4/organization/99", 
+            "name": "TMF", 
+            "role": "ProcessFlowOwner", 
+            "@type": "RelatedParty", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "taskFlowSpecificationCharacteristic": [ 
+        { 
+            "id": "tfs-1-chat-1", 
+            "configurable": true, 
+            "description": "identification of product offering", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 99, 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 96 sur 118 
+ 
+Orange Restricted 
+            "minCardinality": 0, 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-2", 
+            "configurable": true, 
+            "description": "identification of product from the inventory", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "productId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        }, 
+        { 
+            "id": "tfs-1-chat-3", 
+            "configurable": true, 
+            "description": "identification of a promotion from the catalog", 
+            "extensible": false, 
+            "isUnique": false, 
+            "maxCardinality": 1, 
+            "minCardinality": 0, 
+            "name": "promotionId", 
+            "valueType": "string", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationCharacteristic" 
+        } 
+    ], 
+    "taskFlowSpecificationRelationship": [ 
+        { 
+            "id": "tfs2", 
+            "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs2", 
+            "name": "configureSC", 
+            "relationshipType": "next", 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "TaskFlowSpecificationRelationship" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "TaskFlowSpecification" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 97 sur 118 
+ 
+Orange Restricted 
+} 
+ 
+Delete task flow specification 
+  DELETE /taskFlowSpecification/{id} 
+Description 
+This operation deletes a task flow specification entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a TaskFlow. 
+ 
+Request 
+ 
+DELETE /tmf-api/processFlowManagement/v4/taskFlowSpecification/1 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Process Flow 
+List process flows 
+  GET /processFlow?fields=...&{filtering} 
+Description 
+This operation list process flow entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of process flow(s) with only id, href, state and date. The 
+given criteria is processFlowType (orderCapture). 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 98 sur 118 
+ 
+Orange Restricted 
+ 
+Request 
+ 
+GET /tmf-
+api/processFlowManagement/v4/processFlow?fields=id,href,state,processFlowDate&processFlowType=orderCapture 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "4fd-ty56-gg55", 
+        "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55", 
+        "processFlowDate": "2019-04-11T14:52:21.823Z", 
+        "state": "active" 
+    }, 
+    { 
+        "id": "d4d5-98d-sd223", 
+        "href": ".../processFlowManagement/v4/processFlow/d4d5-98d-sd223", 
+        "processFlowDate": "2019-04-11T14:50:31.325Z", 
+        "state": "active" 
+    }, 
+    { 
+        "id": "8gg-9df-ghhf", 
+        "href": ".../processFlowManagement/v4/processFlow/8gg-9df-ghhf", 
+        "processFlowDate": "2019-04-11T14:49:31.325Z", 
+        "state": "cancelled" 
+    }, 
+    { 
+        "id": "sqf-d77-e6dg5", 
+        "href": ".../processFlowManagement/v4/processFlow/sqf-d77-e6dg5", 
+        "processFlowDate": "2019-04-11T14:49:28.325Z", 
+        "state": "completed" 
+    } 
+] 
+ 
+Retrieve process flow 
+  GET /processFlow/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a process flow entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 99 sur 118 
+ 
+Orange Restricted 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a processFlow. The given criteria is the processFlow id 4fd-
+ty56-gg55. 
+ 
+Request 
+ 
+GET /tmf-api/processFlowManagement/v4/processFlow/4fd-ty56-gg55 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "4fd-ty56-gg55", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55", 
+    "processFlowSpecificationRef": { 
+        "id": "1", 
+        "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+        "name": "orderCapture", 
+        "@type": "ProcessFlowSpecificationRef", 
+        "@referredType": "ProcessFlowSpecification" 
+    }, 
+    "processFlowDate": "2019-04-11T14:52:21.823Z", 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        } 
+    ], 
+    "characteristic": [ 
+        { 
+            "name": "productOfferingId", 
+            "valueType": "string", 
+            "value": "TMF Mobile 20" 
+        } 
+    ], 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+            "href": ".../shoppingCartManagement/v4/shoppingCart/qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 100 sur 118 
+ 
+Orange Restricted 
+            "id": "456-f69", 
+            "href": ".../partyManagement/v4/individual/456-f69", 
+            "name": "Jean Pontus", 
+            "role": "Customer", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "active", 
+    "taskFlow": [ 
+        { 
+            "id": "4fd-ty56-gg55-1", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-1" 
+        }, 
+        { 
+            "id": "4fd-ty56-gg55-2", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-2" 
+        }, 
+        { 
+            "id": "4fd-ty56-gg55-3", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-3" 
+        }, 
+        { 
+            "id": "4fd-ty56-gg55-4", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-4" 
+        } 
+    ] 
+} 
+ 
+Create process flow 
+  POST /processFlow 
+Description 
+This operation creates a process flow entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ProcessFlow, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+processFlowSpecification 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 101 sur 118 
+ 
+Orange Restricted 
+channel 
+ 
+characteristic 
+ 
+processFlowDate 
+ 
+processFlowSpecificationRef 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+state 
+ 
+taskFlow 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships 
+when creating a ProcessFlow resource. 
+Context 
+Mandatory Sub-Attributes 
+relatedParty 
+id, @referredType 
+relatedEntity 
+id, role, @referredType 
+ 
+Usage Samples 
+Here's an example of a request for creating a processFlow - the resulting processFlow is 4fd-ty56-gg55. 
+ 
+Request 
+ 
+POST /tmf-api/processFlowManagement/v4/processFlow 
+Content-Type: application/json 
+ 
+{ 
+    "processFlowSpecificationRef": { 
+        "id": "1", 
+        "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+        "name": "orderCapture", 
+        "@type": "ProcessFlowSpecificationRef", 
+        "@referredType": "ProcessFlowSpecification" 
+    }, 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore", 
+            "@type": "Channel" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "456-f69", 
+            "href": ".../partyManagement/v4/individual/456-f69", 
+            "name": "Jean Pontus", 
+            "role": "Customer", 
+            "@type": "RelatedParty", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 102 sur 118 
+ 
+Orange Restricted 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "ProcessFlow", 
+    "@baseType": "ProcessFlow" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "4fd-ty56-gg55", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55", 
+    "processFlowSpecificationRef": { 
+        "id": "1", 
+        "href": ".../processFlowManagement/v4/ProcessFlowSpecification/1", 
+        "name": "orderCapture", 
+        "@type": "ProcessFlowSpecificationRef", 
+        "@referredType": "ProcessFlowSpecification" 
+    }, 
+    "processFlowDate": "2019-04-11T14:52:21.823Z", 
+    "channel": [ 
+        { 
+            "id": "1", 
+            "name": "TMFWebStore" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "456-f69", 
+            "href": ".../partyManagement/v4/individual/456-f69", 
+            "name": "Jean Pontus", 
+            "role": "Customer", 
+            "@type": "RelatedParty", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "active", 
+    "taskFlow": [ 
+        { 
+            "id": "4fd-ty56-gg55-1", 
+            "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-1" 
+        } 
+    ] 
+} 
+ 
+Delete process flow 
+  DELETE /processFlow/{id} 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 103 sur 118 
+ 
+Orange Restricted 
+Description 
+This operation deletes a process flow entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a processFlow. 
+ 
+Request 
+ 
+DELETE /tmf-api/processFlowManagement/v4/processFlow/4fd-ty56-gg55 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Task Flow 
+List task flows 
+  GET 
+processFlow/{processFlowId}/taskFlow?fields=...&{filtering} 
+Description 
+This operation list task flow entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of taskflow(s). The given criteria is the processFlow id 
+(4fd-ty56-gg55). 
+ 
+Request 
+ 
+GET /tmf-api/processFlowManagement/v4/taskFlow?fields=id,href,state&processFlowId=4fd-ty56-gg55 
+Accept: application/json 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 104 sur 118 
+ 
+Orange Restricted 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "4fd-ty56-gg55-1", 
+        "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-1", 
+        "state": "completed" 
+    }, 
+    { 
+        "id": "4fd-ty56-gg55-2", 
+        "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-2", 
+        "state": "completed" 
+    }, 
+    { 
+        "id": "4fd-ty56-gg55-3", 
+        "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-3", 
+        "state": "completed" 
+    }, 
+    { 
+        "id": "4fd-ty56-gg55-4", 
+        "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-4", 
+        "state": "active" 
+    } 
+] 
+ 
+Retrieve task flow 
+  GET 
+processFlow/{processFlowId}/taskFlow/{id}?fields=...&{filteri
+ng} 
+Description 
+This operation retrieves a task flow entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a taskFlow. The given criteria is the taskFlow id 4fd-ty56-
+gg55-3. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 105 sur 118 
+ 
+Orange Restricted 
+ 
+Request 
+ 
+GET /tmf-api/processFlowManagement/v4/taskFlow/4fd-ty56-gg55-3 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "4fd-ty56-gg55-3", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-3", 
+    "completionMethod": "automatic", 
+    "isMandatory": true, 
+    "priority": 0, 
+    "taskFlowSpecificationRef": { 
+        "id": "tfs1", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+        "name": "SCinit", 
+        "@type": "TaskFlowSpecificationRef", 
+        "@referredType": "TaskFlowSpecification" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+            "href": ".../shoppingCartManagement/v4/shoppingCart/qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "state": "completed", 
+    "taskFlowRelationship": [ 
+        { 
+            "relationshipType": "nextTask", 
+            "taskFlow": { 
+                "id": "4fd-ty56-gg55-4", 
+                "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-4" 
+            } 
+        } 
+    ] 
+} 
+ 
+Create task flow 
+  POST processFlow/{processFlowId}/taskFlow 
+Description 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 106 sur 118 
+ 
+Orange Restricted 
+This operation creates a task flow entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TaskFlow, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+taskFlowType 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+channel 
+ 
+characteristic 
+ 
+completionDate 
+ 
+completionMethod 
+ 
+isMandatory 
+ 
+priority 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+startDate 
+ 
+state 
+ 
+taskFlowRelationship 
+ 
+taskFlowSpecification 
+ 
+taskFlowSpecificationRef 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships 
+when creating a TaskFlow resource. 
+Context 
+Mandatory Sub-Attributes 
+relatedParty 
+id, @referredType 
+relatedEntity 
+id, role, @referredType 
+taskFlowRelationship 
+relationshipType, taskFlow 
+ 
+Usage Samples 
+Here's an example of a request for creating a taskFlow - the resulting taskFlow is 4fd-ty56-gg55-3. 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 107 sur 118 
+ 
+Orange Restricted 
+ 
+Request 
+ 
+POST /tmf-api/processFlowManagement/v4/taskFlow 
+Content-Type: application/json 
+ 
+{ 
+    "completionMethod": "automatic", 
+    "priority": 0, 
+    "taskFlowSpecificationRef": { 
+        "id": "tfs1", 
+        "@type": "TaskFlowSpecificationRef", 
+        "@referredType": "TaskFlowSpecification" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "taskFlowRelationship": [ 
+        { 
+            "relationshipType": "nextTask", 
+            "taskFlow": { 
+                "id": "4fd-ty56-gg55-4" 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "4fd-ty56-gg55-3", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-3", 
+    "completionMethod": "automatic", 
+    "isMandatory": true, 
+    "priority": 0, 
+    "taskFlowSpecificationRef": { 
+        "id": "tfs1", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+        "name": "SCinit", 
+        "@type": "TaskFlowSpecificationRef", 
+        "@referredType": "TaskFlowSpecification" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 108 sur 118 
+ 
+Orange Restricted 
+            "href": ".../shoppingCartManagement/v4/shoppingCart/qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "state": "completed", 
+    "taskFlowRelationship": [ 
+        { 
+            "relationshipType": "nextTask", 
+            "taskFlow": { 
+                "id": "4fd-ty56-gg55-4", 
+                "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-4" 
+            } 
+        } 
+    ] 
+} 
+ 
+Patch task flow 
+  PATCH processFlow/{processFlowId}/taskFlow/{id} 
+Description 
+This operation allows partial updates of a task flow entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies to 
+the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on 
+their usage. 
+Patchable Attributes 
+Rule 
+channel 
+ 
+characteristic 
+ 
+completionMethod 
+ 
+isMandatory 
+ 
+priority 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+state 
+ 
+taskFlowRelationship 
+ 
+taskFlowSpecificationRef 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 109 sur 118 
+ 
+Orange Restricted 
+ 
+Non Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+taskFlowSpecification 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+startDate 
+ 
+completionDate 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating a taskFlow - provide configured cart items  . 
+ 
+Request 
+ 
+PATCH /tmf-api/processFlowManagement/v4/taskFlow/4fd-ty56-gg55-4 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "id": "4fd-ty56-gg55-4", 
+    "completionMethod": "userInput", 
+    "taskFlowSpecificationRef": { 
+        "id": "tfs2", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+        "name": "configureSC", 
+        "@type": "TaskFlowSpecificationRef", 
+        "@referredType": "TaskFlowSpecification" 
+    }, 
+    "characteristic": [ 
+        { 
+            "name": "SimplifiedShoppingCartItem", 
+            "valueType": "SimplifiedShoppingCartItemSchema", 
+            "@type": "ObjectCharacteristicValue", 
+            "value": { 
+                "simplifiedCartItem": [ 
+                    { 
+                        "id": "1", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "45d-666" 
+                    }, 
+                    { 
+                        "id": "2", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "489-uuy" 
+                    }, 
+                    { 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 110 sur 118 
+ 
+Orange Restricted 
+                        "id": "3", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "ze2-gt1" 
+                    } 
+                ] 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "4fd-ty56-gg55-4", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-4", 
+    "completionMethod": "userInput", 
+    "isMandatory": true, 
+    "priority": 0, 
+    "taskFlowSpecificationRef": { 
+        "id": "tfs1", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+        "name": "SCinit", 
+        "@type": "TaskFlowSpecificationRef", 
+        "@referredType": "TaskFlowSpecification" 
+    }, 
+    "characteristic": [ 
+        { 
+            "name": "SimplifiedShoppingCartItem", 
+            "valueType": "SimplifiedShoppingCartItemSchema", 
+            "@type": "ObjectCharacteristicValue", 
+            "value": { 
+                "simplifiedCartItem": [ 
+                    { 
+                        "id": "1", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "45d-666" 
+                    }, 
+                    { 
+                        "id": "2", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "489-uuy" 
+                    }, 
+                    { 
+                        "id": "3", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "ze2-gt1" 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 111 sur 118 
+ 
+Orange Restricted 
+                    } 
+                ] 
+            } 
+        } 
+    ], 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+            "href": ".../shoppingCartManagement/v4/shoppingCart/qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "state": "completed", 
+    "taskFlowRelationship": [ 
+        { 
+            "relationshipType": "nextTask", 
+            "taskFlow": { 
+                "id": "4fd-ty56-gg55-5", 
+                "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-5" 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+Here's an example of a request for updating a taskFlow - provide configured cart items  . 
+ 
+Request 
+ 
+PATCH /tmf-api/processFlowManagement/v4/taskFlow/4fd-ty56-gg55-4 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "add", 
+        "path": "characteristic", 
+        "value": { 
+            "name": "SimplifiedShoppingCartItem", 
+            "valueType": "SimplifiedShoppingCartItemSchema", 
+            "@type": "ObjectCharacteristicValue", 
+            "value": { 
+                "simplifiedCartItem": [ 
+                    { 
+                        "id": "1", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "45d-666" 
+                    }, 
+                    { 
+                        "id": "2", 
+                        "action": "add", 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 112 sur 118 
+ 
+Orange Restricted 
+                        "quantity": 1, 
+                        "productOffering.id": "489-uuy" 
+                    }, 
+                    { 
+                        "id": "3", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "ze2-gt1" 
+                    } 
+                ] 
+            } 
+        } 
+    } 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "4fd-ty56-gg55-4", 
+    "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-4", 
+    "completionMethod": "userInput", 
+    "isMandatory": true, 
+    "priority": 0, 
+    "taskFlowSpecificationRef": { 
+        "id": "tfs1", 
+        "href": ".../processFlowManagement/v4/TaskFlowSpecification/tfs1", 
+        "name": "SCinit", 
+        "@type": "TaskFlowSpecificationRef", 
+        "@referredType": "TaskFlowSpecification" 
+    }, 
+    "characteristic": [ 
+        { 
+            "name": "SimplifiedShoppingCartItem", 
+            "valueType": "SimplifiedShoppingCartItemSchema", 
+            "@type": "ObjectCharacteristicValue", 
+            "value": { 
+                "simplifiedCartItem": [ 
+                    { 
+                        "id": "1", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "45d-666" 
+                    }, 
+                    { 
+                        "id": "2", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "489-uuy" 
+                    }, 
+                    { 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 113 sur 118 
+ 
+Orange Restricted 
+                        "id": "3", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "productOffering.id": "ze2-gt1" 
+                    } 
+                ] 
+            } 
+        } 
+    ], 
+    "relatedEntity": [ 
+        { 
+            "id": "qq12-gg22", 
+            "href": ".../shoppingCartManagement/v4/shoppingCart/qq12-gg22", 
+            "name": "web ShoppingCart for Jean Pontus", 
+            "role": "shoppingCart", 
+            "@referredType": "ShoppingCart" 
+        } 
+    ], 
+    "state": "completed", 
+    "taskFlowRelationship": [ 
+        { 
+            "relationshipType": "nextTask", 
+            "taskFlow": { 
+                "id": "4fd-ty56-gg55-5", 
+                "href": ".../processFlowManagement/v4/processFlow/4fd-ty56-gg55/taskFlow/4fd-ty56-gg55-5" 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 114 sur 118 
+ 
+Orange Restricted 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST notification POST 
+calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST Guidelines 
+reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health state, 
+execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not support 
+multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 115 sur 118 
+ 
+Orange Restricted 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the callback 
+url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 116 sur 118 
+ 
+Orange Restricted 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by one 
+of the notification types supported by this API (see Notification resources Models section) and EVENT BODY refers to 
+the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design Guidelines. 
+ 
+ 
+ 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 117 sur 
+118 
+ 
+Orange Restricted 
+Acknowledgements 
+ 
+VERSION History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 4.0.0 
+ 
+Ludovic Robert 
+Orange 
+ludovic.robert@orange.com  
+ 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+First Release of this API  
+Nota: the version 4.0 is assigned to all 
+the APIs delivered in the release 19. 
+Release 4.1.0 
+ 
+Ludovic Robert 
+Orange 
+ludovic.robert@orange.com  
+ 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Adding ProcessFlowSpecification & 
+TaskFlowSpecification resources 
+management. 
+Adding POST operation for TaskFlow 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 19.0 
+ 
+Ludovic Robert 
+Orange 
+ludovic.robert@orange.com 
+ 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Version 4.0 of the API REST 
+Release 21.5 
+ 
+Ludovic Robert 
+Orange 
+ludovic.robert@orange.com 
+ 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Version 4.1 of the API REST 
+
+
+ProcessFlow API REST Specification 
+ 
+© TM Forum 2022. All Rights Reserved                                                                                            Page 118 sur 
+118 
+ 
+Orange Restricted 
+ 
+
+

@@ -1,0 +1,3834 @@
+ 
+ãTM Forum 2020. All Rights Reserved. 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Customer360Management API User 
+Guide 
+ 
+ 
+ 
+ 
+ 
+TMF717 
+Release 21.5.0 
+February 2021 
+ 
+ 
+Latest Update: TM Forum Release 21.5.0 Member Evaluation 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 77 
+ 
+NOTICE 
+Copyright © TM Forum 2019. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 77 
+ 
+Table of Contents 
+ 
+NOTICE ............................................................................................................................ Error! Bookmark not defined. 
+Table of Contents ........................................................................................................................................................... 2 
+List of Tables ................................................................................................................... Error! Bookmark not defined. 
+Introduction ................................................................................................................................................................... 4 
+SAMPLE USE CASES ........................................................................................................................................................ 6 
+Support of polymorphism and extension patterns ........................................................................................................ 7 
+RESOURCE MODEL ......................................................................................................................................................... 8 
+Managed Entity and Task Resource Models .............................................................................................................. 8 
+FIRST resource ......................................................................................................... Error! Bookmark not defined. 
+Notification Resource Models .................................................................................................................................. 42 
+First Notification ...................................................................................................... Error! Bookmark not defined. 
+API OPERATIONS .......................................................................................................................................................... 46 
+VERB  url ...................................................................................................................... Error! Bookmark not defined. 
+API NOTIFICATIONS ...................................................................................................................................................... 73 
+Register listener ....................................................................................................................................................... 73 
+Unregister listener ................................................................................................................................................... 75 
+Publish Event to listener .......................................................................................................................................... 75 
+Acknowledgements ...................................................................................................................................................... 77 
+Release History ......................................................................................................................................................... 77 
+Contributors to Document ....................................................................................................................................... 77 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 77 
+ 
+List of Tables 
+N/A 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 77 
+ 
+Introduction 
+ 
+The following document is the user guide of the REST API for Customer360 management. It includes the model 
+definition as well as all available operations. 
+Add additional information in this section. 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 77 
+ 
+SAMPLE USE CASES 
+Reader will find example of use cases using Usage API in “Open Digital Business Scenarios and Use Cases” 
+document. 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 77 
+ 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities, for instance a BillingAccount and SettlementAccount inheriting properties from the abstract Account 
+entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Account instances some may be instances of BillingAccount where other could be instances of SettlementAccount. 
+The @type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance an AccountRef object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as BillingAccountRef or SettlementAccountRef, and not the class type of 
+the referred object. However since reference classes are rarely sub-classed, @type is generally not useful in 
+reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 77 
+ 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Customer 3 6 0 resource 
+ 
+Resource model 
+ 
+Field descriptions 
+Customer360 fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 77 
+ 
+account 
+A list of customer 3 6 0 account v os (Customer360AccountVO [*]). Generic Account 
+structure used to define commonalities between sub concepts of PartyAccount and 
+Financial Account. 
+agreement 
+A list of customer 3 6 0 agreement v os (Customer360AgreementVO [*]). An 
+agreement represents a contract or arrangement, either written or verbal and 
+sometimes enforceable by law, such as a service level agreement or a customer price 
+agreement. An agreement involves a number of other business entities, such as 
+products, services, and resources and/or their specifications. 
+appointment 
+A list of customer 3 6 0 appointment v os (Customer360AppointmentVO [*]). An 
+Appointment is an arrangement to do something or meet someone at a particular 
+time, at a place (for face to face appointment) or in a contact medium (for phone 
+appointment). 
+customer 
+A customer 3 6 0 customer v o (Customer360CustomerVO). 
+customerBill 
+A list of customer 3 6 0 customer bill v os (Customer360CustomerBillVO [*]). The 
+customer bill. Can be a regular recurring bill or an extra bill on demand by the 
+customer or the csp. 
+partyInteraction 
+A list of customer 3 6 0 party interaction v os (Customer360PartyInteractionVO [*]). 
+product 
+A list of customer 3 6 0 product v os (Customer360ProductVO [*]). A product offering 
+procured by a customer or other interested party playing a party role. A product is 
+realized as one or more service(s) and / or resource(s). 
+productOrder 
+A list of customer 3 6 0 product order v os (Customer360ProductOrderVO [*]). A 
+Product Order is a type of order which  can  be used to place an order between a 
+customer and a service provider or between a service provider and a partner and vice 
+versa,. 
+promotion 
+A list of customer 3 6 0 promotion v os (Customer360PromotionVO [*]). Promotion 
+Resource is used to provide the additional discount, voucher, bonus or gift to the 
+customer who meets the pre-defined criteria. Using promotion, the enterprise is able 
+to attract the users and encourage more consumption, especially continuous 
+purchases.   Normally Promotion is not regarded as one type of product or product 
+offering. It is often applied when the customer buys the product offerings with the 
+price or amount surpassing the certain limit. 
+quote 
+A list of customer 3 6 0 quote v os (Customer360QuoteVO [*]). Quote can be used to 
+negotiate service and product acquisition or modification between a customer and a 
+service provider. Quote contain list of quote items, a reference to customer 
+(partyRole), a list of productOffering and attached prices and conditions. 
+recommendation 
+A list of customer 3 6 0 recommendation v os (Customer360RecommendationVO [*]). 
+Recommendation API is used to recommend offering quickly based on the history and 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 77 
+ 
+real-time context of customer. It is a real-time and personalized recommendation API. 
+It is usually provided by e-commerce or BSS, CRM system in omni-channel. 
+troubleTicket 
+A list of customer 3 6 0 trouble ticket v os (Customer360TroubleTicketVO [*]). A 
+trouble ticket is a record of an issue that is created, tracked, and managed by a 
+trouble ticket management system. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 77 
+ 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+id 
+A string. Identifier of the contact medium within list of the media (for entities with 
+list). 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+CreditProfile sub-resource 
+Credit profile for the party (containing credit scoring, ...). By default only the current credit profile  is retrieved. It 
+can be used as a list to give the party credit profiles history, the first one in the list will be the current one. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+creditProfileDate 
+A date time (DateTime). The date the profile was established. 
+creditRiskRating 
+An integer. This is an integer whose value is used to rate the risk. 
+creditScore 
+An integer. A measure of a person or organizations creditworthiness calculated on the 
+basis of a combination of factors such as their income and credit history. 
+validFor 
+A time period. The period for which the profile is valid. 
+Customer360AccountVO sub-resource 
+Generic Account structure used to define commonalities between sub concepts of PartyAccount and Financial 
+Account. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 77 
+ 
+href 
+A string. Unique reference of the account. 
+id 
+A string. Unique identifier of the account. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+accountType 
+A string. A categorization of an account, such as individual, joint, and so forth, whose 
+instances share some of the same characteristics. Note: for flexibility we use a String 
+here but an implementation may use an enumeration with a limited list of valid 
+values. 
+creditLimit 
+A money (Money). The maximum amount of money that may be charged on an 
+account. 
+description 
+A string. Detailed description of the party account. 
+lastModified 
+A date time (DateTime). Date of last modification of the account. 
+name 
+A string. Name of the account. 
+state 
+A string. Contains the lifecycle state such as: Active, Closed, Suspended and so on. 
+Customer360AgreementVO sub-resource 
+An agreement represents a contract or arrangement, either written or verbal and sometimes enforceable by law, 
+such as a service level agreement or a customer price agreement. An agreement involves a number of other 
+business entities, such as products, services, and resources and/or their specifications. 
+href 
+A string. Unique url identifying the agreement as a resource. 
+id 
+A string. Unique identifier for the agreement. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+agreementPeriod 
+A time period. The time period during which the Agreement is in effect. 
+agreementSpecification An agreement specification reference (AgreementSpecificationRef). An 
+AgreementSpecification represents a template of an agreement that can be used 
+when establishing partnerships. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 77 
+ 
+agreementType 
+A string. The type of the agreement. For example commercial. 
+completionDate 
+A time period. Date at which the agreement is completed. 
+description 
+A string. Narrative that explains the agreement and details about the it , such as why 
+the agreement is taking place. 
+documentNumber 
+An integer. A reference number assigned to an Agreement that follows a prescribed 
+numbering system. 
+initialDate 
+A date time (DateTime). Date at which the agreement was initialized. 
+name 
+A string. A human-readable name for the agreement. 
+statementOfIntent 
+A string. An overview and goals of the Agreement. 
+status 
+A string. The current status of the agreement. Typical values are: in process, approved 
+and rejected. 
+version 
+A string. A string identifying the version of the agreement. 
+Customer360AppointmentVO sub-resource 
+An Appointment is an arrangement to do something or meet someone at a particular time, at a place (for face to 
+face appointment) or in a contact medium (for phone appointment). 
+href 
+A string. Unique URI used to access to the appointment resource. 
+id 
+A string. Unique identifier of the appointment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+calendarEvent 
+A calendar event reference (CalendarEventRef). A calendar event reference 
+(CalendarEventRef). The appointment is associated with a calendar event (an 
+happening at a point of time) associated to a calendar entry. 
+category 
+A string. Business category : intervention for example or to be more precise after 
+SalesIntervention, orderDeliveryIntervention,... 
+creationDate 
+A date time (DateTime). Appointment creation date. 
+description 
+A string. Short free text describing the appointment. 
+externalId 
+A string. External reference known by the customer. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 77 
+ 
+lastUpdate 
+A date time (DateTime). Date of last appointment update. 
+status 
+An appointment state type (AppointmentStateType). Valid values for the lifecycle 
+state of the appointment. 
+validFor 
+A time period. A time period (TimePeriod). Appointment beginning date time and end 
+date time. 
+Customer360CustomerBillVO sub-resource 
+The customer bill. Can be a regular recurring bill or an extra bill on demand by the customer or the csp. 
+href 
+A string. Bill unique reference. 
+id 
+A string. Explanation: Unique identifier of he bill. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+amountDue 
+A money (Money). A base / value business entity used to represent money. 
+billCycle 
+A bill cycle reference (BillCycleRef). .... 
+billDate 
+A date time (DateTime). Bill date, external customer view (in consequence: different 
+to the production date of the bill). 
+billNo 
+A string. Bill reference known by the customer or the party and displayed on the bill. 
+Could be different from the id. 
+billingPeriod 
+A time period. A period of time, either as a deadline (endDateTime only) a 
+startDateTime only, or both. 
+category 
+A string. Category of the bill produced : normal, duplicate, interim, last, trial customer 
+or credit note for example. 
+lastUpdate 
+A date time (DateTime). Date of bill last update. 
+nextBillDate 
+A date time (DateTime). ). Approximate date of  the next bill production given for 
+information (only used/meaningful for on cycle / regular bills). 
+paymentDueDate 
+A date time (DateTime). Date at which the amount due should have been paid. 
+paymentMethod 
+A payment method reference (PaymentMethodRef). paymentMethod here is 
+recognized to be not really necessary in a STANDARD. It could be obtained by a GET 
+request on the billing account. Conclusion: paymentMethod is marked to 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 77 
+ 
+DEPRECIATED and will be removed in one of the next versions. 
+remainingAmount 
+A money (Money). A base / value business entity used to represent money. 
+runType 
+A customer bill run type (CustomerBillRunType). onCycle (a bill can be created as a 
+result of a cycle run) or offCycle (a bill can be created as a result of other events such 
+as customer request or account close). 
+state 
+A customer bill state type (CustomerBillStateType). Status of the bill. 
+taxExcludedAmount 
+A money (Money). A base / value business entity used to represent money. 
+taxIncludedAmount 
+A money (Money). A base / value business entity used to represent money. 
+Customer360CustomerVO sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+account 
+A list of account references (AccountRef [*]). A account may be a party account or a 
+financial account. 
+agreement 
+A list of agreement references (AgreementRef [*]). An agreement represents a 
+contract or arrangement, either written or verbal and sometimes enforceable by law, 
+such as a service level agreement or a customer price agreement. An agreement 
+involves a number of other business entities, such as products, services, and resources 
+and/or their specifications. 
+characteristic 
+A list of characteristics (Characteristic [*]). Describes the characteristic of a customer. 
+contactMedium 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+creditProfile 
+A list of credit profiles (CreditProfile [*]). Credit profile for the party (containing credit 
+scoring, ...). By default only the current credit profile  is retrieved. It can be used as a 
+list to give the party credit profiles history, the first one in the list will be the current 
+one. 
+engagedParty 
+A related party (RelatedParty). The party - an organization or an individual - that is 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 77 
+ 
+engaged as a customer. 
+name 
+A string. A word, term, or phrase by which the Customer is known and distinguished 
+from other Customers. 
+paymentMethod 
+A list of payment method references (PaymentMethodRef [*]). A payment method 
+defines a specific mean of payment (e.g direct debit). 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+status 
+A string. Used to track the lifecycle status of the customer. 
+statusReason 
+A string. A string providing an explanation on the value of the status lifecycle. For 
+instance if the status is Rejected, statusReason will provide the reason for rejection. 
+validFor 
+A time period. The time period that the Customer is valid for. 
+Customer360PartyInteractionVO sub-resource 
+ 
+href 
+A string. Hyperlink to access the party interaction. 
+id 
+A string. Unique identifier of the party interaction. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+channel 
+A list of related channels (RelatedChannel [*]). Where the interaction took place (e.g. 
+web, mobile app, store, kiosk, etc.). 
+creationDate 
+A date time (DateTime). Date when the interaction is created in the system. 
+description 
+A string. Description of the interaction. 
+direction 
+A string. Specifies who started the interaction. It might be the party or the enterprise 
+exposing this API. Possible values are “inbound” and “outbound”. 
+interactionDate 
+A time period. The period during which the interaction took place. Start and end will 
+be different in case of a call or a store visit. They will be the same (or only one will 
+appear) in case of a message or other momentary interactions. 
+reason 
+A string. Reason why the interaction happened. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 77 
+ 
+status 
+A string. Status of the interaction (opened, inProgress, completed). 
+statusChangeDate 
+A date time (DateTime). Last time the status changed. 
+Customer360ProductOrderVO sub-resource 
+A Product Order is a type of order which  can  be used to place an order between a customer and a service provider 
+or between a service provider and a partner and vice versa,. 
+href 
+A string. Hyperlink to access the order. 
+id 
+A string. ID created on repository side (OM system). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+cancellationDate 
+A date time (DateTime). Date when the order is cancelled. This is used when order is 
+cancelled. 
+cancellationReason 
+A string. Reason why the order is cancelled. This is used when order is cancelled. 
+category 
+A string. Used to categorize the order from a business perspective that can be useful 
+for the OM system (e.g. "enterprise", "residential", ...). 
+completionDate 
+A date time (DateTime). Date when the order was completed. 
+description 
+A string. Description of the product order. 
+expectedCompletionDate 
+A date time (DateTime). Expected delivery date amended by the provider. 
+externalId 
+A string. ID given by the consumer and only understandable by him (to facilitate his 
+searches afterwards). 
+notificationContact 
+A string. Contact attached to the order to send back information regarding this order. 
+orderDate 
+A date time (DateTime). Date when the order was created. 
+priority 
+A string. A way that can be used by consumers to prioritize orders in OM system (from 
+0 to 4 : 0 is the highest priority, and 4 the lowest). 
+requestedCompletionDate A date time (DateTime). Requested delivery date from the requestor perspective. 
+requestedStartDate 
+A date time (DateTime). Order fulfillment start date wished by the requestor. This is 
+used when, for any reason, requestor cannot allow seller to begin to operationally 
+begin the fulfillment before a date. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 77 
+ 
+state 
+A product order state type (ProductOrderStateType). Tracks the lifecycle status of the 
+product order, such as Acknowledged, Rejected, InProgress, Pending and so on. 
+Customer360ProductVO sub-resource 
+A product offering procured by a customer or other interested party playing a party role. A product is realized as 
+one or more service(s) and / or resource(s). 
+href 
+A string. Reference of the product. 
+id 
+A string. Unique identifier of the product. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+billingAccount 
+A billing account reference (BillingAccountRef). A BillingAccount is a detailed 
+description of a bill structure. 
+description 
+A string. Is the description of the product. It could be copied from the description of 
+the Product Offering. 
+isBundle 
+A boolean. If true, the product is a ProductBundle which is an instantiation of a 
+BundledProductOffering. If false, the product is a ProductComponent which is an 
+instantiation of a SimpleProductOffering. 
+isCustomerVisible 
+A boolean. If true, the product is visible by the customer. 
+name 
+A string. Name of the product. It could be the same as the name of the product 
+offering. 
+orderDate 
+A date time (DateTime). Is the date when the product was ordered. 
+productOffering 
+A product offering reference (ProductOfferingRef). A product offering represents 
+entities that are orderable from the provider of the catalog, this resource includes 
+pricing information. 
+productSerialNumber 
+A string. Is the serial number for the product. This is typically applicable to tangible 
+products e.g. Broadband Router. 
+productSpecification 
+A product specification reference (ProductSpecificationRef). A ProductSpecification is 
+a detailed description of a tangible or intangible object made available externally in 
+the form of a ProductOffering to customers or other parties playing a party role. 
+randomAtt 
+A string. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 77 
+ 
+startDate 
+A date time (DateTime). Is the date from which the product starts. 
+status 
+A product status type (ProductStatusType). Is the lifecycle status of the product. 
+terminationDate 
+A date time (DateTime). Is the date when the product was terminated. 
+Customer360PromotionVO sub-resource 
+Promotion Resource is used to provide the additional discount, voucher, bonus or gift to the customer who meets 
+the pre-defined criteria. Using promotion, the enterprise is able to attract the users and encourage more 
+consumption, especially continuous purchases.   Normally Promotion is not regarded as one type of product or 
+product offering. It is often applied when the customer buys the product offerings with the price or amount 
+surpassing the certain limit. 
+@baseType 
+A string. The base type for use in polymorphic collections. 
+@schemaLocation 
+A string. A link to the schema describing a resource (for type extension). 
+@type 
+A string. The class type of the actual resource (for type extension). 
+description 
+A string. Description of Promotion. 
+href 
+A string. Hyperlink to access the promotion. 
+id 
+A string. Unique identifier of Promotion. 
+lastUpdate 
+A date time (DateTime). Latest update date of Promotion. 
+lifecycleStatus 
+A string. Status of Promotion, including 
+draft/Test/WaitForApproval/Release/Suspend/Retirement. 
+name 
+A string. Name of Promotion. 
+type 
+A string. Type of promotion.The basic type is Award/Discount/Reduction. More types 
+can be extended in future. 
+validFor 
+A time period. The period for which the promotion is valid. 
+Customer360QuoteVO sub-resource 
+Quote can be used to negotiate service and product acquisition or modification between a customer and a service 
+provider. Quote contain list of quote items, a reference to customer (partyRole), a list of productOffering and 
+attached prices and conditions. 
+href 
+A string. Hyperlink to access the quote. 
+id 
+A string. Unique identifier - attributed by quoting system. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 77 
+ 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+category 
+A string. Used to categorize the quote from a business perspective that can be 
+useful for the CRM system (e.g. "enterprise", "residential", ...). 
+description 
+A string. Description of the quote. 
+effectiveQuoteCompletionDate 
+A date time (DateTime). Date when the quote has been completed. 
+expectedFulfillmentStartDate 
+A date time (DateTime). this is the date wished by the requester to have the 
+requested quote item delivered. 
+expectedQuoteCompletionDate 
+A date time (DateTime). This is expected date - from quote supplier - to be able 
+to send back  a response for this quote. 
+externalId 
+A string. ID given by the consumer and only understandable by him (to facilitate 
+his searches afterwards). 
+instantSyncQuote 
+A boolean. An indicator which when the value is "true" means that requester 
+expects to get quoting result immediately in the response. If the indicator is true 
+then the response code of 200 indicates the operation is successful otherwise a 
+task is created with a response 201. 
+quoteDate 
+A date time (DateTime). Date and time when the quote was created. 
+requestedQuoteCompletionDate A date time (DateTime). This is requested date - from quote requester - to get a 
+complete response for this quote. 
+state 
+A quote state type (QuoteStateType). State of the quote : described in the state-
+machine diagram. 
+validFor 
+A time period. Quote validity period. 
+version 
+A string. Quote version - if the customer rejected the quote but  negotiations 
+still open a new version of the quote is managed. 
+Customer360RecommendationVO sub-resource 
+Recommendation API is used to recommend offering quickly based on the history and real-time context of 
+customer. It is a real-time and personalized recommendation API. It is usually provided by e-commerce or BSS, CRM 
+system in omni-channel. 
+href 
+A string. Hypertext Reference of the recommendation. 
+id 
+A string. Unique identifier of recommendation. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 77 
+ 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+category 
+A category reference (CategoryRef). The category for grouping recommendations. 
+channel 
+A channel reference (ChannelRef). The channel to which the resource reference to. 
+e.g. channel for selling product offerings, channel for opening a trouble ticket etc.. 
+description 
+A string. 
+location 
+A geographic location reference (GeographicLocationRef). The geographic location 
+which the recommendation is related to. 
+name 
+A string. Name of recommendation. 
+recommendationType 
+A string. The type of recommendation. 
+validFor 
+A time period. The period in which the recommendation is valid. 
+Customer360TroubleTicketVO sub-resource 
+A trouble ticket is a record of an issue that is created, tracked, and managed by a trouble ticket management 
+system. 
+href 
+A string. Hyperlink, a reference to the trouble ticket entity. 
+id 
+A string. Unique identifier of the trouble ticket. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+channel 
+A channel reference (ChannelRef). The channel that origin the trouble ticket. 
+creationDate 
+A date time (DateTime). The date on which the trouble ticket was created. 
+description 
+A string. Description of the trouble or issue. 
+expectedResolutionDate 
+A date time (DateTime). The expected resolution date determined by the trouble 
+ticket system. 
+externalId 
+A string. Additional identifier coming from an external system. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 77 
+ 
+lastUpdate 
+A date time (DateTime). The date and time that the trouble ticked was last updated. 
+name 
+A string. Name of the trouble ticket, typically a short description provided by the user 
+that create the ticket. 
+priority 
+A string. The priority of the trouble ticket and how quickly the issue should be 
+resolved. Example: Critical, High, Medium, Low. The value is set by the ticket 
+management system considering the severity, ticket type etc... 
+requestedResolutionDate A date time (DateTime). The resolution date requested by the user. 
+resolutionDate 
+A date time (DateTime). The date and time the trouble ticket was resolved. 
+severity 
+A string. The severity of the issue. Indicate the implication of the issue on the 
+expected functionality e.g. of a system, application, service etc..  
+Severity values can be for example : Critical, Major, Minor. 
+status 
+A trouble ticket status type (TroubleTicketStatusType). The current status of the 
+trouble ticket. 
+statusChange 
+A list of status changes (StatusChange [*]). The status change history that are 
+associated to the ticket.Populated by the server. 
+statusChangeDate 
+A date time (DateTime). The date and time the status changed. 
+statusChangeReason 
+A string. The reason for changing the status. 
+ticketType 
+A string. represent a business type of the trouble ticket e.g. incident, complain, 
+request. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping instalation…. 
+country 
+A string. The country. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 77 
+ 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Money sub-resource 
+A base / value business entity used to represent money. 
+unit 
+A string. Currency (ISO4217 norm uses 3 letters to define the currency). 
+value 
+A float. A signed floating point number, the meaning of the sign is according to the 
+context of the API that uses this Data type. 
+RelatedChannel sub-resource 
+Related channel to another entity. May be online web, mobile app, social ,etc. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the channel. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role playing by the channel. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 77 
+ 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+StatusChange sub-resource 
+Holds the status notification reasons and associated date the status changed, populated by the server. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+changeDate 
+A date time (DateTime). The date and time the status changed. 
+changeReason 
+A string. The reason why the status changed. 
+status 
+A string. The status of the trouble ticket. 
+TargetProductSchema sub-resource 
+The reference object to the schema and type of target product which is described by product specification. 
+@schemaLocation 
+An uri (Uri). This field provides a link to the schema describing the target product. 
+@type 
+A string. Class type of the target product. 
+AccountRef relationship 
+Account reference. A account may be a party account or a financial account. 
+href 
+A string. Reference of the account. 
+id 
+A string. Unique identifier of the account. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 77 
+ 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. Detailed description of the account. 
+name 
+A string. Name of the account. 
+AgreementRef relationship 
+Agreement reference. An agreement represents a contract or arrangement, either written or verbal and sometimes 
+enforceable by law, such as a service level agreement or a customer price agreement. An agreement involves a 
+number of other business entities, such as products, services, and resources and/or their specifications. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the agreement. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+AgreementSpecificationRef relationship 
+Agreement specification reference. An AgreementSpecification represents a template of an agreement that can be 
+used when establishing partnerships. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the agreement specification. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 77 
+ 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+description 
+A string. A narrative that explains in detail what the agreement specification is about. 
+BillCycleRef relationship 
+.... 
+href 
+A string. Unique reference of the account. 
+id 
+A string. Unique identifier of the account. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the account. 
+BillingAccountRef relationship 
+BillingAccount reference. A BillingAccount is a detailed description of a bill structure. 
+href 
+A string. Reference of the billing account. 
+id 
+A string. Unique identifier of the billing account. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the billing account. 
+ratingType 
+A string. Indicates whether the account follows a specific payment option such as 
+prepaid or postpaid. 
+CalendarEventRef relationship 
+Reference of a CalendarEvent. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 77 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+CategoryRef relationship 
+The category for grouping recommendations. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+version 
+A string. Category version. 
+ChannelRef relationship 
+The channel to which the resource reference to. e.g. channel for selling product offerings, channel for opening a 
+trouble ticket etc.. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the channel. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 77 
+ 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+GeographicLocationRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+PaymentMethodRef relationship 
+PaymentMethod reference. A payment method defines a specific mean of payment (e.g direct debit). 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ProductOfferingRef relationship 
+ProductOffering reference. A product offering represents entities that are orderable from the provider of the 
+catalog, this resource includes pricing information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 77 
+ 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ProductSpecificationRef relationship 
+Product specification reference: A ProductSpecification is a detailed description of a tangible or intangible object 
+made available externally in the form of a ProductOffering to customers or other parties playing a party role. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+targetProductSchema 
+A target product schema (TargetProductSchema). A target product schema reference. 
+The reference object to the schema and type of target product which is described by 
+product specification. 
+version 
+A string. Version of the product specification. 
+Json representation sample 
+We provide below the json representation of an example of a 'Customer360' resource object 
+{ 
+    "customer": { 
+        "@type": "Customer", 
+        "href": "https://host:port/tmf-api/customerManagement/v4/customer/1140", 
+        "id": "1140", 
+        "name": "Moon Football Club", 
+        "status": "Approved", 
+        "statusReason": "Account details checked", 
+        "validFor": { 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 77 
+ 
+            "startDateTime": "2018-06-12T00:00:00.000Z", 
+            "endDateTime": "2019-01-11T00:00:00.000Z" 
+        }, 
+        "engagedParty": { 
+            "@referredType": "Organization", 
+            "href": "https://host:port/tmf-api/partyManagement/v4/organization/500", 
+            "id": "500", 
+            "name": "Happy Travellers" 
+        }, 
+        "account": [ 
+            { 
+                "@referredType": "BillingAccount", 
+                "description": "Primary billing account", 
+                "href": "https://host:port/tmf-api/accountManagement/v4/account/8251", 
+                "id": "8251", 
+                "name": "Travel Account" 
+            } 
+        ], 
+        "paymentMethod": [ 
+            { 
+                "@referredType": "CreditCardPayment", 
+                "href": "https://host:port/tmf-api/paymentMethods/v1/paymentMethod/9562", 
+                "id": "9562", 
+                "name": "professional payment" 
+            } 
+        ], 
+        "contactMedium": [ 
+            { 
+                "preferred": true, 
+                "mediumType": "TelephoneNumber", 
+                "validFor": { 
+                    "startDateTime": "2018-06-13T00:00:00.000Z", 
+                    "endDateTime": "2019-01-11T00:00:00.000Z" 
+                }, 
+                "characteristic": { 
+                    "phoneNumber": "01 09 75 83 51", 
+                    "contactType": "homePhone" 
+                } 
+            }, 
+            { 
+                "preferred": false, 
+                "mediumType": "MailingAddress", 
+                "validFor": { 
+                    "startDateTime": "2018-06-13T00:00:00.000Z", 
+                    "endDateTime": "2019-01-11T00:00:00.000Z" 
+                }, 
+                "characteristic": { 
+                    "city": "Paris", 
+                    "street1": "15 Rue des Canards", 
+                    "postCode": "75014", 
+                    "country": "France", 
+                    "contactType": "homeAddress" 
+                } 
+            } 
+        ], 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 77 
+ 
+        "characteristic": [ 
+            { 
+                "name": "fidelityProgram", 
+                "value": "premium", 
+                "valueType": "string" 
+            } 
+        ], 
+        "creditProfile": [ 
+            { 
+                "creditProfileDate": "2018-06-15T00:00:00.000Z", 
+                "creditRiskRating": 4, 
+                "creditScore": 5, 
+                "validFor": { 
+                    "startDateTime": "2018-06-13T00:00:00.000Z", 
+                    "endDateTime": "2019-01-11T00:00:00.000Z" 
+                } 
+            } 
+        ], 
+        "agreement": [ 
+            { 
+                "@referredType": "Agreement", 
+                "href": "https://host:port/tmf-api/agreementManagement/v4/agreement/4721", 
+                "id": "4721", 
+                "name": "Summer Contract Agreement" 
+            } 
+        ], 
+        "relatedParty": [ 
+            { 
+                "@referredType": "Organization", 
+                "href": "https://host:port/tmf-api/partyManagement/v4/organization/2777", 
+                "id": "2777", 
+                "name": "John Doe (Accounting) Ltd", 
+                "role": "bill receiver" 
+            } 
+        ] 
+    }, 
+    "product": [ 
+        { 
+            "id": "g265-tf85", 
+            "href": "https://host:port/productInventoryManagement/v4/product/g265-tf85", 
+            "description": "product description", 
+            "isBundle": false, 
+            "isCustomerVisible": true, 
+            "name": "Voice Over IP Basic instance for Jean", 
+            "productSerialNumber": "N/A", 
+            "startDate": "2017-11-01T09:37:29.961Z", 
+            "status": "active", 
+            "@baseType": "Product", 
+            "@type": "Product", 
+            "@schemaLocation": "https:://host:port/standardProduct.json", 
+            "realizingService": [ 
+                { 
+                    "id": "123t-78k", 
+                    "href": "https...", 
+                    "role": "RealizingService", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 77 
+ 
+                    "@referredType": "Service" 
+                } 
+            ], 
+            "productOffering": { 
+                "id": "PO-101-1", 
+                "href": "https...", 
+                "name": "Voice Over IP Basic", 
+                "@referredType": "ProductOffering" 
+            }, 
+            "productOrderItem": [ 
+                { 
+                    "productOrderId": "1023-98gh", 
+                    "productOrderHref": "https...", 
+                    "orderItemId": "2", 
+                    "orderItemAction": "add", 
+                    "@referredType": "ProductOrder", 
+                    "role": "Install order" 
+                }, 
+                { 
+                    "productOrderId": "df65-gh12", 
+                    "productOrderHref": "https...", 
+                    "orderItemId": "2", 
+                    "orderItemAction": "change", 
+                    "@referredType": "ProductOrder", 
+                    "role": "change management order" 
+                }, 
+                { 
+                    "productOrderId": "5ghh-sd12", 
+                    "productOrderHref": "https...", 
+                    "orderItemId": "3", 
+                    "orderItemAction": "change", 
+                    "@referredType": "ProductOrder", 
+                    "role": "change management order" 
+                } 
+            ], 
+            "productCharacteristic": [ 
+                { 
+                    "name": "Number", 
+                    "valueType": "string", 
+                    "value": "415 279 7439" 
+                } 
+            ], 
+            "relatedParty": [ 
+                { 
+                    "id": "45hj-8888", 
+                    "href": "https...", 
+                    "name": "Jean", 
+                    "role": "User", 
+                    "@referredType": "Individual" 
+                } 
+            ], 
+            "productSpecification": { 
+                "id": "PS-101", 
+                "href": "https...", 
+                "@referredType": "ProductSpecification", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 77 
+ 
+                "version": "1" 
+            } 
+        } 
+    ], 
+    "account": [ 
+        { 
+            "@type": "BillingAccount", 
+            "paymentStatus": "In Arrears", 
+            "creditLimit": { 
+                "unit": "USD", 
+                "value": 10000 
+            }, 
+            "description": "This  billing account ...", 
+            "href": "https://host:port/tmf-api/accountManagement/v4/account/5430", 
+            "id": "5430", 
+            "lastModified": "2018-06-14T00:00:00.000Z", 
+            "name": "Home Account", 
+            "state": "Inactive", 
+            "accountType": "Business", 
+            "billStructure": { 
+                "presentationMedia": [ 
+                    { 
+                        "href": "https://host:port/tmf-api/accountManagement/v4/billPresentationMedia/9968", 
+                        "id": "9968", 
+                        "name": "Post Mail" 
+                    } 
+                ], 
+                "format": { 
+                    "href": "https://host:port/tmf-api/accountManagement/v4/billFormat/3555", 
+                    "id": "3555", 
+                    "name": "Detailed invoice" 
+                }, 
+                "cycleSpecification": { 
+                    "dateShift": 54, 
+                    "frequency": "monthly", 
+                    "href": "https://host:port/tmf-api/accountManagement/v4/billingCycleSpecification/3828", 
+                    "id": "3828", 
+                    "name": "Annual billing" 
+                } 
+            }, 
+            "paymentPlan": [ 
+                { 
+                    "numberOfPayments": 4, 
+                    "paymentFrequency": "monthly", 
+                    "priority": 1, 
+                    "status": "Effective", 
+                    "totalAmount": { 
+                        "unit": "USD", 
+                        "value": 100.0 
+                    }, 
+                    "paymentType": "regular", 
+                    "validFor": { 
+                        "startDateTime": "2018-06-11T00:00:00.000Z", 
+                        "endDateTime": "2019-01-10T00:00:00.000Z" 
+                    }, 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 77 
+ 
+                    "paymentMethod": { 
+                        "href": "https://host:port/tmf-api/paymentMethods/v4/paymentMethod/2452", 
+                        "id": "2452", 
+                        "name": "professional payment" 
+                    } 
+                } 
+            ], 
+            "financialAccount": { 
+                "@referredType": "FinantialAccount", 
+                "href": "https://host:port/tmf-api/accountManagement/v4/account/2063", 
+                "id": "2063", 
+                "name": "Partnership account", 
+                "accountBalance": { 
+                    "amount": { 
+                        "unit": "USD", 
+                        "value": 55.56 
+                    }, 
+                    "accountType": "ReceivableBalance", 
+                    "validFor": { 
+                        "startDateTime": "2018-06-13T00:00:00.000Z", 
+                        "endDateTime": "2019-01-10T00:00:00.000Z" 
+                    } 
+                } 
+            }, 
+            "defaultPaymentMethod": { 
+                "href": "https://host:port/tmf-api/paymentMethods/v4/paymentMethod/3537", 
+                "id": "3537", 
+                "name": "family payment" 
+            }, 
+            "relatedParty": [ 
+                { 
+                    "@referredType": "Organization", 
+                    "href": "https://host:port/tmf-api/partyManagement/v4/organization/6838", 
+                    "id": "6838", 
+                    "name": "Richard Cole", 
+                    "role": "service provider" 
+                } 
+            ], 
+            "taxExemption": [ 
+                { 
+                    "id": "1", 
+                    "certificateNumber": "9665432345", 
+                    "issuingJurisdiction": "USA", 
+                    "reason": "Embassy", 
+                    "taxDefinition": [ 
+                        { 
+                            "id": "96", 
+                            "name": "Value Added Tax", 
+                            "taxType": "federalVat" 
+                        } 
+                    ], 
+                    "attachment": { 
+                        "attachmentType": "taxExemptionCertificate", 
+                        "name": "TaxExemptionCertificate-888.pdf", 
+                        "description": "Electronic version of the tax exemption certificate", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 77 
+ 
+                        "mimeType": "application/pdf", 
+                        "url": "http://host:port/DocumentManager/666/TaxExemptionCertificate-888.pdf" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2018-06-17T00:00:00.000Z", 
+                        "endDateTime": "2019-01-10T00:00:00.000Z" 
+                    } 
+                } 
+            ], 
+            "contact": [ 
+                { 
+                    "contactName": "Rachel Douglas", 
+                    "contactType": "secondary", 
+                    "partyRoleType": "Vendor", 
+                    "validFor": { 
+                        "startDateTime": "2018-06-17T00:00:00.000Z", 
+                        "endDateTime": "2019-01-10T00:00:00.000Z" 
+                    }, 
+                    "contactMedium": [ 
+                        { 
+                            "preferred": true, 
+                            "mediumType": "PostalAddress", 
+                            "validFor": { 
+                                "startDateTime": "2018-06-14T00:00:00.000Z", 
+                                "endDateTime": "2019-01-10T00:00:00.000Z" 
+                            }, 
+                            "characteristic": { 
+                                "city": "Paris", 
+                                "street1": "15 Rue des Canards", 
+                                "postCode": "75014", 
+                                "country": "France" 
+                            } 
+                        } 
+                    ], 
+                    "relatedParty": { 
+                        "@type": "Organization", 
+                        "href": "https://host:port/tmf-api/partyManagement/v4/organization/9947", 
+                        "id": "9947", 
+                        "name": "Richard Cole", 
+                        "role": "owner" 
+                    } 
+                } 
+            ], 
+            "accountBalance": [ 
+                { 
+                    "amount": { 
+                        "unit": "USD", 
+                        "value": 58.33 
+                    }, 
+                    "balanceType": "ReceivableBalance", 
+                    "validFor": { 
+                        "startDateTime": "2018-06-10T00:00:00.000Z", 
+                        "endDateTime": "2019-01-10T00:00:00.000Z" 
+                    } 
+                } 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 77 
+ 
+            ], 
+            "accountRelationship": [ 
+                { 
+                    "relationshipType": "contains", 
+                    "validFor": { 
+                        "startDateTime": "2018-06-13T00:00:00.000Z", 
+                        "endDateTime": "2019-01-10T00:00:00.000Z" 
+                    }, 
+                    "account": { 
+                        "@type": "BillingAccount", 
+                        "description": "This  account ...", 
+                        "href": "https://host:port/tmf-api/accountManagement/v4/account/9327", 
+                        "id": "9327", 
+                        "name": "Paradise Account" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "agreement": [ 
+        { 
+            "@type": "Agreement", 
+            "href": "https://host:port/tmf-api/agreementManagement/v4/agreement/28", 
+            "id": "28", 
+            "name": "Summer Contract Agreement", 
+            "agreementType": "commercial", 
+            "agreementItem": [ 
+                { 
+                    "productOffering": [ 
+                        { 
+                            "@referredType": "ProductOffering", 
+                            "href": "https://host:port/tmf-api/productCatalogManagement/v4/productOffering/9085", 
+                            "id": "9085", 
+                            "name": "My Quick BB Offer" 
+                        } 
+                    ], 
+                    "termOrCondition": [ 
+                        { 
+                            "description": "This  agreement term or condition ...", 
+                            "id": "5890", 
+                            "validFor": { 
+                                "startDateTime": "2018-04-25T00:00Z", 
+                                "endDateTime": "2018-11-20T00:00Z" 
+                            } 
+                        } 
+                    ] 
+                } 
+            ], 
+            "engagedParty": [ 
+                { 
+                    "@referredType": "Organization", 
+                    "href": "https://host:port/tmf-api/partyManagement/v4/organization/330", 
+                    "id": "330", 
+                    "role": "Supplier", 
+                    "name": "Magic Tools Company" 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 77 
+ 
+                } 
+            ] 
+        } 
+    ], 
+    "productOrder": [ 
+        { 
+            "id": "30001", 
+            "href": "https://host:port/productOrderingManagement/v4/productOrder/30001", 
+            "category": "B2C product order", 
+            "completionDate": "2019-05-02T08:13:59.506Z", 
+            "description": "Product Order illustration sample", 
+            "expectedCompletionDate": "2019-05-02T08:13:59.506Z", 
+            "externalId": "PO-456", 
+            "orderDate": "2019-04-30T08:13:59.506Z", 
+            "priority": "1", 
+            "requestedCompletionDate": "2019-05-02T08:13:59.506Z", 
+            "requestedStartDate": "2019-05-03T08:13:59.506Z", 
+            "state": "completed", 
+            "@type": "ProductOrder" 
+        } 
+    ], 
+    "customerBill": [ 
+        { 
+            "id": "CB-123", 
+            "href": "https://server:port/tmf-api/Customer_Bill_Management/v4/customerBill/CB-123", 
+            "billingAccount": { 
+                "id": "A0815", 
+                "href": "http://host:port/tmf-api/Account_Management/v4/billingAccount/A0815", 
+                "name": "BA Peter Retep", 
+                "@referredType": "billingAccount", 
+                "@type": "billingAccountRef", 
+                "@baseType": "billingAccountRef", 
+                "@schemaLocation": "...some href..." 
+            } 
+        } 
+    ], 
+    "partyInteraction": [ 
+        { 
+            "id": "123", 
+            "href": "https://host:port/partyInteraction/v4/partyInteraction/123", 
+            "@type": "PartyInteraction", 
+            "interactionDate": { 
+                "startDateTime": "2019-10-02T11:36:18.758Z", 
+                "endDateTime": "2019-10-02T11:53:21.789Z" 
+            }, 
+            "description": "Visit to store", 
+            "reason": "The user wanted to buy TV and internet plan", 
+            "status": "ongoing", 
+            "statusChangeDate": "2019-10-02T11:53:21.789Z", 
+            "direction": "inbounds", 
+            "creationDate": "2019-10-02T11:37:08.013Z", 
+            "relatedParty": [ 
+                { 
+                    "id": "999", 
+                    "href": "https://host:port/partyManagement/v4/individual/999", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 77 
+ 
+                    "@referredType": "Individual", 
+                    "role": "user", 
+                    "name": "John Doe" 
+                }, 
+                { 
+                    "id": "888", 
+                    "href": "https://host:port/partyManagement/v4/individual/888", 
+                    "@referredType": "Individual", 
+                    "role": "agent", 
+                    "name": "Rian Muray" 
+                } 
+            ], 
+            "interactionItem": [ 
+                { 
+                    "id": "5678", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/123/interactionItem/5678", 
+                    "reason": "The user signed up to new TV bundle and paid the decoder", 
+                    "itemDate": { 
+                        "endDateTime": "2019-10-02T11:56:01.895Z", 
+                        "startDateTime": "2019-10-02T11:50:01.895Z" 
+                    }, 
+                    "resolution": "Product order is created", 
+                    "creationDate": "2019-10-02T11:50:01.895Z", 
+                    "item": { 
+                        "id": "30001", 
+                        "href": "https://host:port/productOrderingManagement/v4/productOrder/30001", 
+                        "@referredType": "ProductOrder", 
+                        "@type": "EntityRef", 
+                        "role": "interaction", 
+                        "name": "Product Order illustration sample by reference" 
+                    } 
+                }, 
+                { 
+                    "id": "1212", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/123/interactionItem/1212", 
+                    "reason": "The user is purchasing unlimited internet plan", 
+                    "itemDate": { 
+                        "endDateTime": "2019-10-02T11:56:01.895Z", 
+                        "startDateTime": "2019-10-02T11:50:01.895Z" 
+                    }, 
+                    "resolution": "Product order is created", 
+                    "creationDate": "2019-10-02T11:50:01.895Z", 
+                    "item": { 
+                        "id": "88", 
+                        "href": "https://host:port/productOrderingManagement/v4/productOrder/88", 
+                        "@type": "ProductOrder", 
+                        "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Resource/ProductOrder.schema.json", 
+                        "productOrderItem": [ 
+                            { 
+                                "id": "13219", 
+                                "action": "add", 
+                                "productOffering": { 
+                                    "id": "2445", 
+                                    "name": "Unlimited Internet Plus" 
+                                } 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 77 
+ 
+                            } 
+                        ] 
+                    } 
+                } 
+            ], 
+            "channel": [ 
+                { 
+                    "id": "555", 
+                    "name": "Madrid Gran V\u00eda Store", 
+                    "role": "interaction creation", 
+                    "@type": "store" 
+                } 
+            ], 
+            "attachment": [ 
+                { 
+                    "id": "111222444", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/123/attachment/111222444", 
+                    "name": "Some cool attachment", 
+                    "description": "blahblahblah", 
+                    "attachmentType": "receipt", 
+                    "mimeType": "application/pdf", 
+                    "size": { 
+                        "amount": 321321, 
+                        "units": "KB" 
+                    }, 
+                    "URL": "https://whereverthpdfis.com", 
+                    "interactionDate": { 
+                        "startDateTime": "2019-10-02T11:36:18.758Z", 
+                        "endDateTime": "2019-10-02T11:53:21.789Z" 
+                    } 
+                } 
+            ], 
+            "note": [ 
+                { 
+                    "id": "121", 
+                    "text": "loren ipsum dolor sit amet\u2026", 
+                    "author": "John Doe", 
+                    "date": "2019-10-02T11:36:18.758Z" 
+                } 
+            ], 
+            "interactionRelationship": [ 
+                { 
+                    "id": "1034", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/1034", 
+                    "relationshipType": "parent" 
+                } 
+            ] 
+        } 
+    ], 
+    "troubleTicket": [ 
+        { 
+            "id": "3180", 
+            "href": "https://mycsp.com:8080/tmf-api/troubleTicket/v4/troubleTicket/3180", 
+            "creationDate": "2019-05-31T07:34:45.968Z", 
+            "description": "I do not accept the last VOD charge, since the movie was constantly interrupted, I had to quick 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 40 of 77 
+ 
+watching the movie in the middle ", 
+            "expectedResolutionDate": "2019-06-10T07:34:45.968Z", 
+            "externalId": "213-9909", 
+            "lastUpdate": "2019-05-31T07:34:45.968Z", 
+            "name": "Compliant over last bill", 
+            "priority": "High", 
+            "requestedResolutionDate": "2019-05-31T07:34:45.968Z", 
+            "severity": "Urgent", 
+            "status": "Pending", 
+            "statusChangeDate": "2019-05-31T07:34:45.968Z", 
+            "statusChangeReason": "Need more information from the customer", 
+            "ticketType": "Bill Dispute", 
+            "@type": "TroubleTicket" 
+        } 
+    ], 
+    "promotion": [ 
+        { 
+            "id": "PREPAIDOFFER_5GB", 
+            "href": "https:/host:port/tmf-api/promotion/v4/promotion/8474", 
+            "description": "Top-up by \u00a320 or more and get 5GB of data for only \u00a35", 
+            "lastUpdate": "2021-01-19T00:00:00.000Z", 
+            "lifecycleStatus": "release", 
+            "name": "More 5GB data when \u00a320 top-up", 
+            "validFor": { 
+                "startDateTime": "2020-01-05T12:00:56.982Z", 
+                "endDateTime": "9999-12-31T23:59:59.999Z" 
+            } 
+        } 
+    ], 
+    "quote": [ 
+        { 
+            "id": "12dd-78hg", 
+            "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+            "category": "BSBS Quote", 
+            "description": "Quote illustration", 
+            "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+            "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+            "externalId": "QO-tr-89", 
+            "instantSyncQuote": false, 
+            "quoteDate": "2019-05-06T12:45:12.028Z", 
+            "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+            "version": "1", 
+            "state": "inProgress", 
+            "@type": "Quote" 
+        } 
+    ], 
+    "appointment": [ 
+        { 
+            "id": "21", 
+            "href": "https://serverRoot/tmf-api/appointment/v4/appointment/21", 
+            "@type": "Appointment", 
+            "category": "intervention", 
+            "creationDate": "2018-02-01T14:40:43.000Z", 
+            "description": "Fix an internet connexion problem for a customer", 
+            "status": "accepted", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 41 of 77 
+ 
+            "externalId": "432113", 
+            "lastUpdate": "2018-02-04T14:40:43.000Z", 
+            "validFor": { 
+                "startDateTime": "2018-02-15T14:00:00.000Z", 
+                "endDateTime": "2018-02-15T16:00:00.000Z" 
+            }, 
+            "attachment": [ 
+                { 
+                    "id": "4444", 
+                    "href": "https://serverRoot/tmf-api/documentManagement/v4/customerContract/4444", 
+                    "@referredType": "CustomerContract" 
+                }, 
+                { 
+                    "name": "customer agreement for intervention", 
+                    "description": "The customer authorizes the technician to modify his installation", 
+                    "agreementDate": "2018-02-03T10:28:35.000Z", 
+                    "url": "https://documentManager/85745/customerAgreement325.pdf", 
+                    "@type": "CustomerAgreement", 
+                    "@schemaLocation": "../CustomerAgreement.schema.json" 
+                } 
+            ], 
+            "calendarEvent": { 
+                "id": "33", 
+                "href": "https://serverRoot/tmf-api/timeManagement/v4/calendarEvent/33", 
+                "name": "Intervention calendar event" 
+            }, 
+            "contactMedium": [ 
+                { 
+                    "mediumType": "phoneNumber", 
+                    "preferred": true, 
+                    "characteristic": { 
+                        "phoneNumber": "+33650981065", 
+                        "type": "mobile" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2018-02-01T14:40:43.000Z", 
+                        "endDateTime": "" 
+                    } 
+                } 
+            ], 
+            "note": [ 
+                { 
+                    "date": "2018-02-04T11:00:18.000Z", 
+                    "author": "Ludovic Robert", 
+                    "text": "Problem explained to the technician" 
+                }, 
+                { 
+                    "date": "2018-02-04T14:40:43.000Z", 
+                    "author": "Ludovic Robert", 
+                    "text": "Work order generated" 
+                } 
+            ], 
+            "relatedEntity": [ 
+                { 
+                    "id": "789", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 42 of 77 
+ 
+                    "href": "https://serverRoot/tmf-api/troubleTicket/v4/troubleTicket/789", 
+                    "role": "Problem description", 
+                    "name": "Internet connexion problem to solve", 
+                    "@referredType": "TroubleTicket" 
+                }, 
+                { 
+                    "id": "465", 
+                    "href": "https://serverRoot/tmf-api/workForceManagement/v4/workOrder/465", 
+                    "role": "work order description", 
+                    "name": "Work order generated for technician intervention", 
+                    "@referredType": "WorkOrder" 
+                } 
+            ], 
+            "relatedParty": [ 
+                { 
+                    "id": "32", 
+                    "href": "https://serverRoot/tmf-api/partyManagement/v4/individual/32", 
+                    "role": "customer", 
+                    "name": "Kate Smith", 
+                    "@referredType": "Individual" 
+                }, 
+                { 
+                    "id": "56", 
+                    "href": "https://serverRoot/tmf-api/partyManagement/v4/individual/56", 
+                    "role": "technician", 
+                    "name": "John Doe", 
+                    "@referredType": "Individual" 
+                } 
+            ], 
+            "relatedPlace": { 
+                "name": "client's address", 
+                "role": "interventionAddress", 
+                "streetNr": "96", 
+                "streetType": "avenue", 
+                "streetName": "de Versailles", 
+                "postCode": "75016", 
+                "city": "Paris", 
+                "country": "France", 
+                "@type": "GeographicAddress", 
+                "@schemaLocation": "../geographicAddress.schema.json" 
+            } 
+        } 
+    ], 
+    "id": "2160", 
+    "href": "https://host:port/tmf-api/customer360/v4/customer360/2160" 
+} 
+ 
+Notification Resource Models 
+ 
+3 notifications are defined for this API 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 43 of 77 
+ 
+Notifications related to Customer360: 
+    - Customer360CreateEvent 
+    - Customer360AttributeValueChangeEvent 
+    - Customer360DeleteEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 44 of 77 
+ 
+Customer 3 6 0 Create Event 
+Notification Customer360CreateEvent case for resource Customer360 
+Json representation sample 
+We provide below the json representation of an example of a 'Customer360CreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"Customer360CreateEvent", 
+     "event": { 
+        "customer360" :  
+            {-- SEE Customer360 RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Customer 3 6 0 Attribute Value Change Event 
+Notification Customer360AttributeValueChangeEvent case for resource Customer360 
+Json representation sample 
+We provide below the json representation of an example of a 'Customer360AttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"Customer360AttributeValueChangeEvent", 
+     "event": { 
+        "customer360" :  
+            {-- SEE Customer360 RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Customer 3 6 0 Delete Event 
+Notification Customer360DeleteEvent case for resource Customer360 
+Json representation sample 
+We provide below the json representation of an example of a 'Customer360DeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"Customer360DeleteEvent", 
+     "event": { 
+        "customer360" :  
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 45 of 77 
+ 
+            {-- SEE Customer360 RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 46 of 77 
+ 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Complete Update of an Entity 
+PUT Resource 
+PUT must be used to 
+completely update a resource 
+identified by its resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be 
+used to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Customer 3 6 0 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 47 of 77 
+ 
+List customer 3 6 0s 
+  GET /customer360?fields=...&{filtering} 
+Description 
+This operation list customer 3 6 0 entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving multiple Customer360. 
+ 
+Request 
+ 
+GET /tmf-api/customer360/v4/customer360 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "accumulatedBalance": [ 
+            { 
+                "id": "55", 
+                "href": "https://mycsp.com:8080/tmf-
+api/prepayBalanceManagement/v4/bucket?product.id=12345&bucketBalance[usageType==\"data\"]", 
+                "description": "The query used to fetch the accumulated balance", 
+                "@type": "AccumulatedBalance", 
+                "@baseType": "Entity", 
+                "bucket": [ 
+                    { 
+                        "id": "11", 
+                        "href": "https://mycsp.com:8080/tmf-api/prepayBalanceManagement/v4/bucket/11" 
+                    }, 
+                    { 
+                        "id": "12", 
+                        "href": "https://mycsp.com:8080/tmf-api/prepayBalanceManagement/v4/bucket/12" 
+                    } 
+                ], 
+                "partyAccount": { 
+                    "id": "acc1", 
+                    "href": "https://mycsp.com:8080/tmf-api/accountManagement/v4/account/acc1" 
+                }, 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 48 of 77 
+ 
+                "product": [ 
+                    { 
+                        "id": "prd1", 
+                        "href": "https://mycsp.com:8080/tmf-api/productInventory/v4/product/prd1" 
+                    } 
+                ], 
+                "relatedParty": [ 
+                    { 
+                        "id": "cust1", 
+                        "href": "https://mycsp.com:8080/tmf-api/customerManagement/customer/cust1", 
+                        "name": "jerry watts", 
+                        "role": "customer", 
+                        "@referredType": "Customer" 
+                    } 
+                ], 
+                "totalBalance": { 
+                    "amount": 200, 
+                    "units": "MB" 
+                } 
+            } 
+        ], 
+        "agreement": [ 
+            { 
+                "@type": "Agreement", 
+                "href": "https://host:port/tmf-api/agreementManagement/v4/agreement/28", 
+                "id": "28", 
+                "name": "Summer Contract Agreement", 
+                "agreementType": "commercial", 
+                "agreementItem": [ 
+                    { 
+                        "productOffering": [ 
+                            { 
+                                "@referredType": "ProductOffering", 
+                                "href": "https://host:port/tmf-api/productCatalogManagement/v4/productOffering/9085", 
+                                "id": "9085", 
+                                "name": "My Quick BB Offer" 
+                            } 
+                        ], 
+                        "termOrCondition": [ 
+                            { 
+                                "description": "This  agreement term or condition ...", 
+                                "id": "5890", 
+                                "validFor": { 
+                                    "startDateTime": "2018-04-25T00:00Z", 
+                                    "endDateTime": "2018-11-20T00:00Z" 
+                                } 
+                            } 
+                        ] 
+                    } 
+                ], 
+                "engagedParty": [ 
+                    { 
+                        "@referredType": "Organization", 
+                        "href": "https://host:port/tmf-api/partyManagement/v4/organization/330", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 49 of 77 
+ 
+                        "id": "330", 
+                        "role": "Supplier", 
+                        "name": "Magic Tools Company" 
+                    } 
+                ] 
+            } 
+        ], 
+        "billFormat": "Email", 
+        "customerBill": [ 
+            { 
+                "id": "CB-123", 
+                "href": "https://server:port/tmf-api/Customer_Bill_Management/v4/customerBill/CB-123", 
+                "billingAccount": { 
+                    "id": "A0815", 
+                    "href": "http://host:port/tmf-api/Account_Management/v4/billingAccount/A0815", 
+                    "name": "BA Peter Retep", 
+                    "@referredType": "billingAccount", 
+                    "@type": "billingAccountRef", 
+                    "@baseType": "billingAccountRef", 
+                    "@schemaLocation": "...some href..." 
+                } 
+            } 
+        ], 
+        "partyInteraction": [ 
+            { 
+                "id": "123", 
+                "href": "https://host:port/partyInteraction/v4/partyInteraction/123", 
+                "@type": "PartyInteraction", 
+                "interactionDate": { 
+                    "startDateTime": "2019-10-02T11:36:18.758Z", 
+                    "endDateTime": "2019-10-02T11:53:21.789Z" 
+                }, 
+                "description": "Visit to store", 
+                "reason": "The user wanted to buy TV and internet plan", 
+                "status": "ongoing", 
+                "statusChangeDate": "2019-10-02T11:53:21.789Z", 
+                "direction": "inbounds", 
+                "creationDate": "2019-10-02T11:37:08.013Z", 
+                "relatedParty": [ 
+                    { 
+                        "id": "999", 
+                        "href": "https://host:port/partyManagement/v4/individual/999", 
+                        "@referredType": "Individual", 
+                        "role": "user", 
+                        "name": "John Doe" 
+                    }, 
+                    { 
+                        "id": "888", 
+                        "href": "https://host:port/partyManagement/v4/individual/888", 
+                        "@referredType": "Individual", 
+                        "role": "agent", 
+                        "name": "Rian Muray" 
+                    } 
+                ], 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 50 of 77 
+ 
+                "interactionItem": [ 
+                    { 
+                        "id": "5678", 
+                        "href": "https://host:port/partyInteraction/v4/partyInteraction/123/interactionItem/5678", 
+                        "reason": "The user signed up to new TV bundle and paid the decoder", 
+                        "itemDate": { 
+                            "endDateTime": "2019-10-02T11:56:01.895Z", 
+                            "startDateTime": "2019-10-02T11:50:01.895Z" 
+                        }, 
+                        "resolution": "Product order is created", 
+                        "creationDate": "2019-10-02T11:50:01.895Z", 
+                        "item": { 
+                            "id": "30001", 
+                            "href": "https://host:port/productOrderingManagement/v4/productOrder/30001", 
+                            "@referredType": "ProductOrder", 
+                            "@type": "EntityRef", 
+                            "role": "interaction", 
+                            "name": "Product Order illustration sample by reference" 
+                        } 
+                    }, 
+                    { 
+                        "id": "1212", 
+                        "href": "https://host:port/partyInteraction/v4/partyInteraction/123/interactionItem/1212", 
+                        "reason": "The user is purchasing unlimited internet plan", 
+                        "itemDate": { 
+                            "endDateTime": "2019-10-02T11:56:01.895Z", 
+                            "startDateTime": "2019-10-02T11:50:01.895Z" 
+                        }, 
+                        "resolution": "Product order is created", 
+                        "creationDate": "2019-10-02T11:50:01.895Z", 
+                        "item": { 
+                            "id": "88", 
+                            "href": "https://host:port/productOrderingManagement/v4/productOrder/88", 
+                            "@type": "ProductOrder", 
+                            "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Resource/ProductOrder.schema.json", 
+                            "productOrderItem": [ 
+                                { 
+                                    "id": "13219", 
+                                    "action": "add", 
+                                    "productOffering": { 
+                                        "id": "2445", 
+                                        "name": "Unlimited Internet Plus" 
+                                    } 
+                                } 
+                            ] 
+                        } 
+                    } 
+                ], 
+                "channel": [ 
+                    { 
+                        "id": "555", 
+                        "name": "Madrid Gran V\u00eda Store", 
+                        "role": "interaction creation", 
+                        "@type": "store" 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 51 of 77 
+ 
+                    } 
+                ], 
+                "attachment": [ 
+                    { 
+                        "id": "111222444", 
+                        "href": "https://host:port/partyInteraction/v4/partyInteraction/123/attachment/111222444", 
+                        "name": "Some cool attachment", 
+                        "description": "blahblahblah", 
+                        "attachmentType": "receipt", 
+                        "mimeType": "application/pdf", 
+                        "size": { 
+                            "amount": 321321, 
+                            "units": "KB" 
+                        }, 
+                        "URL": "https://whereverthpdfis.com", 
+                        "interactionDate": { 
+                            "startDateTime": "2019-10-02T11:36:18.758Z", 
+                            "endDateTime": "2019-10-02T11:53:21.789Z" 
+                        } 
+                    } 
+                ], 
+                "note": [ 
+                    { 
+                        "id": "121", 
+                        "text": "loren ipsum dolor sit amet\u2026", 
+                        "author": "John Doe", 
+                        "date": "2019-10-02T11:36:18.758Z" 
+                    } 
+                ], 
+                "interactionRelationship": [ 
+                    { 
+                        "id": "1034", 
+                        "href": "https://host:port/partyInteraction/v4/partyInteraction/1034", 
+                        "relationshipType": "parent" 
+                    } 
+                ] 
+            } 
+        ], 
+        "product": [ 
+            { 
+                "id": "g265-tf85", 
+                "href": "https://host:port/productInventoryManagement/v4/product/g265-tf85", 
+                "description": "product description", 
+                "isBundle": false, 
+                "isCustomerVisible": true, 
+                "name": "Voice Over IP Basic instance for Jean", 
+                "productSerialNumber": "N/A", 
+                "startDate": "2017-11-01T09:37:29.961Z", 
+                "status": "active", 
+                "@baseType": "Product", 
+                "@type": "Product", 
+                "@schemaLocation": "https:://host:port/standardProduct.json", 
+                "realizingService": [ 
+                    { 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 52 of 77 
+ 
+                        "id": "123t-78k", 
+                        "href": "https...", 
+                        "role": "RealizingService", 
+                        "@referredType": "Service" 
+                    } 
+                ], 
+                "productOffering": { 
+                    "id": "PO-101-1", 
+                    "href": "https...", 
+                    "name": "Voice Over IP Basic", 
+                    "@referredType": "ProductOffering" 
+                }, 
+                "productOrderItem": [ 
+                    { 
+                        "productOrderId": "1023-98gh", 
+                        "productOrderHref": "https...", 
+                        "orderItemId": "2", 
+                        "orderItemAction": "add", 
+                        "@referredType": "ProductOrder", 
+                        "role": "Install order" 
+                    }, 
+                    { 
+                        "productOrderId": "df65-gh12", 
+                        "productOrderHref": "https...", 
+                        "orderItemId": "2", 
+                        "orderItemAction": "change", 
+                        "@referredType": "ProductOrder", 
+                        "role": "change management order" 
+                    }, 
+                    { 
+                        "productOrderId": "5ghh-sd12", 
+                        "productOrderHref": "https...", 
+                        "orderItemId": "3", 
+                        "orderItemAction": "change", 
+                        "@referredType": "ProductOrder", 
+                        "role": "change management order" 
+                    } 
+                ], 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Number", 
+                        "valueType": "string", 
+                        "value": "415 279 7439" 
+                    } 
+                ], 
+                "relatedParty": [ 
+                    { 
+                        "id": "45hj-8888", 
+                        "href": "https...", 
+                        "name": "Jean", 
+                        "role": "User", 
+                        "@referredType": "Individual" 
+                    } 
+                ], 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 53 of 77 
+ 
+                "productSpecification": { 
+                    "id": "PS-101", 
+                    "href": "https...", 
+                    "@referredType": "ProductSpecification", 
+                    "version": "1" 
+                } 
+            } 
+        ], 
+        "promotion": [ 
+            { 
+                "id": "PREPAIDOFFER_5GB", 
+                "href": "https:/host:port/tmf-api/promotion/v4/promotion/8474", 
+                "description": "Top-up by \u00a320 or more and get 5GB of data for only \u00a35", 
+                "lastUpdate": "2021-01-19T00:00:00.000Z", 
+                "lifecycleStatus": "release", 
+                "name": "More 5GB data when \u00a320 top-up", 
+                "pattern": [ 
+                    { 
+                        "id": "PATTERN_PREPAID_PRODUCT_OFFERING_5GB", 
+                        "action": [ 
+                            { 
+                                "id": "ACTION_PREPAID_PRODUCT_OFFERING_5GB", 
+                                "actionEntityRef": { 
+                                    "id": "PRODUCT_OFFERING_5GB", 
+                                    "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_5GB", 
+                                    "name": "5GB data add-on" 
+                                }, 
+                                "actionType": "3", 
+                                "actionValue": "5" 
+                            } 
+                        ], 
+                        "criteriaGroup": [ 
+                            { 
+                                "id": "GROUP_PREPAID_PRODUCT_OFFERING_5GB", 
+                                "criteria": [ 
+                                    { 
+                                        "id": "CRITERIA_PREPAID_PRODUCT_OFFERING_5GB", 
+                                        "criteriaOperator": ">=", 
+                                        "criteriaParameter": "5.3", 
+                                        "criteriaValue": "\u00a320" 
+                                    } 
+                                ] 
+                            } 
+                        ] 
+                    } 
+                ], 
+                "promotionType": "Reduction", 
+                "validFor": { 
+                    "startDateTime": "2020-01-05T12:00:56.982Z", 
+                    "endDateTime": "9999-12-31T23:59:59.999Z" 
+                } 
+            } 
+        ], 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 54 of 77 
+ 
+        "quote": [ 
+            { 
+                "id": "12dd-78hg", 
+                "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+                "category": "BSBS Quote", 
+                "description": "Quote illustration", 
+                "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+                "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+                "externalId": "QO-tr-89", 
+                "instantSyncQuote": false, 
+                "quoteDate": "2019-05-06T12:45:12.028Z", 
+                "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+                "version": "1", 
+                "agreement": [ 
+                    { 
+                        "id": "7778-jj56", 
+                        "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+                        "name": "Global Agreement", 
+                        "@baseType": "Agreement", 
+                        "@referredType": "MassAgreement" 
+                    } 
+                ], 
+                "billingAccount": [ 
+                    { 
+                        "id": "BA4569", 
+                        "href": "https://host:port/accountManagement/v4/billingAccount/BA4569" 
+                    } 
+                ], 
+                "contactMedium": [ 
+                    { 
+                        "mediumType": "email", 
+                        "preferred": true, 
+                        "characteristic": { 
+                            "emailAddress": "jean.pontus@PerfectCustomer.com" 
+                        }, 
+                        "validFor": { 
+                            "startDateTime": "2019-05-06T12:45:12.028Z" 
+                        } 
+                    } 
+                ], 
+                "note": [ 
+                    { 
+                        "id": "1", 
+                        "author": "Jean Pontus", 
+                        "date": "2019-05-06T12:45:12.031Z", 
+                        "text": "This is a quote request following today call" 
+                    } 
+                ], 
+                "productOfferingQualification": [ 
+                    { 
+                        "id": "22ds-ty55", 
+                        "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-
+ty55" 
+                    } 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 55 of 77 
+ 
+                ], 
+                "quoteItem": [ 
+                    { 
+                        "id": "1", 
+                        "action": "add", 
+                        "quantity": 10, 
+                        "state": "inProgress", 
+                        "product": { 
+                            "@type": "Product", 
+                            "productCharacteristic": [ 
+                                { 
+                                    "name": "Voice Bundle", 
+                                    "valueType": "string", 
+                                    "value": "unlimited" 
+                                }, 
+                                { 
+                                    "name": "Data Bundle", 
+                                    "valueType": "object", 
+                                    "value": { 
+                                        "volume": 50, 
+                                        "unit": "Gb/month" 
+                                    } 
+                                } 
+                            ], 
+                            "productSpecification": { 
+                                "id": "ssp7-ty89", 
+                                "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                                "name": "TMF Tariff Plan" 
+                            } 
+                        }, 
+                        "productOffering": { 
+                            "id": "54gg-zza1", 
+                            "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                            "name": "TMF Tarif Plan 25" 
+                        } 
+                    }, 
+                    { 
+                        "id": "2", 
+                        "action": "add", 
+                        "quantity": 10, 
+                        "state": "inProgress", 
+                        "attachment": [ 
+                            { 
+                                "attachmentType": "brochure", 
+                                "description": "handset brochure", 
+                                "mimeType": "pdf", 
+                                "name": "Handset commercial brochure.pdf", 
+                                "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                                "size": { 
+                                    "amount": 3.7, 
+                                    "units": "Mb" 
+                                }, 
+                                "validFor": { 
+                                    "startDateTime": "2019-05-06T12:45:12.031Z" 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 56 of 77 
+ 
+                                } 
+                            } 
+                        ], 
+                        "product": { 
+                            "@type": "Product", 
+                            "productSpecification": { 
+                                "id": "qq45-ytr7", 
+                                "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                                "name": "Handset", 
+                                "version": "1" 
+                            } 
+                        }, 
+                        "productOffering": { 
+                            "id": "z789-78ga", 
+                            "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                            "name": "TMF handset T9+" 
+                        } 
+                    }, 
+                    { 
+                        "id": "3", 
+                        "action": "add", 
+                        "quantity": 1, 
+                        "state": "inProgress", 
+                        "productOffering": { 
+                            "id": "ssdd-4dfd", 
+                            "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                            "name": "Gold Support" 
+                        } 
+                    } 
+                ], 
+                "relatedParty": [ 
+                    { 
+                        "name": "Jean Pontus", 
+                        "role": "Buyer Contact", 
+                        "id": "qsdd-9888", 
+                        "@referredType": "Individual" 
+                    }, 
+                    { 
+                        "name": "PerfectCustomer", 
+                        "role": "Buyer organization", 
+                        "id": "55", 
+                        "@referredType": "Organization" 
+                    }, 
+                    { 
+                        "name": "Joe Doe", 
+                        "role": "Seller Contact", 
+                        "id": "45gh-gh89", 
+                        "@referredType": "Individual" 
+                    } 
+                ], 
+                "state": "inProgress", 
+                "@type": "Quote" 
+            } 
+        ], 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 57 of 77 
+ 
+        "serviceProblem": [ 
+            { 
+                "id": "sp_001", 
+                "href": "https://mycsp.com:8080/tmf-api/serviceProblemManagement/v4/serviceProblem/sp_001", 
+                "category": "serviceProvider.declared", 
+                "priority": 1, 
+                "description": "Internet connection error", 
+                "reason": "unknown", 
+                "originatorParty": { 
+                    "role": "Supplier", 
+                    "id": "NP1", 
+                    "href": "https://mycsp.com:8080/tmf-api/partyManagement/v4/organization/NP1", 
+                    "@referredType": "Organization" 
+                }, 
+                "affectedService": [ 
+                    { 
+                        "id": "SP00001_Service_001", 
+                        "href": "https://mycsp.com:8080/tmf-api/serviceInventoryManagement/v4/service/SP00001_Service_001" 
+                    } 
+                ] 
+            } 
+        ], 
+        "usageVolumeProduct": 36, 
+        "appointment": [ 
+            { 
+                "id": "21", 
+                "href": "https://serverRoot/tmf-api/appointment/v4/appointment/21", 
+                "@type": "Appointment", 
+                "category": "intervention", 
+                "creationDate": "2018-02-01T14:40:43.000Z", 
+                "description": "Fix an internet connexion problem for a customer", 
+                "status": "accepted", 
+                "externalId": "432113", 
+                "lastUpdate": "2018-02-04T14:40:43.000Z", 
+                "validFor": { 
+                    "startDateTime": "2018-02-15T14:00:00.000Z", 
+                    "endDateTime": "2018-02-15T16:00:00.000Z" 
+                }, 
+                "attachment": [ 
+                    { 
+                        "id": "4444", 
+                        "href": "https://serverRoot/tmf-api/documentManagement/v4/customerContract/4444", 
+                        "@referredType": "CustomerContract" 
+                    }, 
+                    { 
+                        "name": "customer agreement for intervention", 
+                        "description": "The customer authorizes the technician to modify his installation", 
+                        "agreementDate": "2018-02-03T10:28:35.000Z", 
+                        "url": "https://documentManager/85745/customerAgreement325.pdf", 
+                        "@type": "CustomerAgreement", 
+                        "@schemaLocation": "../CustomerAgreement.schema.json" 
+                    } 
+                ], 
+                "calendarEvent": { 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 58 of 77 
+ 
+                    "id": "33", 
+                    "href": "https://serverRoot/tmf-api/timeManagement/v4/calendarEvent/33", 
+                    "name": "Intervention calendar event" 
+                }, 
+                "contactMedium": [ 
+                    { 
+                        "mediumType": "phoneNumber", 
+                        "preferred": true, 
+                        "characteristic": { 
+                            "phoneNumber": "+33650981065", 
+                            "type": "mobile" 
+                        }, 
+                        "validFor": { 
+                            "startDateTime": "2018-02-01T14:40:43.000Z", 
+                            "endDateTime": "" 
+                        } 
+                    } 
+                ], 
+                "note": [ 
+                    { 
+                        "date": "2018-02-04T11:00:18.000Z", 
+                        "author": "Ludovic Robert", 
+                        "text": "Problem explained to the technician" 
+                    }, 
+                    { 
+                        "date": "2018-02-04T14:40:43.000Z", 
+                        "author": "Ludovic Robert", 
+                        "text": "Work order generated" 
+                    } 
+                ], 
+                "relatedEntity": [ 
+                    { 
+                        "id": "789", 
+                        "href": "https://serverRoot/tmf-api/troubleTicket/v4/troubleTicket/789", 
+                        "role": "Problem description", 
+                        "name": "Internet connexion problem to solve", 
+                        "@referredType": "TroubleTicket" 
+                    }, 
+                    { 
+                        "id": "465", 
+                        "href": "https://serverRoot/tmf-api/workForceManagement/v4/workOrder/465", 
+                        "role": "work order description", 
+                        "name": "Work order generated for technician intervention", 
+                        "@referredType": "WorkOrder" 
+                    } 
+                ], 
+                "relatedParty": [ 
+                    { 
+                        "id": "32", 
+                        "href": "https://serverRoot/tmf-api/partyManagement/v4/individual/32", 
+                        "role": "customer", 
+                        "name": "Kate Smith", 
+                        "@referredType": "Individual" 
+                    }, 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 59 of 77 
+ 
+                    { 
+                        "id": "56", 
+                        "href": "https://serverRoot/tmf-api/partyManagement/v4/individual/56", 
+                        "role": "technician", 
+                        "name": "John Doe", 
+                        "@referredType": "Individual" 
+                    } 
+                ], 
+                "relatedPlace": { 
+                    "name": "client's address", 
+                    "role": "interventionAddress", 
+                    "streetNr": "96", 
+                    "streetType": "avenue", 
+                    "streetName": "de Versailles", 
+                    "postCode": "75016", 
+                    "city": "Paris", 
+                    "country": "France", 
+                    "@type": "GeographicAddress", 
+                    "@schemaLocation": "../geographicAddress.schema.json" 
+                } 
+            } 
+        ], 
+        "id": "2160", 
+        "href": "https://host:port/tmf-api/customer360/v4/customer360/2160", 
+        "usageSpecification": 70, 
+        "customerId": "22f93e32-6a6a-40d9-96d5-46f7ea20d2e0", 
+        "customerRef": "https://host:port/tmf-api/customer/v4/customer/22f93e32-6a6a-40d9-96d5-46f7ea20d2e0" 
+    } 
+] 
+ 
+Retrieve customer 3 6 0 
+  GET /customer360/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a customer 3 6 0 entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific Customer360. 
+ 
+Request 
+ 
+GET /tmf-api/customer360/v4/customer360/2160 
+Accept: application/json 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 60 of 77 
+ 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "accumulatedBalance": [ 
+        { 
+            "id": "55", 
+            "href": "https://mycsp.com:8080/tmf-
+api/prepayBalanceManagement/v4/bucket?product.id=12345&bucketBalance[usageType==\"data\"]", 
+            "description": "The query used to fetch the accumulated balance", 
+            "@type": "AccumulatedBalance", 
+            "@baseType": "Entity", 
+            "bucket": [ 
+                { 
+                    "id": "11", 
+                    "href": "https://mycsp.com:8080/tmf-api/prepayBalanceManagement/v4/bucket/11" 
+                }, 
+                { 
+                    "id": "12", 
+                    "href": "https://mycsp.com:8080/tmf-api/prepayBalanceManagement/v4/bucket/12" 
+                } 
+            ], 
+            "partyAccount": { 
+                "id": "acc1", 
+                "href": "https://mycsp.com:8080/tmf-api/accountManagement/v4/account/acc1" 
+            }, 
+            "product": [ 
+                { 
+                    "id": "prd1", 
+                    "href": "https://mycsp.com:8080/tmf-api/productInventory/v4/product/prd1" 
+                } 
+            ], 
+            "relatedParty": [ 
+                { 
+                    "id": "cust1", 
+                    "href": "https://mycsp.com:8080/tmf-api/customerManagement/customer/cust1", 
+                    "name": "jerry watts", 
+                    "role": "customer", 
+                    "@referredType": "Customer" 
+                } 
+            ], 
+            "totalBalance": { 
+                "amount": 200, 
+                "units": "MB" 
+            } 
+        } 
+    ], 
+    "agreement": [ 
+        { 
+            "@type": "Agreement", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 61 of 77 
+ 
+            "href": "https://host:port/tmf-api/agreementManagement/v4/agreement/28", 
+            "id": "28", 
+            "name": "Summer Contract Agreement", 
+            "agreementType": "commercial", 
+            "agreementItem": [ 
+                { 
+                    "productOffering": [ 
+                        { 
+                            "@referredType": "ProductOffering", 
+                            "href": "https://host:port/tmf-api/productCatalogManagement/v4/productOffering/9085", 
+                            "id": "9085", 
+                            "name": "My Quick BB Offer" 
+                        } 
+                    ], 
+                    "termOrCondition": [ 
+                        { 
+                            "description": "This  agreement term or condition ...", 
+                            "id": "5890", 
+                            "validFor": { 
+                                "startDateTime": "2018-04-25T00:00Z", 
+                                "endDateTime": "2018-11-20T00:00Z" 
+                            } 
+                        } 
+                    ] 
+                } 
+            ], 
+            "engagedParty": [ 
+                { 
+                    "@referredType": "Organization", 
+                    "href": "https://host:port/tmf-api/partyManagement/v4/organization/330", 
+                    "id": "330", 
+                    "role": "Supplier", 
+                    "name": "Magic Tools Company" 
+                } 
+            ] 
+        } 
+    ], 
+    "billFormat": "Email", 
+    "customerBill": [ 
+        { 
+            "id": "CB-123", 
+            "href": "https://server:port/tmf-api/Customer_Bill_Management/v4/customerBill/CB-123", 
+            "billingAccount": { 
+                "id": "A0815", 
+                "href": "http://host:port/tmf-api/Account_Management/v4/billingAccount/A0815", 
+                "name": "BA Peter Retep", 
+                "@referredType": "billingAccount", 
+                "@type": "billingAccountRef", 
+                "@baseType": "billingAccountRef", 
+                "@schemaLocation": "...some href..." 
+            } 
+        } 
+    ], 
+    "partyInteraction": [ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 62 of 77 
+ 
+        { 
+            "id": "123", 
+            "href": "https://host:port/partyInteraction/v4/partyInteraction/123", 
+            "@type": "PartyInteraction", 
+            "interactionDate": { 
+                "startDateTime": "2019-10-02T11:36:18.758Z", 
+                "endDateTime": "2019-10-02T11:53:21.789Z" 
+            }, 
+            "description": "Visit to store", 
+            "reason": "The user wanted to buy TV and internet plan", 
+            "status": "ongoing", 
+            "statusChangeDate": "2019-10-02T11:53:21.789Z", 
+            "direction": "inbounds", 
+            "creationDate": "2019-10-02T11:37:08.013Z", 
+            "relatedParty": [ 
+                { 
+                    "id": "999", 
+                    "href": "https://host:port/partyManagement/v4/individual/999", 
+                    "@referredType": "Individual", 
+                    "role": "user", 
+                    "name": "John Doe" 
+                }, 
+                { 
+                    "id": "888", 
+                    "href": "https://host:port/partyManagement/v4/individual/888", 
+                    "@referredType": "Individual", 
+                    "role": "agent", 
+                    "name": "Rian Muray" 
+                } 
+            ], 
+            "interactionItem": [ 
+                { 
+                    "id": "5678", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/123/interactionItem/5678", 
+                    "reason": "The user signed up to new TV bundle and paid the decoder", 
+                    "itemDate": { 
+                        "endDateTime": "2019-10-02T11:56:01.895Z", 
+                        "startDateTime": "2019-10-02T11:50:01.895Z" 
+                    }, 
+                    "resolution": "Product order is created", 
+                    "creationDate": "2019-10-02T11:50:01.895Z", 
+                    "item": { 
+                        "id": "30001", 
+                        "href": "https://host:port/productOrderingManagement/v4/productOrder/30001", 
+                        "@referredType": "ProductOrder", 
+                        "@type": "EntityRef", 
+                        "role": "interaction", 
+                        "name": "Product Order illustration sample by reference" 
+                    } 
+                }, 
+                { 
+                    "id": "1212", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/123/interactionItem/1212", 
+                    "reason": "The user is purchasing unlimited internet plan", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 63 of 77 
+ 
+                    "itemDate": { 
+                        "endDateTime": "2019-10-02T11:56:01.895Z", 
+                        "startDateTime": "2019-10-02T11:50:01.895Z" 
+                    }, 
+                    "resolution": "Product order is created", 
+                    "creationDate": "2019-10-02T11:50:01.895Z", 
+                    "item": { 
+                        "id": "88", 
+                        "href": "https://host:port/productOrderingManagement/v4/productOrder/88", 
+                        "@type": "ProductOrder", 
+                        "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Resource/ProductOrder.schema.json", 
+                        "productOrderItem": [ 
+                            { 
+                                "id": "13219", 
+                                "action": "add", 
+                                "productOffering": { 
+                                    "id": "2445", 
+                                    "name": "Unlimited Internet Plus" 
+                                } 
+                            } 
+                        ] 
+                    } 
+                } 
+            ], 
+            "channel": [ 
+                { 
+                    "id": "555", 
+                    "name": "Madrid Gran V\u00eda Store", 
+                    "role": "interaction creation", 
+                    "@type": "store" 
+                } 
+            ], 
+            "attachment": [ 
+                { 
+                    "id": "111222444", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/123/attachment/111222444", 
+                    "name": "Some cool attachment", 
+                    "description": "blahblahblah", 
+                    "attachmentType": "receipt", 
+                    "mimeType": "application/pdf", 
+                    "size": { 
+                        "amount": 321321, 
+                        "units": "KB" 
+                    }, 
+                    "URL": "https://whereverthpdfis.com", 
+                    "interactionDate": { 
+                        "startDateTime": "2019-10-02T11:36:18.758Z", 
+                        "endDateTime": "2019-10-02T11:53:21.789Z" 
+                    } 
+                } 
+            ], 
+            "note": [ 
+                { 
+                    "id": "121", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 64 of 77 
+ 
+                    "text": "loren ipsum dolor sit amet\u2026", 
+                    "author": "John Doe", 
+                    "date": "2019-10-02T11:36:18.758Z" 
+                } 
+            ], 
+            "interactionRelationship": [ 
+                { 
+                    "id": "1034", 
+                    "href": "https://host:port/partyInteraction/v4/partyInteraction/1034", 
+                    "relationshipType": "parent" 
+                } 
+            ] 
+        } 
+    ], 
+    "product": [ 
+        { 
+            "id": "g265-tf85", 
+            "href": "https://host:port/productInventoryManagement/v4/product/g265-tf85", 
+            "description": "product description", 
+            "isBundle": false, 
+            "isCustomerVisible": true, 
+            "name": "Voice Over IP Basic instance for Jean", 
+            "productSerialNumber": "N/A", 
+            "startDate": "2017-11-01T09:37:29.961Z", 
+            "status": "active", 
+            "@baseType": "Product", 
+            "@type": "Product", 
+            "@schemaLocation": "https:://host:port/standardProduct.json", 
+            "realizingService": [ 
+                { 
+                    "id": "123t-78k", 
+                    "href": "https...", 
+                    "role": "RealizingService", 
+                    "@referredType": "Service" 
+                } 
+            ], 
+            "productOffering": { 
+                "id": "PO-101-1", 
+                "href": "https...", 
+                "name": "Voice Over IP Basic", 
+                "@referredType": "ProductOffering" 
+            }, 
+            "productOrderItem": [ 
+                { 
+                    "productOrderId": "1023-98gh", 
+                    "productOrderHref": "https...", 
+                    "orderItemId": "2", 
+                    "orderItemAction": "add", 
+                    "@referredType": "ProductOrder", 
+                    "role": "Install order" 
+                }, 
+                { 
+                    "productOrderId": "df65-gh12", 
+                    "productOrderHref": "https...", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 65 of 77 
+ 
+                    "orderItemId": "2", 
+                    "orderItemAction": "change", 
+                    "@referredType": "ProductOrder", 
+                    "role": "change management order" 
+                }, 
+                { 
+                    "productOrderId": "5ghh-sd12", 
+                    "productOrderHref": "https...", 
+                    "orderItemId": "3", 
+                    "orderItemAction": "change", 
+                    "@referredType": "ProductOrder", 
+                    "role": "change management order" 
+                } 
+            ], 
+            "productCharacteristic": [ 
+                { 
+                    "name": "Number", 
+                    "valueType": "string", 
+                    "value": "415 279 7439" 
+                } 
+            ], 
+            "relatedParty": [ 
+                { 
+                    "id": "45hj-8888", 
+                    "href": "https...", 
+                    "name": "Jean", 
+                    "role": "User", 
+                    "@referredType": "Individual" 
+                } 
+            ], 
+            "productSpecification": { 
+                "id": "PS-101", 
+                "href": "https...", 
+                "@referredType": "ProductSpecification", 
+                "version": "1" 
+            } 
+        } 
+    ], 
+    "promotion": [ 
+        { 
+            "id": "PREPAIDOFFER_5GB", 
+            "href": "https:/host:port/tmf-api/promotion/v4/promotion/8474", 
+            "description": "Top-up by \u00a320 or more and get 5GB of data for only \u00a35", 
+            "lastUpdate": "2021-01-19T00:00:00.000Z", 
+            "lifecycleStatus": "release", 
+            "name": "More 5GB data when \u00a320 top-up", 
+            "pattern": [ 
+                { 
+                    "id": "PATTERN_PREPAID_PRODUCT_OFFERING_5GB", 
+                    "action": [ 
+                        { 
+                            "id": "ACTION_PREPAID_PRODUCT_OFFERING_5GB", 
+                            "actionEntityRef": { 
+                                "id": "PRODUCT_OFFERING_5GB", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 66 of 77 
+ 
+                                "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_5GB", 
+                                "name": "5GB data add-on" 
+                            }, 
+                            "actionType": "3", 
+                            "actionValue": "5" 
+                        } 
+                    ], 
+                    "criteriaGroup": [ 
+                        { 
+                            "id": "GROUP_PREPAID_PRODUCT_OFFERING_5GB", 
+                            "criteria": [ 
+                                { 
+                                    "id": "CRITERIA_PREPAID_PRODUCT_OFFERING_5GB", 
+                                    "criteriaOperator": ">=", 
+                                    "criteriaParameter": "5.3", 
+                                    "criteriaValue": "\u00a320" 
+                                } 
+                            ] 
+                        } 
+                    ] 
+                } 
+            ], 
+            "promotionType": "Reduction", 
+            "validFor": { 
+                "startDateTime": "2020-01-05T12:00:56.982Z", 
+                "endDateTime": "9999-12-31T23:59:59.999Z" 
+            } 
+        } 
+    ], 
+    "quote": [ 
+        { 
+            "id": "12dd-78hg", 
+            "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+            "category": "BSBS Quote", 
+            "description": "Quote illustration", 
+            "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+            "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+            "externalId": "QO-tr-89", 
+            "instantSyncQuote": false, 
+            "quoteDate": "2019-05-06T12:45:12.028Z", 
+            "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+            "version": "1", 
+            "agreement": [ 
+                { 
+                    "id": "7778-jj56", 
+                    "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+                    "name": "Global Agreement", 
+                    "@baseType": "Agreement", 
+                    "@referredType": "MassAgreement" 
+                } 
+            ], 
+            "billingAccount": [ 
+                { 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 67 of 77 
+ 
+                    "id": "BA4569", 
+                    "href": "https://host:port/accountManagement/v4/billingAccount/BA4569" 
+                } 
+            ], 
+            "contactMedium": [ 
+                { 
+                    "mediumType": "email", 
+                    "preferred": true, 
+                    "characteristic": { 
+                        "emailAddress": "jean.pontus@PerfectCustomer.com" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2019-05-06T12:45:12.028Z" 
+                    } 
+                } 
+            ], 
+            "note": [ 
+                { 
+                    "id": "1", 
+                    "author": "Jean Pontus", 
+                    "date": "2019-05-06T12:45:12.031Z", 
+                    "text": "This is a quote request following today call" 
+                } 
+            ], 
+            "productOfferingQualification": [ 
+                { 
+                    "id": "22ds-ty55", 
+                    "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-
+ty55" 
+                } 
+            ], 
+            "quoteItem": [ 
+                { 
+                    "id": "1", 
+                    "action": "add", 
+                    "quantity": 10, 
+                    "state": "inProgress", 
+                    "product": { 
+                        "@type": "Product", 
+                        "productCharacteristic": [ 
+                            { 
+                                "name": "Voice Bundle", 
+                                "valueType": "string", 
+                                "value": "unlimited" 
+                            }, 
+                            { 
+                                "name": "Data Bundle", 
+                                "valueType": "object", 
+                                "value": { 
+                                    "volume": 50, 
+                                    "unit": "Gb/month" 
+                                } 
+                            } 
+                        ], 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 68 of 77 
+ 
+                        "productSpecification": { 
+                            "id": "ssp7-ty89", 
+                            "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                            "name": "TMF Tariff Plan" 
+                        } 
+                    }, 
+                    "productOffering": { 
+                        "id": "54gg-zza1", 
+                        "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                        "name": "TMF Tarif Plan 25" 
+                    } 
+                }, 
+                { 
+                    "id": "2", 
+                    "action": "add", 
+                    "quantity": 10, 
+                    "state": "inProgress", 
+                    "attachment": [ 
+                        { 
+                            "attachmentType": "brochure", 
+                            "description": "handset brochure", 
+                            "mimeType": "pdf", 
+                            "name": "Handset commercial brochure.pdf", 
+                            "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                            "size": { 
+                                "amount": 3.7, 
+                                "units": "Mb" 
+                            }, 
+                            "validFor": { 
+                                "startDateTime": "2019-05-06T12:45:12.031Z" 
+                            } 
+                        } 
+                    ], 
+                    "product": { 
+                        "@type": "Product", 
+                        "productSpecification": { 
+                            "id": "qq45-ytr7", 
+                            "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                            "name": "Handset", 
+                            "version": "1" 
+                        } 
+                    }, 
+                    "productOffering": { 
+                        "id": "z789-78ga", 
+                        "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                        "name": "TMF handset T9+" 
+                    } 
+                }, 
+                { 
+                    "id": "3", 
+                    "action": "add", 
+                    "quantity": 1, 
+                    "state": "inProgress", 
+                    "productOffering": { 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 69 of 77 
+ 
+                        "id": "ssdd-4dfd", 
+                        "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                        "name": "Gold Support" 
+                    } 
+                } 
+            ], 
+            "relatedParty": [ 
+                { 
+                    "name": "Jean Pontus", 
+                    "role": "Buyer Contact", 
+                    "id": "qsdd-9888", 
+                    "@referredType": "Individual" 
+                }, 
+                { 
+                    "name": "PerfectCustomer", 
+                    "role": "Buyer organization", 
+                    "id": "55", 
+                    "@referredType": "Organization" 
+                }, 
+                { 
+                    "name": "Joe Doe", 
+                    "role": "Seller Contact", 
+                    "id": "45gh-gh89", 
+                    "@referredType": "Individual" 
+                } 
+            ], 
+            "state": "inProgress", 
+            "@type": "Quote" 
+        } 
+    ], 
+    "serviceProblem": [ 
+        { 
+            "id": "sp_001", 
+            "href": "https://mycsp.com:8080/tmf-api/serviceProblemManagement/v4/serviceProblem/sp_001", 
+            "category": "serviceProvider.declared", 
+            "priority": 1, 
+            "description": "Internet connection error", 
+            "reason": "unknown", 
+            "originatorParty": { 
+                "role": "Supplier", 
+                "id": "NP1", 
+                "href": "https://mycsp.com:8080/tmf-api/partyManagement/v4/organization/NP1", 
+                "@referredType": "Organization" 
+            }, 
+            "affectedService": [ 
+                { 
+                    "id": "SP00001_Service_001", 
+                    "href": "https://mycsp.com:8080/tmf-api/serviceInventoryManagement/v4/service/SP00001_Service_001" 
+                } 
+            ] 
+        } 
+    ], 
+    "usageVolumeProduct": 36, 
+    "appointment": [ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 70 of 77 
+ 
+        { 
+            "id": "21", 
+            "href": "https://serverRoot/tmf-api/appointment/v4/appointment/21", 
+            "@type": "Appointment", 
+            "category": "intervention", 
+            "creationDate": "2018-02-01T14:40:43.000Z", 
+            "description": "Fix an internet connexion problem for a customer", 
+            "status": "accepted", 
+            "externalId": "432113", 
+            "lastUpdate": "2018-02-04T14:40:43.000Z", 
+            "validFor": { 
+                "startDateTime": "2018-02-15T14:00:00.000Z", 
+                "endDateTime": "2018-02-15T16:00:00.000Z" 
+            }, 
+            "attachment": [ 
+                { 
+                    "id": "4444", 
+                    "href": "https://serverRoot/tmf-api/documentManagement/v4/customerContract/4444", 
+                    "@referredType": "CustomerContract" 
+                }, 
+                { 
+                    "name": "customer agreement for intervention", 
+                    "description": "The customer authorizes the technician to modify his installation", 
+                    "agreementDate": "2018-02-03T10:28:35.000Z", 
+                    "url": "https://documentManager/85745/customerAgreement325.pdf", 
+                    "@type": "CustomerAgreement", 
+                    "@schemaLocation": "../CustomerAgreement.schema.json" 
+                } 
+            ], 
+            "calendarEvent": { 
+                "id": "33", 
+                "href": "https://serverRoot/tmf-api/timeManagement/v4/calendarEvent/33", 
+                "name": "Intervention calendar event" 
+            }, 
+            "contactMedium": [ 
+                { 
+                    "mediumType": "phoneNumber", 
+                    "preferred": true, 
+                    "characteristic": { 
+                        "phoneNumber": "+33650981065", 
+                        "type": "mobile" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2018-02-01T14:40:43.000Z", 
+                        "endDateTime": "" 
+                    } 
+                } 
+            ], 
+            "note": [ 
+                { 
+                    "date": "2018-02-04T11:00:18.000Z", 
+                    "author": "Ludovic Robert", 
+                    "text": "Problem explained to the technician" 
+                }, 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 71 of 77 
+ 
+                { 
+                    "date": "2018-02-04T14:40:43.000Z", 
+                    "author": "Ludovic Robert", 
+                    "text": "Work order generated" 
+                } 
+            ], 
+            "relatedEntity": [ 
+                { 
+                    "id": "789", 
+                    "href": "https://serverRoot/tmf-api/troubleTicket/v4/troubleTicket/789", 
+                    "role": "Problem description", 
+                    "name": "Internet connexion problem to solve", 
+                    "@referredType": "TroubleTicket" 
+                }, 
+                { 
+                    "id": "465", 
+                    "href": "https://serverRoot/tmf-api/workForceManagement/v4/workOrder/465", 
+                    "role": "work order description", 
+                    "name": "Work order generated for technician intervention", 
+                    "@referredType": "WorkOrder" 
+                } 
+            ], 
+            "relatedParty": [ 
+                { 
+                    "id": "32", 
+                    "href": "https://serverRoot/tmf-api/partyManagement/v4/individual/32", 
+                    "role": "customer", 
+                    "name": "Kate Smith", 
+                    "@referredType": "Individual" 
+                }, 
+                { 
+                    "id": "56", 
+                    "href": "https://serverRoot/tmf-api/partyManagement/v4/individual/56", 
+                    "role": "technician", 
+                    "name": "John Doe", 
+                    "@referredType": "Individual" 
+                } 
+            ], 
+            "relatedPlace": { 
+                "name": "client's address", 
+                "role": "interventionAddress", 
+                "streetNr": "96", 
+                "streetType": "avenue", 
+                "streetName": "de Versailles", 
+                "postCode": "75016", 
+                "city": "Paris", 
+                "country": "France", 
+                "@type": "GeographicAddress", 
+                "@schemaLocation": "../geographicAddress.schema.json" 
+            } 
+        } 
+    ], 
+    "id": "2160", 
+    "href": "https://host:port/tmf-api/customer360/v4/customer360/2160", 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 72 of 77 
+ 
+    "usageSpecification": 70, 
+    "customerId": "22f93e32-6a6a-40d9-96d5-46f7ea20d2e0", 
+    "customerRef": "https://host:port/tmf-api/customer/v4/customer/22f93e32-6a6a-40d9-96d5-46f7ea20d2e0" 
+} 
+ 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 73 of 77 
+ 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 74 of 77 
+ 
+ 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 75 of 77 
+ 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 76 of 77 
+ 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+Any Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 77 of 77 
+ 
+Acknowledgements 
+ 
+Release History 
+ 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+R21.5.0 
+10/2021 
+Shantanu Raje <Raje 
+shantanu.raje@rci.rogers.
+com> 
+First Release of the Document.  
+ 
+Contributors to Document 
+ 
+Shantanu Raje 
+Rogers Communications 
+ 
+ 
+ 
+
+

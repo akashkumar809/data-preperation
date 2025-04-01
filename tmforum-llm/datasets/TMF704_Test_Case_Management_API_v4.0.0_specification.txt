@@ -1,0 +1,2623 @@
+ 
+TM Forum 2020. All Rights Reserved. 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Test Case Management API User 
+Guide 
+ 
+ 
+ 
+ 
+ 
+TMF704 
+Team Approved Date: 19-Jun-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 60 
+ 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 60 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 60 
+ 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 6 
+Introduction .............................................................................................................................................................. 7 
+SAMPLE USE CASES ......................................................................................................................................................... 8 
+Support of polymorphism and extension patterns ........................................................................................................ 9 
+RESOURCE MODEL ........................................................................................................................................................ 10 
+Managed Entity and Task Resource Models ..................................................................................................... 10 
+Test Case resource................................................................................................................................................. 10 
+Test Suite resource ................................................................................................................................................ 15 
+Non Functional Test Model resource .................................................................................................................... 20 
+Notification Resource Models .............................................................................................................................. 25 
+Test Case Create Event .......................................................................................................................................... 26 
+Test Case Change Event ......................................................................................................................................... 27 
+Test Case Delete Event .......................................................................................................................................... 27 
+Test Case Attribute Value Change Event ............................................................................................................... 27 
+Test Case State Change Event ............................................................................................................................... 28 
+Test Suite Create Event ......................................................................................................................................... 28 
+Test Suite Change Event ........................................................................................................................................ 28 
+Test Suite Delete Event ......................................................................................................................................... 29 
+Test Suite Attribute Value Change Event .............................................................................................................. 29 
+Test Suite State Change Event ............................................................................................................................... 30 
+Non Functional Test Model Create Event ............................................................................................................. 30 
+Non Functional Test Model Change Event ............................................................................................................ 30 
+Non Functional Test Model Delete Event.............................................................................................................. 31 
+Non Functional Test Model Attribute Value Change Event .................................................................................. 31 
+Non Functional Test Model State Change Event ................................................................................................... 31 
+API OPERATIONS ........................................................................................................................................................... 33 
+Operations on Test Case ........................................................................................................................................... 33 
+List test cases ......................................................................................................................................................... 33 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 60 
+ 
+Retrieve test case .................................................................................................................................................. 35 
+Create test case ..................................................................................................................................................... 36 
+Patch test case ....................................................................................................................................................... 39 
+Delete test case ..................................................................................................................................................... 41 
+Operations on Test Suite .......................................................................................................................................... 41 
+List test suites ........................................................................................................................................................ 41 
+Retrieve test suite ................................................................................................................................................. 42 
+Create test suite .................................................................................................................................................... 43 
+Patch test suite ...................................................................................................................................................... 45 
+Delete test suite .................................................................................................................................................... 47 
+Operations on Non Functional Test Model............................................................................................................... 48 
+List non functional test models ............................................................................................................................. 48 
+Retrieve non functional test model ....................................................................................................................... 49 
+Create non functional test model ......................................................................................................................... 50 
+Patch non functional test model ........................................................................................................................... 51 
+Delete non functional test model.......................................................................................................................... 53 
+API NOTIFICATIONS....................................................................................................................................................... 54 
+Register listener ........................................................................................................................................................ 54 
+Unregister listener .................................................................................................................................................... 55 
+Publish Event to listener ........................................................................................................................................... 55 
+Appendix 1 .................................................................................................................................................................... 57 
+Examples of base64-encoded Attachment content for ONAP VTP .......................................................................... 57 
+Example 1. ONAP VTP test case representation example ..................................................................................... 57 
+Example 2. ONAP VTP test suite representation example 1 (requests) ................................................................ 57 
+Example 3. ONAP VTP test suite representation example 1 (responses) ............................................................. 58 
+Example 4. ONAP VTP test suite representation example 2 (requests) ................................................................ 58 
+Example 5. ONAP VTP test suite representation example 2 (responses) ............................................................. 59 
+Acknowledgements ...................................................................................................................................................... 60 
+Document History ..................................................................................................................................................... 60 
+Version History ...................................................................................................................................................... 60 
+Release History ...................................................................................................................................................... 60 
+Contributors to Document ........................................................................................................................................ 60 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 60 
+ 
+List of Tables 
+N/A 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 60 
+ 
+Introduction 
+ 
+The following document is the specification of the REST API for test case management. It includes the model 
+definition as well as all available operations.  
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 60 
+ 
+SAMPLE USE CASES 
+The reader will find examples of use cases in TMF913 “Test API Component Suite” document. 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 60 
+ 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance TestCase, TestSuite and NonFunctionalTestModel inheriting properties from the abstract 
+ManagedArtifact entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+ManagedArtifact instances some may be instances of TestCase where other could be instances of TestSuite. The 
+@type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 60 
+ 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Test Case resource 
+A managed test case resource. 
+Resource model 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 60 
+ 
+Field descriptions 
+TestCase fields 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+versionDescription 
+A string. The artifact version description. 
+href 
+A string. Hyperlink to access the test resource. 
+id 
+A string. ID created by the implementing service. 
+testCaseDefinition 
+A test case definition (TestCaseDefinition). Test case definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos (RelatedPartyWithContactInfo [*]). Related 
+party specialization that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). Possible values for the 
+state of a managed artifact: 'incomplete', 'beta', 'stable', 'deprecated'. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 60 
+ 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 60 
+ 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+TestCaseDefinition sub-resource 
+Test case definition. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 60 
+ 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCase' resource object 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample test case", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testCaseDefinition": { 
+        "attachmentType": "vtpar", 
+        "content": "<base64-encoded test case>", 
+        "mimeType": "base64" 
+    } 
+} 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 60 
+ 
+Test Suite resource 
+A managed test suite resource. 
+Resource model 
+ 
+Field descriptions 
+TestSuite fields 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 60 
+ 
+versionDescription 
+A string. The artifact version description. 
+href 
+A string. Hyperlink to access the test resource. 
+id 
+A string. ID created by the implementing service. 
+testSuiteDefinition 
+A test suite definition (TestSuiteDefinition). Test suite definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos (RelatedPartyWithContactInfo [*]). Related 
+party specialization that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). Possible values for the 
+state of a managed artifact: 'incomplete', 'beta', 'stable', 'deprecated'. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 60 
+ 
+Another Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Quantity sub-resource 
+An amount in a given unit. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 60 
+ 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+TestSuiteDefinition sub-resource 
+Test suite definition. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 60 
+ 
+id 
+A string. Unique identifier for this particular attachment. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuite' resource object 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample test suite", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testSuiteDefinition": { 
+        "attachmentType": "testsuite", 
+        "content": "<base64-encoded test suite>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 60 
+ 
+Non Functional Test Model resource 
+A managed non-functional test model resource. 
+Resource model 
+ 
+Field descriptions 
+NonFunctionalTestModel fields 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+versionDescription 
+A string. The artifact version description. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 60 
+ 
+href 
+A string. Hyperlink to access the test resource. 
+id 
+A string. ID created by the implementing service. 
+nonFunctionalTestModelDefinition A non functional test model definition 
+(NonFunctionalTestModelDefinition). Non-functional test model definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos (RelatedPartyWithContactInfo [*]). 
+Related party specialization that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). Possible values 
+for the state of a managed artifact: 'incomplete', 'beta', 'stable', 
+'deprecated'. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 60 
+ 
+Another Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+NonFunctionalTestModelDefinition sub-resource 
+Non-functional test model definition. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 60 
+ 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 60 
+ 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestModel' resource object 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample non-functional test model", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "nonFunctionalTestModelDefinition": { 
+        "attachmentType": "nftestmodel", 
+        "content": "<base64-encoded non-functional test model>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 60 
+ 
+Notification Resource Models 
+ 
+15 notifications are defined for this API 
+Notifications related to TestCase: 
+    - TestCaseCreateEvent 
+    - TestCaseChangeEvent 
+    - TestCaseDeleteEvent 
+    - TestCaseAttributeValueChangeEvent 
+    - TestCaseStateChangeEvent 
+Notifications related to TestSuite: 
+    - TestSuiteCreateEvent 
+    - TestSuiteChangeEvent 
+    - TestSuiteDeleteEvent 
+    - TestSuiteAttributeValueChangeEvent 
+    - TestSuiteStateChangeEvent 
+Notifications related to NonFunctionalTestModel: 
+    - NonFunctionalTestModelCreateEvent 
+    - NonFunctionalTestModelChangeEvent 
+    - NonFunctionalTestModelDeleteEvent 
+    - NonFunctionalTestModelAttributeValueChangeEvent 
+    - NonFunctionalTestModelStateChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 60 
+ 
+ 
+Test Case Create Event 
+Notification TestCaseCreateEvent case for resource TestCase 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseCreateEvent", 
+     "event": { 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 60 
+ 
+        "testCase" :  
+            {-- SEE TestCase RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Case Change Event 
+Notification TestCaseChangeEvent case for resource TestCase 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseChangeEvent", 
+     "event": { 
+        "testCase" :  
+            {-- SEE TestCase RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Case Delete Event 
+Notification TestCaseDeleteEvent case for resource TestCase 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseDeleteEvent", 
+     "event": { 
+        "testCase" :  
+            {-- SEE TestCase RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Case Attribute Value Change Event 
+Notification TestCaseAttributeValueChangeEvent case for resource TestCase 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseAttributeValueChangeEvent' notification 
+event object 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 60 
+ 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseAttributeValueChangeEvent", 
+     "event": { 
+        "testCase" :  
+            {-- SEE TestCase RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Case State Change Event 
+Notification TestCaseStateChangeEvent case for resource TestCase 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseStateChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseStateChangeEvent", 
+     "event": { 
+        "testCase" :  
+            {-- SEE TestCase RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Suite Create Event 
+Notification TestSuiteCreateEvent case for resource TestSuite 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestSuiteCreateEvent", 
+     "event": { 
+        "testSuite" :  
+            {-- SEE TestSuite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Suite Change Event 
+Notification TestSuiteChangeEvent case for resource TestSuite 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 60 
+ 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestSuiteChangeEvent", 
+     "event": { 
+        "testSuite" :  
+            {-- SEE TestSuite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Suite Delete Event 
+Notification TestSuiteDeleteEvent case for resource TestSuite 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestSuiteDeleteEvent", 
+     "event": { 
+        "testSuite" :  
+            {-- SEE TestSuite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Suite Attribute Value Change Event 
+Notification TestSuiteAttributeValueChangeEvent case for resource TestSuite 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteAttributeValueChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestSuiteAttributeValueChangeEvent", 
+     "event": { 
+        "testSuite" :  
+            {-- SEE TestSuite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 60 
+ 
+Test Suite State Change Event 
+Notification TestSuiteStateChangeEvent case for resource TestSuite 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteStateChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestSuiteStateChangeEvent", 
+     "event": { 
+        "testSuite" :  
+            {-- SEE TestSuite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Model Create Event 
+Notification NonFunctionalTestModelCreateEvent case for resource NonFunctionalTestModel 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestModelCreateEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"NonFunctionalTestModelCreateEvent", 
+     "event": { 
+        "nonFunctionalTestModel" :  
+            {-- SEE NonFunctionalTestModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Model Change Event 
+Notification NonFunctionalTestModelChangeEvent case for resource NonFunctionalTestModel 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestModelChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 60 
+ 
+    "eventType":"NonFunctionalTestModelChangeEvent", 
+     "event": { 
+        "nonFunctionalTestModel" :  
+            {-- SEE NonFunctionalTestModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Model Delete Event 
+Notification NonFunctionalTestModelDeleteEvent case for resource NonFunctionalTestModel 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestModelDeleteEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"NonFunctionalTestModelDeleteEvent", 
+     "event": { 
+        "nonFunctionalTestModel" :  
+            {-- SEE NonFunctionalTestModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Model Attribute Value Change Event 
+Notification NonFunctionalTestModelAttributeValueChangeEvent case for resource NonFunctionalTestModel 
+Json representation sample 
+We provide below the json representation of an example of a 
+'NonFunctionalTestModelAttributeValueChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"NonFunctionalTestModelAttributeValueChangeEvent", 
+     "event": { 
+        "nonFunctionalTestModel" :  
+            {-- SEE NonFunctionalTestModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Model State Change Event 
+Notification NonFunctionalTestModelStateChangeEvent case for resource NonFunctionalTestModel 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 60 
+ 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestModelStateChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"NonFunctionalTestModelStateChangeEvent", 
+     "event": { 
+        "nonFunctionalTestModel" :  
+            {-- SEE NonFunctionalTestModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 60 
+ 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Test Case 
+List test cases 
+  GET /testCase?fields=...&{filtering} 
+Description 
+This operation list test case entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 60 
+ 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of test case(s). 
+ 
+Request 
+ 
+GET /tmf-api/testCase/v4/testCase 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "description": "Sample test case 1", 
+        "version": "1.2.3", 
+        "relatedParty": [ 
+            { 
+                "name": "testUser", 
+                "role": "Owner", 
+                "@referredType": "Individual", 
+                "contact": [ 
+                    { 
+                        "mediumType": "email", 
+                        "characteristic": { 
+                            "emailAddress": "testUser@abc.com" 
+                        } 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "stable", 
+        "testCaseDefinition": { 
+            "content": "<base64-encoded test case> - please see Example 1 in Appendix 1", 
+            "mimeType": "base64", 
+            "url": "http://myservice.com/artifact/1234" 
+        } 
+    } 
+] 
+ 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 60 
+ 
+Retrieve test case 
+  GET /testCase/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a test case entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific test case. 
+ 
+Request 
+ 
+GET /tmf-api/testCase/v4/testCase/3180 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample test case 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testCaseDefinition": { 
+        "content": "<base64-encoded test case> - please see Example 1 in Appendix 1", 
+        "mimeType": "base64", 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 60 
+ 
+        "url": "http://myservice.com/artifact/1234" 
+    } 
+} 
+ 
+Create test case 
+  POST /testCase 
+Description 
+This operation creates a test case entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a TestCase, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+testCaseDefinition 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a test case. 
+ 
+Request 
+ 
+POST /tmf-api/testCase/v4/testCase 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample test case 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 60 
+ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testCaseDefinition": { 
+        "attachmentType": "vtpar", 
+        "content": "<base64-encoded test case> - please see Example 1 in Appendix 1", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample test case 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testCaseDefinition": { 
+        "content": "<base64-encoded test case> - please see Example 1 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/artifact/1234" 
+    } 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 60 
+ 
+} 
+ 
+ 
+Here's an example of a request for creating a test case by referring definition from artifact. 
+ 
+Request 
+ 
+POST /tmf-api/testCase/v4/testCase 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample test case 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testCaseDefinition": { 
+        "url": "http://myservice.com/artifact/1234", 
+        "mimeType": "string" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample test case 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 60 
+ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testCaseDefinition": { 
+        "content": "<base64-encoded test case> - please see Example 1 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/artifact/1234" 
+    } 
+} 
+ 
+Patch test case 
+  PATCH /testCase/{id} 
+Description 
+This operation allows partial updates of a test case entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+testCaseDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 40 of 60 
+ 
+Non Patchable Attributes 
+Rule 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a TestCase resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample test case", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testCaseDefinition": { 
+        "attachmentType": "vtpar", 
+        "content": "<base64-encoded test case>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+} 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 41 of 60 
+ 
+Delete test case 
+  DELETE /testCase/{id} 
+Description 
+This operation deletes a test case entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a test case. 
+ 
+Request 
+ 
+DELETE /tmf-api/testCase/v4/testCase/3180 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Test Suite 
+List test suites 
+  GET /testSuite?fields=...&{filtering} 
+Description 
+This operation list test suite entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of test suite(s). 
+ 
+Request 
+ 
+GET /tmf-api/testCase/v4/testSuite 
+Accept: application/json 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 42 of 60 
+ 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "description": "Sample test suite 1", 
+        "version": "1.2.3", 
+        "relatedParty": [ 
+            { 
+                "name": "testUser", 
+                "role": "Owner", 
+                "@referredType": "Individual", 
+                "contact": [ 
+                    { 
+                        "mediumType": "email", 
+                        "characteristic": { 
+                            "emailAddress": "testUser@abc.com" 
+                        } 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "stable", 
+        "testSuiteDefinition": { 
+            "content": "<base64-encoded test suite> - please see Example 3 in Appendix 1", 
+            "mimeType": "base64", 
+            "url": "http://myservice.com/artifact/5678" 
+        } 
+    } 
+] 
+ 
+Retrieve test suite 
+  GET /testSuite/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a test suite entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 43 of 60 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific test suite. 
+ 
+Request 
+ 
+GET /tmf-api/testCase/v4/testSuite/3180 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+    "description": "Sample test suite 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testSuiteDefinition": { 
+        "content": "<base64-encoded test suite> - please see Example 3 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/artifact/5678" 
+    } 
+} 
+ 
+Create test suite 
+  POST /testSuite 
+Description 
+This operation creates a test suite entity. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 44 of 60 
+ 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a TestSuite, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+testSuiteDefinition 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a test suite. 
+ 
+Request 
+ 
+POST /tmf-api/testCase/v4/testSuite 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample test suite 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 45 of 60 
+ 
+    "state": "stable", 
+    "testSuiteDefinition": { 
+        "attachmentType": "vtpar", 
+        "content": "<base64-encoded test suite> - please see Example 2 in Appendix 1", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+    "description": "Sample test suite 1", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testSuiteDefinition": { 
+        "content": "<base64-encoded test suite> - please see Example 3 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/artifact/5678" 
+    } 
+} 
+ 
+Patch test suite 
+  PATCH /testSuite/{id} 
+Description 
+This operation allows partial updates of a test suite entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional.  
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 46 of 60 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+testSuiteDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a TestSuite resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/testCase/v4/testSuite/aac9969d-219d-4ff1-b256-1765dcf9b342 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "description": "Sample test suite", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 47 of 60 
+ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testSuiteDefinition": { 
+        "attachmentType": "testsuite", 
+        "content": "<base64-encoded test suite>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+} 
+ 
+Delete test suite 
+  DELETE /testSuite/{id} 
+Description 
+This operation deletes a test suite entity. 
+Usage Samples 
+Here's an example of a request for deleting a test suite. 
+ 
+Request 
+ 
+DELETE /tmf-api/testCase/v4/testSuite/3180 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 48 of 60 
+ 
+Operations on Non Functional Test Model 
+List non functional test models 
+  GET /nonFunctionalTestModel?fields=...&{filtering} 
+Description 
+This operation list non functional test model entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving NonFunctionalTestModel resources. 
+ 
+Request 
+ 
+GET /tmf-api/testCase/v4/nonFunctionalTestModel 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/aac9969d-219d-4ff1-b256-
+1765dcf9b342", 
+    "description": "Sample non-functional test model", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 49 of 60 
+ 
+    "state": "stable", 
+    "nonFunctionalTestModelDefinition": { 
+        "attachmentType": "nftestmodel", 
+        "content": "<base64-encoded non-functional test model>", 
+        "mimeType": "base64" 
+    } 
+} 
+] 
+ 
+Retrieve non functional test model 
+  GET /nonFunctionalTestModel/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a non functional test model entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a NonFunctionalTestModel resource. 
+ 
+Request 
+ 
+GET /tmf-api/testCase/v4/nonFunctionalTestModel/aac9969d-219d-4ff1-b256-1765dcf9b342 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/aac9969d-219d-4ff1-b256-
+1765dcf9b342", 
+    "description": "Sample non-functional test model", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 50 of 60 
+ 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "nonFunctionalTestModelDefinition": { 
+        "attachmentType": "nftestmodel", 
+        "content": "<base64-encoded non-functional test model>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+Create non functional test model 
+  POST /nonFunctionalTestModel 
+Description 
+This operation creates a non functional test model entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+NonFunctionalTestModel, including any possible rule conditions and applicable default values. Notice that it is up 
+to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+nonFunctionalTestModelDefinition 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Usage Samples 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 51 of 60 
+ 
+Here's an example of a request for creating a NonFunctionalTestModel resource. In this example the request only 
+passes mandatory attributes. 
+ 
+Request 
+ 
+POST /tmf-api/testCase/v4/nonFunctionalTestModel 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample non-functional test model", 
+    "version": "1.2.3", 
+    "nonFunctionalTestModelDefinition": { 
+        "attachmentType": "nftestmodel", 
+        "content": "<base64-encoded non-functional test model>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/aac9969d-219d-4ff1-b256-
+1765dcf9b342", 
+    "description": "Sample non-functional test model", 
+    "version": "1.2.3", 
+    "nonFunctionalTestModelDefinition": { 
+        "attachmentType": "nftestmodel", 
+        "content": "<base64-encoded non-functional test model>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+Patch non functional test model 
+  PATCH /nonFunctionalTestModel/{id} 
+Description 
+This operation allows partial updates of a non functional test model entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 52 of 60 
+ 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+nonFunctionalTestModelDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a NonFunctionalTestModel resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/testCase/v4/nonFunctionalTestModel/aac9969d-219d-4ff1-b256-1765dcf9b342 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/aac9969d-219d-4ff1-b256-
+1765dcf9b342", 
+    "description": "Sample non-functional test model", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 53 of 60 
+ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "nonFunctionalTestModelDefinition": { 
+        "attachmentType": "nftestmodel", 
+        "content": "<base64-encoded non-functional test model>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+} 
+ 
+Delete non functional test model 
+  DELETE /nonFunctionalTestModel/{id} 
+Description 
+This operation deletes a non functional test model entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a NonFunctionalTestModel resource. 
+ 
+Request 
+ 
+DELETE /tmf-api/testCase/v4/nonFunctionalTestModel/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 54 of 60 
+ 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 55 of 60 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 56 of 60 
+ 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 57 of 60 
+ 
+Appendix 1 
+Examples of base64-encoded Attachment content for ONAP VTP 
+Example 1. ONAP VTP test case representation example 
+ 
+Encoded value 
+ 
+ewogICAgInRlc3RTdWl0ZU5hbWUiOiAidGVzdHN1aXRlLTEiLAogICAgInRlc3RTY2VuYXJpb05hbWUiOiAidG1mLXZ0cCIsCiAgI
+CAibWV0YWRhdGEiOiB7fSwKICAgICJpbnB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgICAibmFtZSI6ICJhcmcxIiwKICAgICA
+gICAgICAgImRlc2NyaXB0aW9uIjogIkFyZ3VtZW50IDEiLAogICAgICAgICAgICAidHlwZSI6ICJzdHJpbmciLAogICAgICAgICAgICAi
+aXNPcHRpb25hbCI6IGZhbHNlCiAgICAgICAgfQogICAgXSwKICAgICJvdXRwdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICAgIm
+5hbWUiOiAiYXR0cjEiLAogICAgICAgICAgICAiZGVzY3JpcHRpb24iOiAiYXR0cmlidXRlIDEiLAogICAgICAgICAgICAidHlwZSI6ICJzd
+HJpbmciCiAgICAgICAgfQogICAgXQp9 
+ 
+Original /decoded JSON object 
+ 
+{ 
+    "testSuiteName": "testsuite-1", 
+    "testScenarioName": "tmf-vtp", 
+    "metadata": {}, 
+    "inputs": [ 
+        { 
+            "name": "arg1", 
+            "description": "Argument 1", 
+            "type": "string", 
+            "isOptional": false 
+        } 
+    ], 
+    "outputs": [ 
+        { 
+            "name": "attr1", 
+            "description": "attribute 1", 
+            "type": "string" 
+        } 
+    ] 
+} 
+ 
+ 
+Example 2. ONAP VTP test suite representation example 1 (requests) 
+ 
+Encoded value 
+ 
+W3sKICAgICJ0ZXN0Q2FzZU5hbWUiOiAidGVzdGNhc2UtMSIsCiAgICAidGVzdFNjZW5hcmlvTmFtZSI6ICJ0bWYtdnRwIgp9XQ
+o= 
+ 
+Original /decoded JSON object 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 58 of 60 
+ 
+[{ 
+    "testCaseName": "testcase-1", 
+    "testScenarioName": "tmf-vtp" 
+}] 
+ 
+ 
+Example 3. ONAP VTP test suite representation example 1 (responses) 
+ 
+Encoded value 
+ 
+W3sKICAgICJ0ZXN0Q2FzZU5hbWUiOiAidGVzdGNhc2UtMSIsCiAgICAidGVzdFNjZW5hcmlvTmFtZSI6ICJ0bWYtdnRwIgogICA
+gImlkIjogImFhYzk5NjlkLTIxOWQtNGZmMS1iMjU2LTE3NjVkY2Y5YjM0MiIsCiAgICAiaHJlZiI6ICJodHRwczovL215Y3NwOjgwO
+DAvdG1mLWFwaS90ZXN0Q2FzZS92NC90ZXN0Q2FzZS9hYWM5OTY5ZC0yMTlkLTRmZjEtYjI1Ni0xNzY1ZGNmOWIzNDIiCn1
+dCg== 
+ 
+Original /decoded JSON object 
+ 
+[{ 
+    "testCaseName": "testcase-1", 
+    "testScenarioName": "tmf-vtp" 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342" 
+}] 
+ 
+ 
+Example 4. ONAP VTP test suite representation example 2 (requests) 
+ 
+Encoded value 
+ 
+W3sKICAgICJ0ZXN0Q2FzZU5hbWUiOiAidGVzdGNhc2UtMSIsCiAgICAidGVzdFNjZW5hcmlvTmFtZSI6ICJ0bWYtdnRwIgogIH0
+sCiAgewogICAgInRlc3RDYXNlTmFtZSI6ICJ0ZXN0Y2FzZS0yIiwKICAgICJ0ZXN0U2NlbmFyaW9OYW1lIjogInRtZi12dHAiIAogIH
+1dCg== 
+ 
+Original /decoded JSON object 
+ 
+[{ 
+    "testCaseName": "testcase-1", 
+    "testScenarioName": "tmf-vtp" 
+  }, 
+  { 
+    "testCaseName": "testcase-2", 
+    "testScenarioName": "tmf-vtp"  
+  }] 
+ 
+ 
+ 
+ 
+
+
+Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 59 of 60 
+ 
+ 
+Example 5. ONAP VTP test suite representation example 2 (responses) 
+ 
+Encoded value 
+ 
+W3sKICAgICJ0ZXN0Q2FzZU5hbWUiOiAidGVzdGNhc2UtMSIsCiAgICAidGVzdFNjZW5hcmlvTmFtZSI6ICJ0bWYtdnRwIiwKICA
+gICJpZCI6ICJhYWM5OTY5ZC0yMTlkLTRmZjEtYjI1Ni0xNzY1ZGNmOWIzNDIiLAogICAgImhyZWYiOiAiaHR0cHM6Ly9teWNzc
+Do4MDgwL3RtZi1hcGkvdGVzdENhc2UvdjQvdGVzdENhc2UvYWFjOTk2OWQtMjE5ZC00ZmYxLWIyNTYtMTc2NWRjZjliMzQ
+yIgogIH0sCiAgewogICAgInRlc3RDYXNlTmFtZSI6ICJ0ZXN0Y2FzZS0yIiwKICAgICJ0ZXN0U2NlbmFyaW9OYW1lIjogInRtZi12dH
+AiLAogICAgImlkIjogImRlNDE2YjU1LTJhNjctNDJjMC04YzRmLTRmNWVhZWVlMDA0ZCIsCiAgICAiaHJlZiI6ICJodHRwczovL21
+5Y3NwOjgwODAvdG1mLWFwaS90ZXN0Q2FzZS92NC90ZXN0Q2FzZS9kZTQxNmI1NS0yYTY3LTQyYzAtOGM0Zi00ZjVlYWVlZ
+TAwNGQiCiAgfV0K 
+ 
+Original /decoded JSON object 
+ 
+[{ 
+    "testCaseName": "testcase-1", 
+    "testScenarioName": "tmf-vtp", 
+    "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342" 
+  }, 
+  { 
+    "testCaseName": "testcase-2", 
+    "testScenarioName": "tmf-vtp", 
+    "id": "de416b55-2a67-42c0-8c4f-4f5eaeee004d", 
+    "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/de416b55-2a67-42c0-8c4f-4f5eaeee004d" 
+  }] 
+ 
+ 
+ 
+ 
+
+
+ Test Case Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 60 of 60 
+ 
+Acknowledgements 
+Document History 
+ 
+Version History 
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+4.0.0 
+22-Jun-2020 
+Alan Pope 
+Final edits for initial release 
+ 
+Release History 
+Release Status 
+Date  
+Release led by: 
+Description  
+Pre-production 
+19-Jun-2020 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Edward Pershwitz 
+ITEA Technologies 
+edward.pershwitz@iteatechnologie
+s.com  
+First Release of the Document.  
+Production 
+23-Sep-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Contributors to Document 
+Kanagaraj Manickam 
+Huawei Technologies Co., Ltd 
+ 
+ 
+ 
+
+

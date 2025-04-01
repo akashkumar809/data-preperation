@@ -1,0 +1,3424 @@
+ 
+               TM Forum Specification 
+ Performance Threshold  
+ 
+API - REST Specification  
+ 
+ 
+ 
+ 
+ 
+     
+TMF649 
+ 
+Release 17.0.1 
+December 2017 
+ 
+ 
+ 
+Latest Update: TM Forum Release 17.0 
+TM Forum Approved 
+Version 1.0.1 
+IPR Mode: RAND 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 2  
+NOTICE 
+Copyright © TM Forum 2017. All Rights Reserved. 
+This document and translations of it may be copied and furnished to others, and derivative 
+works that comment on or otherwise explain it or assist in its implementation may be 
+prepared, copied, published, and distributed, in whole or in part, without restriction of any 
+kind, provided that the above copyright notice and this section are included on all such 
+copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed 
+for the purpose of developing any document or deliverable produced by a TM FORUM 
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in 
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM 
+or its successors or assigns.  
+This document and the information contained herein is provided on an "AS IS" basis and TM 
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL 
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that 
+would necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to 
+notify the TM FORUM Team Administrator and provide an indication of its willingness to grant patent 
+licenses to such patent claims in a manner consistent with the IPR Mode of the TM FORUM 
+Collaboration Project Team that produced this deliverable. 
+  
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a 
+claim of ownership of any patent claims that would necessarily be infringed by implementations of this 
+TM FORUM Standards Final Deliverable by a patent holder that is not willing to provide a license to 
+such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project 
+Team that produced this TM FORUM Standards Final Deliverable. TM FORUM may include such 
+claims on its website, but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights 
+that might be claimed to pertain to the implementation or use of the technology described in this TM 
+FORUM Standards Final Deliverable or the extent to which any license under such rights might or 
+might not be available; neither does it represent that it has made any effort to identify any such rights. 
+Information on TM FORUM's procedures with respect to rights in any document or deliverable 
+produced by a TM FORUM Collaboration Project Team can be found on the TM FORUM website. 
+Copies of claims of rights made available for publication and any assurances of licenses to be made 
+available, or the result of an attempt made to obtain a general license or permission for the use of such 
+proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any 
+information or list of intellectual property rights will at any time be complete, or that any claims in such 
+list are, in fact, Essential Claims. 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 3  
+Direct inquiries to the TM Forum office:  
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054 USA 
+Tel No.  +1 973 944 5100 
+Fax No.  +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 4  
+TABLE OF CONTENTS 
+NOTICE .................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................... 4 
+List of Tables ............................................................................................................................................ 6 
+Introduction ............................................................................................................................................... 7 
+SAMPLE USE CASES.............................................................................................................................. 8 
+RESOURCE MODEL.............................................................................................................................. 10 
+Managed Entity and Task Resource Models ..................................................................................... 10 
+API OPERATION for thresholds ............................................................................................................. 20 
+POST /API/THRESOLD .................................................................................................................... 24 
+PATCH /API/THRESHOLD/{THRESHOLDID} .................................................................................. 26 
+DELETE /API/THRESHOLD/{THRESHOLDID} ................................................................................ 28 
+GET /API/THRESHOLD/{THRESHOLDID) ....................................................................................... 29 
+GET /API/THRESHOLD .................................................................................................................... 30 
+POST /API/THRESOLDRULE ........................................................................................................... 31 
+PATCH /API/THRESOLDRULE/{THRESHOLDRULEID} ................................................................. 34 
+DELETE /API/THRESOLDRULE/{THRESHOLDRULEID} ................................................................ 38 
+GET /API/THRESHOLDRULE/{THRESHOLDRULEID) .................................................................... 39 
+GET /API/THRESHOLDRULE ........................................................................................................... 40 
+POST /API/THRESOLDJOB ............................................................................................................. 43 
+PATCH /API/THRESOLDJOB/{THRESHOLDJOBID} ....................................................................... 46 
+DELETE /API/THRESOLDJOB/{THRESHOLDJOBID} ..................................................................... 49 
+GET /API/THRESHOLDJOB//{THRESHOLDJOBID) ........................................................................ 50 
+GET /API/THRESHOLDJOB ............................................................................................................. 52 
+POST /API//{THRESHOLDJOBID}/SUSPEND ................................................................................. 53 
+POST /API/{THRESHOLDJOBID}RESUME ..................................................................................... 54 
+API NOTIFICATION FOR THRESHOLDS ............................................................................................. 55 
+REGISTER LISTENER POST /hub ................................................................................................... 55 
+UNREGISTER LISTENER DELETE hub/{id} .................................................................................... 55 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 5  
+publish {EventTYPE} POST /listener ................................................................................................. 56 
+THRESHOLDCreate Notification ....................................................................................................... 57 
+THRESHOLDCHANGE Notification .................................................................................................. 58 
+THRESHOLDDELETE Notification .................................................................................................... 59 
+THRESHOLDRULECreate Notification ............................................................................................. 60 
+THRESHOLDRULECHANGE Notification......................................................................................... 62 
+THRESHOLDRULEDELETE Notification .......................................................................................... 64 
+THRESHOLDJOBCreate Notification ................................................................................................ 66 
+THRESHOLDJOBCHANGE Notification ........................................................................................... 68 
+THRESHOLDJOBDELETE Notification ............................................................................................. 70 
+THRESHOLDJOBSUSPEND Notification ......................................................................................... 72 
+thresholdJobRESUME Notification .................................................................................................... 73 
+Acknowledgements................................................................................................................................. 74 
+Contributors to Document .................................................................................................................. 74 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 6  
+LIST OF TABLES 
+ 
+Figure 1 - Threshold Management Use Case………………………………………………………………8 
+Figure 2 - Jobs Execution State Machine………………………………………………………………….18 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 7  
+INTRODUCTION 
+The following document is the specification of the REST API for the threshold management. It includes 
+the model definition as well as all available operations.  
+Performance Threshold Management is about identifying exceptional behavior of monitored 
+performance indicators. Threshold Management is built as an additional layer on top of standard 
+Performance Monitoring. A PM Producing application that is already producing indicators is asked to 
+set a Threshold over a Performance Indicator and raise an alarm when this Threshold is crossed. 
+When the indicator returns to its normal behavior an alarm clear alarm event is sent. 
+Possible actions are:  
+• 
+creating, retrieving, modifying and deleting threshold rules 
+• 
+creating, retrieving, modifying and deleting thresholds 
+• 
+creating, retrieving, modifying and deleting thresholdjobs.  
+The Performance Thresholding API provides a standardized client interface to Service and Resource 
+Performance Management Systems for manipulating (create/update/delete) threshold/violation/exception 
+rules. It enables alarms/notifications on exceptions and scheduling of threshold/violation/exception evaluation. 
+ Examples of Performance Thresholding API originators (clients) include resource performance monitoring 
+applications and resource performance analysis applications. As part of the HIP platform the Capability 
+delivery assurance will be exposing the API for Platform capability consumers. The API will also be used by 
+the Platform Capability manager for capability delivery assurance.  
+The API supports the ability to define a Threshold as a set of rules that determine when to raise an alarm and 
+when to clear it for various severity levels. Correspondingly, for each rule used for raising alarms, the expected 
+alarm fields of the Threshold Crossing Alarm (TCA) can be set over the interface. The API will support 
+Performance Thresholds creation deletion and query. 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 8  
+SAMPLE USE CASES 
+A Thresholding mechanism is a significant tool to identify exceptional behaviour at different 
+management layers, at network level, service level and even customer level. It is assumed that a 
+Performance Management system is deployed to collect and calculate measurements (e.g. Counters, 
+KPIs, KQIs) that have significance to various departments of the Service Operator: Operations, 
+Engineering, Marketing, Customer Care, etc. Performance Management systems are sometimes 
+limited to a specific domain or technology and sometimes much wider serving multiple domains, 
+multiple technologies and multiple management layers. 
+In many typical scenarios, there is a need of management systems to get the information on 
+exceptional behaviour as reflected in values of KPIs. This may be needed as a tool to identify lack of 
+network resources (e.g. Bandwidth, CPU, transport links) to realize an insufficient Quality of Service or 
+even bad customer experience. 
+As shown in the diagram below, a management system that requires the information on exceptional 
+behaviour of KPIs is typically requesting this information from the Performance management system 
+that collects the relevant counters or calculates the KPIs. Using the Threshold management system 
+will define the threshold defines the threshold and whenever the threshold is crossed the Performance 
+management system will send a threshold crossing alarm using the standard TM Forum Alarm 
+management API. Other consequences (not just alarms) may also be defined in a textual format. 
+ 
+ 
+Figure 1 - Threshold Management Use Case 
+ 
+A threshold is defined and executed in the target Performance management system in three steps: 
+1. Defining a threshold rule 
+2. Defining a threshold 
+3. Defining a threshold job that will execute the threshold witha s cope of monitored objects 
+(resources, services, and customers) at a specific schedule 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 9  
+The Threshold Rule is the heart of this interface. It allows to define logic that determines when to alert 
+on exceptional values of KPIs and on return to normal conditions. The Thresholding API supports two 
+kinds of thresholds: 
+• 
+Simple Thresholds – defined explicitely by a set of attributes 
+• 
+Threshold algorithms – a case where the threshold is actually an algorithm to be executed 
+with parameters 
+The simple threshold rules provide support for simple cases such as comparing a value of a KPI to a 
+constant, but it can also support more interesting options such as checking ranges of values or 
+counting events in a particular time interval and more. 
+It is also possible to define an action that will be triggered when a threshold rule is valid. In most cases 
+the action will be raising or clearing a threshold crossing alarm (using the Alarm management 
+interface). In other cases a generic kind of an action, described by a text or a URL can be defined. 
+The Threshold resource packs a set of threshold rules to single logic (with an "OR" condition among 
+them) such that hysteresis or multi-range thresholds can be supported. 
+The Threshold Job is the operational entity to execute a threshold (a set of threshold rules). As part of 
+the definition of a Threshold Job, a scope of monitored objects is provided and a schedule for the 
+threshold evaluation is determined. 
+The API allows to create, update and delete threshold rules, thresholds and threshold jobs. Threshold 
+jobs can be suspended and resumed as part of their lifecycle. 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 10  
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Example of the JSON representation of a Threshold: 
+{ 
+  "id": "374", 
+  "href" : "http://api/threshold/374", 
+  "description": "Number odf Dropped Packets too high", 
+  "name": "DroppedPacketsHigh", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1919", 
+      "id": "1919", 
+"name: "DroppedPacketsHighRule" 
+    }     
+} 
+ 
+ 
+ 
+Threshold attributes description: 
+Field 
+Mandatory/ 
+Optional 
+Description 
+Id 
+M 
+Unique identifier of the threshold 
+href 
+M 
+A reference to the threshold 
+description 
+O 
+A description of the threshold 
+name 
+M 
+A word, term, or phrase by which a Performance threshold is 
+known and distinguished from other thresholds. 
+thresholdRule 
+M 
+A Performance Threshold contains a set of Performance 
+threshold rules of different conditions (Raise, Clear) and 
+different severities. 
+ 
+Example of the JSON representation of a Threshold Rule of type 
+"SimpleThresholdRule" : 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "href": "http://api/thresholdrule/1920", 
+  "@type": "simpleThresholdRule", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 11  
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+   }, 
+    "conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    } 
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0, 
+   
+    "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "MAJOR", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the limit"     
+}, 
+  "perfAlarmSpecThresholdCrossingDescription": "Dropped Packets per second are over 
+the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "MAJOR" 
+} 
+} 
+ 
+ 
+ 
+Example of the JSON representation of a Threshold Rule of type 
+"AlgorithmThresholdRule" : 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+   "@type": "algorithmThresholdRule ", 
+  "href": "http://api/thresholdrule/1920", 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 12  
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+   "algorithmRef": ""http://api/thresholdrulealgoritm/7000"", 
+   "algorithmParams": [ 
+      { 
+        "name": "sensitivity", 
+        "value": "0.2" 
+      } 
+    ], 
+   
+  "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "MAJOR", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the limit"  
+}, 
+  "perfAlarmSpecThresholdCrossingDescription": "Dropped Packets per second are over 
+the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "MAJOR" 
+} 
+} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 13  
+Threshold Rule attributes description: 
+Field 
+Mandatory/ 
+Optional 
+Description 
+Id 
+M 
+Unique identifier of the threshold rule 
+thresholdRuleName 
+M 
+A word, term, or phrase by which a 
+Performance threshold rule is known and 
+distinguished from other threshold rules. 
+Href 
+M 
+A reference to the threshold rule 
+Measurement 
+O 
+A counter/KPI to be used by the threshold 
+rule 
+     Id 
+M 
+Unique identifier of the measurement 
+     Name 
+M 
+A word, term, or phrase by which a 
+measurement is known and distinguished 
+from other measurements. 
+     Href 
+M 
+A reference to the measurement 
+     Description 
+O 
+A description of the measurement 
+     measurementType 
+O 
+A category of the measurement (different 
+SDOs may be using different categories) 
+     measurementUnit 
+O 
+The unit of the measurement (e.g. second, 
+bytes, Celsius, etc.) 
+     collectionType 
+O 
+This attribute indicates different forms in 
+which the measurement data can be 
+captured (please see details below) 
+     measurementFormula 
+O 
+A formula that is used to calculate a 
+measurement (a string) 
+simpleThresholdRule 
+ 
+A threshold rule that is based on explicit 
+definition of attributes that represent a 
+Boolean expression 
+     conformanceTargetUpper 
+O 
+A value used to determine if the Performance 
+threshold is crossed or ceased to be crossed, 
+serving as an upper value 
+     conformanceTargetLower 
+O 
+A value used to determine if the Performance 
+threshold is crossed or ceased to be crossed, 
+serving as an lower value 
+     conformanceComparatorUpper 
+O 
+An operator that when applied on a value (of 
+conformanceTargetUpper) specifies whether 
+a Performance threshold rule is crossed or 
+ceased to be crossed. 
+     conformanceComparatorLower 
+O 
+An operator that when applied on a value (of 
+conformanceTargetLower) specifies whether 
+a Performance threshold rule is crossed or 
+ceased to be crossed. 
+     conformancePeriod 
+O 
+An interval of time during which the 
+ConformanceTarget must 
+be measured 
+     thresholdTarget 
+O 
+A percent that is used to specify when a 
+warning should be used that indicates a 
+Performance threshold is in danger of not 
+being met. 
+     tolerancePeriod 
+O 
+An interval of time over which the 
+toleranceTarget is acceptable before a 
+Performance threshold Consequence is 
+initiated. 
+     gracePeriods 
+O 
+The number of times an objective can remain 
+un-updated in reference to the 
+conformancePeriod without a Performance 
+threshold Consequence being initiated. 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 14  
+algorithmThresholdRule 
+O 
+A threshold rule that is a reference to an 
+algorithm 
+     algorithmRef 
+O 
+ 
+     algorithmParams 
+O 
+A name value pair for the algorithm's 
+parameters 
+genericPerformanceConsequence 
+O 
+A threshold crossing or a threshold ceased to 
+be crossing results in a Performance 
+consequence. 
+     Name 
+M 
+A word, term, or phrase by which a 
+Consequence is known and distinguished 
+from other measurements 
+     Description 
+O 
+A description of a Consequence 
+     PrescribedAction 
+M 
+The suggested action 
+performanceAlarmSpecification 
+O 
+The specification of how to populate the 
+alarm fields when generating a threshold 
+crossing alarm. 
+     perfAlamSpecSeverity 
+M 
+A value for the Severity attribute as part of a 
+threshold crossing alarm definition. 
+     perfAlamProbableCause 
+M 
+A value for the ProbableCause attribute as 
+part of a threshold crossing alarm definition. 
+     perfAlarmSpecAlarmType 
+O 
+A value for the AlarmType attribute as part of 
+a threshold crossing alarm definition. 
+     perfAlarmSpecSpecificProblem 
+O 
+A value for the SpecificProblem attribute as 
+part of a threshold crossing alarm definition 
+     perfAlarmSpecAdditionalText 
+O 
+A value for the AdditionalText attribute as 
+part of a threshold crossing alarm definition. 
+  
+perfAlarmSpecThresholdCrossing
+Description 
+O 
+A specific description of the threshold 
+crossing (intended to be populated e under 
+the alarm under CrossedThreshold 
+structure). 
+thresholdRuleCondition 
+M 
+A concrete threshold may have two possible 
+values: \"Raise\" - a threshold was crossed or 
+\"Clear\" - a threshold ceased crossing. 
+thresholdRuleSeverity 
+M 
+A threshold can be generated in different 
+severity levels. A crossing for each level may 
+require a different condition and possibly 
+trigger a different consequence. The 
+supported severity levels are equivalent to 
+the possible severity level of alarms. 
+ 
+ 
+ 
+ 
+Collection Types 
+Following are the possible values of Collection Type: 
+ 
+COUNTER - This Collection Method is defined using a variable whose value can only be 
+incremented and which is reset at the beginning of each granularity period to well defined 
+value (usually “0”). 
+ 
+CUMULATIVE - This Collection Method is defined using a  variable whose value can 
+only be incremented  and which wraps around on reaching maximum possible value  that 
+the variable can attain. 
+• 
+GAUGE - This Collection Method is defined using a dynamic variable whose value can be 
+incremented or decremented, and which may be reset at the beginning of a granularity period 
+or recording interval ( multiple consecutive granularity periods). 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 15  
+• 
+DISCRETE_EVENT - A collection method (using a set of appropriate data containers) where 
+data related to a particular event type is captured and every nth event is registered, where n ≥ 
+1. The captured information is reset at the beginning of each granularity period. 
+• 
+STATUS_INSPECTION - This Collection Method  uses a  mechanism for high frequency 
+samplings of internal counters at predefined rates and captured using appropriate data type. 
+The captured information is reset at the beginning of each granularity period. 
+ 
+Alarm/Threshold Severities 
+Following are the possible values of Alarm/Threshold Severities: 
+• CRITICAL 
+• MAJOR 
+• MINOR 
+• WARNING 
+• INTERMEDIATE 
+ 
+Conformance Operators 
+Following are the possible values of the supported operators: 
+• GT – Greater than 
+• GE – Greater or equal 
+• EQ - Equal 
+• NEQ – Not Equal 
+• LE – Less or Equal 
+ 
+Example of the JSON representation of a Threshold Job. In this case the schedule 
+definition is of type weeklyScheduledefinition. 
+{ 
+   "id": "900", 
+   "href": "http://api/thresholdjob/900" 
+   "granularity": " G_30MN", 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+   "performanceThreshold": 374, 
+   "scheduleDefinition": { 
+    "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+    "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+    "scheduleDefinitionHoursRange": "string", 
+    "@type" = "weeklyScheduledefinition", 
+    "daysOfWeekRecurrence ": [ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 16  
+      "Monday","Tuesady", Wednesday", "Thursday", "Friday" 
+    ], 
+     
+    "excludedDates": [ 
+      "2017-12-31" 
+    ] 
+  }, 
+  "monitoredObjectsCriteria": [ 
+    { 
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+      "monitoredObjectFilter": "" 
+    } 
+  ] 
+} 
+ 
+ 
+ 
+Threshold job attributes description: 
+Field 
+Mandatory/ 
+Optional 
+Description 
+Id 
+M 
+The identifier of the threshold job 
+Href 
+M 
+A reference to the threshold job 
+Granularity 
+O 
+The rate of evaluating the threshold 
+(i.e. the execution of the threshold job) 
+creationTime 
+M 
+The threshold job creation time 
+lastModifiedTime 
+M 
+The time when the threshold job 
+was last modified 
+jobPriority 
+O 
+The priority of the management job. 
+The target system is using it to 
+prioritize jobs. 
+executionState 
+M 
+The execution state of the threshold 
+job. It is used to indicate a failure in 
+the execution of the job. 
+performanceThreshold 
+M 
+The Performance threshold to be 
+executed by the job. 
+scheduleDefinition 
+O 
+The schedule definition for running 
+the threshold job 
+     scheduleDefinitionStartTime 
+M 
+The Start time of the Schedule 
+Definition 
+     scheduleDefinitionEndTime 
+O 
+The Endtime of the Schedule 
+Definition. If the attribute is empty 
+the Schedule run forever, not 
+having a time constraint. 
+     recurringFrequency 
+M 
+A recurring frequency to run a job 
+within day that is included in 
+schedule definition, for example: 
+every 5 minutes, 15 minute, 30 
+minutes, 1 hour. 
+    scheduleDefinitionHoursRange 
+O 
+A list of time ranges within a 
+specific day that the schedule will 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 17  
+be active on, for example 08:00-
+12:00, 16:00-19:00. 
+    WeeklyScheduleDefinition 
+O 
+The weekly schedule is used to 
+define a schedule that is based on 
+the days of the week, e.g. a 
+schedule that will be active only on 
+Monday and Tuesday. 
+          daysOfWeekRecurrence 
+O 
+The list of days of week when the 
+weekly schedule definition is active 
+on: e.g. Monday, Tuesday, 
+Wednesday. 
+    MonthlyScheduleDaysofMonthDefinition 
+          
+O 
+The monthly schedule by days of 
+month is used to define a schedule 
+that is based on specifying which 
+days of month are requited, 
+e.g. the10th, 20th, 30th of each 
+month. 
+        daysOfMonthRecurrence 
+ 
+The list of days of month when the 
+monthly schedule definition is 
+active on, e.g. 10th , 15th , 20th. 
+     MonthlyScheduleDaysofWeekDefinition 
+O 
+The monthly schedule by days of 
+week is used to define a monthly 
+schedule based on the sequence of 
+week in a month and the days, e.g. 
+Monday of the 1st week each 
+month. 
+          daysOdMonthRecurrence 
+O 
+The list of days within a week of 
+month when the monthly schedule 
+definition is active on, e.g. Monday, 
+Tuesday of the week that is 
+specified in the 
+recurringDaySequence attribute. 
+          recurringDaySequence 
+O 
+A week of month when the monthly 
+schedule definition is active on, 1-5 
+or last week of the month. This 
+works in conjunction with the 
+daysOfWeekRecurrence attribute. 
+     DateScheduleDefinition 
+           
+O 
+The date schedule is used to define 
+a schedule that is based on specific 
+dates, such as December 31st 
+2015, Feberaury 28th 2013 
+          scheduledDates 
+ 
+The list of dates when the date 
+schedule definition is active on, 
+e.g.November 1st 2022. 
+     excludedDates 
+O 
+A list of specific dates that should 
+be excluded from the Schedule 
+Definition. 
+monitoredObjectsCriteria 
+M 
+Monitored objects are specified by 
+the MonitoredObjectsCriteria. 
+     monitoredObjectInstnaces 
+O 
+A list of object identifiers for 
+specifying what monitored 
+objects need to be referencenced. 
+     monitoredObjectClass 
+O 
+A monitored object class for 
+specifying the set of instances that 
+are referenced 
+     mointoredObjectFilter 
+O 
+A filter that can be used in 
+conjunction with the monitored 
+object class for specifying the set of 
+instances that are referenced 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 18  
+ 
+Granularity 
+Following are the possible values of Granularity: 
+• G_1M – 1 Minute 
+• G_5M – 5 Minutes 
+• G_15M – 15 minutes 
+• G_30M – 30 minutes 
+• G_1H – 1 hour 
+• G_24H – 24 hours 
+• G_1M – 1 month 
+• G_1Y – 1 year 
+• NA – not available 
+ 
+Execution State 
+Following are the possible values of Execution States: 
+• Active – The job is active 
+• Suspended – The job is suspended 
+• Failed – The job is not active due to  a failure 
+• Completed – The job has complted sucessfully, but no longer active 
+ 
+Figure 2 - Jobs Execution State Machine 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 19  
+UML MODEL 
+The UML model of the Threshold Interface is shown in the diagram below. 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 20  
+API OPERATION FOR THRESHOLDS 
+ 
+Operation on Entities 
+Uniform API 
+Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to 
+retrieve a 
+representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to 
+create a new resource 
+Partial Update of an 
+Entity 
+PATCH Resource 
+PATCH must be used 
+to partially update a 
+resource 
+Complete Update of 
+an Entity 
+PUT Resource 
+PUT must be used to 
+completely update a 
+resource identified by 
+its resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used 
+to remove a resource 
+Execute an Action on 
+an Entity  
+POST on TASK 
+Resource 
+POST must be used to 
+execute Task 
+Resources 
+Other Request 
+Methods 
+POST on TASK 
+Resource 
+GET and POST must 
+not be used to tunnel 
+other request methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design 
+Guidelines. 
+Notifications are also described in a subsequent section. 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 21  
+ 
+Threshold Operations 
+Uniform API Operation 
+Mandatory/Optional 
+Comments 
+POST /threshold 
+M 
+Create a new threshold 
+PATCH /threshold/{thresholdId} 
+O 
+Modify a threshold 
+DELETE/threshold/{thresholdId} M 
+DELETE a threshold, 
+always by identifier 
+GET /threshold/{thresholdId} 
+M 
+GET an threshold by 
+identifier  
+GET /threshold 
+O 
+GET an threshold by a 
+filter 
+ 
+Threshold Rule Operations 
+Uniform API Operation 
+Mandatory/Optional 
+Comments 
+POST /thresholdRule 
+M 
+Create a new 
+threshold rule 
+PATCH /threshold/{thresholdRuleId} 
+O 
+Modify a threshold 
+rule 
+DELETE/threshold/{thresholdRuleId} M 
+DELETE a threshold 
+rule, always by 
+identifier 
+GET /threshold/{thresholdRuleId} 
+M 
+GET a threshold rule 
+by identifier  
+GET /thresholdRule 
+O 
+GET threshold rules 
+by a filter 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 22  
+Threshold Job Operation 
+Uniform API Operation 
+Mandatory/Optional 
+Comments 
+POST /thresholdJob 
+M 
+Create a new 
+threshold job 
+PATCH /threshold/{thresholdJobId} 
+O 
+Modify a threshold 
+job 
+DELETE/thresholdJob/{thresholdJobId} M 
+DELETE a 
+threshold job, 
+always by identifier 
+GET /thresholdJob/{thresholJobId} 
+M 
+GET a threshold 
+job by identifier  
+GET /thresholdJob 
+O 
+GET threshold jobs 
+by a filter 
+POST /suspendThresholdJob 
+O 
+Suspend a 
+threshold job 
+POST /resumeThresholdJob 
+O 
+Resume a 
+threshold job 
+ 
+ 
+Notifications 
+Uniform API Operation 
+Mandatory/Optional 
+Comments 
+POST /threshldCreateNotification M 
+Notify on a new 
+threshold 
+ 
+POST 
+/thresholdClearedNotification 
+M 
+Notify on a cleared 
+threshold 
+POST 
+/thresholdChangeNotification 
+O 
+Notify on a change in a 
+threshold 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 23  
+Uniform API Operation 
+Mandatory/Optional 
+Comments 
+POST 
+/threshldRuleCreateNotification 
+M 
+Notify on a new 
+threshold rule 
+ 
+POST 
+/thresholdRuleClearedNotification 
+M 
+Notify on a cleared 
+threshold rule 
+POST 
+/thresholdRuleChangeNotification 
+O 
+Notify on a change in a 
+threshold rule 
+ 
+POST 
+/threshldJobCreateNotification 
+M 
+Notify on a new 
+threshold job 
+ 
+POST 
+/thresholdJobClearedNotification 
+M 
+Notify on a cleared 
+threshold job 
+POST 
+/thresholdJobChangeNotification 
+O 
+Notify on a change in a 
+threshold job 
+ 
+POST 
+/thresholdJobSuspendNotification 
+O 
+Notify on a suspension 
+of a threshold job 
+ 
+POST 
+/thresholdJobResumeNotification 
+O 
+Notify on a resumption 
+of a threshold job 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 24  
+POST /API/THRESOLD 
+The POST /threshold operation is used to create a new threshold at the target 
+Performance management system. 
+Behavior:  
+• Return status codes 
+o 20OK - the request was successful 
+o 400 Bad Request – error 
+The mandatory/optional attributes are specified in the table below. 
+Field 
+Mandatory/ 
+Optional 
+Rule 
+description 
+O 
+ 
+name 
+M 
+ 
+thresholdRule 
+M 
+ 
+ 
+REQUEST 
+POST /api/threshold 
+Content-Type: application/json 
+ 
+{ 
+  "description": "Too many Dropped Packets per interface", 
+  "name": "DroppedPacketsHigh", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1919", 
+      "id": "1919" 
+    } 
+  ] 
+} 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+{ 
+ 
+  "id": "374", 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 25  
+  "href" : "http://api/threshold/374", 
+  "description": "string", 
+  "name": "DroppedPacketsHigh", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1919", 
+      "id": "1919", 
+"name: "" 
+    } 
+  ] 
+} 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 26  
+PATCH /API/THRESHOLD/{THRESHOLDID} 
+The PATCH /threshold operation is used to modify an existing threshold at the target 
+Performance management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request – error 
+The patchable attributes are specified in the table below. 
+Field 
+Patchable 
+Rule 
+Id 
+N 
+ 
+href 
+N 
+ 
+description 
+Y 
+ 
+name 
+Y 
+ 
+thresholdRule 
+Y 
+ 
+ 
+In the example below, the threshold the patch command is used to modify the 
+description of the threshold and the attached threshold rule. 
+REQUEST 
+PATCH /api/threshold/374 
+Content-Type: application/json 
+{ 
+  "id": 374, 
+  "description": " Too many Dropped Packets per Router interface", 
+  "thresholdRule": [ 
+    { 
+"href": "http://api/thresholdrule/1920", 
+      "id": "1920" 
+    } 
+  ] 
+} 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 27  
+{ 
+  "id": "374", 
+  "href" : "http://api/threshold/374", 
+  "description": "Too many Dropped Packets per Router interface ", 
+  "name": "DroppedPacketsHigh ", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1920", 
+      "id": "1920" 
+    } 
+  ] 
+} 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 28  
+DELETE /API/THRESHOLD/{THRESHOLDID} 
+The PATCH /threshold operation is used to delete an existing threshold at the target 
+management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+delete /api/threshold/374 
+Content-Type: application/json 
+RESPONSE 
+200 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 29  
+GET /API/THRESHOLD/{THRESHOLDID) 
+The GET /alarm operation is used to .. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+Get /api/threshold/374 
+Content-Type: application/json 
+RESPONSE 
+200 
+Content-Type: application/json 
+ 
+{ 
+  "id": 374, 
+  "href" : "http://api/threshold/374", 
+  "description": "Too many Dropped Packets per Router interface ", 
+  "name": "DroppedPacketsHigh ", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1920", 
+      "id": "1920" 
+    } 
+  ] 
+} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 30  
+GET /API/THRESHOLD 
+The GET /api/threshold operation is used to get thresholds by filter. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+Get /api/threshold?name= DroppedPacketsHigh 
+Accept: application/json 
+RESPONSE 
+200 
+Content-Type: application/json 
+{ 
+  "id": 374, 
+  "href" : "http://api/threshold/374", 
+  "description": "Too many Dropped Packets per Router interface ", 
+  "name": "DroppedPacketsHigh ", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1920", 
+      "id": "1920" 
+    } 
+  ] 
+} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 31  
+POST /API/THRESOLDRULE 
+The POST /thresholdrule operation is used to create a new threshold rule at the 
+target Performance management system. 
+Behavior:  
+• Return status codes 
+o 200 OK - the request was successful 
+o 400 Bad Request – error 
+The mandatory/optional attributes are specified in the table below. 
+Field 
+Mandatory/ 
+Optional 
+Rule 
+Id 
+M 
+Unique identifier of the threshold rule, maybe 
+supplied to be used by the target system. If 
+not supplied, the target system will generate 
+it 
+thresholdRuleName 
+M 
+ 
+Measurement 
+O 
+ 
+     Id 
+M 
+ 
+     Name 
+M 
+ 
+     Href 
+M 
+ 
+     Description 
+O 
+ 
+     measurementType 
+O 
+ 
+     measurementUnit 
+O 
+ 
+     collectionType 
+O 
+ 
+     measurementFormula 
+O 
+ 
+@Type 
+M 
+Either "simpleThresholdRule" or 
+"algorithmThresholdRule" 
+simpleThresholdRule (subclass) 
+ 
+Not an actual attribute .The grouped 
+attributes below belong to this subclass 
+     conformanceTargetUpper 
+O 
+When populated should be used with 
+conformanceComparatorUpper  
+     conformanceTargetLower 
+O 
+When populated should be used with 
+conformanceComparatorLower 
+     conformanceComparatorUpper 
+O 
+ 
+     conformanceComparatorLower 
+O 
+ 
+     conformancePeriod 
+O 
+ 
+     thresholdTarget 
+O 
+ 
+     tolerancePeriod 
+O 
+ 
+     gracePeriods 
+O 
+ 
+algorithmThresholdRule 
+(subclass) 
+O 
+Not an actual attribute .The grouped 
+attributes below belong to this subclass 
+     algorithmRef 
+O 
+ 
+     algorithmParams 
+O 
+ 
+genericPerformanceConsequence 
+O 
+ 
+     Name 
+M 
+ 
+     Description 
+O 
+ 
+     PrescribedAction 
+M 
+ 
+performanceAlarmSpecification 
+O 
+ 
+     perfAlamSpecSeverity 
+M 
+ 
+     perfAlamProbableCause 
+M 
+ 
+     perfAlarmSpecAlarmType 
+O 
+ 
+     perfAlarmSpecSpecificProblem 
+O 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 32  
+     perfAlarmSpecAdditionalText 
+O 
+ 
+  
+perfAlarmSpecThresholdCrossing
+Description 
+O 
+ 
+thresholdRuleCondition 
+M 
+ 
+thresholdRuleSeverity 
+M 
+ 
+ 
+ 
+ 
+ 
+REQUEST 
+POST /api/thresholdrule/ 
+Content-type: application/json  
+{ 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "@type": "simpleThresholdRule", 
+  "Measurement": { 
+    "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+"conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0 
+  "genericperformanceConsequence": [ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 33  
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    }, 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "MAJOR", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the limit" 
+  }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets per second are over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "MAJOR" 
+} 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "@type": "simpleThresholdRule", 
+ 
+  "href": "http://api/thresholdrule/1920", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+   "conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 34  
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+     }, 
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+     }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0, 
+  "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "MAJOR", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the 
+limit"   
+     }, 
+   "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets per second are 
+over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "MAJOR" 
+} 
+} 
+ 
+ 
+ 
+PATCH /API/THRESOLDRULE/{THRESHOLDRULEID} 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 35  
+The PATCH /api/thresholdrule operation is used to modify an existing threshold rule 
+at the target management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request – error 
+The patchable attributes are specified in the table below. 
+Field 
+Patchable 
+Rule 
+id 
+N 
+ 
+href 
+N 
+ 
+thresholdRuleName 
+Y 
+ 
+Measurement 
+Y 
+ 
+     Id 
+N 
+ 
+     Name 
+N 
+ 
+     Href 
+N 
+ 
+     Description 
+N 
+ 
+     measurementType 
+N 
+ 
+     measurementUnit 
+N 
+ 
+     collectionType 
+N 
+ 
+     measurementFormula 
+N 
+ 
+@Type 
+Y 
+ 
+simpleThresholdRule 
+ 
+Not an actual attribute .The grouped 
+attributes below belong to this subclass 
+     conformanceTargetUpper 
+Y 
+ 
+     conformanceTargetLower 
+Y 
+ 
+     conformanceComparatorUpper 
+Y 
+ 
+     conformanceComparatorLower 
+Y 
+ 
+     conformancePeriod 
+Y 
+ 
+     thresholdTarget 
+Y 
+ 
+     tolerancePeriod 
+Y 
+ 
+     gracePeriods 
+Y 
+ 
+algorithmThresholdRule 
+Y 
+Not an actual attribute .The grouped 
+attributes below belong to this subclass 
+     algorithmRef 
+Y 
+ 
+     algorithmParams 
+Y 
+ 
+genericPerformanceConsequence 
+Y 
+ 
+     Name 
+Y 
+ 
+     Description 
+Y 
+ 
+     PrescribedAction 
+Y 
+ 
+performanceAlarmSpecification 
+Y 
+ 
+     perfAlamSpecSeverity 
+Y 
+ 
+     perfAlamProbableCause 
+Y 
+ 
+     perfAlarmSpecAlarmType 
+Y 
+ 
+     perfAlarmSpecSpecificProblem 
+Y 
+ 
+     perfAlarmSpecAdditionalText 
+Y 
+ 
+  
+perfAlarmSpecThresholdCrossingDescri
+ption 
+Y 
+ 
+thresholdRuleCondition 
+Y 
+ 
+thresholdRuleSeverity 
+Y 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 36  
+In the example below, the definition of the alarm to generate is being changed. 
+REQUEST 
+PATCH /api/thresholdrule/1920 
+Content-type: application/merge-patch+json 
+{ 
+    "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "CRITICAL", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the 
+limit"  }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets per second are 
+over the limit ", 
+  } 
+} 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "@type": "simpleThresholdRule", 
+ 
+  "href": "http://api/thresholdrule/1920", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+   "conformanceTargetUpper": 300, 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 37  
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    } 
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0 
+  "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "CRITICAL", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the 
+limit"   
+     }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets per second are 
+over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "CRITICAL" 
+} 
+} 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 38  
+DELETE /API/THRESOLDRULE/{THRESHOLDRULEID} 
+The DELETE /api/thresholdrule operation is used to delete an existing threshold rule 
+at the target management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+DELETE /api/thresholdrule/1920 
+RESPONSE 
+200 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 39  
+GET /API/THRESHOLDRULE/{THRESHOLDRULEID) 
+The GET /api/thresholdrule operation is used to get the details of athreshold rule by 
+the identifier. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+GET /api/thresholdrule/1920 
+Accept: application/json 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "@type": "simpleThresholdRule", 
+  "href": "http://api/thresholdrule/1920", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+    "conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 40  
+    }, 
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0, 
+  "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "CRITICAL", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the 
+limit"   
+     }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets per second are 
+over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "CRITICAL" 
+} 
+} 
+ 
+GET /API/THRESHOLDRULE 
+The GET /api/thresholdrule operation is used to get  a threshold rule by filter. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 41  
+GET 
+/api/thresholdrule/fields=id,thresholdRulename,href,Measurement&thresholdRuleSeverity=CRITICA
+L 
+Accept: application/json 
+RESPONSE 
+200 
+Content-Type: application/json 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+     "@type": "simpleThresholdRule", 
+  "href": "http://api/thresholdrule/1920", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+    "conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "", 
+      } 
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0, 
+  "genericperformanceConsequence": [ 
+    { 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 42  
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "CRITICAL", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are over the 
+limit"   
+     }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets per second are 
+over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "CRITICAL" 
+} 
+} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 43  
+POST /API/THRESOLDJOB 
+The POST /api/thresholdjob operation is used to create a new threshold job at the 
+target Performance management system. 
+Behavior:  
+• Return status codes 
+o 200 OK - the request was successful 
+o 400 Bad Request – error 
+The mandatory/optional attributes are specified in the table below. 
+Field 
+Mandatory/ 
+Optional 
+Rule 
+Granularity 
+O 
+If not specified, the measurement 
+collection granularity should be 
+used  
+jobPriority 
+O 
+ 
+performanceThreshold 
+O 
+ 
+scheduleDefinition 
+O 
+ 
+     scheduleDefinitionStartTime 
+O 
+ 
+     scheduleDefinitionEndTime 
+O 
+ 
+     recurringFrequency 
+O 
+ 
+    scheduleDefinitionHoursRange 
+O 
+ 
+@type 
+M 
+Possible values are any of the 
+subclasses below 
+  WeeklyScheduleDefinition 
+O 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+          daysOfWeekRecurrence 
+O 
+ 
+  MonthlyScheduleDaysofMonthDefinition 
+          
+O 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+        daysOfMonthRecurrence 
+ 
+ 
+   MonthlyScheduleDaysofWeekDefinition 
+O 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+          daysOdMonthRecurrence 
+O 
+ 
+          recurringDaySequence 
+O 
+ 
+    DateScheduleDefinition 
+           
+O 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+          scheduledDates 
+ 
+ 
+     excludedDates 
+O 
+ 
+monitoredObjectsCriteria 
+O 
+ 
+     monitoredObjectInstnaces 
+O 
+ 
+     monitoredObjectClass 
+O 
+ 
+     mointoredObjectFilter 
+O 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 44  
+REQUEST 
+POST /api/thresholdjob/ 
+Content-type: application/json 
+{ 
+  "granularity": " G_30MN", 
+   "jobPriority": 0, 
+  "performanceThreshold": 374, 
+  "scheduleDefinition": { 
+    "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+    "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+    "scheduleDefinitionHoursRange": "", 
+    "@type" = "weeklyScheduledefinition", 
+    daysOfWeekRecurrence":     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" 
+        "excludedDates": [ 
+        "2017-12-31" 
+         ] 
+    }, 
+   "monitoredObjectsCriteria": [ 
+    { 
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+      "monitoredObjectFilter": "" 
+    } 
+  ] 
+} 
+RESPONSE 
+200 
+Content-Type: application/json 
+ 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+  "granularity": " G_30MN", 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+   "performanceThreshold": 374, 
+   "scheduleDefinition": { 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 45  
+    "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+    "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+    "scheduleDefinitionHoursRange": "", 
+    "@type" = "weeklyScheduledefinition", 
+    daysOfWeekRecurrence":     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" 
+        "excludedDates": [ 
+        "2017-12-31" 
+         ], 
+   "monitoredObjectsCriteria": [ 
+    { 
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+      "monitoredObjectFilter": "" 
+    } 
+  ] 
+} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 46  
+PATCH /API/THRESOLDJOB/{THRESHOLDJOBID} 
+The PATCH /api/thresholdjob operation is used to modify an existing threshold job at 
+the target Performance management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request – error 
+The patchable attributes are specified in the table below. 
+Field 
+Patchable 
+Rule 
+id 
+N 
+ 
+href 
+N 
+ 
+Granularity 
+Y 
+ 
+jobPriority 
+Y 
+ 
+performanceThreshold 
+Y 
+ 
+scheduleDefinition 
+Y 
+ 
+     scheduleDefinitionStartTime 
+Y 
+ 
+     scheduleDefinitionEndTime 
+Y 
+ 
+     recurringFrequency 
+Y 
+ 
+    scheduleDefinitionHoursRange 
+Y 
+ 
+@type 
+Y 
+Possible values are any of the 
+subclasses below 
+    WeeklyScheduleDefinition 
+Y 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+          daysOfWeekRecurrence 
+Y 
+ 
+    MonthlyScheduleDaysofMonthDefinition 
+          
+Y 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+        daysOfMonthRecurrence 
+ 
+ 
+     MonthlyScheduleDaysofWeekDefinition 
+Y 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+          daysOdMonthRecurrence 
+Y 
+ 
+          recurringDaySequence 
+Y 
+ 
+     DateScheduleDefinition 
+           
+Y 
+Not an actual attribute .The 
+grouped attributes below belong to 
+this subclass 
+          scheduledDates 
+Y 
+ 
+     excludedDates 
+Y 
+ 
+monitoredObjectsCriteria 
+Y 
+ 
+     monitoredObjectInstnaces 
+Y 
+ 
+     monitoredObjectClass 
+Y 
+ 
+     mointoredObjectFilter 
+Y 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 47  
+In the example below, the schedule definition is changed, such that the threshold job 
+will run every 5 days, instead of running on week days. 
+REQUEST 
+PATCH /api/thresholdjob/900 
+Content-type: application/merge-patch+json 
+ 
+{ 
+    "scheduleDefinition": { 
+   "@type" = "monthlyScheduleDaysOfMonthDefinition, 
+   " daysOfMonthRecurrence ": [ 
+      "5", "10", "15", "20", "25", "30" 
+    ], 
+    "excludedDates": [ 
+      "2017-12-31" 
+    ] 
+  }, 
+} 
+ 
+ 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+  "granularity": " G_30MN", 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+   "performanceThreshold": 374, 
+   "scheduleDefinition": { 
+    "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+    "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+    "scheduleDefinitionHoursRange": "", 
+    "@type" = "monthlyScheduleDaysOfMonthDefinition", 
+      "daysOfMonthRecurrence ": [ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 48  
+      "5", "10", "15", "20", "25", "30" 
+       ], 
+       "excludedDates": [ 
+        "2017-12-31" 
+       ] 
+    }, 
+  "monitoredObjectsCriteria": [ 
+    { 
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+      "monitoredObjectFilter": "" 
+    } 
+  ] 
+} 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 49  
+DELETE /API/THRESOLDJOB/{THRESHOLDJOBID} 
+The DELETE /api/thresholdjob operation is used to delete an existing threshold job in 
+the target Performance management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+DELETE /api/thresholdjob/900 
+RESPONSE 
+200 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 50  
+GET /API/THRESHOLDJOB//{THRESHOLDJOBID) 
+The GET /thresholdjob operation is used to get the details of a threshold by its 
+identifier. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+GET /api/thresholdjob/900 
+Accept: application/json 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+  "granularity": " G_30MN", 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+   "performanceThreshold": 374, 
+   "scheduleDefinition": { 
+    "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+    "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+    "scheduleDefinitionHoursRange": "", 
+    "@type" = "monthlyScheduleDaysOfMonthDefinition", 
+     " daysOfMonthRecurrence ": [ 
+       "5", "10", "15", "20", "25", "30" 
+     ], 
+      "excludedDates": [ 
+      "2017-12-31" 
+    ] 
+  }, 
+  "monitoredObjectsCriteria": [ 
+    { 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 51  
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+      "monitoredObjectFilter": "" 
+    } 
+  ] 
+} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 52  
+GET /API/THRESHOLDJOB 
+The GET /api/thresholdjob operation is used to get the details of required threshold 
+jobs by a filter. 
+In the example below, the request is to retrieve the id and href attributes of all 
+threshold jobs that were created after August 31st 2017 at 20:00. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+GET /api/thresholdjob/fields=id,href,Measurement& lastModifiedTime.gt="2017-08-
+31T20:00:00.000Z" 
+Accept: application/json 
+RESPONSE 
+200 
+Content-Type: application/json 
+ 
+[ 
+{ 
+  "id": "20", 
+  "http://api/thresholdjob/20": "string", 
+}, 
+{ 
+  "id": "23", 
+  "href": " http://api/thresholdjob/23", 
+} 
+] 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 53  
+POST /API//{THRESHOLDJOBID}/SUSPEND 
+The POST /api/thresholdJob/{id}/suspend operation is used to suspend the execution of 
+a threshold job at the target Performance management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+POST /api/thresholdJob/20/suspend 
+Content-Type: application/json 
+RESPONSE 
+200 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 54  
+POST /API/{THRESHOLDJOBID}RESUME 
+The POST /api/threshold/{id}/Resume operation is used to resume the execution of a 
+threshold job at the target Performance management system. 
+Behavior:  
+• Return status codes 
+o 201 Created - the request was successful 
+o 400 Bad Request - error 
+REQUEST 
+POST /api/ thresholdJob/20/resume 
+Content-Type: application/json 
+RESPONSE 
+200 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 55  
+API NOTIFICATION FOR THRESHOLDS 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms 
+described in the REST Guidelines reproduced below. 
+ REGISTER LISTENER POST /HUB 
+Description:  
+Sets the communication endpoint address the service instance must use 
+to deliver information about its health state, execution state, failures and 
+metrics. Subsequent POST calls will be rejected by the service if it does 
+not support multiple listeners. In this case DELETE /api/hub/{id} must be 
+called before an endpoint can be created again. 
+Behavior:  
+Returns HTTP/1.1 status code 204 if the request was successful. 
+ 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+REQUEST 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+RESPONSE 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+UNREGISTER LISTENER DELETE HUB/{ID} 
+Description :  
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior :  
+Returns HTTP/1.1 status code 204 if the request was successful. 
+ 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 56  
+REQUEST 
+DELETE /api/hub/{id} 
+Accept: application/json 
+ 
+RESPONSE 
+204 
+PUBLISH {EVENTTYPE} POST /LISTENER 
+Description:  
+Provide the Event description 
+Behavior:  
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration. 
+REQUEST 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+ 
+"eventType": "EventType", 
+ 
+"eventTime": "2014-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562231", 
+ 
+"event":  
+ 
+{ 
+    EVENT BODY  
+ 
+} 
+} 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+Example see TMF REST Design Guidelines. 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 57  
+THRESHOLDCREATE NOTIFICATION 
+Example of the JSON representation of thresholdcreate Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdCreateNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562231", 
+ 
+"event":  
+ 
+{ 
+"threshold": 
+{ 
+  "id": "374", 
+  "href" : "http://api/threshold/374", 
+  "description": "Number odf Dropped Packets too high", 
+  "name": "DroppedPacketsHigh", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1919", 
+      "id": "1919", 
+"name: "DroppedPacketsHighRule" 
+    }     
+      ] 
+} 
+     
+} 
+} 
+   
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 58  
+THRESHOLDCHANGE NOTIFICATION 
+Example of the JSON representation of thresholdchange Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdChangeNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562233", 
+ 
+"event":  
+ 
+{ 
+"threshold": 
+{ 
+  "id": "374", 
+  "href" : "http://api/threshold/374", 
+  "description": "Number odf Dropped Packets too high", 
+  "name": "DroppedPacketsHigh", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1919", 
+      "id": "1919", 
+"name: "DroppedPacketsHighRule" 
+    }     
+      ] 
+} 
+     
+} 
+} 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 59  
+THRESHOLDDELETE NOTIFICATION 
+Example of the JSON representation of thresholdDelete Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdDeleteNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562235", 
+ 
+"event":  
+ 
+{ 
+"threshold": 
+{ 
+  "id": "374", 
+  "href" : "http://api/threshold/374", 
+  "description": "Number odf Dropped Packets too high", 
+  "name": "DroppedPacketsHigh", 
+  "thresholdRule": [ 
+    { 
+      "href": "http://api/thresholdrule/1919", 
+      "id": "1919", 
+"name: "DroppedPacketsHighRule" 
+    }     
+      ] 
+} 
+     
+} 
+} 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 60  
+THRESHOLDRULECREATE NOTIFICATION 
+Example of the JSON representation of thresholdRuleCreate Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdRuleCreateNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562239", 
+ 
+"event":  
+ 
+{ 
+"thresholdRule": 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "href": "http://api/thresholdrule/1920", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+  "@type": "simpleThresholdRule", 
+     "conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 61  
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0, 
+        "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "CRITICAL", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are 
+over the limit"   
+     }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets 
+per second are over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "CRITICAL" 
+} 
+     
+} 
+   } 
+} 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 62  
+THRESHOLDRULECHANGE NOTIFICATION 
+Example of the JSON representation of thresholdRuleChange Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdRuleChangeNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562239", 
+ 
+"event":  
+ 
+{ 
+"thresholdRule": 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "href": "http://api/thresholdrule/1920", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+  "@type": "simpleThresholdRule", 
+     "conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 63  
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0, 
+  "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "CRITICAL", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are 
+over the limit"   
+     }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets 
+per second are over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "CRITICAL" 
+} 
+     
+} 
+   } 
+} 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 64  
+THRESHOLDRULEDELETE NOTIFICATION 
+Example of the JSON representation of thresholdRuleDelete Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdRuleDeleteNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562239", 
+ 
+"event":  
+ 
+{ 
+"thresholdRule": 
+{ 
+  "id": 1920, 
+  "thresholdRuleName": "DropPacketsHighRule", 
+  "href": "http://api/thresholdrule/1920", 
+  "Measurement": { 
+  "id": "", 
+    "name": "DroppedPacketsPPS", 
+    "href": "", 
+    "description": "The number of dropped packets per second", 
+    "measurementType": "Traffic", 
+    "measurementUnit": "packets per second", 
+    "collectionType": "COUNTER", 
+    "measurementFormula": "" 
+  }, 
+  "@type": "simpleThresholdRule", 
+    "conformanceTargetUpper": 300, 
+    "conformanceTargetLower": 0, 
+    "conformanceComparatorUpper": GT, 
+    "conformanceComparatorLower": 0, 
+    "conformancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 65  
+    "tolerancePeriod": { 
+      "startDateTime": "", 
+      "endDateTime": "" 
+    }, 
+    "thresholdTarget": 0, 
+    "gracePeriods": 0, 
+  "genericperformanceConsequence": [ 
+    { 
+      "name": "", 
+      "Description": "", 
+      "prescribedAction": "" 
+    } 
+  ], 
+  "performanceAlarmSpecification": { 
+    "perfAlarmSpecSeverity": "CRITICAL", 
+    "perfeAlarmProbableCause": "Threshold Crossed", 
+    "perfAlarmSpecAlarmType": "", 
+    "perfAlarmSpecSpecificProblem": "", 
+    "perfAlarmSpecAdditionalText": "Dropped Packets per second are 
+over the limit"   
+     }, 
+  "perfAlarmSpecThresholdCrossingDescription": " Dropped Packets 
+per second are over the limit ", 
+  "thresholdRuleCondition": "Raise", 
+  "thresholdRuleSeverity": "CRITICAL" 
+} 
+     
+} 
+   } 
+} 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 66  
+THRESHOLDJOBCREATE NOTIFICATION 
+Example of the JSON representation of thresholdJobCreate Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdJobCreateNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562239", 
+ 
+"event":  
+ 
+{ 
+"thresholdJob": 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+  "granularity": " G_30MN", 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+   "performanceThreshold": 374, 
+   "scheduleDefinition": { 
+   "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+   "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+   "scheduleDefinitionHoursRange": "", 
+   "@type" = "monthlyScheduleDaysOfMonthDefinition", 
+    "daysOfMonthRecurrence ": [ 
+       "5", "10", "15", "20", "25", "30" 
+     ],    " 
+     "excludedDates": [ 
+      "2017-12-31" 
+    ] 
+  }, 
+  "monitoredObjectsCriteria": [ 
+    { 
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 67  
+      "monitoredObjectFilter": "" 
+    } 
+  ] 
+     
+} 
+   } 
+} 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 68  
+THRESHOLDJOBCHANGE NOTIFICATION 
+Example of the JSON representation of thresholdJobChange Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdJobChangeNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562241", 
+ 
+"event":  
+ 
+{ 
+" thresholdJob": 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+  "granularity": " G_30MN", 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+   "performanceThreshold": 374, 
+   "scheduleDefinition": { 
+   "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+   "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+   "scheduleDefinitionHoursRange": "", 
+   "@type" = "monthlyScheduleDaysOfMonthDefinition", 
+          "daysOfMonthRecurrence": [ 
+       "5", "10", "15", "20", "25", "30" 
+    ], 
+    "excludedDates": [ 
+      "2017-12-31" 
+    ] 
+  }, 
+  "monitoredObjectsCriteria": [ 
+    { 
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 69  
+      "monitoredObjectFilter": "" 
+    } 
+  ] 
+     
+} 
+   } 
+} 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 70  
+THRESHOLDJOBDELETE NOTIFICATION 
+Example of the JSON representation of thresholdJobDelete Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdJobDeleteNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562245", 
+ 
+"event":  
+ 
+{ 
+" thresholdJob": 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+  "granularity": " G_30MN", 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+   "performanceThreshold": 374, 
+   "scheduleDefinition": { 
+   "scheduleDefinitionStartTime": "2017-08-31T20:12:37.285Z", 
+   "scheduleDefinitionEndTime": "2018-08-31T20:12:37.285Z", 
+   "scheduleDefinitionHoursRange": "", 
+   "@type" = "monthlyScheduleDaysOfMonthDefinition", 
+          " daysOfMonthRecurrence": [ 
+       "5", "10", "15", "20", "25", "30" 
+    ], 
+    "excludedDates": [ 
+      "2017-12-31" 
+    ] 
+   }, 
+  "monitoredObjectsCriteria": [ 
+    { 
+      "monitoredObjectInstances": "", 
+      "monitoredObjectClass": "Router Interface", 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 71  
+      "monitoredObjectFilter": "" 
+    } 
+    
+} 
+   } 
+} 
+ 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 72  
+THRESHOLDJOBSUSPEND NOTIFICATION 
+Example of the JSON representation of thresholdJobSuspend Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdJobSuspendNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562241", 
+ 
+"event":  
+ 
+{ 
+" thresholdJob": 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+   "jobPriority": 0, 
+   "executionState": "Suspended", 
+     
+} 
+ } 
+} 
+ 
+ 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 73  
+THRESHOLDJOBRESUME NOTIFICATION 
+Example of the JSON representation of thresholdJobResume Notification: 
+POST /client/listener 
+Accept: application/json 
+{ 
+ 
+"eventType": "ThresholdJobResumeNotification", 
+ 
+"eventTime": "2017-09-27T05:46:25.0Z", 
+ 
+"eventId": "1562241", 
+ 
+"event":  
+ 
+{ 
+" thresholdJob": 
+{ 
+  "id": "900", 
+  "href": "http://api/thresholdjob/900" 
+   "jobPriority": 0, 
+   "executionState": "Active", 
+     
+} 
+ } 
+} 
+
+
+Performance Threshold API REST Specification                                 
+ 
+ 
+                                                       © TM Forum 2017. All Rights Reserved.  
+Page 74  
+ACKNOWLEDGEMENTS 
+ 
+Release 
+Number 
+Date Modified 
+Modified By 
+Description of Changes 
+17.0.0 
+31th August 
+2017 
+Yuval Stein 
+TEOCO 
+yuval.stein@teoco.com  
+Bozidar Pasagic 
+Bell 
+bozidar.pasagic@bell.ca 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Release 
+17.0.1 
+Version 
+1.0.1 
+04-Dec-2017 
+Adrienne Walcott 
+TM Forum 
+awalcott@tmforum.org 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+CONTRIBUTORS TO DOCUMENT 
+Yuval Stein 
+TEOCO 
+Bozidar Pasagic 
+Bell 
+Pierre Gauthier 
+TM Forum 
+ 
+
+

@@ -1,0 +1,1489 @@
+ 
+TM Forum 2020. All Rights Reserved. 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Geographic Address Management 
+API User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF673 
+Team Approved Date: 28-May-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 39 
+ 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 39 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 39 
+ 
+Table of Contents 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 6 
+Introduction .............................................................................................................................................................. 7 
+SAMPLE USE CASES ......................................................................................................................................................... 8 
+Support of polymorphism and extension patterns ........................................................................................................ 9 
+RESOURCE MODEL ........................................................................................................................................................ 10 
+Managed Entity and Task Resource Models ..................................................................................................... 10 
+Geographic Address Validation resource .............................................................................................................. 10 
+Geographic Address resource ............................................................................................................................... 15 
+Geographic Sub Address resource ........................................................................................................................ 18 
+Notification Resource Models .............................................................................................................................. 19 
+Geographic Address Validation State Change Event ............................................................................................. 20 
+API OPERATIONS ........................................................................................................................................................... 22 
+Operations on Geographic Address Validation ........................................................................................................ 23 
+List geographic address validations ....................................................................................................................... 23 
+Retrieve geographic address validation ................................................................................................................ 24 
+Create geographic address validation ................................................................................................................... 25 
+Patch geographic address validation ..................................................................................................................... 27 
+Operations on Geographic Address .......................................................................................................................... 29 
+List geographic addresses ...................................................................................................................................... 29 
+Retrieve geographic address ................................................................................................................................. 30 
+Operations on Geographic Sub Address ................................................................................................................... 32 
+List geographic sub addresses ............................................................................................................................... 32 
+Retrieve geographic sub address .......................................................................................................................... 33 
+API NOTIFICATIONS....................................................................................................................................................... 35 
+Register listener ........................................................................................................................................................ 35 
+Unregister listener .................................................................................................................................................... 36 
+Publish Event to listener ........................................................................................................................................... 36 
+Acknowledgements ...................................................................................................................................................... 38 
+Version History.......................................................................................................................................................... 38 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 39 
+ 
+Release History ......................................................................................................................................................... 38 
+Contributors to Document ........................................................................................................................................ 38 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 39 
+ 
+List of Tables 
+N/A 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 39 
+ 
+Introduction 
+ 
+The following document is the specification of the REST API for Geographic Address management. A geographic 
+address is a specialization of the abstract Place entity (like Geographic Site and Geographic Location).  
+ 
+The following document is the specification of the REST API for geographic address management. It includes the 
+model definition as well as all available operations. 
+The Geographic Address Management API provides a standardized client interface to an Address management 
+system. 
+It allows looking for worldwide addresses. 
+It can also be used to validate geographic address data, to be sure that it corresponds to a real geographic address. 
+Finally, it can be used to look for a geographic address by: searching an area as a start (city, town …), then zooming 
+on the streets of this area, and finally listing all the street segments (numbers) in a street. 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 39 
+ 
+SAMPLE USE CASES 
+This section includes a set of main use cases that can be performed with this API. Additional use cases can be 
+generated using the operations and resources defined in this specification. 
+• Validate an address input by customer as part of order capture process  
+• Get the location (GeographicalLocation) of a given address  
+• Get geographic objects (Area, Street, StreetSegment) associated to an address 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 39 
+ 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance a Warehouse and Customer Access inheriting properties from the Geographic Site entity itself inheriting 
+from geographic place. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Geographic Site (or Geographic place) instances some may be instances of Warehouse where other could be 
+instances of Customer Access. The @type gives this information. All resources and sub-resources of this API have a 
+@type attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities (like for instance in PlaceRef object) to explicitly denote 
+the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes the class 
+type of the reference itself, such as WarehouseRef or CustomerAccessRef, and not the class type of the referred 
+object. However, since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+Some APIs, like Product Ordering, support providing a GeographicAddress as a polymorphic version of Place, per 
+reference or per value. However, in the case there is a need to provide a specific GeographicSubAddress this 
+cannot be done solely per reference, because the href mechanism doesn’t allow this. In that case the 
+GeographicAddress itself can be provided per reference, but the GeographicSubAddress (at least its id) has to be 
+provided per value: 
+… 
+“place”: 
+{ 
+    "id": "7513180", 
+    “geographicSubAddress”: 
+     { 
+          “id”: “3” 
+     }, 
+   “@type”: “GeographicAddress” 
+} 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 39 
+ 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Geographic Address Validation resource 
+This resource is used to manage address validation request and response. 
+Resource model 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 39 
+ 
+ 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 39 
+ 
+Field descriptions 
+GeographicAddressValidation fields 
+alternateGeographicAddress A list of geographic addresses (GeographicAddress [*]). Structured textual way of 
+describing how to find a Property in an urban area (country properties are often 
+defined differently). 
+Note : Address corresponds to SID UrbanPropertyAddress. 
+href 
+A string. An URI used to access to the address validation resource. 
+id 
+A string. Unique identifier of the Address Validation. 
+provideAlternative 
+A boolean. Indicator provided by the requester to specify if alternate addresses 
+must be provided in case of partial or fail result. 
+status 
+A string. Status of the address validation (inProgress, terminatedWithError, done). 
+validAddress 
+A geographic address (GeographicAddress). Structured textual way of describing 
+how to find a Property in an urban area (country properties are often defined 
+differently). 
+Note : Address corresponds to SID UrbanPropertyAddress. 
+validationDate 
+A date time (DateTime). Date when the address validation is performed. 
+validationResult 
+A string. Result of the address validation (success, partial, fail). 
+GeographicAddress sub-resource 
+Structured textual way of describing how to find a Property in an urban area (country properties are often defined 
+differently). 
+Note : Address corresponds to SID UrbanPropertyAddress. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+city 
+A string. City that the address is in. 
+country 
+A string. Country that the address is in. 
+geographicLocation 
+A geographic location ref or value (GeographicLocationRefOrValue). 
+geographicSubAddress 
+A list of geographic sub addresses (GeographicSubAddress [*]). Representation of a 
+GeographicSubAddress  
+It is used for addressing within a property in an urban area (country properties are 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 39 
+ 
+often defined differently). It may refer to a building, a building cluster, or a floor of a 
+multistory building. 
+locality 
+A string. An area of defined or undefined boundaries within a local authority or other 
+legislatively defined area, usually rural or semi-rural in nature. [ANZLIC-STREET], or a 
+suburb, a bounded locality within a city, town or shire principally of urban character 
+[ANZLICSTREET]. 
+postcode 
+A string. descriptor for a postal delivery area, used to speed and simplify the delivery 
+of mail (also known as zipcode). 
+stateOrProvince 
+A string. the State or Province that the address is in. 
+streetName 
+A string. Name of the street or other street type. 
+streetNr 
+A string. Number identifying a specific property on a public street. It may be combined 
+with streetNrLast for ranged addresses. 
+streetNrLast 
+A string. Last number in a range of street numbers allocated to a property. 
+streetNrLastSuffix 
+A string. Last street number suffix for a ranged address. 
+streetNrSuffix 
+A string. the first street number suffix. 
+streetSuffix 
+A string. A modifier denoting a relative direction. 
+streetType 
+A string. alley, avenue, boulevard, brae, crescent, drive, highway, lane, terrace, 
+parade, place, tarn, way, wharf. 
+GeographicSubAddress sub-resource 
+Representation of a GeographicSubAddress  
+It is used for addressing within a property in an urban area (country properties are often defined differently). It may 
+refer to a building, a building cluster, or a floor of a multistory building. 
+buildingName 
+A string. allows for buildings that have well-known names. 
+href 
+A string. Link to the subAddress. 
+id 
+A string. Unique Identifier of the subAddress. 
+levelNumber 
+A string. used where a level type may be repeated e.g. BASEMENT 1, BASEMENT 2. 
+levelType 
+A string. describes level types within a building. 
+name 
+A string. Name of the subAddress to identify it with a meaningful identification. 
+privateStreetName 
+A string. private streets internal to a property (e.g. a university) may have internal 
+names that are not recorded by the land title office. 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 39 
+ 
+privateStreetNumber 
+A string. private streets numbers internal to a private street. 
+subAddressType 
+A string. Type of subAddress : it can be a subunit or a private street. 
+subUnitNumber 
+A string. the discriminator used for the subunit 
+often just a simple number e.g. FLAT 5, may also be a range. 
+subUnitType 
+A string. the type of subunit 
+e.g.BERTH, FLAT, PIER, SUITE, SHOP, TOWER, UNIT, WHARF. 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicAddressValidation' resource object 
+{ 
+    "id": "1a2b3c", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddressValidation/1a2b3c", 
+    "provideAlternative": "true", 
+    "status": "done", 
+    "validationDate": "2017-05-03T00:00", 
+    "validationResult": "partial", 
+    "submittedGeographicAddress": { 
+        "streetNr": "151", 
+        "streetName": "Landgrabenweg", 
+        "postcode": "53227", 
+        "postcodeExtension": "1", 
+        "city": "Bonn", 
+        "stateOrProvince": "NRW", 
+        "country": "Germany", 
+        "@type": "FieldedAddress", 
+        "@baseTtype": "GeographicAddress", 
+        "@schemaLocation": "http://github.com/MEF-GIT/FieldedAddress.json" 
+    }, 
+    "alternateGeographicAddress": [ 
+        { 
+            "id": "9912", 
+            "href": "/tmf-api/geographicAddressManagement/v4/geographicAddress/9912", 
+            "streetNr": "151", 
+            "streetNrSuffix": "Erstbau", 
+            "streetName": "Landgrabenweg", 
+            "streetType": "road", 
+            "streetSuffix": "", 
+            "postcode": "53227", 
+            "locality": "Beuel", 
+            "city": "Bonn", 
+            "stateOrProvince": "NRW", 
+            "country": "Germany", 
+            "geographicLocationRefOrValue": { 
+                "id": "9597", 
+                "href": "/tmf-api/geographicAddressManagement/v4/geographicLocation/9597" 
+            } 
+        } 
+    ] 
+} 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 39 
+ 
+Geographic Address resource 
+Structured textual way of describing how to find a Property in an urban area (country properties are often defined 
+differently). 
+Note : Address corresponds to SID UrbanPropertyAddress. 
+Resource model 
+ 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 39 
+ 
+Field descriptions 
+GeographicAddress fields 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+city 
+A string. City that the address is in. 
+country 
+A string. Country that the address is in. 
+geographicLocation 
+A geographic location ref or value (GeographicLocationRefOrValue). 
+geographicSubAddress 
+A list of geographic sub addresses (GeographicSubAddress [*]). Representation of a 
+GeographicSubAddress  
+It is used for addressing within a property in an urban area (country properties are 
+often defined differently). It may refer to a building, a building cluster, or a floor of a 
+multistory building. 
+locality 
+A string. An area of defined or undefined boundaries within a local authority or other 
+legislatively defined area, usually rural or semi-rural in nature. [ANZLIC-STREET], or a 
+suburb, a bounded locality within a city, town or shire principally of urban character 
+[ANZLICSTREET]. 
+postcode 
+A string. descriptor for a postal delivery area, used to speed and simplify the delivery 
+of mail (also known as zipcode). 
+stateOrProvince 
+A string. the State or Province that the address is in. 
+streetName 
+A string. Name of the street or other street type. 
+streetNr 
+A string. Number identifying a specific property on a public street. It may be combined 
+with streetNrLast for ranged addresses. 
+streetNrLast 
+A string. Last number in a range of street numbers allocated to a property. 
+streetNrLastSuffix 
+A string. Last street number suffix for a ranged address. 
+streetNrSuffix 
+A string. the first street number suffix. 
+streetSuffix 
+A string. A modifier denoting a relative direction. 
+streetType 
+A string. alley, avenue, boulevard, brae, crescent, drive, highway, lane, terrace, 
+parade, place, tarn, way, wharf. 
+GeographicSubAddress sub-resource 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 39 
+ 
+Representation of a GeographicSubAddress  
+It is used for addressing within a property in an urban area (country properties are often defined differently). It may 
+refer to a building, a building cluster, or a floor of a multistory building. 
+buildingName 
+A string. allows for buildings that have well-known names. 
+href 
+A string. Link to the subAddress. 
+id 
+A string. Unique Identifier of the subAddress. 
+levelNumber 
+A string. used where a level type may be repeated e.g. BASEMENT 1, BASEMENT 2. 
+levelType 
+A string. describes level types within a building. 
+name 
+A string. Name of the subAddress to identify it with a meaningful identification. 
+privateStreetName 
+A string. private streets internal to a property (e.g. a university) may have internal 
+names that are not recorded by the land title office. 
+privateStreetNumber 
+A string. private streets numbers internal to a private street. 
+subAddressType 
+A string. Type of subAddress : it can be a subunit or a private street. 
+subUnitNumber 
+A string. the discriminator used for the subunit 
+often just a simple number e.g. FLAT 5, may also be a range. 
+subUnitType 
+A string. the type of subunit 
+e.g.BERTH, FLAT, PIER, SUITE, SHOP, TOWER, UNIT, WHARF. 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicAddress' resource object 
+{ 
+    "id": "9090", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddress/9090", 
+    "streetNr": "225", 
+    "streetNrSuffix": "B", 
+    "streetNrLast": "", 
+    "streetNrLastSuffix": "", 
+    "streetName": " Strathmore", 
+    "streetType": "Terrace", 
+    "streetSuffix": "", 
+    "postcode": "5004", 
+    "locality": "Brighton.", 
+    "city": "Brighton", 
+    "stateOrProvince": "SA", 
+    "country": "Australia", 
+    "@type": "GeographicAddress ", 
+    "geographicLocation": { 
+        "id": "abcdef", 
+        "href": "/tmf-api/geographicAddressManagement/v4/geographicLocation/abcdef", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 39 
+ 
+        "name": "Nice Acropolis" 
+    }, 
+    "geographicSubAddress": [ 
+        { 
+            "id": "3833", 
+            "href": "/tmf-api/geographicAddressManagement/v4/geographicSubAddress/3833", 
+            "type": "SubUnit", 
+            "name": "Mimosas", 
+            "subUnitType": "flat", 
+            "subUnitNumber": "239", 
+            "levelType": "floor", 
+            "levelNumber": "3", 
+            "buildingName": "Catalysts", 
+            "privateStreetNumber": "", 
+            "privateStreetName": "", 
+            "@type": "GeographicSubAddress" 
+        }, 
+        { 
+            "id": "3834", 
+            "href": "/tmf-api/geographicAddressManagement/v4/geographicSubAddress/3834", 
+            "type": "SubUnit", 
+            "name": "Heaven", 
+            "subUnitType": "flat", 
+            "subUnitNumber": "007", 
+            "levelType": "floor", 
+            "levelNumber": "3", 
+            "buildingName": "VIP area", 
+            "privateStreetNumber": "", 
+            "privateStreetName": "", 
+            "@type": "GeographicSubAddress" 
+        } 
+    ] 
+} 
+Geographic Sub Address resource 
+Representation of a GeographicSubAddress  
+It is used for addressing within a property in an urban area (country properties are often defined differently). It may 
+refer to a building, a building cluster, or a floor of a multistory building. 
+Field descriptions 
+GeographicSubAddress fields 
+buildingName 
+A string. allows for buildings that have well-known names. 
+href 
+A string. Link to the subAddress. 
+id 
+A string. Unique Identifier of the subAddress. 
+levelNumber 
+A string. used where a level type may be repeated e.g. BASEMENT 1, BASEMENT 2. 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 39 
+ 
+levelType 
+A string. describes level types within a building. 
+name 
+A string. Name of the subAddress to identify it with a meaningful identification. 
+privateStreetName 
+A string. private streets internal to a property (e.g. a university) may have internal 
+names that are not recorded by the land title office. 
+privateStreetNumber 
+A string. private streets numbers internal to a private street. 
+subAddressType 
+A string. Type of subAddress : it can be a subunit or a private street. 
+subUnitNumber 
+A string. the discriminator used for the subunit 
+often just a simple number e.g. FLAT 5, may also be a range. 
+subUnitType 
+A string. the type of subunit 
+e.g.BERTH, FLAT, PIER, SUITE, SHOP, TOWER, UNIT, WHARF. 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicSubAddress' resource object 
+{ 
+    "buildingName": "a string ...", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddress/1234/geographicSubAddress/9334", 
+    "id": "9334", 
+    "levelNumber": "a string ...", 
+    "levelType": "a string ...", 
+    "name": "a string ...", 
+    "privateStreetName": "a string ...", 
+    "privateStreetNumber": "a string ...", 
+    "subAddressType": "a string ...", 
+    "subUnitNumber": "a string ...", 
+    "subUnitType": "a string ..." 
+} 
+ 
+Notification Resource Models 
+ 
+1 notifications are defined for this API 
+Notifications related to GeographicAddressValidation: 
+    - GeographicAddressValidationStateChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 39 
+ 
+ 
+Geographic Address Validation State Change Event 
+Notification GeographicAddressValidationStateChangeEvent case for resource GeographicAddressValidation 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicAddressValidationStateChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 39 
+ 
+    "eventType":"GeographicAddressValidationStateChangeEvent", 
+     "event": { 
+        "geographicAddressValidation" :  
+            {-- SEE GeographicAddressValidation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 39 
+ 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Complete Update of an 
+Entity 
+PUT Resource 
+PUT must be used to 
+completely update a 
+resource identified by its 
+resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be 
+used to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 39 
+ 
+Operations on Geographic Address Validation 
+List geographic address validations 
+  GET /geographicAddressValidation?fields=...&{filtering} 
+Description 
+This operation list geographic address validation entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving GeographicAddressValidation resources. 
+ 
+Request 
+ 
+GET /tmf-api/geographicAddressManagement/v4/geographicAddressValidation 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "1a2b3c", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddressValidation/1a2b3c", 
+    "provideAlternative": "true", 
+    "status": "done", 
+    "validationDate": "2017-05-03T00:00", 
+    "validationResult": "partial", 
+    "submittedGeographicAddress": { 
+        "streetNr": "151", 
+        "streetName": "Landgrabenweg", 
+        "postcode": "53227", 
+        "postcodeExtension": "1", 
+        "city": "Bonn", 
+        "stateOrProvince": "NRW", 
+        "country": "Germany", 
+        "@type": "FieldedAddress", 
+        "@baseTtype": "GeographicAddress", 
+        "@schemaLocation": "http://github.com/MEF-GIT/FieldedAddress.json" 
+    }, 
+    "alternateGeographicAddress": [ 
+        { 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 39 
+ 
+            "id": "9912", 
+            "streetNr": "151", 
+            "streetNrSuffix": "Erstbau", 
+            "streetName": "Landgrabenweg", 
+            "streetType": "road", 
+            "streetSuffix": "", 
+            "postcode": "53227", 
+            "locality": "Beuel", 
+            "city": "Bonn", 
+            "stateOrProvince": "NRW", 
+            "country": "Germany", 
+            "geographicLocationRefOrValue": { 
+                "id": "9597"            } 
+        } 
+    ] 
+} 
+] 
+ 
+Retrieve geographic address validation 
+  GET 
+/geographicAddressValidation/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a geographic address validation entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a GeographicAddressValidation resource. 
+ 
+Request 
+ 
+GET /tmf-api/geographicAddressManagement/v4/geographicAddressValidation/1a2b3c 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "1a2b3c", 
+    "provideAlternative": "true", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 39 
+ 
+    "status": "done", 
+    "validationDate": "2017-05-03T00:00", 
+    "validationResult": "partial", 
+    "submittedGeographicAddress": { 
+        "streetNr": "151", 
+        "streetName": "Landgrabenweg", 
+        "postcode": "53227", 
+        "postcodeExtension": "1", 
+        "city": "Bonn", 
+        "stateOrProvince": "NRW", 
+        "country": "Germany", 
+        "@type": "FieldedAddress", 
+        "@baseTtype": "GeographicAddress", 
+        "@schemaLocation": "http://github.com/MEF-GIT/FieldedAddress.json" 
+    }, 
+    "alternateGeographicAddress": [ 
+        { 
+            "id": "9912", 
+            "streetNr": "151", 
+            "streetNrSuffix": "Erstbau", 
+            "streetName": "Landgrabenweg", 
+            "streetType": "road", 
+            "streetSuffix": "", 
+            "postcode": "53227", 
+            "locality": "Beuel", 
+            "city": "Bonn", 
+            "stateOrProvince": "NRW", 
+            "country": "Germany", 
+            "geographicLocationRefOrValue": { 
+                "id": "9597" 
+            } 
+        } 
+    ] 
+} 
+ 
+Create geographic address validation 
+  POST /geographicAddressValidation 
+Description 
+This operation creates a geographic address validation entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+GeographicAddressValidation, including any possible rule conditions and applicable default values. Notice that it is 
+up to an implementer to add additional mandatory attributes. 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 39 
+ 
+ 
+Mandatory Attributes 
+Rule 
+submittedGeographicAddress 
+ 
+provideAlternative 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+alternateGeographicAddress 
+ 
+status 
+ 
+validAddress 
+ 
+validationDate 
+ 
+validationResult 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a GeographicAddressValidation resource. In this example the request 
+only passes mandatory attributes. 
+ 
+Request 
+ 
+POST /tmf-api/geographicAddressManagement/v4/geographicAddressValidation 
+Content-Type: application/json 
+ 
+{ 
+    "provideAlternative": "true", 
+    "submittedGeographicAddress": { 
+        "streetNr": "151", 
+        "streetName": "Landgrabenweg", 
+        "postcode": "53227", 
+        "city": "Bonn", 
+        "stateOrProvince": "NRW", 
+        "country": "Germany", 
+        "@type": "GeographicAddress" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "1a2b3c", 
+    "href": "https://host:port/location/geographicAddressValidation/1a2b3c", 
+    "provideAlternative": "true", 
+    "submittedGeographicAddress": { 
+        "streetNr": "151", 
+        "streetName": "Landgrabenweg", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 39 
+ 
+        "postcode": "53227", 
+        "postcodeExtension": "1", 
+        "city": "Bonn", 
+        "stateOrProvince": "NRW", 
+        "country": "Germany", 
+        "@type": "FieldedAddress", 
+        "@baseTtype": "GeographicAddress", 
+        "@schemaLocation": "http://github.com/MEF-GIT/FieldedAddress.json" 
+    } 
+} 
+ 
+Patch geographic address validation 
+  PATCH /geographicAddressValidation/{id} 
+Description 
+This operation allows partial updates of a geographic address validation entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+alternateGeographicAddress 
+ 
+provideAlternative 
+ 
+status 
+ 
+validAddress 
+ 
+validationDate 
+ 
+validationResult 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a GeographicAddressValidation resource. 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 39 
+ 
+ 
+Request 
+ 
+PATCH /tmf-api/geographicAddressManagement/v4/geographicAddressValidation/1a2b3c 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "1a2b3c", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddressValidation/1a2b3c", 
+    "provideAlternative": "true", 
+    "status": "done", 
+    "validationDate": "2017-05-03T00:00", 
+    "validationResult": "partial", 
+    "submittedGeographicAddress": { 
+        "streetNr": "151", 
+        "streetName": "Landgrabenweg", 
+        "postcode": "53227", 
+        "postcodeExtension": "1", 
+        "city": "Bonn", 
+        "stateOrProvince": "NRW", 
+        "country": "Germany", 
+        "@type": "FieldedAddress", 
+        "@baseTtype": "GeographicAddress", 
+        "@schemaLocation": "http://github.com/MEF-GIT/FieldedAddress.json" 
+    }, 
+    "alternateGeographicAddress": [ 
+        { 
+            "id": "9912", 
+            "href": "https://host:port/location/geographicAddress/9912", 
+            "streetNr": "151", 
+            "streetNrSuffix": "Erstbau", 
+            "streetName": "Landgrabenweg", 
+            "streetType": "road", 
+            "streetSuffix": "", 
+            "postcode": "53227", 
+            "locality": "Beuel", 
+            "city": "Bonn", 
+            "stateOrProvince": "NRW", 
+            "country": "Germany", 
+            "geographicLocationRefOrValue": { 
+                "id": "9597", 
+                "href": "/tmf-api/geographicAddressManagement/v4/geographicLocation/9597" 
+            } 
+        } 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 39 
+ 
+    ], 
+    "name": "new name" 
+} 
+ 
+Operations on Geographic Address 
+List geographic addresses 
+  GET /geographicAddress?fields=...&{filtering} 
+Description 
+This operation list geographic address entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving GeographicAddress resources. 
+ 
+Request 
+ 
+GET /tmf-api/geographicAddressManagement/v4/geographicAddress 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "9090", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddress/9090", 
+    "streetNr": "225", 
+    "streetNrSuffix": "B", 
+    "streetNrLast": "", 
+    "streetNrLastSuffix": "", 
+    "streetName": " Strathmore", 
+    "streetType": "Terrace", 
+    "streetSuffix": "", 
+    "postcode": "5004", 
+    "locality": "Brighton.", 
+    "city": "Brighton", 
+    "stateOrProvince": "SA", 
+    "country": "Australia", 
+    "@type": "GeographicAddress ", 
+    "geographicLocation": { 
+        "id": "abcdef", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 39 
+ 
+        "href": "/tmf-api/geographicAddressManagement/v4/geographicLocation/abcdef", 
+        "name": "Nice Acropolis" 
+    }, 
+    "geographicSubAddress": [ 
+        { 
+            "id": "3833", 
+            "href": "/tmf-api/geographicAddressManagement/v4/geographicSubAddress/3833", 
+            "type": "SubUnit", 
+            "name": "Mimosas", 
+            "subUnitType": "flat", 
+            "subUnitNumber": "239", 
+            "levelType": "floor", 
+            "levelNumber": "3", 
+            "buildingName": "Catalysts", 
+            "privateStreetNumber": "", 
+            "privateStreetName": "", 
+            "@type": "GeographicSubAddress" 
+        }, 
+        { 
+            "id": "3834", 
+            "href": "/tmf-api/geographicAddressManagement/v4/geographicSubAddress/3834", 
+            "type": "SubUnit", 
+            "name": "Heaven", 
+            "subUnitType": "flat", 
+            "subUnitNumber": "007", 
+            "levelType": "floor", 
+            "levelNumber": "3", 
+            "buildingName": "VIP area", 
+            "privateStreetNumber": "", 
+            "privateStreetName": "", 
+            "@type": "GeographicSubAddress" 
+        } 
+    ] 
+} 
+] 
+ 
+Retrieve geographic address 
+  GET /geographicAddress/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a geographic address entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving a GeographicAddress resource. 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 39 
+ 
+ 
+Request 
+ 
+GET /tmf-api/geographicAddressManagement/v4/geographicAddress/9090 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "9090", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddress/9090", 
+    "streetNr": "225", 
+    "streetNrSuffix": "B", 
+    "streetNrLast": "", 
+    "streetNrLastSuffix": "", 
+    "streetName": " Strathmore", 
+    "streetType": "Terrace", 
+    "streetSuffix": "", 
+    "postcode": "5004", 
+    "locality": "Brighton.", 
+    "city": "Brighton", 
+    "stateOrProvince": "SA", 
+    "country": "Australia", 
+    "@type": "GeographicAddress ", 
+    "geographicLocation": { 
+        "id": "abcdef", 
+        "href": ""/tmf-api/geographicAddressManagement/v4/geographicLocation/abcdef", 
+        "name": "Nice Acropolis" 
+    }, 
+    "geographicSubAddress": [ 
+        { 
+            "id": "3833", 
+            "href": "/tmf-api/geographicAddressManagement/v4/geographicSubAddress/3833", 
+            "type": "SubUnit", 
+            "name": "Mimosas", 
+            "subUnitType": "flat", 
+            "subUnitNumber": "239", 
+            "levelType": "floor", 
+            "levelNumber": "3", 
+            "buildingName": "Catalysts", 
+            "privateStreetNumber": "", 
+            "privateStreetName": "", 
+            "@type": "GeographicSubAddress" 
+        }, 
+        { 
+            "id": "3834", 
+            "href": "/tmf-api/geographicAddressManagement/v4/geographicSubAddress/3834", 
+            "type": "SubUnit", 
+            "name": "Heaven", 
+            "subUnitType": "flat", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 39 
+ 
+            "subUnitNumber": "007", 
+            "levelType": "floor", 
+            "levelNumber": "3", 
+            "buildingName": "VIP area", 
+            "privateStreetNumber": "", 
+            "privateStreetName": "", 
+            "@type": "GeographicSubAddress" 
+        } 
+    ] 
+} 
+ 
+Operations on Geographic Sub Address 
+List geographic sub addresses 
+  GET 
+geographicAddress/{geographicAddressId}/geographicSubAddress?
+fields=...&{filtering} 
+Description 
+This operation list geographic sub address entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving GeographicSubAddress resources. 
+ 
+Request 
+ 
+GET /tmf-api/geographicAddressManagement/v4/geographicAddress/1245/geographicSubAddress 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "buildingName": "a string ...", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddress/1245/geographicSubAddress/9334", 
+    "id": "9334", 
+    "levelNumber": "a string ...", 
+    "levelType": "a string ...", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 39 
+ 
+    "name": "a string ...", 
+    "privateStreetName": "a string ...", 
+    "privateStreetNumber": "a string ...", 
+    "subAddressType": "a string ...", 
+    "subUnitNumber": "a string ...", 
+    "subUnitType": "a string ..." 
+} 
+] 
+ 
+Retrieve geographic sub address 
+  GET 
+geographicAddress/{geographicAddressId}/geographicSubAddress/
+{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a geographic sub address entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a GeographicSubAddress resource. 
+ 
+Request 
+ 
+GET /tmf-api/geographicAddressManagement/v4/geographicAddress/12345/geographicSubAddress/9334 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "buildingName": "a string ...", 
+    "href": "/tmf-api/geographicAddressManagement/v4/geographicAddress/12345/geographicSubAddress/9334", 
+    "id": "9334", 
+    "levelNumber": "a string ...", 
+    "levelType": "a string ...", 
+    "name": "a string ...", 
+    "privateStreetName": "a string ...", 
+    "privateStreetNumber": "a string ...", 
+    "subAddressType": "a string ...", 
+    "subUnitNumber": "a string ...", 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 39 
+ 
+    "subUnitType": "a string ..." 
+} 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 39 
+ 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 39 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+ Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 39 
+ 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 39 
+ 
+Acknowledgements 
+ 
+Version History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+1.0 
+04/15/2017 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Mariano Belaunde 
+Orange Labs 
+First Release of the Document.  
+2.0 
+11/06/2018 
+Mariano Belaunde  
+Orange Labs 
+Alignment with Guidelines 3.0 
+4.0.0 
+28-May-2020 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Mariano Belaunde 
+Orange Labs 
+Version 4.0 of the API REST 
+ 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Pre-production 
+28-May-2020 
+Pierre Gauthier 
+TM Forum 
+ 
+Mariano Belaunde 
+Orange Labs 
+Version 4.0 of the API REST 
+ 
+Production 
+20-Jul-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Contributors to Document 
+ 
+
+
+Geographic Address Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 39 
+ 
+ 
+ 
+ 
+ 
+ 
+
+

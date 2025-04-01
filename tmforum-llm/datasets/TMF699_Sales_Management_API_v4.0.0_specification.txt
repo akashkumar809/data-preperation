@@ -1,0 +1,1732 @@
+ 
+TM Forum 2019. All Rights Reserved. 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Sales Management API REST 
+Specification 
+ 
+ 
+ 
+ 
+ 
+TMF699 
+Release 19.0.1 
+November 2019 
+ 
+ 
+Latest Update: TM Forum Release 19.0.1 TM Forum Approved 
+Version 4.0.1 
+IPR Mode: RAND 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 2 of 40 
+ 
+NOTICE 
+Copyright © TM Forum 2019. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 3 of 40 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 4 of 40 
+ 
+Table of Contents 
+ 
+NOTICE .......................................................................................................................................................................... 2 
+Table of Contents ....................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................... 5 
+Introduction ................................................................................................................................................................. 6 
+SAMPLE USE CASES ......................................................................................................................................................... 7 
+Support of polymorphism and extension patterns ........................................................................................................ 8 
+RESOURCE MODEL .......................................................................................................................................................... 9 
+Managed Entity and Task Resource Models ....................................................................................................... 9 
+Sales Lead resource ................................................................................................................................................. 9 
+Notification Resource Models .............................................................................................................................. 19 
+Sales Lead Create Event ........................................................................................................................................ 19 
+Sales Lead Attribute Value Change Event ............................................................................................................. 20 
+Sales Lead State Change Event .............................................................................................................................. 20 
+Sales Lead Delete Event......................................................................................................................................... 21 
+API OPERATIONS ........................................................................................................................................................... 22 
+Operations on Sales Lead.......................................................................................................................................... 22 
+List sales leads ....................................................................................................................................................... 22 
+Retrieve sales lead ................................................................................................................................................. 23 
+Create sales lead .................................................................................................................................................... 26 
+Patch sales lead ..................................................................................................................................................... 31 
+Delete sales lead .................................................................................................................................................... 35 
+API NOTIFICATIONS....................................................................................................................................................... 37 
+Register listener ........................................................................................................................................................ 37 
+Unregister listener .................................................................................................................................................... 38 
+Publish Event to listener ........................................................................................................................................... 38 
+Acknowledgements ...................................................................................................................................................... 40 
+Version History.......................................................................................................................................................... 40 
+Release History ......................................................................................................................................................... 40 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 5 of 40 
+ 
+List of Tables 
+N/A 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 6 of 40 
+ 
+Introduction 
+ 
+The following document is the specification of the REST API for Sales Management. It includes the model definition 
+as well as all available operations. 
+ 
+This API provides interfaces for Sales Lead, Sales Opportunity, Sales Quote and the other management capabilities 
+to support the sales activities to build relationship with the prospect customer who could be a person or organization 
+that has an interest in the goods and/or services and possibly become the actual customers with one or more 
+subscriptions. 
+ 
+The first release of this API specifies only the SalesLead resource. 
+ 
+The Lead corresponds to the nominal result of an interaction involving a prospective customer towards one of offers 
+or services. It is the first stage (S) of the SPANCO process. 
+ 
+A prospect could have expressed a commercial interest or a commercial interest has been detected from his behavior 
+analysis. The Lead Management function enables to collect, evaluate and attribute the leads to the appropriate sales 
+representatives. The lead is an interest concerning an offer family or a product line, or expressed literally during an 
+interaction, possibly further to a marketing campaign, and it must be handled and specified to become an 
+opportunity or an order. 
+ 
+In a nominal way, once the interest towards offers or services is confirmed and the prospective customer clearly 
+identified, then an Opportunity is created. 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 7 of 40 
+ 
+SAMPLE USE CASES 
+Use case 1: A prospect shows interest in a commercial link 
+  
+Use case 2: A prospect asks for information in a trade show 
+SAM 
+Use case 3: A prospect is the target of a marketing mailing campaign 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 8 of 40 
+ 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema-based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance a CustomerInterest and B2BInterest, inherit properties from the abstract SalesLead entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+SalesLead instances some may be instances of CustomerInterest where other could be instances of B2BInterest. The 
+@type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance a SalesLeadRef object) to explicitly denote 
+the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes the class 
+type of the reference itself, such as CustomerInterestRef or B2BInterestRef, and not the class type of the referred 
+object. However, since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 9 of 40 
+ 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Sales Lead resource 
+A Sales Lead is the identification of a person or organization that has an interest in the goods and/or services 
+provided in the prospect of them becoming Customers with one or more Subscriptions. 
+Resource model 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 10 of 40 
+ 
+ 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 11 of 40 
+ 
+Lifecycle 
+ 
+Field descriptions 
+SalesLead fields 
+category 
+A category reference (CategoryRef). The category for grouping recommendations. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 12 of 40 
+ 
+channel 
+A channel reference (ChannelRef). The channel to which the resource reference to. 
+e.g. channel for selling product offerings, channel for opening a trouble ticket etc.. 
+creationDate 
+A date time (DateTime). Date and time of the salesLead creation. 
+description 
+A string. Unique description of the salesLead. 
+estimatedRevenue 
+A money (Money). Estimation of the revenue if the salesLead turns into a sale. 
+href 
+A string. Reference of the salesLead. 
+id 
+A string. Unique identifier of the salesLead. 
+marketSegment 
+A market segment reference (MarketSegmentRef). A Market Segment is a grouping of 
+Parties, GeographicAreas, SalesChannels, and so forth. MarketSegments are the 
+target of MarketingCampaigns, ProductOfferings, ProductPromotions, 
+ProductPlacements, and ProductPrograms from both internal and external 
+(Competitors, and other Providers) perspective. 
+marketingCampaign 
+A marketing campaign reference (MarketingCampaignRef). Campaign represents the 
+carrier-initiated marketing activity which aims at the better recognition about its 
+brand and offerings by the market. 
+name 
+A string. Name of the salesLead. 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+priority 
+A sales lead priority type (SalesLeadPriorityType). Urgency of working this salesLead. 
+product 
+A product reference (ProductRef). 
+productOffering 
+A product offering reference (ProductOfferingRef). A product offering represents 
+entities that are orderable from the provider of the catalog, this resource includes 
+pricing information. 
+productSpecification 
+A product specification reference (ProductSpecificationRef). A ProductSpecification is 
+a detailed description of a tangible or intangible object made available externally in 
+the form of a ProductOffering to customers or other parties playing a party role. 
+prospectContact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+rating 
+A string. Identifies the potential of a salesLead for becoming a sale. Usual ratings for 
+qualified leads are: hot, warm, cold. 
+referredDate 
+A date time (DateTime). Date when the prospect information was received (for 
+example, from a trade show). 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 13 of 40 
+ 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+salesOpportunity 
+A sales opportunity reference (SalesOpportunityRef). Sales Opportunity is an 
+'opportunity' to generate revenue from a Sales Account or Sales Lead. Opportunities 
+are the pending deals that need to be tracked and on which Sales Team plans and 
+executes Sales Activities (Events and Tasks). 
+status 
+A sales lead state type (SalesLeadStateType). Valid values for the lifecycle state of a 
+salesLead resource. 
+statusChangeDate 
+A date time (DateTime). Date and time of the last update. 
+statusChangeReason 
+A string. Reason why the status has changed. 
+type 
+A string. Indicates the nature of the salesLead. 
+validFor 
+A time period. The period for which the salesLead is valid. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping instalation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 14 of 40 
+ 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Money sub-resource 
+A base / value business entity used to represent money. 
+unit 
+A string. Currency (ISO4217 norm uses 3 letters to define the currency). 
+value 
+A float. A positive floating-point number. 
+Note sub-resource 
+Extra information about a given entity. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be globally 
+unique, depending on provider implementation). 
+text 
+A string. Text of the note. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+TargetProductSchema sub-resource 
+The reference object to the schema and type of target product which is described by product specification. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 15 of 40 
+ 
+@schemaLocation 
+A string. This field provides a link to the schema describing the target product. 
+@type 
+A string. Class type of the target product. 
+CategoryRef relationship 
+The category for grouping recommendations. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+version 
+A string. Category version. 
+ChannelRef relationship 
+The channel to which the resource reference to. e.g. channel for selling product offerings, channel for opening a 
+trouble ticket etc. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the channel. 
+name 
+A string. Name of the channel. 
+MarketSegmentRef relationship 
+provides references to the corresponding market segment as target of product offerings. A market segment is 
+grouping of Parties, GeographicAreas, SalesChannels, and so forth. 
+@referredType 
+A string. (Class) type of the referred market segment. 
+href 
+A string. Reference of the market segment. 
+id 
+A string. Unique identifier of the market segment. 
+name 
+A string. Name of the market segment. 
+MarketingCampaignRef relationship 
+MarketingCampaign reference. Marketing campaign represents the carrier-initiated marketing activity which aims 
+at the better recognition about its brand and offerings by the market. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 16 of 40 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+ProductOfferingRef relationship 
+ProductOffering reference. A product offering represents entities that are orderable from the provider of the 
+catalog, this resource includes pricing information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+ProductRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+ProductSpecificationRef relationship 
+Product specification reference: A ProductSpecification is a detailed description of a tangible or intangible object 
+made available externally in the form of a ProductOffering to customers or other parties playing a party role. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+targetProductSchema 
+A target product schema (TargetProductSchema). A target product schema reference. 
+The reference object to the schema and type of target product which is described by 
+product specification. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 17 of 40 
+ 
+version 
+A string. Version of the product specification. 
+SalesOpportunityRef relationship 
+Sales Opportunity is an 'opportunity' to generate revenue from a Sales Account or Sales Lead. Opportunities are the 
+pending deals that need to be tracked and on which Sales Team plans and executes Sales Activities (Events and 
+Tasks). . 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+Json representation sample 
+We provide below the json representation of an example of a 'SalesLead' resource object 
+{ 
+    "id": "123", 
+    "href": "https://serverRoot/tmf-api/sales/v4/salesLead/123", 
+    "@type": "SalesLead", 
+    "creationDate": "2019-01-19T12:27:59.123Z", 
+    "description": "salesLead generated by a clic on a commercial link", 
+    "name": "Campaign 17 salesLead 7852", 
+    "priority": "medium", 
+    "rating": "hot", 
+    "referredDate": "2019-01-19T12:27:59.123Z", 
+    "status": "inProgress", 
+    "statusChangeDate": "2019-01-25T15:53:29.961Z", 
+    "statusChangeReason": "Lead accepted by marketing team", 
+    "type": "advertisingLink", 
+    "category": { 
+        "id": "15", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/category/15", 
+        "name": "Individual Bank account category" 
+    }, 
+    "channel": { 
+        "id": "1", 
+        "name": "www.orange.fr" 
+    }, 
+    "estimatedRevenue": { 
+        "unit": "EUR", 
+        "value": 1200 
+    }, 
+    "marketSegment": { 
+        "id": "657", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketSegment/657", 
+        "name": "Active youngs market segment" 
+    }, 
+    "marketingCampaign": { 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 18 of 40 
+ 
+        "id": "21", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketingCampaign/21", 
+        "name": "January 2019 campaign for Orange Bank" 
+    }, 
+    "note": [ 
+        { 
+            "author": "Saul Goodman", 
+            "date": "2019-01-22T15:53:29.961Z", 
+            "text": "Customer with a very good credit profile" 
+        } 
+    ], 
+    "product": { 
+        "id": "7321", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/product/7321" 
+    }, 
+    "productOffering": { 
+        "id": "42", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/productOffering/42", 
+        "name": "Gold Credit Card" 
+    }, 
+    "contactMedium": [ 
+        { 
+            "preferred": "false", 
+            "mediumType": "email", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "emailAddress": "gustavo.fring@mail.com" 
+            } 
+        }, 
+        { 
+            "preferred": "true", 
+            "mediumType": "phone", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "phoneNumber": "+33607080910" 
+            } 
+        }, 
+        { 
+            "preferred": "false", 
+            "mediumType": "postal address", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "street1": "Rue de Provence", 
+                "postCode": "75001", 
+                "city": "Paris", 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 19 of 40 
+ 
+                "country": "France" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "127", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/127", 
+            "name": "Walter White", 
+            "role": "marketing team", 
+            "@referredType": "individual" 
+        }, 
+        { 
+            "id": "475", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/475", 
+            "name": "Saul Goodman", 
+            "role": "sales team", 
+            "@referredType": "individual" 
+        } 
+    ], 
+    "salesOpportunity": { 
+        "id": "7894325", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/salesOpportunity/7894325", 
+        "name": "GoBank account" 
+    }, 
+    "validFor": { 
+        "startDateTime": "2019-01-19T12:27:59.123Z", 
+        "endDateTime": "2019-02-19T12:27:59.123Z" 
+    } 
+} 
+ 
+Notification Resource Models 
+ 
+4 notifications are defined for this API 
+Notifications related to SalesLead: 
+    - SalesLeadCreateEvent 
+    - SalesLeadAttributeValueChangeEvent 
+    - SalesLeadStateChangeEvent 
+    - SalesLeadDeleteEvent 
+Sales Lead Create Event  
+Notification SalesLeadCreateEvent case for resource SalesLead 
+Json representation sample 
+We provide below the json representation of an example of a 'SalesLeadCreateEvent' event object 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 20 of 40 
+ 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SalesLeadCreateEvent", 
+     "event": { 
+        "salesLead" :  
+            {-- SEE SalesLead RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Sales Lead Attribute Value Change Event  
+Notification SalesLeadAttributeValueChangeEvent case for resource SalesLead 
+Json representation sample 
+We provide below the json representation of an example of a 'SalesLeadAttributeValueChangeEvent' notification 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SalesLeadAttributeValueChangeEvent", 
+     "event": { 
+        "salesLead" :  
+            {-- SEE SalesLead RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Sales Lead State Change Event  
+Notification SalesLeadStateChangeEvent case for resource SalesLead 
+Json representation sample 
+We provide below the json representation of an example of a 'SalesLeadStateChangeEvent' notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SalesLeadStateChangeEvent", 
+     "event": { 
+        "salesLead" :  
+            {-- SEE SalesLead RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 21 of 40 
+ 
+Sales Lead Delete Event  
+Notification SalesLeadDeleteEvent case for resource SalesLead 
+Json representation sample 
+We provide below the json representation of an example of a 'SalesLeadDeleteEvent' notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SalesLeadDeleteEvent", 
+     "event": { 
+        "salesLead" :  
+            {-- SEE SalesLead RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 22 of 40 
+ 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+Operations on Sales Lead 
+List sales leads 
+  GET /salesLead?fields=...&{filtering} 
+Description 
+This operation list sales lead entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving a list of sales leads. The given criteria is the id of the customer 
+Gustavo Fring with the following selected attributes: id, name, description and status. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 23 of 40 
+ 
+ 
+Request 
+ 
+GET {apiRoot}/salesLead?fields=id,name,description,status&relatedParty.id=94587 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "123", 
+        "name": "Campaign 17 salesLead 7852", 
+        "description": "salesLead generated by a clic on a commercial link", 
+        "status": "inProgress" 
+    }, 
+    { 
+        "id": "456", 
+        "name": "Web site request 123456", 
+        "description": "salesLead generated by a clic on a commercial link", 
+        "status": "inProgress" 
+    } 
+] 
+ 
+Retrieve sales lead 
+  GET /salesLead/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a sales lead entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's a sample of a request for retrieving a sales lead. 
+ 
+Request 
+ 
+GET {apiRoot}/salesLead/123 
+Accept: application/json 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 24 of 40 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "123", 
+    "href": "https://serverRoot/tmf-api/sales/v4/salesLead/123", 
+    "@type": "SalesLead", 
+    "creationDate": "2019-01-19T12:27:59.123Z", 
+    "description": "salesLead generated by a clic on a commercial link", 
+    "name": "Campaign 17 salesLead 7852", 
+    "priority": "medium", 
+    "rating": "hot", 
+    "referredDate": "2019-01-19T12:27:59.123Z", 
+    "status": "inProgress", 
+    "statusChangeDate": "2019-01-25T15:53:29.961Z", 
+    "statusChangeReason": "Lead accepted by marketing team", 
+    "type": "advertisingLink", 
+    "category": { 
+        "id": "15", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/category/15", 
+        "name": "Individual Bank account category" 
+    }, 
+    "channel": { 
+        "id": "1", 
+        "name": "www.orange.fr" 
+    }, 
+    "estimatedRevenue": { 
+        "unit": "EUR", 
+        "value": 1200 
+    }, 
+    "marketSegment": { 
+        "id": "657", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketSegment/657", 
+        "name": "Active youngs market segment" 
+    }, 
+    "marketingCampaign": { 
+        "id": "21", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketingCampaign/21", 
+        "name": "January 2019 campaign for Orange Bank" 
+    }, 
+    "note": [ 
+        { 
+            "author": "Saul Goodman", 
+            "date": "2019-01-22T15:53:29.961Z", 
+            "text": "Customer with a very good credit profile" 
+        } 
+    ], 
+    "product": { 
+        "id": "7321", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/product/7321" 
+    }, 
+    "productOffering": { 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 25 of 40 
+ 
+        "id": "42", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/productOffering/42", 
+        "name": "Gold Credit Card" 
+    }, 
+    "prospectContact": [ 
+        { 
+            "preferred": "false", 
+            "mediumType": "email", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "emailAddress": "gustavo.fring@mail.com" 
+            } 
+        }, 
+        { 
+            "preferred": "true", 
+            "mediumType": "phone", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "phoneNumber": "+33607080910" 
+            } 
+        }, 
+        { 
+            "preferred": "false", 
+            "mediumType": "postal address", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "street1": "Rue de Provence", 
+                "postCode": "75001", 
+                "city": "Paris", 
+                "country": "France" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "127", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/127", 
+            "name": "Walter White", 
+            "role": "marketing team", 
+            "@referredType": "individual" 
+        }, 
+        { 
+            "id": "475", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/475", 
+            "name": "Saul Goodman", 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 26 of 40 
+ 
+            "role": "sales team", 
+            "@referredType": "individual" 
+        } 
+    ], 
+    "salesOpportunity": { 
+        "id": "7894325", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/salesOpportunity/7894325", 
+        "name": "GoBank account" 
+    }, 
+    "validFor": { 
+        "startDateTime": "2019-01-19T12:27:59.123Z", 
+        "endDateTime": "2019-02-19T12:27:59.123Z" 
+    } 
+} 
+ 
+Create sales lead 
+  POST /salesLead 
+Description 
+This operation creates a sales lead entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non-mandatory attributes when creating a SalesLead, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+ 
+Non-Mandatory Attributes 
+Rule 
+category 
+ 
+channel 
+ 
+creationDate 
+ 
+description 
+ 
+estimatedRevenue 
+ 
+marketSegment 
+ 
+marketingCampaign 
+ 
+note 
+ 
+priority 
+ 
+product 
+ 
+productOffering 
+ 
+productSpecification 
+ 
+prospectContact 
+ 
+rating 
+ 
+referredDate 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 27 of 40 
+ 
+Non-Mandatory Attributes 
+Rule 
+relatedParty 
+ 
+salesOpportunity 
+ 
+status 
+ 
+statusChangeDate 
+ 
+statusChangeReason 
+ 
+type 
+ 
+validFor 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a sales lead resource. 
+ 
+Request 
+ 
+POST {apiRoot}/salesLead 
+Content-Type: application/json 
+ 
+{ 
+    "name": "Campaign 17 salesLead 7852", 
+    "description": "salesLead generated by a clic on a commercial link", 
+    "referredDate": "2019-01-19T12:27:59.123Z", 
+    "type": "advertisingLink", 
+    "rating": "hot", 
+    "priority": "medium", 
+    "estimatedRevenue": { 
+        "unit": "EUR", 
+        "value": 1200 
+    }, 
+    "validFor": { 
+        "startDateTime": "2019-01-19T12:27:59.123Z", 
+        "endDateTime": "2019-02-19T12:27:59.123Z" 
+    }, 
+    "marketSegment": { 
+        "id": "657", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketSegment/657", 
+        "name": "Active youngs market segment" 
+    }, 
+    "marketingCampaign": { 
+        "id": "21", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketingCampaign/21", 
+        "name": "January 2019 campaign for Orange Bank" 
+    }, 
+    "channel": { 
+        "id": "1", 
+        "name": "www.orange.fr" 
+    }, 
+    "productOffering": { 
+        "id": "42", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/productOffering/42", 
+        "name": "Gold Credit Card" 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 28 of 40 
+ 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "127", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/127", 
+            "name": "Walter White", 
+            "role": "marketing team", 
+            "@referredType": "individual" 
+        }, 
+        { 
+            "id": "475", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/475", 
+            "name": "Saul Goodman", 
+            "role": "sales team", 
+            "@referredType": "individual" 
+        } 
+    ], 
+    "prospectContact": [ 
+        { 
+            "preferred": "false", 
+            "mediumType": "email", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "emailAddress": "gustavo.fring@mail.com" 
+            } 
+        }, 
+        { 
+            "preferred": "true", 
+            "mediumType": "phone", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "phoneNumber": "+33607080910" 
+            } 
+        }, 
+        { 
+            "preferred": "false", 
+            "mediumType": "postal address", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "street1": "Rue de Provence", 
+                "postCode": "75001", 
+                "city": "Paris", 
+                "country": "France" 
+            } 
+        } 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 29 of 40 
+ 
+    ], 
+    "category": { 
+        "id": "15", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/category/15", 
+        "name": "Individual Bank account category" 
+    }, 
+    "salesOpportunity": { 
+        "id": "7894325", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/salesOpportunity/7894325", 
+        "name": "GoBank account" 
+    }, 
+    "product": { 
+        "id": "7321", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/product/7321" 
+    }, 
+    "note": [ 
+        { 
+            "author": "Saul Goodman", 
+            "date": "2019-01-22T15:53:29.961Z", 
+            "text": "Customer with a very good credit profile" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "123", 
+    "href": "https://serverRoot/tmf-api/sales/v4/salesLead/123", 
+    "@type": "SalesLead", 
+    "name": "Campaign 17 salesLead 7852", 
+    "description": "salesLead generated by a clic on a commercial link", 
+    "status": "acknowledged", 
+    "statusChangeDate": "2019-01-25T15:53:29.961Z", 
+    "creationDate": "2019-01-19T12:27:59.123Z", 
+    "referredDate": "2019-01-19T12:27:59.123Z", 
+    "statusChangeReason": "Lead created", 
+    "type": "advertisingLink", 
+    "rating": "hot", 
+    "priority": "medium", 
+    "estimatedRevenue": { 
+        "unit": "EUR", 
+        "value": 1200 
+    }, 
+    "validFor": { 
+        "startDateTime": "2019-01-19T12:27:59.123Z", 
+        "endDateTime": "2019-02-19T12:27:59.123Z" 
+    }, 
+    "marketSegment": { 
+        "id": "657", 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 30 of 40 
+ 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketSegment/657", 
+        "name": "Active youngs market segment" 
+    }, 
+    "marketingCampaign": { 
+        "id": "21", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketingCampaign/21", 
+        "name": "January 2019 campaign for Orange Bank" 
+    }, 
+    "channel": { 
+        "id": "1", 
+        "name": "www.orange.fr", 
+        "role": "originChannel" 
+    }, 
+    "productOffering": { 
+        "id": "42", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/productOffering/42", 
+        "name": "Gold Credit Card" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "127", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/127", 
+            "name": "Walter White", 
+            "role": "marketing team", 
+            "@referredType": "individual" 
+        }, 
+        { 
+            "id": "475", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/475", 
+            "name": "Saul Goodman", 
+            "role": "sales team", 
+            "@referredType": "individual" 
+        } 
+    ], 
+    "prospectContact": [ 
+        { 
+            "preferred": "false", 
+            "mediumType": "email", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "emailAddress": "gustavo.fring@mail.com" 
+            } 
+        }, 
+        { 
+            "preferred": "true", 
+            "mediumType": "phone", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 31 of 40 
+ 
+                "phoneNumber": "+33607080910" 
+            } 
+        }, 
+        { 
+            "preferred": "false", 
+            "mediumType": "postal address", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "street1": "Rue de Provence", 
+                "postCode": "75001", 
+                "city": "Paris", 
+                "country": "France" 
+            } 
+        } 
+    ], 
+    "category": { 
+        "id": "15", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/category/15", 
+        "name": "Individual Bank account category" 
+    }, 
+    "salesOpportunity": { 
+        "id": "7894325", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/salesOpportunity/7894325", 
+        "name": "GoBank account" 
+    }, 
+    "product": { 
+        "id": "7321", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/product/7321" 
+    }, 
+    "note": [ 
+        { 
+            "author": "Saul Goodman", 
+            "date": "2019-01-22T15:53:29.961Z", 
+            "text": "Customer with a very good credit profile" 
+        } 
+    ] 
+} 
+ 
+Patch sales lead 
+  PATCH /salesLead/{id} 
+Description 
+This operation allows partial updates of a sales lead entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional.  
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 32 of 40 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non-Patchable Attributes 
+The tables below provide the list of patchable and non-patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+category 
+ 
+channel 
+ 
+description 
+ 
+estimatedRevenue 
+ 
+marketSegment 
+ 
+marketingCampaign 
+ 
+name 
+ 
+note 
+ 
+priority 
+ 
+product 
+ 
+productOffering 
+ 
+productSpecification 
+ 
+prospectContact 
+ 
+rating 
+ 
+referredDate 
+ 
+relatedParty 
+ 
+salesOpportunity 
+ 
+status 
+ 
+statusChangeDate 
+ 
+statusChangeReason 
+ 
+type 
+ 
+validFor 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+creationDate 
+ 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a sales lead. In this example, a new status is set, together with a 
+change reason. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 33 of 40 
+ 
+ 
+Request 
+ 
+PATCH {apiRoot}/salesLead/123 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "status": "pending", 
+    "statusChangeReason": "Lead needs extra information to continue the process" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "123", 
+    "href": "https://serverRoot/tmf-api/sales/v4/salesLead/123", 
+    "@type": "SalesLead", 
+    "name": "Campaign 17 salesLead 7852", 
+    "description": "salesLead generated by a clic on a commercial link", 
+    "status": "pending", 
+    "statusChangeDate": "2019-01-26T14:12:54.349Z", 
+    "creationDate": "2019-01-19T12:27:59.123Z", 
+    "referredDate": "2019-01-19T12:27:59.123Z", 
+    "statusChangeReason": "Lead needs extra information to continue the process", 
+    "type": "advertisingLink", 
+    "rating": "hot", 
+    "priority": "medium", 
+    "estimatedRevenue": { 
+        "unit": "EUR", 
+        "value": 1200 
+    }, 
+    "validFor": { 
+        "startDateTime": "2019-01-19T12:27:59.123Z", 
+        "endDateTime": "2019-02-19T12:27:59.123Z" 
+    }, 
+    "marketSegment": { 
+        "id": "657", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketSegment/657", 
+        "name": "Active youngs market segment" 
+    }, 
+    "marketingCampaign": { 
+        "id": "21", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/marketingCampaign/21", 
+        "name": "January 2019 campaign for Orange Bank" 
+    }, 
+    "channel": { 
+        "id": "1", 
+        "name": "www.orange.fr", 
+        "role": "originChannel" 
+    }, 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 34 of 40 
+ 
+    "productOffering": { 
+        "id": "42", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/productOffering/42", 
+        "name": "Gold Credit Card" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "127", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/127", 
+            "name": "Walter White", 
+            "role": "marketing team", 
+            "@referredType": "individual" 
+        }, 
+        { 
+            "id": "475", 
+            "href": "https://serverRoot/tmf-api/partyManagement/v1/party/475", 
+            "name": "Saul Goodman", 
+            "role": "sales team", 
+            "@referredType": "individual" 
+        } 
+    ], 
+    "prospectContact": [ 
+        { 
+            "preferred": "false", 
+            "mediumType": "email", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "emailAddress": "gustavo.fring@mail.com" 
+            } 
+        }, 
+        { 
+            "preferred": "true", 
+            "mediumType": "phone", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "phoneNumber": "+33607080910" 
+            } 
+        }, 
+        { 
+            "preferred": "false", 
+            "mediumType": "postal address", 
+            "validFor": { 
+                "startDateTime": "2017-03-15T07:49:25.246Z", 
+                "endDateTime": "" 
+            }, 
+            "characteristic": { 
+                "street1": "Rue de Provence", 
+                "postCode": "75001", 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 35 of 40 
+ 
+                "city": "Paris", 
+                "country": "France" 
+            } 
+        } 
+    ], 
+    "category": { 
+        "id": "15", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/category/15", 
+        "name": "Individual Bank account category" 
+    }, 
+    "salesOpportunity": { 
+        "id": "7894325", 
+        "href": "https://serverRoot/tmf-api/marketingManagement/v4/salesOpportunity/7894325", 
+        "name": "GoBank account" 
+    }, 
+    "product": { 
+        "id": "7321", 
+        "href": "https://serverRoot/tmf-api/productCatalogManagement/v4/product/7321" 
+    }, 
+    "note": [ 
+        { 
+            "author": "Saul Goodman", 
+            "date": "2019-01-22T15:53:29.961Z", 
+            "text": "Customer with a very good credit profile" 
+        } 
+    ] 
+} 
+ 
+Delete sales lead 
+  DELETE /salesLead/{id} 
+Description 
+This operation deletes a sales lead entity. 
+Usage Samples 
+Here's an example of a request for deleting a sales Lead. 
+ 
+Request 
+ 
+DELETE {apiRoot}/salesLead/123 
+ 
+ 
+ 
+Response 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 36 of 40 
+ 
+204 
+ 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 37 of 40 
+ 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 38 of 40 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+Sales Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 39 of 40 
+ 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+Any Management API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved.                                                                                                         Page 40 of 40 
+ 
+Acknowledgements 
+ 
+Version History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+4.0.0 
+11-Aug-2019 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Grégoire Laurent 
+gregoire.laurent@orange.com 
+Ludovic Robert 
+ludovic.robert@orange.com 
+Sophie Bouleau 
+sophie.bouleau@orange.com 
+ 
+Version 4.0 of the API REST 
+Note: the version 4.0 is assigned to all 
+the APIs delivered in the release 19.0 
+4.0.1 
+04-Nov-2019 
+Adrienne Walcott 
+Updated to reflect TM Forum Approve
+Status 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+19.0.0 
+11-Aug-2019 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Grégoire Laurent 
+gregoire.laurent@orange.com 
+Ludovic Robert 
+ludovic.robert@orange.com 
+Sophie Bouleau 
+sophie.bouleau@orange.com 
+ 
+Version 4.0 of the API REST 
+Note: the version 4.0 is assigned to all 
+the APIs delivered in the release 19.0 
+19.0.1 
+04-Nov-2019 
+Adrienne Walcott 
+Updated to reflect TM Forum Approve
+Status 
+ 
+
+

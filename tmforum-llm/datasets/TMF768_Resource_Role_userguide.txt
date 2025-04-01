@@ -1,0 +1,2987 @@
+TM Forum Specification 
+Resource Role Management 
+API User Guide
+Maturity Level: General Available (GA)
+Team Approved Date: 14-Nov-2024
+Approval Status: Team Approved
+IPR Mode: RAND
+Release Status: Preview
+Version 5.0.0
+TMF768
+© TM Forum 2024. All Rights Reserved.
+
+
+  
+ 
+ 
+ NOTICE
+Copyright © TM Forum 2024. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page i
+
+
+  
+ 
+ 
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  1
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+Support of polymorphism and extension patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
+RESOURCE MODEL . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+ResourceRoleSpecification resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+ResourceRole resource. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  12
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  16
+ResourceRoleSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  17
+ResourceRole . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  22
+API OPERATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  27
+Operations on ResourceRoleSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  27
+Retrieves a ResourceRoleSpecification by ID . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  27
+List or find ResourceRoleSpecification objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  29
+Creates a ResourceRoleSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  31
+Updates partially a ResourceRoleSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  34
+Deletes a ResourceRoleSpecification. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  41
+Operations on ResourceRole . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  42
+Retrieves a ResourceRole by ID. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  42
+List or find ResourceRole objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  43
+Creates a ResourceRole. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  45
+Updates partially a ResourceRole. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  47
+Deletes a ResourceRole . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  53
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  55
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  55
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  56
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  56
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  58
+Version History . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  58
+Release History. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  58
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  58
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page ii
+
+
+  
+ 
+ 
+ Introduction
+The scope of this document is to define the Resource Role Management API.
+A resource role, in a high-level context, is a designation assigned to a resource that defines
+its function, responsibilities, or usage in a particular context.
+The Resource Role Management API is designed to facilitate the management of resource
+role instances and specifications. These specifications delineate the shared characteristics
+and behaviors inherent to each type of resource entity. Furthermore, this API provides
+comprehensive management capabilities for various facets of a resource role, ensuring
+efficient and effective control over the system’s resources.
+The data model for the Resource Role Management API is constructed based on the
+aggregated business entity model from the Information Framework (SID). This is followed by
+a concise explanation of the concepts associated with the roles of Resources. This approach
+ensures a comprehensive understanding of the API profile document.
+Resource Role A Resource Role is a concept that delineates the diverse roles associated
+with Resources, encompassing both physical and logical aspects, within the model. This
+definition provides a structured understanding of the interactions and functionalities of the
+Resources in the system.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 1
+
+
+  
+ 
+ 
+ 
+Figure 1. Resource role, a starting point (SID v23.0 Resource Domain Resource ABE)
+Resource Specification might be described by Resource Roles that can be played by
+corresponding Resources.
+Resource Role is sub-classed according to Resource Specification sub-classes.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 2
+
+
+  
+ 
+ 
+ 
+Figure 2. Extending roles (SID v23.0 Resource Domain Resource Specification ABE)
+The Resource Role is designed with extensibility in mind, allowing for interactions between
+Resources and other business entities, such as Party Roles.
+For instance, the following diagram illustrates the association of Party Roles with distinct
+Resource Roles, such as device roles.
+This concept can be further elucidated with a practical business scenario: In a typical
+Provider network, the core and the edge utilize different devices due to their distinct roles.
+The core, serving a different purpose than the edge, necessitates the assignment of
+management personnel with varying skill sets for the core and edge devices. This
+differentiation in management is a direct result of the unique roles and requirements of the
+core and edge devices within the network.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 3
+
+
+  
+ 
+ 
+ 
+Figure 3. Managing resource roles using party roles (SID v23.0 Resource Domain Resource
+ABE)
+Digital Identity Global Party and Resource Domain Overview Digital Identity API
+(TMF720) plays an important role in the global party and resource domains relating to User
+Role Permission API (TMF672), Party API (TMF632), Party Role API (TMF669), Federated
+Identity API (TMF691), Resource Inventory API (TMF639) and Resource Role API
+(TMF768), to managing and controlling access to information and resources within an
+organization or network.
+In summary, these TM Forum Open APIs are related to managing parties, resources and
+their associated roles and digital identities within a network, as well as controlling access to
+information and resources through user roles and permissions. They provide a standardized
+way for organizations to manage these processes and enable integration with other systems.
+Following diagram illustrates the digital identity in a global party and resource domains
+overview, referencing related TM Forum Open APIs and data model entities.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 4
+
+
+  
+ 
+ 
+ 
+Figure 4. Digital identity global party and resource domain overview
+The Resource Role Management API provides the capability of creating, updating, and
+deleting resource role specifications and resource roles.
+The key functions are:
+• Search resource role specification(s).
+• Retrieve a resource role specification.
+• Create a resource role specification.
+• Update a resource role specification.
+• Delete a resource role specification.
+• Search resource role(s).
+• Retrieve a resource role.
+• Create a resource role.
+• Update a resource role.
+• Delete a resource role
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 5
+
+
+  
+ 
+ 
+ Sample Use Cases
+This section provides examples of how the most common business functions are
+implemented using the API standard.
+The Resource Role Management API provides the ability to manage resource roles and its
+underlying specifications.
+Some example use cases are:
+• UC1: An Administration User of a Resource Catalog Management application creating a
+new resource role “Api Consumer” for a Product Catalog Management Web Application
+that needs to access protected resources such as TMF620 Product Catalog API.
+• UC2: An Administration User of a Resource Catalog Management application creating a
+new resource role “Api Provider” for the TMF620 API to declare the full set of
+permissions exposed by the API.
+As an example, at the end of both use cases the information created will be:
+Figure 5. Product Catalog Management Web App Api Consumer example
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 6
+
+
+  
+ 
+ 
+ Support of polymorphism and extension
+patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below. Polymorphism in
+collections occurs when entities inherit from base entities, for instance a BillingAccount and
+SettlementAccount inheriting properties from the abstract Account entity.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines, Part 2 (TMF630).
+The @type attribute provides a way to represent the actual class type of an entity. For
+example, within a list of Account instances some may be instances of BillingAccount where
+other could be instances of SettlementAccount. The @type gives this information. All
+resources and sub-resources of this API have a @type attributes that can be provided when
+this is useful.
+The @referredType can be used within reference entities (like for instance an AccountRef
+object) to explicitly denote the actual entity type of the referred class. Notice that in reference
+entities the @type, when used, denotes the class type of the reference itself, such as
+BillingAccountRef or SettlementAccountRef, and not the class type of the referred object.
+However since reference classes are rarely sub-classed, @type is generally not useful in
+reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 7
+
+
+  
+ 
+ 
+ RESOURCE MODEL
+Managed Entity and Task Resource Models
+ResourceRoleSpecification resource
+Resource role specification.
+Resource model
+Figure 1 - ResourceRoleSpecification
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 8
+
+
+  
+ 
+ 
+ 
+Figure 2 - EntitySpecification
+Field descriptions
+ResourceRoleSpecification fields
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+constraint
+A ConstraintRef. Constraint reference. The Constraint resource
+represents a policy/rule applied to an entity or entity spec.
+creationDate
+A DateTime. Date and time of creation of the entity role
+specification.
+description
+A String. Description of the specification.
+entitySpecRelationship
+An EntitySpecificationRelationship. A migration, substitution,
+dependency or exclusivity relationship between/among entity
+specifications.
+href
+A String. Hyperlink reference.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 9
+
+
+  
+ 
+ 
+ 
+id
+A String. Unique identifier.
+isBundle
+A Boolean. IsBundle determines whether specification
+represents a single specification (false), or a bundle of
+specifications (true).
+lastUpdate
+A DateTime. Date and time of the last update of the specification.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status of this
+catalog item.
+name
+A String. Name given to the specification.
+permissionSpecificationSet
+A PermissionSpecificationSetRef. A PermissionSpecificationSet
+defines a set of permissions that can be attached to a party role
+specification. The resulting permissions will then apply to all
+users that adopt this party role.
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+specCharacteristic
+A CharacteristicSpecification. This class defines a characteristic
+specification.
+targetEntitySchema
+A TargetEntitySchema. The reference object to the schema and
+type of target entity which is described by a specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. Specification version.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'ResourceRoleSpecification'
+resource object.
+{
+   "@type": "ResourceRoleSpecification",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider role specification",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "specCharacteristic": [
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 10
+
+
+  
+ 
+ 
+       {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+         ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z"
+}
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 11
+
+
+  
+ 
+ 
+ 
+ResourceRole resource
+The part played by a resource in a given context.
+Resource model
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 12
+
+
+  
+ 
+ 
+ 
+Figure 3 - ResourceRole
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 13
+
+
+  
+ 
+ 
+ 
+Field descriptions
+ResourceRole fields
+characteristic
+A Characteristic. Describes a given characteristic of an object or
+entity through a name/value pair. This is an abstract base class,
+the actual value is in one of the strongly-typed subclasses :
+StringCharacteristic, ObjectCharacteristic, FloatCharacteristic,
+BooleanCharacteristic, NumberCharacteristic,
+IntegerCharacteristic, StringArrayCharacteristic,
+ObjectArrayCharacteristic, BooleanArrayCharacteristic,
+NumberArrayCharacteristic, IntegerArrayCharacteristic…
+Characteristic can be instanciated as
+* BooleanArrayCharacteristic
+* BooleanCharacteristic
+* FloatArrayCharacteristic
+* FloatCharacteristic
+* IntegerArrayCharacteristic
+* IntegerCharacteristic
+* NumberArrayCharacteristic
+* NumberCharacteristic
+* ObjectArrayCharacteristic
+* ObjectCharacteristic
+* StringArrayCharacteristic
+* StringCharacteristic
+creationDate
+A DateTime. Date and time of creation of the entity role.
+description
+A String. Description of the specification.
+engagedResource
+A ResourceRef. Resource reference, for when Resource is used
+by other entities.
+entityRoleSpecification
+An EntityRoleSpecificationRef. Reference to an
+EntitySpecification object.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+isBundle
+A Boolean. IsBundle determines whether specification
+represents a single specification (false), or a bundle of
+specifications (true).
+lastUpdate
+A DateTime. Date and time of the last update of the specification.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status of this
+catalog item.
+name
+A String. Name given to the specification.
+role
+A String. Role played by the engagedEntity in this context. As
+role is defined by entityRoleSpecification, this role attribute can
+be used to precise the role defined by entityRoleSpecification, or
+it can be used to define the role in case there is no
+entityRoleSpecification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 14
+
+
+  
+ 
+ 
+ 
+version
+A String. Specification version.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'ResourceRole' resource object.
+{
+   "@type": "ResourceRole",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "identitier",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 15
+
+
+  
+ 
+ 
+          "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z",
+   "engagedResource": {
+      "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+Notification Resource Models
+8 notifications are defined for this API.
+Notifications related to ResourceRoleSpecification:
+• Create Event
+• Delete Event
+• Attribute Value Change Event
+• Status Change Event
+Notifications related to ResourceRole:
+• Create Event
+• Delete Event
+• Attribute Value Change Event
+• Status Change Event
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 16
+
+
+  
+ 
+ 
+ 
+Figure 4 Notification Pattern
+ResourceRoleSpecification
+Create Event
+Message example for ResourceRoleSpecificationCreate Event Notification
+Content-Type: application/json
+{
+   "correlationId": "95003dd3-e325",
+   "description": "ResourceRoleSpecificationCreateEvent illustration",
+   "domain": "Commercial",
+   "eventId": "4010-9b59-509a64cf85a8",
+   "eventTime": "2022-08-25T12:18:12.171Z",
+   "eventType": "ResourceRoleSpecificationCreateEvent",
+   "priority": "1",
+   "timeOccurred": "2022-08-25T12:18:06.252Z",
+   "title": "ResourceRoleSpecificationCreateEvent",
+   "event": {
+      "resourceRoleSpecification": {
+         "@type": "ResourceRoleSpecification",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 17
+
+
+  
+ 
+ 
+          "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+         "name": "TMF620 API provider role specification",
+         "lastUpdate": "2024-02-20T17:00:00Z",
+         "lifecycleStatus": "active",
+         "validFor": {
+            "startDateTime": "2024-02-20T17:00:00Z",
+            "endDateTime": "2099-01-11T00:00:00Z"
+         },
+         "version": "1.0",
+         "specCharacteristic": [
+            {
+               "@type": "CharacteristicSpecification",
+               "name": "identifier",
+               "valueType": "string",
+               "description": "Unique identifier for the API. This value will be
+used as the audience parameter on authorization calls.",
+               "configurable": true,
+               "minCardinality": 1,
+               "maxCardinality": 1
+            },
+            {
+               "@type": "CharacteristicSpecification",
+               "name": "maximumAccessTokenLifetime",
+               "valueType": "integer",
+               "description": "Time until an access token issued for this API will
+expire.",
+               "configurable": true,
+               "minCardinality": 1,
+               "maxCardinality": 1
+            },
+            {
+               "@type": "CharacteristicSpecification",
+               "name": "jwtTokenSigningAlgorithm",
+               "valueType": "string",
+               "description": "Algorithm used to sign access tokens issued for this
+API.",
+               "configurable": true,
+               "minCardinality": 1,
+               "maxCardinality": 1,
+               "characteristicValueSpecification": [
+                  {
+                     "@type": "StringCharacteristicValueSpecification",
+                     "@baseType": "characteristicValueSpecification",
+                     "isDefault": true,
+                     "valueType": "string",
+                     "value": "RS256 (RSA Signature with SHA-256)"
+                  },
+                  {
+                     "@type": "StringCharacteristicValueSpecification",
+                     "@baseType": "characteristicValueSpecification",
+                     "valueType": "string",
+                     "value": "HS256 (HMAC with SHA-256)"
+                  },
+                  {
+                     "@type": "StringCharacteristicValueSpecification",
+                     "@baseType": "characteristicValueSpecification",
+                     "valueType": "string",
+                     "value": "PS256 (RSA Signature with SHA-256)"
+                  }
+               ]
+            }
+         ],
+         "permissionSpecificationSet": [
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 18
+
+
+  
+ 
+ 
+             {
+               "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+               "id": "193c8d6887394ca5b50290685db512ca",
+               "@type": "PermissionSpecificationSetRef"
+            }
+         ],
+         "creationDate": "2024-02-20T17:00:00Z"
+      }
+   },
+   "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleSpecificationCreateEvent"
+}
+Delete Event
+Message example for ResourceRoleSpecificationDelete Event Notification
+Content-Type: application/json
+{
+   "correlationId": "90cfc73d-deb7",
+   "description": "ResourceRoleSpecificationDeleteEvent illustration",
+   "domain": "Commercial",
+   "eventId": "47d6-9751-40e4f01440c9",
+   "eventTime": "2022-08-25T12:18:12.202Z",
+   "eventType": "ResourceRoleSpecificationDeleteEvent",
+   "priority": "4",
+   "timeOccurred": "2022-08-25T12:18:07.224Z",
+   "title": "ResourceRoleSpecificationDeleteEvent",
+   "event": {
+      "resourceRoleSpecification": {
+         "@type": "ResourceRoleSpecification",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152"
+      }
+   },
+   "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "705",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 19
+
+
+  
+ 
+ 
+       "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleSpecificationDeleteEvent"
+}
+Attribute Value Change Event
+Message example for ResourceRoleSpecificationAttributeValueChange Event Notification
+Content-Type: application/json
+{
+   "correlationId": "333-fd6",
+   "description": "ResourceRoleSpecificationAttributeValueChangeEvent illustration",
+   "domain": "Commercial",
+   "eventId": "569",
+   "eventTime": "2021-09-27T07:43:59.059Z",
+   "eventType": "ResourceRoleSpecificationAttributeValueChangeEvent",
+   "priority": "1",
+   "timeOccurred": "2021-09-27T07:43:59.059Z",
+   "title": "ResourceRoleSpecificationAttributeValueChangeEvent",
+   "event": {
+      "resourceRoleSpecification": {
+         "@type": "ResourceRoleSpecification",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+         "specCharacteristic": [
+            {
+               "@type": "CharacteristicSpecification",
+               "name": "identifier",
+               "valueType": "string",
+               "description": "Unique identifier for the API. This value will be
+used as the audience parameter on authorization calls.",
+               "configurable": true,
+               "minCardinality": 1,
+               "maxCardinality": 1
+            },
+            {
+               "@type": "CharacteristicSpecification",
+               "name": "maximumAccessTokenLifetime",
+               "valueType": "integer",
+               "description": "Time until an access token issued for this API will
+expire.",
+               "configurable": true,
+               "minCardinality": 1,
+               "maxCardinality": 1
+            },
+            {
+               "@type": "CharacteristicSpecification",
+               "name": "jwtTokenSigningAlgorithm",
+               "valueType": "string",
+               "description": "Algorithm used to sign access tokens issued for this
+API.",
+               "configurable": true,
+               "minCardinality": 1,
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 20
+
+
+  
+ 
+ 
+                "maxCardinality": 1,
+               "characteristicValueSpecification": [
+                  {
+                     "@type": "StringCharacteristicValueSpecification",
+                     "@baseType": "characteristicValueSpecification",
+                     "isDefault": true,
+                     "valueType": "string",
+                     "value": "RS256 (RSA Signature with SHA-256)"
+                  },
+                  {
+                     "@type": "StringCharacteristicValueSpecification",
+                     "@baseType": "characteristicValueSpecification",
+                     "valueType": "string",
+                     "value": "HS256 (HMAC with SHA-256)"
+                  },
+                  {
+                     "@type": "StringCharacteristicValueSpecification",
+                     "@baseType": "characteristicValueSpecification",
+                     "valueType": "string",
+                     "value": "PS256 (RSA Signature with SHA-256)"
+                  }
+               ]
+            }
+         ],
+         "permissionSpecificationSet": [
+            {
+               "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+               "id": "193c8d6887394ca5b50290685db512ca",
+               "@type": "PermissionSpecificationSetRef"
+            }
+         ]
+      }
+   },
+   "reportingSystem": {
+      "id": "123",
+      "name": "CRM app",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "123",
+      "name": "CRM app",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleSpecificationAttributeValueChangeEvent"
+}
+Status Change Event
+Message example for ResourceRoleSpecificationStatusChange Event Notification
+Content-Type: application/json
+{
+   "correlationId": "0f874cb9-c70d",
+   "description": "ResourceRoleSpecificationStatusChangeEvent illustration",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 21
+
+
+  
+ 
+ 
+    "domain": "Commercial",
+   "eventId": "41cf-ad81-d65ea1c2840c",
+   "eventTime": "2022-08-25T12:18:12.191Z",
+   "eventType": "ResourceRoleSpecificationStatusChangeEvent",
+   "priority": "5",
+   "timeOccurred": "2022-08-25T12:18:08.202Z",
+   "title": "ResourceRoleSpecificationStatusChangeEvent",
+   "event": {
+      "resourceRoleSpecification": {
+         "@type": "ResourceRoleSpecification",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+         "lifecycleStatus": "active"
+      }
+   },
+   "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleSpecificationStatusChangeEvent"
+}
+ResourceRole
+Create Event
+Message example for ResourceRoleCreate Event Notification
+Content-Type: application/json
+{
+   "correlationId": "95003dd3-e325",
+   "description": "ResourceRoleCreateEvent illustration",
+   "domain": "Commercial",
+   "eventId": "4010-9b59-509a64cf85a8",
+   "eventTime": "2022-08-25T12:18:12.171Z",
+   "eventType": "ResourceRoleCreateEvent",
+   "priority": "1",
+   "timeOccurred": "2022-08-25T12:18:06.252Z",
+   "title": "ResourceRoleCreateEvent",
+   "event": {
+      "resourceRole": {
+         "@type": "ResourceRole",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+         "name": "TMF620 API provider resource role",
+         "lastUpdate": "2024-02-20T17:00:00Z",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 22
+
+
+  
+ 
+ 
+          "lifecycleStatus": "active",
+         "validFor": {
+            "startDateTime": "2024-02-20T17:00:00Z",
+            "endDateTime": "2099-01-11T00:00:00Z"
+         },
+         "version": "1.0",
+         "role": "Api Provider",
+         "entityRoleSpecification": {
+            "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+            "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+            "@type": "EntityRoleSpecificationRef",
+            "@referredType": "ResourceRoleSpecification"
+         },
+         "characteristic": [
+            {
+               "@type": "StringCharacteristic",
+               "@baseType": "Characteristic",
+               "name": "identitier",
+               "valueType": "string",
+               "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+            },
+            {
+               "@type": "IntegerCharacteristic",
+               "@baseType": "Characteristic",
+               "name": "maximumAccessTokenLifetime",
+               "valueType": "integer",
+               "value": 86400
+            },
+            {
+               "@type": "StringCharacteristic",
+               "@baseType": "Characteristic",
+               "name": "jwtSigningAlgorithm",
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            }
+         ],
+         "creationDate": "2024-02-20T17:00:00Z",
+         "engagedResource": {
+            "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+            "id": "e3479404feb943d2af7af92ffe4ec2b0",
+            "@type": "ResourceRef",
+            "@referredType": "Resource"
+         }
+      }
+   },
+   "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleCreateEvent"
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 23
+
+
+  
+ 
+ 
+ }
+Delete Event
+Message example for ResourceRoleDelete Event Notification
+Content-Type: application/json
+{
+   "correlationId": "90cfc73d-deb7",
+   "description": "ResourceRoleDeleteEvent illustration",
+   "domain": "Commercial",
+   "eventId": "47d6-9751-40e4f01440c9",
+   "eventTime": "2022-08-25T12:18:12.202Z",
+   "eventType": "ResourceRoleDeleteEvent",
+   "priority": "4",
+   "timeOccurred": "2022-08-25T12:18:07.224Z",
+   "title": "ResourceRoleDeleteEvent",
+   "event": {
+      "resourceRole": {
+         "@type": "ResourceRole",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152"
+      }
+   },
+   "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleDeleteEvent"
+}
+Attribute Value Change Event
+Message example for ResourceRoleAttributeValueChange Event Notification
+Content-Type: application/json
+{
+   "correlationId": "333-fd6",
+   "description": "ResourceRoleAttributeValueChangeEvent illustration",
+   "domain": "Commercial",
+   "eventId": "569",
+   "eventTime": "2021-09-27T07:43:59.059Z",
+   "eventType": "ResourceRoleAttributeValueChangeEvent",
+   "priority": "1",
+   "timeOccurred": "2021-09-27T07:43:59.059Z",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 24
+
+
+  
+ 
+ 
+    "title": "ResourceRoleAttributeValueChangeEvent",
+   "event": {
+      "resourceRole": {
+         "@type": "ResourceRole",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+         "engagedResource": {
+            "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+            "id": "e3479404feb943d2af7af92ffe4ec2b0",
+            "@type": "ResourceRef"
+         }
+      }
+   },
+   "reportingSystem": {
+      "id": "123",
+      "name": "CRM app",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "123",
+      "name": "CRM app",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleAttributeValueChangeEvent"
+}
+Status Change Event
+Message example for ResourceRoleStatusChange Event Notification
+Content-Type: application/json
+{
+   "correlationId": "0f874cb9-c70d",
+   "description": "ResourceRoleStatusChangeEvent illustration",
+   "domain": "Commercial",
+   "eventId": "41cf-ad81-d65ea1c2840c",
+   "eventTime": "2022-08-25T12:18:12.191Z",
+   "eventType": "ResourceRoleStatusChangeEvent",
+   "priority": "5",
+   "timeOccurred": "2022-08-25T12:18:08.202Z",
+   "title": "ResourceRoleStatusChangeEvent",
+   "event": {
+      "resourceRole": {
+         "@type": "ResourceRole",
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+         "lifecycleStatus": "active"
+      }
+   },
+   "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 25
+
+
+  
+ 
+ 
+       "@referredType": "LogicalResource"
+   },
+   "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+   },
+   "@baseType": "Event",
+   "@type": "ResourceRoleStatusChangeEvent"
+}
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 26
+
+
+  
+ 
+ 
+ API OPERATIONS
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Execute an Action on an Entity
+POST on TASK Resource
+POST must be used to execute
+Task Resources
+Other Request Methods
+POST on TASK Resource
+GET and POST must not be
+used to tunnel other request
+methods.
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines.
+Notifications are also described in a subsequent section.
+Operations on ResourceRoleSpecification
+Retrieves a ResourceRoleSpecification by ID
+GET /resourceRoleSpecification/{id}?fields=…
+Description
+This operation retrieves a ResourceRoleSpecification entity. Attribute selection is enabled for
+all first level attributes. Filtering may be available depending on the compliance level
+supported by an implementation.
+Usage samples
+Retrieve Resource Role Specification example.
+Request
+GET /resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json
+Response
+200
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 27
+
+
+  
+ 
+ 
+ {
+   "@type": "ResourceRoleSpecification",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider role specification",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "specCharacteristic": [
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 28
+
+
+  
+ 
+ 
+          ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z"
+}
+List or find ResourceRoleSpecification objects
+GET /resourceRoleSpecification?fields=…
+Description
+This operation list ResourceRoleSpecification entities. Attribute selection is enabled for all
+first level attributes. Filtering may be available depending on the compliance level supported
+by an implementation.
+Usage samples
+Retrieve Resource Role Specifications example.
+Request
+GET /resourceRoleSpecification
+Content-Type: application/json
+Response
+200
+[
+   {
+      "@type": "ResourceRoleSpecification",
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "name": "TMF620 API provider role specification",
+      "lastUpdate": "2024-02-20T17:00:00Z",
+      "lifecycleStatus": "active",
+      "validFor": {
+         "startDateTime": "2024-02-20T17:00:00Z",
+         "endDateTime": "2099-01-11T00:00:00Z"
+      },
+      "version": "1.0",
+      "specCharacteristic": [
+         {
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 29
+
+
+  
+ 
+ 
+             "@type": "CharacteristicSpecification",
+            "name": "identifier",
+            "valueType": "string",
+            "description": "Unique identifier for the API. This value will be used
+as the audience parameter on authorization calls.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+         },
+         {
+            "@type": "CharacteristicSpecification",
+            "name": "maximumAccessTokenLifetime",
+            "valueType": "integer",
+            "description": "Time until an access token issued for this API will
+expire.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+         },
+         {
+            "@type": "CharacteristicSpecification",
+            "name": "jwtTokenSigningAlgorithm",
+            "valueType": "string",
+            "description": "Algorithm used to sign access tokens issued for this
+API.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1,
+            "characteristicValueSpecification": [
+               {
+                  "@type": "StringCharacteristicValueSpecification",
+                  "@baseType": "characteristicValueSpecification",
+                  "isDefault": true,
+                  "valueType": "string",
+                  "value": "RS256 (RSA Signature with SHA-256)"
+               },
+               {
+                  "@type": "StringCharacteristicValueSpecification",
+                  "@baseType": "characteristicValueSpecification",
+                  "valueType": "string",
+                  "value": "HS256 (HMAC with SHA-256)"
+               },
+               {
+                  "@type": "StringCharacteristicValueSpecification",
+                  "@baseType": "characteristicValueSpecification",
+                  "valueType": "string",
+                  "value": "PS256 (RSA Signature with SHA-256)"
+               }
+            ]
+         }
+      ],
+      "permissionSpecificationSet": [
+         {
+            "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+            "id": "193c8d6887394ca5b50290685db512ca",
+            "@type": "PermissionSpecificationSetRef"
+         }
+      ],
+      "creationDate": "2024-02-20T17:00:00Z"
+   }
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 30
+
+
+  
+ 
+ 
+ ]
+Creates a ResourceRoleSpecification
+POST /resourceRoleSpecification?fields=…
+Description
+This operation creates a ResourceRoleSpecification entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+id
+lifecycleStatus
+name
+validFor
+@type
+Usage samples
+Create Resource Role Specification example.
+Request
+POST /resourceRoleSpecification
+Content-Type: application/json
+{
+   "@type": "ResourceRoleSpecification",
+   "name": "TMF620 API provider role specification",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "specCharacteristic": [
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 31
+
+
+  
+ 
+ 
+ expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+         ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ]
+}
+Response
+201
+{
+   "@type": "ResourceRoleSpecification",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider role specification",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 32
+
+
+  
+ 
+ 
+    },
+   "version": "1.0",
+   "specCharacteristic": [
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+         ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ],
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 33
+
+
+  
+ 
+ 
+    "creationDate": "2024-02-20T17:00:00Z"
+}
+Updates partially a ResourceRoleSpecification
+PATCH /resourceRoleSpecification/{id}?fields=…
+Description
+This operation allows partial updates of a ResourceRoleSpecification entity. Support of
+json/merge 
+(https://tools.ietf.org/html/rfc7396) 
+is 
+mandatory, 
+support 
+of 
+json/patch
+(http://tools.ietf.org/html/rfc5789) is optional. Note: If the update operation yields to the
+creation of sub-resources or relationships, the same rules concerning mandatory sub-
+resource attributes and default value settings in the POST operation applies to the PATCH
+operation. Hence these tables are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+creationDate
+href
+id
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Patchable Attributes
+Rule
+attachment
+constraint
+description
+entitySpecRelationship
+isBundle
+lastUpdate
+lifecycleStatus
+name
+permissionSpecificationSet
+relatedParty
+specCharacteristic
+targetEntitySchema
+validFor
+version
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 34
+
+
+  
+ 
+ 
+ 
+Usage samples
+PartialUpdate_ResourceRoleSpecification_using_json example.
+Request
+PATCH /resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json
+{
+   "@type": "ResourceRoleSpecification",
+   "name": "TMF620 API provider role specification",
+   "permissionSpecificationSet": [
+      {
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ]
+}
+Response
+200
+{
+   "@type": "ResourceRoleSpecification",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider role specification",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "specCharacteristic": [
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 35
+
+
+  
+ 
+ 
+       },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+         ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z"
+}
+PartialUpdate_ResourceRoleSpecification_using_json_merge_patch example.
+Request
+PATCH /resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/merge-patch+json
+{
+   "@type": "ResourceRoleSpecification",
+   "name": "TMF620 API provider role specification",
+   "permissionSpecificationSet": [
+      {
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ]
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 36
+
+
+  
+ 
+ 
+ }
+Response
+200
+{
+   "@type": "ResourceRoleSpecification",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider role specification",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "specCharacteristic": [
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 37
+
+
+  
+ 
+ 
+                "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+         ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z"
+}
+PartialUpdate_ResourceRoleSpecification_using_json_patch example.
+Request
+PATCH /resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json-patch+json
+[
+  {
+    "op": "replace",
+    "path": "/name",
+    "value": "TMF620 API provider role specification"
+  },
+  {
+    "op": "replace",
+    "path": "/lifecycleStatus",
+    "value": "active"
+  }
+]
+Response
+200
+{
+   "@type": "ResourceRoleSpecification",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider role specification",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 38
+
+
+  
+ 
+ 
+    "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "specCharacteristic": [
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+         ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+         "id": "193c8d6887394ca5b50290685db512ca",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 39
+
+
+  
+ 
+ 
+          "@type": "PermissionSpecificationSetRef"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z"
+}
+PartialUpdate_ResourceRoleSpecification_using_json_patch_query example.
+Request
+PATCH /resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json-patch-query+json
+[
+  {
+    "op": "replace",
+    "path": "/specCharacteristic?name=maximumAccessTokenLifetime",
+    "value": {
+      "@type": "CharacteristicSpecification",
+      "name": "maximumAccessTokenLifetime",
+      "valueType": "integer",
+      "description": "Time until an access token issued for this API will expire.",
+      "configurable": true,
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  }
+]
+Response
+200
+{
+   "@type": "ResourceRoleSpecification",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider role specification",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "specCharacteristic": [
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "identifier",
+         "valueType": "string",
+         "description": "Unique identifier for the API. This value will be used as
+the audience parameter on authorization calls.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 40
+
+
+  
+ 
+ 
+       },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "description": "Time until an access token issued for this API will
+expire.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1
+      },
+      {
+         "@type": "CharacteristicSpecification",
+         "name": "jwtTokenSigningAlgorithm",
+         "valueType": "string",
+         "description": "Algorithm used to sign access tokens issued for this API.",
+         "configurable": true,
+         "minCardinality": 1,
+         "maxCardinality": 1,
+         "characteristicValueSpecification": [
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "isDefault": true,
+               "valueType": "string",
+               "value": "RS256 (RSA Signature with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "HS256 (HMAC with SHA-256)"
+            },
+            {
+               "@type": "StringCharacteristicValueSpecification",
+               "@baseType": "characteristicValueSpecification",
+               "valueType": "string",
+               "value": "PS256 (RSA Signature with SHA-256)"
+            }
+         ]
+      }
+   ],
+   "permissionSpecificationSet": [
+      {
+         "href": "https://serverRoot/tmf-
+api/rolesAndPermissionsManagement/v5/permissionSpecificationSet/193c8d6887394ca5b502
+90685db512ca",
+         "id": "193c8d6887394ca5b50290685db512ca",
+         "@type": "PermissionSpecificationSetRef"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z"
+}
+Deletes a ResourceRoleSpecification
+DELETE /resourceRoleSpecification/{id}
+Description
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 41
+
+
+  
+ 
+ 
+ 
+This operation deletes a ResourceRoleSpecification entity.
+Usage samples
+Remove Resource Role Specification example.
+Request
+DELETE /resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json
+Response
+204
+Operations on ResourceRole
+Retrieves a ResourceRole by ID
+GET /resourceRole/{id}?fields=…
+Description
+This operation retrieves a ResourceRole entity. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Retrieve Resource Role example.
+Request
+GET /resourceRole/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json
+Response
+200
+{
+   "@type": "ResourceRole",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 42
+
+
+  
+ 
+ 
+       "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "identitier",
+         "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z",
+   "engagedResource": {
+      "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+List or find ResourceRole objects
+GET /resourceRole?fields=…
+Description
+This operation list ResourceRole entities. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Retrieve Resource Roles example.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 43
+
+
+  
+ 
+ 
+ 
+Request
+GET /resourceRole
+Content-Type: application/json
+Response
+200
+[
+   {
+      "@type": "ResourceRole",
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "name": "TMF620 API provider resource role",
+      "lastUpdate": "2024-02-20T17:00:00Z",
+      "lifecycleStatus": "active",
+      "validFor": {
+         "startDateTime": "2024-02-20T17:00:00Z",
+         "endDateTime": "2099-01-11T00:00:00Z"
+      },
+      "version": "1.0",
+      "role": "Api Provider",
+      "entityRoleSpecification": {
+         "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+         "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+         "@type": "EntityRoleSpecificationRef",
+         "@referredType": "ResourceRoleSpecification"
+      },
+      "characteristic": [
+         {
+            "@type": "StringCharacteristic",
+            "@baseType": "Characteristic",
+            "name": "identitier",
+            "valueType": "string",
+            "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+         },
+         {
+            "@type": "IntegerCharacteristic",
+            "@baseType": "Characteristic",
+            "name": "maximumAccessTokenLifetime",
+            "valueType": "integer",
+            "value": 86400
+         },
+         {
+            "@type": "StringCharacteristic",
+            "@baseType": "Characteristic",
+            "name": "jwtSigningAlgorithm",
+            "valueType": "string",
+            "value": "RS256 (RSA Signature with SHA-256)"
+         }
+      ],
+      "creationDate": "2024-02-20T17:00:00Z",
+      "engagedResource": {
+         "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 44
+
+
+  
+ 
+ 
+          "id": "e3479404feb943d2af7af92ffe4ec2b0",
+         "@type": "ResourceRef",
+         "@referredType": "Resource"
+      }
+   }
+]
+Creates a ResourceRole
+POST /resourceRole?fields=…
+Description
+This operation creates a ResourceRole entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+engagedResource
+engagedResource.@type
+engagedResource.id
+id
+lifecycleStatus
+name
+validFor
+@type
+Usage samples
+Create Resource Role example.
+Request
+POST /resourceRole
+Content-Type: application/json
+{
+   "@type": "ResourceRole",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 45
+
+
+  
+ 
+ 
+    },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "identitier",
+         "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "engagedResource": {
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+Response
+201
+{
+   "@type": "ResourceRole",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 46
+
+
+  
+ 
+ 
+          "@baseType": "Characteristic",
+         "name": "identitier",
+         "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z",
+   "engagedResource": {
+      "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+Updates partially a ResourceRole
+PATCH /resourceRole/{id}?fields=…
+Description
+This operation allows partial updates of a ResourceRole entity. Support of json/merge
+(https://tools.ietf.org/html/rfc7396) is mandatory, support of json/patch (http://tools.ietf.org/
+html/rfc5789) is optional. Note: If the update operation yields to the creation of sub-resources
+or relationships, the same rules concerning mandatory sub-resource attributes and default
+value settings in the POST operation applies to the PATCH operation. Hence these tables
+are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+creationDate
+href
+id
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 47
+
+
+  
+ 
+ 
+ 
+Patchable Attributes
+Rule
+characteristic
+description
+engagedResource
+entityRoleSpecification
+isBundle
+lastUpdate
+lifecycleStatus
+name
+role
+validFor
+version
+Usage samples
+PartialUpdate_ResourceRole_using_json example.
+Request
+PATCH /resourceRole/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json
+{
+   "@type": "ResourceRole",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   }   
+}
+Response
+200
+{
+   "@type": "ResourceRole",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 48
+
+
+  
+ 
+ 
+    "role": "Api Provider",
+   "entityRoleSpecification": {
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "identitier",
+         "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z",
+   "engagedResource": {
+      "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+PartialUpdate_ResourceRole_using_json_merge_patch
+Request
+PATCH /resourceRole/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/merge-patch+json
+{
+   "@type": "ResourceRole",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   }   
+}
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 49
+
+
+  
+ 
+ 
+ 
+Response
+200
+{
+   "@type": "ResourceRole",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "identitier",
+         "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z",
+   "engagedResource": {
+      "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+PartialUpdate_ResourceRole_using_json_patch example.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 50
+
+
+  
+ 
+ 
+ 
+Request
+PATCH /resourceRole/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json-patch+json
+[
+  {
+    "op": "replace",
+    "path": "/name",
+    "value": "TMF620 API provider resource role"
+  },
+  {
+    "op": "replace",
+    "path": "/role",
+    "value": "Api Provider"
+  }
+]
+Response
+200
+{
+   "@type": "ResourceRole",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "role": "Api Provider",
+   "entityRoleSpecification": {
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "identitier",
+         "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 51
+
+
+  
+ 
+ 
+       {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z",
+   "engagedResource": {
+      "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+PartialUpdate_ResourceRole_using_json_patch_query example.
+Request
+PATCH /resourceRole/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json-patch-query+json
+[
+  {
+    "op": "replace",
+    "path": "/characteristic?name=maximumAccessTokenLifetime",
+    "value": {
+      "@type": "IntegerCharacteristic",
+      "@baseType": "Characteristic",
+      "name": "maximumAccessTokenLifetime",
+      "valueType": "integer",
+      "value": 86400
+    }
+  }
+]
+Response
+200
+{
+   "@type": "ResourceRole",
+   "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRole/2391ee4acbc142b1a4b74b4d4ab38152",
+   "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+   "name": "TMF620 API provider resource role",
+   "lastUpdate": "2024-02-20T17:00:00Z",
+   "lifecycleStatus": "active",
+   "validFor": {
+      "startDateTime": "2024-02-20T17:00:00Z",
+      "endDateTime": "2099-01-11T00:00:00Z"
+   },
+   "version": "1.0",
+   "role": "Api Provider",
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 52
+
+
+  
+ 
+ 
+    "entityRoleSpecification": {
+      "href": "https://serverRoot/tmf-
+api/resourceRoleManagement/v5/resourceRoleSpecification/2391ee4acbc142b1a4b74b4d4ab3
+8152",
+      "id": "2391ee4acbc142b1a4b74b4d4ab38152",
+      "@type": "EntityRoleSpecificationRef",
+      "@referredType": "ResourceRoleSpecification"
+   },
+   "characteristic": [
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "identitier",
+         "valueType": "string",
+         "value": "https://serverRoot/tmf-api/productCatalogManagement/v5"
+      },
+      {
+         "@type": "IntegerCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "maximumAccessTokenLifetime",
+         "valueType": "integer",
+         "value": 86400
+      },
+      {
+         "@type": "StringCharacteristic",
+         "@baseType": "Characteristic",
+         "name": "jwtSigningAlgorithm",
+         "valueType": "string",
+         "value": "RS256 (RSA Signature with SHA-256)"
+      }
+   ],
+   "creationDate": "2024-02-20T17:00:00Z",
+   "engagedResource": {
+      "href": "https://serverRoot/tmf-
+api/resourceManagement/v5/resource/e3479404feb943d2af7af92ffe4ec2b0",
+      "id": "e3479404feb943d2af7af92ffe4ec2b0",
+      "@type": "ResourceRef",
+      "@referredType": "Resource"
+   }
+}
+Deletes a ResourceRole
+DELETE /resourceRole/{id}
+Description
+This operation deletes a ResourceRole entity.
+Usage samples
+Remove Resource Role example.
+Request
+DELETE /resourceRole/2391ee4acbc142b1a4b74b4d4ab38152
+Content-Type: application/json
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 53
+
+
+  
+ 
+ 
+ 
+Response
+204
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 54
+
+
+  
+ 
+ 
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 55
+
+
+  
+ 
+ 
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 56
+
+
+  
+ 
+ 
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 57
+
+
+  
+ 
+ 
+ Acknowledgements
+Version History
+Version
+Number
+Date
+Modified
+Modified by:
+Description of changes
+5.0.0
+13-Mar-2024
+Bruno Sousa
+Fernandes (NOS)
+Initial revision of the document.
+5.0.0
+08-Oct-2024
+Bruno Sousa
+Fernandes (NOS)
+Fixed examples according to new API
+tooling linter.
+Release History
+Release Number
+Release Status
+Date
+Release led by:
+Description
+5.0.0
+Preview
+14-Nov-2024
+Bruno Sousa
+Fernandes (NOS)
+Initial revision of
+the document.
+Contributors to Document
+This document was prepared by the members of the TM Forum API Project team:
+Name
+Company
+Role
+Bruno Sousa Fernandes,
+bruno.sfernandes@nos.pt
+NOS, PT
+Author
+Jonathan Goldberg,
+jonathan.goldberg@amdocs.co
+m
+Amdocs, IL
+Reviewer
+Pierre Gauthier,
+pgauthier@tmforum.org
+TM Forum
+Reviewer
+Resource Role Management API User Guide
+© TM Forum 2024. All Rights Reserved.
+Page 58
+
+

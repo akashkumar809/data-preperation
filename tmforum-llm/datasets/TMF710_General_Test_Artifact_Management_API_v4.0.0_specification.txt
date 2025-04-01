@@ -1,0 +1,1293 @@
+ 
+TM Forum 2020. All Rights Reserved. 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+General Test Artifact Management 
+API User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF710 
+Team Approved Date: 13-Sep-2020 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 2 of 32 
+ 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 3 of 32 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 4 of 32 
+ 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 5 
+Introduction .............................................................................................................................................................. 6 
+SAMPLE USE CASES ......................................................................................................................................................... 7 
+Support of polymorphism and extension patterns ........................................................................................................ 8 
+RESOURCE MODEL .......................................................................................................................................................... 9 
+Managed Entity and Task Resource Models ....................................................................................................... 9 
+General Test Artifact resource ................................................................................................................................ 9 
+Notification Resource Models .............................................................................................................................. 15 
+General Test Artifact Create Event ........................................................................................................................ 16 
+General Test Artifact Change Event ...................................................................................................................... 17 
+General Test Artifact Delete Event ........................................................................................................................ 17 
+General Test Artifact Attribute Value Change Event ............................................................................................. 18 
+General Test Artifact State Change Event ............................................................................................................. 18 
+API OPERATIONS ........................................................................................................................................................... 19 
+Operations on General Test Artifact ......................................................................................................................... 19 
+List general test artifacts ....................................................................................................................................... 19 
+Retrieve general test artifact ................................................................................................................................. 21 
+Create general test artifact ................................................................................................................................... 22 
+Patch general test artifact ..................................................................................................................................... 25 
+Delete general test artifact.................................................................................................................................... 28 
+API NOTIFICATIONS....................................................................................................................................................... 29 
+Register listener ........................................................................................................................................................ 29 
+Unregister listener .................................................................................................................................................... 30 
+Publish Event to listener ........................................................................................................................................... 30 
+Acknowledgements ...................................................................................................................................................... 32 
+Document History ..................................................................................................................................................... 32 
+Version History ...................................................................................................................................................... 32 
+Release History ...................................................................................................................................................... 32 
+Contributors to Document ........................................................................................................................................ 32 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 5 of 32 
+ 
+List of Tables 
+N/A 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 6 of 32 
+ 
+Introduction 
+ 
+The following document is the specification of the REST API for general test artifact management. It includes the 
+model definition as well as all available operations.  
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 7 of 32 
+ 
+SAMPLE USE CASES 
+The reader will find examples of use cases in TMF913 “Test API Component Suite” document. 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 8 of 32 
+ 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance GeneralTestArtifact inheriting properties from the abstract ManagedArtifact entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+ManagedArtifact instances some may be instances of GeneralTestArtifact where other could be instances of some 
+other sub-class of ManagedArtifact. The @type gives this information. All resources and sub-resources of this API 
+have a @type attributes that can be provided when this is useful. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 9 of 32 
+ 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+General Test Artifact resource 
+A managed general test artifact resource. 
+Resource model 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 10 of 32 
+ 
+Field descriptions 
+GeneralTestArtifact fields 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+versionDescription 
+A string. The artifact version description. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+generalArtifactDefinition A general test artifact definition (GeneralTestArtifactDefinition). General test artifact 
+definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos (RelatedPartyWithContactInfo [*]). Related 
+party specialization that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). Possible values for the 
+state of a managed artifact: 'incomplete', 'beta', 'stable', 'deprecated'. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 11 of 32 
+ 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 12 of 32 
+ 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+GeneralTestArtifactDefinition sub-resource 
+General test artifact definition. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 13 of 32 
+ 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 14 of 32 
+ 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+Json representation sample 
+We provide below the json representation of an example of a 'GeneralTestArtifact' resource object 
+{ 
+    "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+    "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+    "description": "Sample general test artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "attribute": [ 
+        { 
+            "characteristic": { 
+                "name": "name", 
+                "valueType": "string", 
+                "value": "test.zip" 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 15 of 32 
+ 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "category", 
+                "valueType": "string", 
+                "value": "vnf" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "checksum", 
+                "valueType": "string", 
+                "value": "BC1A4D958133CAE622EAC4F6B845D78D" 
+            } 
+        } 
+    ], 
+    "generalArtifactDefinition": { 
+        "attachmentType": "zip", 
+        "content": "<base64-encoded general artifact, usually a binary of some sort>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+Notification Resource Models 
+ 
+5 notifications are defined for this API 
+Notifications related to GeneralTestArtifact: 
+    - GeneralTestArtifactCreateEvent 
+    - GeneralTestArtifactChangeEvent 
+    - GeneralTestArtifactDeleteEvent 
+    - GeneralTestArtifactAttributeValueChangeEvent 
+    - GeneralTestArtifactStateChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 16 of 32 
+ 
+ 
+General Test Artifact Create Event 
+Notification GeneralTestArtifactCreateEvent case for resource GeneralTestArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'GeneralTestArtifactCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 17 of 32 
+ 
+    "eventType":"GeneralTestArtifactCreateEvent", 
+     "event": { 
+        "generalTestArtifact" :  
+            {-- SEE GeneralTestArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+General Test Artifact Change Event 
+Notification GeneralTestArtifactChangeEvent case for resource GeneralTestArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'GeneralTestArtifactChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeneralTestArtifactChangeEvent", 
+     "event": { 
+        "generalTestArtifact" :  
+            {-- SEE GeneralTestArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+General Test Artifact Delete Event 
+Notification GeneralTestArtifactDeleteEvent case for resource GeneralTestArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'GeneralTestArtifactDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeneralTestArtifactDeleteEvent", 
+     "event": { 
+        "generalTestArtifact" :  
+            {-- SEE GeneralTestArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 18 of 32 
+ 
+General Test Artifact Attribute Value Change Event 
+Notification GeneralTestArtifactAttributeValueChangeEvent case for resource GeneralTestArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'GeneralTestArtifactAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeneralTestArtifactAttributeValueChangeEvent", 
+     "event": { 
+        "generalTestArtifact" :  
+            {-- SEE GeneralTestArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+General Test Artifact State Change Event 
+Notification GeneralTestArtifactStateChangeEvent case for resource GeneralTestArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'GeneralTestArtifactStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeneralTestArtifactStateChangeEvent", 
+     "event": { 
+        "generalTestArtifact" :  
+            {-- SEE GeneralTestArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 19 of 32 
+ 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to 
+retrieve a representation of 
+a resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to 
+create a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on General Test Artifact 
+List general test artifacts 
+  GET /generalTestArtifact?fields=...&{filtering} 
+Description 
+This operation list general test artifact entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 20 of 32 
+ 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of general artifacts. 
+ 
+Request 
+ 
+GET /tmf-api/generalTestArtifact/v4/generalTestArtifact 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+        "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+        "description": "Sample general test artifact", 
+        "version": "1.2.3", 
+        "relatedParty": [ 
+            { 
+                "name": "testUser", 
+                "@referredType": "Individual", 
+                "role": "Owner", 
+                "contact": [ 
+                    { 
+                        "mediumType": "email", 
+                        "characteristic": { 
+                            "emailAddress": "testUser@abc.com" 
+                        } 
+                    } 
+                ] 
+            } 
+        ], 
+        "attribute": [ 
+            { 
+                "characteristic": { 
+                    "name": "name", 
+                    "valueType": "string", 
+                    "value": "test.zip" 
+                } 
+            }, 
+            { 
+                "characteristic": { 
+                    "name": "category", 
+                    "valueType": "string", 
+                    "value": "vnf" 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 21 of 32 
+ 
+                } 
+            }, 
+            { 
+                "characteristic": { 
+                    "name": "checksum", 
+                    "valueType": "string", 
+                    "value": "BC1A4D958133CAE622EAC4F6B845D78D" 
+                } 
+            } 
+        ], 
+        "generalArtifactDefinition": { 
+            "attachmentType": "zip", 
+            "content": "<base64-encoded general artifact, usually a binary of some sort>", 
+            "mimeType": "base64", 
+            "url": "http://myservice.com/artifact/1234" 
+        } 
+    } 
+] 
+ 
+Retrieve general test artifact 
+  GET /generalTestArtifact/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a general test artifact entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific general artifact. 
+ 
+Request 
+ 
+GET /tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-dd86a40b8974 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+    "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 22 of 32 
+ 
+    "description": "Sample general test artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "attribute": [ 
+        { 
+            "characteristic": { 
+                "name": "name", 
+                "valueType": "string", 
+                "value": "test.zip" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "category", 
+                "valueType": "string", 
+                "value": "vnf" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "checksum", 
+                "valueType": "string", 
+                "value": "BC1A4D958133CAE622EAC4F6B845D78D" 
+            } 
+        } 
+    ], 
+    "generalArtifactDefinition": { 
+        "attachmentType": "zip", 
+        "content": "<base64-encoded general artifact, usually a binary of some sort>", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/artifact/1234" 
+    } 
+} 
+ 
+Create general test artifact 
+  POST /generalTestArtifact 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 23 of 32 
+ 
+Description 
+This operation creates a general test artifact entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+GeneralTestArtifact, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+generalArtifactDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a general artifact. 
+ 
+Request 
+ 
+POST /tmf-api/generalTestArtifact/v4/generalTestArtifact 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample general test artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 24 of 32 
+ 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "attribute": [ 
+        { 
+            "characteristic": { 
+                "name": "name", 
+                "valueType": "string", 
+                "value": "test.zip" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "category", 
+                "valueType": "string", 
+                "value": "vnf" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "checksum", 
+                "valueType": "string", 
+                "value": "BC1A4D958133CAE622EAC4F6B845D78D" 
+            } 
+        } 
+    ], 
+    "generalArtifactDefinition": { 
+        "attachmentType": "zip", 
+        "content": "<base64-encoded general test artifact, usually a binary of some sort>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+    "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+    "description": "Sample general test artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 25 of 32 
+ 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "attribute": [ 
+        { 
+            "characteristic": { 
+                "name": "name", 
+                "valueType": "string", 
+                "value": "test.zip" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "category", 
+                "valueType": "string", 
+                "value": "vnf" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "checksum", 
+                "valueType": "string", 
+                "value": "BC1A4D958133CAE622EAC4F6B845D78D" 
+            } 
+        } 
+    ], 
+    "generalArtifactDefinition": { 
+        "content": "<base64-encoded general artifact, usually a binary of some sort>", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/artifact/1234" 
+    } 
+} 
+ 
+Patch general test artifact 
+  PATCH /generalTestArtifact/{id} 
+Description 
+This operation allows partial updates of a general test artifact entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional.  
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 26 of 32 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+generalArtifactDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a GeneralTestArtifact resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-dd86a40b8974 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 27 of 32 
+ 
+    "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+    "description": "Sample general test artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "attribute": [ 
+        { 
+            "characteristic": { 
+                "name": "name", 
+                "valueType": "string", 
+                "value": "test.zip" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "category", 
+                "valueType": "string", 
+                "value": "vnf" 
+            } 
+        }, 
+        { 
+            "characteristic": { 
+                "name": "checksum", 
+                "valueType": "string", 
+                "value": "BC1A4D958133CAE622EAC4F6B845D78D" 
+            } 
+        } 
+    ], 
+    "generalArtifactDefinition": { 
+        "attachmentType": "zip", 
+        "content": "<base64-encoded general artifact, usually a binary of some sort>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 28 of 32 
+ 
+Delete general test artifact 
+  DELETE /generalTestArtifact/{id} 
+Description 
+This operation deletes a general test artifact entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a general artifact. 
+ 
+Request 
+ 
+DELETE /tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-dd86a40b8974 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 29 of 32 
+ 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 30 of 32 
+ 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+ 
+ 
+
+
+General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 31 of 32 
+ 
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+ General Test Artifact Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 32 of 32 
+ 
+Acknowledgements 
+Document History 
+Version History 
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+4.0.0 
+21-Sep-2020 Alan Pope 
+Final edits for initial release 
+ 
+Release History 
+Release 
+Status 
+Date  
+Release led by: 
+Description  
+Pre-production 
+21-Sep-2020 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Edward Pershwitz 
+ITEA Technologies 
+edward.pershwitz@iteate
+chnologies.com  
+First Release of the Document.  
+Production 
+24-Nov-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Contributors to Document 
+Kanagaraj Manickam 
+Huawei Technologies Co., Ltd 
+ 
+ 
+ 
+
+

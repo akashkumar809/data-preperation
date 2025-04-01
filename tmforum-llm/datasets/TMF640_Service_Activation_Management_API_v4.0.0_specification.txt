@@ -1,0 +1,2260 @@
+ 
+ãTM Forum 2020. All Rights Reserved. 
+ 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Service Activation and 
+Configuration API User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF640 
+Team Approved Date: 28-May-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.2 
+IPR Mode: RAND 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 2 of 51 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 3 of 51 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7916 
+TM Forum Web Page: www.tmforum.org 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 4 of 51 
+Table of Contents 
+NOTICE ........................................................................................................................................................................... 2 
+Table of Contents ........................................................................................................................................................... 4 
+LIST OF TABLES ............................................................................................................................................................... 6 
+INTRODUCTION .............................................................................................................................................................. 7 
+SAMPLE USE CASES ........................................................................................................................................................ 9 
+Use Cases include: .................................................................................................................................................. 9 
+Support of polymorphism and extension patterns ...................................................................................................... 10 
+RESOURCE MODEL ....................................................................................................................................................... 11 
+Managed Entity and Task Resource Models ............................................................................................................ 11 
+Service resource .................................................................................................................................................... 11 
+Lifecycle of Service ............................................................................................................................................... 11 
+Monitor resource .................................................................................................................................................. 23 
+Notification Resource Models .................................................................................................................................. 25 
+Service Create Event ............................................................................................................................................. 26 
+Service Attribute Value Change Event .................................................................................................................. 27 
+Service State Change Event .................................................................................................................................. 27 
+Service Delete Event ............................................................................................................................................. 27 
+Monitor Create Event ........................................................................................................................................... 28 
+Monitor Attribute Value Change Event ................................................................................................................ 28 
+Monitor State Change Event ................................................................................................................................. 29 
+Monitor Delete Event ........................................................................................................................................... 29 
+API OPERATIONS .......................................................................................................................................................... 30 
+Operations on Service .............................................................................................................................................. 30 
+List services ........................................................................................................................................................... 30 
+Retrieve service .................................................................................................................................................... 31 
+Create service ....................................................................................................................................................... 34 
+Patch service ......................................................................................................................................................... 40 
+Delete service ....................................................................................................................................................... 43 
+Operations on Monitor ............................................................................................................................................ 44 
+List monitors ......................................................................................................................................................... 44 
+Retrieve monitor ................................................................................................................................................... 44 
+API NOTIFICATIONS ...................................................................................................................................................... 46 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 5 of 51 
+Register listener ....................................................................................................................................................... 46 
+Unregister listener ................................................................................................................................................... 47 
+Publish Event to listener .......................................................................................................................................... 47 
+Acknowledgements ...................................................................................................................................................... 49 
+Version History ......................................................................................................................................................... 49 
+Release History ......................................................................................................................................................... 49 
+Contributors to Document ....................................................................................................................................... 51 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 6 of 51 
+ LIST OF TABLES 
+ 
+N/A 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 7 of 51 
+INTRODUCTION 
+Services may be activated or configured by the Activation and Configuration API.  
+The following examples use the characteristic specification and the strongly typed patterns.  
+1) 
+Using the characteristic specification pattern. When the characteristic specification pattern is used it is 
+assumed that a service specification with the corresponding characteristic specifications exist. 
+     "id" : "id1234567890", 
+     "href" : "http//..", 
+ 
+"state" : "active", 
+ 
+"serviceSpecification":{ 
+          "id":"conferenceBridgeEquipment", 
+          "href":"http: //serverlocation:port/catalogManagement/serviceSpecification /conferenceBridgeEquipment" 
+     }, 
+     "characteristic":[ 
+   { 
+          "name":"numberOfVc500Units", 
+           "valueType": "integer", 
+          "value":"1" 
+        }, 
+        { 
+          "name":"numberOfVc100Units", 
+           "valueType": "integer", 
+          "value":"2" 
+        }, 
+        { 
+          "name":"routerType", 
+           "valueType": "string", 
+          "value":"CiscoASR1000" 
+        }, 
+        { 
+          "name":"powerSupply", 
+           "valueType": "string", 
+          "value":"UK" 
+        } 
+     ]} 
+ } 
+2) Using the Strongly typed pattern. When the strongly typed pattern is used it is assumed that a corresponding 
+YAML or JSON schema is defined for the Service. 
+{          
+   "id" : "id1234567890", 
+   "href" : "http//..", 
+   "state" : "active", 
+   "@type" : "conferenceBridgeEquipment", 
+   "@schemaLocation" : "http://../conferenceBridgeEquipment.json", 
+ 
+ 
+"serviceSpecification":{ 
+          "id":"conferenceBridgeEquipment", 
+          "href":"http: //serverlocation:port/catalogManagement/serviceSpecification /conferenceBridgeEquipment" 
+     }, 
+     "numberOfVc500Units": "1", 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 8 of 51 
+     "numberOfVc100Units": "2", 
+     "routerType": "CiscoASR1000", 
+     "powerSupply": "UK" 
+ } 
+} 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 9 of 51 
+SAMPLE USE CASES 
+The order to activate functional area includes all activities to support the business/customer layer in delivering 
+ordered services.  Order to activate also includes any changes (inflight and post activation) along with lifecycle 
+management of the service.  
+Use Cases include:  
+• 
+Create new service 
+• 
+Monitor long running service creation process 
+• 
+Modify inflight service creation 
+• 
+Cancel inflight service creation 
+• 
+Modify existing service 
+• 
+Suspend service / restore service 
+• 
+Remove service 
+• 
+Check feasibility of a service 
+• 
+Design and Assign a service and reserve resources 
+• 
+Create an inactive service 
+• 
+Activate an inactive service 
+• 
+Retrieve service details 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 10 of 51 
+Support of polymorphism and extension patterns 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities, for instance a TypeAService or TypeBService inheriting properties from the base Service entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Service instances some may be instances of TypeAService where other could be instances of TypeBService. The 
+@type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance a RelatedParty object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as RelatedParty, and not the class type of the referred object. However, 
+since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 11 of 51 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Service resource 
+Service is a base class for defining the Service hierarchy. All Services are characterized as either being possibly 
+visible and usable by a Customer or not. This gives rise to the two subclasses of Service: CustomerFacingService and 
+ResourceFacingService. 
+Resource model 
+ 
+ 
+Lifecycle of Service 
+Here is the state machine diagram for a Service. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 12 of 51 
+ 
+The following table provided service state explanation: 
+A service is in state… 
+when the Service Component Activation Interface shall support the 
+following operations 
+feasabilityChecked 
+The service component OS is requested to determine whether the 
+necessary resources are available and sufficient for the installation of a 
+given service. 
+It should be noted that this is just an initial feasibility check and no RFS is 
+created. 
+designed 
+The Service Component OS is requested to design the service. This could be 
+use to allocate resource but nothing is supposed to be reserved. 
+reserved 
+The Service Component OS is requested to reserve a resource, or a set of 
+resources, required for a service. This situation allows for the requesting OS 
+to determine whether the underlying resources are available and reserve 
+them in order to support a service (a RFS). 
+As a result of the reservation request, a servce is instantiated & reserved. 
+inactive 
+The service is deactivated - The Resource Facing service is deactivated and 
+thus is no longer available for service. It remains allocated to the CFS that is 
+managed by the high level service activation OS 
+active 
+The service component OS is requested to activate a given resource facing 
+service such that the component is fully available and active as part of the 
+CFS. 
+When this request is complete, all RFS component shall be in active state 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 13 of 51 
+terminated 
+The service is ‘logically deleted’. The resource facing service is deleted and 
+thus allocated from the CFS. All associated resources are freed and made 
+available for service to other users. 
+ 
+Field descriptions 
+Service fields 
+category 
+A string. Is it a customer facing or resource facing service. 
+description 
+A string. Free-text description of the service. 
+endDate 
+A date time (DateTime). Date when the service ends. 
+feature 
+A list of features (Feature [*]). A list of feature associated with this service. 
+hasStarted 
+A boolean. If TRUE, this Service has already been started. 
+href 
+A string. Reference of the service. 
+id 
+A string. Unique identifier of the service. 
+isBundle 
+A boolean. If true, the service is a ServiceBundle which regroup a service hierachy. If 
+false, the service is a 'atomic' service (hierachy leaf). 
+isServiceEnabled 
+A boolean. If FALSE and hasStarted is FALSE, this particular Service has NOT been 
+enabled for use - if FALSE and hasStarted is TRUE then the service has failed. 
+isStateful 
+A boolean. If TRUE, this Service can be changed without affecting any other services. 
+name 
+A string. Name of the service. 
+note 
+A list of notes (Note [*]). A list of notes made on this service. 
+place 
+A list of related place ref or values (RelatedPlaceRefOrValue [*]). A list of places (Place 
+[*]). Used to define a place useful for the service (for example a geographical place 
+whre the service is installed). 
+relatedEntity 
+A list of related entity ref or values (RelatedEntityRefOrValue [*]). A list of related  
+entity in relationship with this service. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of related party references 
+(RelatedParty [*]). A related party defines party or party role linked to a specific 
+entity. 
+serviceCharacteristic 
+A list of characteristics (Characteristic [*]). A list of characteristics that characterize 
+this service (ServiceCharacteristic [*]). 
+serviceDate 
+A string. Date when the service was created (whatever its status). 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 14 of 51 
+serviceOrderItem 
+A list of related service order items (RelatedServiceOrderItem [*]). A list of service 
+order items related to this service. 
+serviceRelationship 
+A list of service relationships (ServiceRelationship [*]). A list of service relationships 
+(ServiceRelationship [*]). Describes links with other service(s) in the inventory. 
+serviceSpecification 
+A service specification reference (ServiceSpecificationRef). The specification from 
+which this service was instantiated. 
+serviceType 
+A string. Business type of the service. 
+startDate 
+A date time (DateTime). Date when the service starts. 
+startMode 
+A string. This attribute is an enumerated integer that indicates how the Service is 
+started, such as: 0: Unknown; 1: Automatically by the managed environment; 2: 
+Automatically by the owning device; 3: Manually by the Provider of the Service; 4: 
+Manually by a Customer of the Provider; 5: Any of the above. 
+state 
+A service state type (ServiceStateType). The life cycle state of the service, such as 
+designed, reserved, active, etc... 
+supportingResource 
+A list of resource references (ResourceRef [*]). A list of supporting resources 
+(SupportingResource [*]).Note: only Service of type RFS can be associated with 
+Resources. 
+supportingService 
+A list of service ref or values (ServiceRefOrValue [*]). A list of supporting services 
+(SupportingService [*]). A collection of services that support this service (bundling, 
+link CFS to RFS). 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 15 of 51 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+relationshipType 
+A string. The type of relationship. 
+Feature sub-resource 
+Configuration feature. 
+constraint 
+A list of constraint references (ConstraintRef [*]). This is a list of feature constraints. 
+featureCharacteristic 
+A list of characteristics (Characteristic [1..*]). This is a list of Characteristics for a 
+particular feature. 
+featureRelationship 
+A list of feature relationships (FeatureRelationship [*]). Configuration feature. 
+id 
+A string. Unique identifier of the feature. 
+isBundle 
+A boolean. True if this is a feature group. Default is false. 
+isEnabled 
+A boolean. True if this feature is enabled. Default is true. 
+name 
+A string. This is the name for the feature. 
+FeatureRelationship sub-resource 
+Configuration feature. 
+id 
+A string. Unique identifier of the target feature. 
+name 
+A string. This is the name of the target feature. 
+relationshipType 
+A string. This is the type of the feature relationship. 
+validFor 
+A time period. The period for which this feature relationship is valid. 
+Note sub-resource 
+Extra information about a given entity. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be globally 
+unique, depending on provider implementation). 
+text 
+A string. Text of the note. 
+RelatedEntityRefOrValue sub-resource 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 16 of 51 
+A reference to an entity, where the type of the entity is not known in advance. A related entity defines a entity 
+described by reference or by value linked to a specific entity. The polymorphic attributes @type, @schemaLocation 
+& @referredType are related to the Entity and not the RelatedEntityRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+RelatedPlaceRefOrValue sub-resource 
+Related Entity reference. A related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are related to the place entity and 
+not the RelatedPlaceRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 17 of 51 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. 
+RelatedServiceOrderItem sub-resource 
+RelatedServiceOrderItem (a ServiceOrder item) .The service order item which triggered service 
+creation/change/termination. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+itemAction 
+An order item action type (OrderItemActionType). Action of the order item for this 
+service. 
+itemId 
+A string. Identifier of the order item where the service was managed. 
+role 
+A string. role of the service order item for this service. 
+serviceOrderHref 
+A string. Reference of the related entity. 
+serviceOrderId 
+A string. Unique identifier of a related entity. 
+ServiceRefOrValue sub-resource 
+A Service to be created defined by value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the Service entity and not the RelatedServiceRefOrValue class 
+itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the service. 
+href 
+A string. Reference of the service. 
+id 
+A string. Unique identifier of the service. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 18 of 51 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+category 
+A string. Is it a customer facing or resource facing service. 
+description 
+A string. Free-text description of the service. 
+endDate 
+A date time (DateTime). Date when the service ends. 
+hasStarted 
+A boolean. If TRUE, this Service has already been started. 
+isBundle 
+A boolean. If true, the service is a ServiceBundle which regroup a service hierachy. If 
+false, the service is a 'atomic' service (hierachy leaf). 
+isServiceEnabled 
+A boolean. If FALSE and hasStarted is FALSE, this particular Service has NOT been 
+enabled for use - if FALSE and hasStarted is TRUE then the service has failed. 
+isStateful 
+A boolean. If TRUE, this Service can be changed without affecting any other services. 
+serviceDate 
+A string. Date when the service was created (whatever its status). 
+serviceType 
+A string. Business type of the service. 
+startDate 
+A date time (DateTime). Date when the service starts. 
+startMode 
+A string. This attribute is an enumerated integer that indicates how the Service is 
+started, such as: 0: Unknown; 1: Automatically by the managed environment; 2: 
+Automatically by the owning device; 3: Manually by the Provider of the Service; 4: 
+Manually by a Customer of the Provider; 5: Any of the above. 
+feature 
+A list of features (Feature [*]). A list of feature associated with this service. 
+note 
+A list of notes (Note [*]). A list of notes made on this service. 
+place 
+A list of related place ref or values (RelatedPlaceRefOrValue [*]). A list of places (Place 
+[*]). Used to define a place useful for the service (for example a geographical place 
+whre the service is installed). 
+relatedEntity 
+A list of related entity ref or values (RelatedEntityRefOrValue [*]). A list of related  
+entity in relationship with this service. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of related party references 
+(RelatedParty [*]). A related party defines party or party role linked to a specific 
+entity. 
+serviceCharacteristic 
+A list of characteristics (Characteristic [*]). A list of characteristics that characterize 
+this service (ServiceCharacteristic [*]). 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 19 of 51 
+serviceOrderItem 
+A list of related service order items (RelatedServiceOrderItem [*]). A list of service 
+order items related to this service. 
+serviceRelationship 
+A list of service relationships (ServiceRelationship [*]). A list of service relationships 
+(ServiceRelationship [*]). Describes links with other service(s) in the inventory. 
+serviceSpecification 
+A service specification reference (ServiceSpecificationRef). The specification from 
+which this service was instantiated. 
+state 
+A service state type (ServiceStateType). The life cycle state of the service, such as 
+designed, reserved, active, etc... 
+supportingResource 
+A list of resource references (ResourceRef [*]). A list of supporting resources 
+(SupportingResource [*]).Note: only Service of type RFS can be associated with 
+Resources. 
+supportingService 
+A list of service ref or values (ServiceRefOrValue [*]). A list of supporting services 
+(SupportingService [*]). A collection of services that support this service (bundling, 
+link CFS to RFS). 
+ServiceRelationship sub-resource 
+ 
+relationshipType 
+A string. 
+service 
+A service ref or value (ServiceRefOrValue). A Service to be created defined by 
+value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the Service entity and not 
+the RelatedServiceRefOrValue class itself. 
+serviceRelationshipCharacteristic A list of characteristics (Characteristic [*]). Describes a given characteristic of 
+an object or entity through a name/value pair. 
+ConstraintRef relationship 
+Constraint reference. The Constraint resource represents a policy/rule applied to an entity or entity spec. 
+@referredType 
+A string. The (class) type of the referred constraint. 
+href 
+A string. Hyperlink reference to the target constraint. 
+id 
+A string. reference id to the target constraint. 
+name 
+A string. Name given to the constraint. 
+version 
+A string. constraint version. 
+ResourceRef relationship 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 20 of 51 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ServiceSpecificationRef relationship 
+Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+version 
+A string. Service specification version. 
+Json representation sample 
+We provide below the json representation of an example of a 'Service' resource object 
+{ 
+    "id": "123-456", 
+    "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-456", 
+    "category": "MobileService", 
+    "description": "Mobile Line ", 
+    "hasStarted": true, 
+    "isBundle": false, 
+    "isServiceEnabled": true, 
+    "isStateful": true, 
+    "serviceDate": "020-04-01T12:15:39.434Z", 
+    "startDate": "2020-04-03T12:15:39.434Z", 
+    "feature": [ 
+        { 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 21 of 51 
+            "id": "1", 
+            "isBundle": false, 
+            "isEnabled": true, 
+            "name": "Voice", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "1", 
+                    "name": "VoiceFeatureCharacteristic", 
+                    "valueType": "object", 
+                    "value": [ 
+                        { 
+                            "voiceStandard": "enable", 
+                            "voWifi": "disable", 
+                            "roaming": "enable", 
+                            "@schemaLocation": 
+".../serviceSpecification/11/featureSpecification/1/VoiceFeatureCharacteristic.json", 
+                            "@type": "VoiceFeatureCharacteristic" 
+                        } 
+                    ], 
+                    "@type": "FeatureCharacteristic" 
+                } 
+            ], 
+            "@type": "Feature" 
+        }, 
+        { 
+            "id": "2", 
+            "isEnabled": false, 
+            "name": "Data", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "75", 
+                    "name": "isGreen", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ], 
+            "@type": "Feature" 
+        }, 
+        { 
+            "id": "3", 
+            "isEnabled": true, 
+            "name": "Messaging", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "74", 
+                    "name": "incomingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                }, 
+                { 
+                    "id": "73", 
+                    "name": "outgoingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ], 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 22 of 51 
+            "@type": "Feature" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "78", 
+            "href": "..../partyManagement/v4/organization/78", 
+            "name": "TMF Telco", 
+            "role": "Service Provider", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "id": "12", 
+            "href": "..../partyManagement/v4/individual/12", 
+            "name": "Jean Pontus", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "serviceCharacteristic": [ 
+        { 
+            "id": "89", 
+            "name": "MSISDN", 
+            "valueType": "string", 
+            "value": "415-275-7439" 
+        } 
+    ], 
+    "serviceSpecification": { 
+        "id": "cfs45", 
+        "href": ".../serviceCatalog/v4/serviceSpecification/cfs45", 
+        "name": "c_Mobile", 
+        "@type": "serviceSpecification", 
+        "@referredType": "ServiceSpecification" 
+    }, 
+    "state": "active", 
+    "supportingService": [ 
+        { 
+            "serviceSpecification": { 
+                "id": "cfs89", 
+                "href": ".../serviceCatalog/v4/serviceSpecification/cfs89", 
+                "name": "c_MobileSupport", 
+                "@type": "serviceSpecification", 
+                "@referredType": "ServiceSpecification" 
+            }, 
+            "serviceCharacteristic": [ 
+                { 
+                    "id": "sd-8", 
+                    "name": "IMSI", 
+                    "valueType": "string", 
+                    "value": "228 01 21 76510739 " 
+                } 
+            ], 
+            "state": "active", 
+            "@type": "Service" 
+        }, 
+        { 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 23 of 51 
+            "id": "741-853", 
+            "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/741-853", 
+            "@referredType": "Service", 
+            "@type": "ServiceRef" 
+        } 
+    ], 
+    "@type": "Service" 
+} 
+Monitor resource 
+Monitoring of resources. 
+Resource model 
+ 
+Field descriptions 
+Monitor fields 
+href 
+A string. reference to this monitor. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 24 of 51 
+id 
+A string. Identifier of an instance of the monitor. Required to be unique within the 
+resource type.  Used in URIs as the identifier for specific instances of a type. 
+request 
+A request (Request). Represents the request. 
+response 
+A response (Response). Represents the response. 
+sourceHref 
+A string. The monitored resource href. 
+state 
+A string. The Monitor state of the resource.  InProgress, InError, Completed. 
+HeaderItem sub-resource 
+An item typically included in a request or response. 
+name 
+A string. The name of the header item, e.g. locale. 
+value 
+A string. The value of the header item, e.g. en-us. 
+Request sub-resource 
+A response to a request. 
+body 
+A string. The body of the request. For example for an HTTP request might contain 
+content of a form . 
+header 
+A list of header items (HeaderItem [1..*]). Items included in the header of the request. 
+For example for an HTTP request might contain requested locale, basic 
+authentication. 
+method 
+A string. The protocol of the request, e.g. http. 
+to 
+A string. The target of the request, e.g. a URL for an HTTP request. 
+Response sub-resource 
+A response to a request. 
+body 
+A string. The body of the response. For example for an HTTP response might contain 
+HTML for rendering. 
+header 
+A list of header items (HeaderItem [1..*]). Items included in the header of the 
+response. For example for an HTTP response might contain negotiated locale. 
+statusCode 
+A string. The status of the response. For example for an HTTP response would be 
+codes such as 200, 400, etc. 
+Json representation sample 
+We provide below the json representation of an example of a 'Monitor' resource object 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 25 of 51 
+{ 
+    "id": "44555", 
+    "href": "https://serverlocation:port/ServiceActivationAndConfiguration/v4/monitor/44555", 
+    "state": "completed", 
+    "request": { 
+        "method": "POST", 
+        "to": "http://serverlocation:port/serviceActivationConfiguration/v4/service/", 
+        "body": "Active Mobile Line", 
+        "header": [ 
+            { 
+                "name": "locale", 
+                "value": "en-us" 
+            } 
+        ] 
+    }, 
+    "response": { 
+        "statusCode": "201", 
+        "body": "Actived Mobile Line", 
+        "header": [ 
+            { 
+                "name": "locale", 
+                "value": "en-us" 
+            } 
+        ] 
+    }, 
+    "sourceHref": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-456", 
+    "@type": "Monitor" 
+} 
+ 
+ 
+Notification Resource Models 
+ 
+8 notifications are defined for this API 
+Notifications related to Service: 
+    - ServiceCreateEvent 
+    - ServiceAttributeValueChangeEvent 
+    - ServiceStateChangeEvent 
+    - ServiceDeleteEvent 
+Notifications related to Monitor: 
+    - MonitorCreateEvent 
+    - MonitorAttributeValueChangeEvent 
+    - MonitorStateChangeEvent 
+    - MonitorDeleteEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 26 of 51 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+ 
+Service Create Event 
+Notification ServiceCreateEvent case for resource Service 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceCreateEvent' notification event object 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 27 of 51 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceCreateEvent", 
+     "event": { 
+        "service" :  
+            {-- SEE Service RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Attribute Value Change Event 
+Notification ServiceAttributeValueChangeEvent case for resource Service 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceAttributeValueChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceAttributeValueChangeEvent", 
+     "event": { 
+        "service" :  
+            {-- SEE Service RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service State Change Event 
+Notification ServiceStateChangeEvent case for resource Service 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceStateChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceStateChangeEvent", 
+     "event": { 
+        "service" :  
+            {-- SEE Service RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Delete Event 
+Notification ServiceDeleteEvent case for resource Service 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 28 of 51 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceDeleteEvent", 
+     "event": { 
+        "service" :  
+            {-- SEE Service RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Monitor Create Event 
+Notification MonitorCreateEvent case for resource Monitor 
+Json representation sample 
+We provide below the json representation of an example of a 'MonitorCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"MonitorCreateEvent", 
+     "event": { 
+        "monitor" :  
+            {-- SEE Monitor RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Monitor Attribute Value Change Event 
+Notification MonitorAttributeValueChangeEvent case for resource Monitor 
+Json representation sample 
+We provide below the json representation of an example of a 'MonitorAttributeValueChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"MonitorAttributeValueChangeEvent", 
+     "event": { 
+        "monitor" :  
+            {-- SEE Monitor RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 29 of 51 
+Monitor State Change Event 
+Notification MonitorStateChangeEvent case for resource Monitor 
+Json representation sample 
+We provide below the json representation of an example of a 'MonitorStateChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"MonitorStateChangeEvent", 
+     "event": { 
+        "monitor" :  
+            {-- SEE Monitor RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Monitor Delete Event 
+Notification MonitorDeleteEvent case for resource Monitor 
+Json representation sample 
+We provide below the json representation of an example of a 'MonitorDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"MonitorDeleteEvent", 
+     "event": { 
+        "monitor" :  
+            {-- SEE Monitor RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 30 of 51 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines Part 1 document. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Service 
+List services 
+  GET /service?fields=...&{filtering} 
+Description 
+This operation list service entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving services from the network. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 31 of 51 
+ 
+Request 
+ 
+GET /tmf-api/ServiceActivationAndConfiguration/v4/service?fields=id,name,state&serviceType=Cloud&state=Active 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "5351", 
+        "name": "vCPE serial 1355615", 
+        "state": "active" 
+    }, 
+    { 
+        "id": "5352", 
+        "name": "vDPI serial 1355445", 
+        "state": "active" 
+    } 
+] 
+ 
+Retrieve service 
+  GET /service/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a service entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific service from the network. The level of detail returned is 
+minimal, according to what might be held in the network. 
+ 
+Request 
+ 
+GET /tmf-api/ServiceActivationAndConfiguration/v4/service/123-456 
+Accept: application/json 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 32 of 51 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "123-456", 
+    "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-456", 
+    "category": "MobileService", 
+    "description": "Mobile Line ", 
+    "hasStarted": true, 
+    "isBundle": false, 
+    "isServiceEnabled": true, 
+    "isStateful": true, 
+    "serviceDate": "020-04-01T12:15:39.434Z", 
+    "startDate": "2020-04-03T12:15:39.434Z", 
+    "feature": [ 
+        { 
+            "id": "1", 
+            "isBundle": false, 
+            "isEnabled": true, 
+            "name": "Voice", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "1", 
+                    "name": "VoiceFeatureCharacteristic", 
+                    "valueType": "object", 
+                    "value": [ 
+                        { 
+                            "voiceStandard": "enable", 
+                            "voWifi": "disable", 
+                            "roaming": "enable", 
+                            "@schemaLocation": 
+".../serviceSpecification/11/featureSpecification/1/VoiceFeatureCharacteristic.json", 
+                            "@type": "VoiceFeatureCharacteristic" 
+                        } 
+                    ], 
+                    "@type": "FeatureCharacteristic" 
+                } 
+            ], 
+            "@type": "Feature" 
+        }, 
+        { 
+            "id": "2", 
+            "isEnabled": false, 
+            "name": "Data", 
+            "@type": "Feature", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "75", 
+                    "name": "isGreen", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ] 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 33 of 51 
+        }, 
+        { 
+            "id": "3", 
+            "isEnabled": true, 
+            "name": "Messaging", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "74", 
+                    "name": "incomingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                }, 
+                { 
+                    "id": "73", 
+                    "name": "outgoingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ], 
+            "@type": "Feature" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "78", 
+            "href": "http://serverlocation:port/partyManagement/v4/organization/78", 
+            "name": "TMF Telco", 
+            "role": "Service Provider", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "id": "12", 
+            "href": "http://serverlocation:port/partyManagement/v4/individual/12", 
+            "name": "Jean Pontus", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "serviceCharacteristic": [ 
+        { 
+            "id": "89", 
+            "name": "MSISDN", 
+            "valueType": "string", 
+            "value": "415-275-7439" 
+        } 
+    ], 
+    "serviceSpecification": { 
+        "id": "cfs45", 
+        "href": ".../serviceCatalog/v4/serviceSpecification/cfs45", 
+        "name": "c_Mobile", 
+        "@type": "serviceSpecification", 
+        "@referredType": "ServiceSpecification" 
+    }, 
+    "state": "active", 
+    "supportingService": [ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 34 of 51 
+        { 
+            "id": "123-457", 
+            "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-457", 
+            "hasStarted": true, 
+            "serviceDate": "020-04-01T12:15:39.434Z", 
+            "startDate": "2020-04-03T12:15:39.434Z", 
+            "serviceSpecification": { 
+                "id": "cfs89", 
+                "href": "http://serverlocation:port/serviceCatalog/v4/serviceSpecification/cfs89", 
+                "name": "c_MobileSupport", 
+                "@type": "serviceSpecification", 
+                "@referredType": "ServiceSpecification" 
+            }, 
+            "serviceCharacteristic": [ 
+                { 
+                    "id": "sd-8", 
+                    "name": "IMSI", 
+                    "valueType": "string", 
+                    "value": "228 01 21 76510739 " 
+                } 
+            ], 
+            "state": "active", 
+            "@type": "Service" 
+        }, 
+        { 
+            "id": "741-853", 
+            "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/741-853", 
+            "@referredType": "Service", 
+            "@type": "ServiceRef" 
+        } 
+    ], 
+    "@type": "Service" 
+} 
+ 
+Create service 
+  POST /service 
+Description 
+This operation creates a service entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a Service, including 
+any possible rule conditions and applicable default values. Notice that it is up to an implementer to add additional 
+mandatory attributes. 
+Mandatory Attributes 
+Rule 
+state 
+ 
+serviceSpecification.id 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 35 of 51 
+Non Mandatory Attributes 
+Rule 
+category 
+ 
+description 
+ 
+endDate 
+ 
+feature 
+ 
+hasStarted 
+ 
+isBundle 
+ 
+isServiceEnabled 
+ 
+isStateful 
+ 
+name 
+ 
+note 
+ 
+place 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+serviceCharacteristic 
+ 
+serviceDate 
+ 
+serviceOrderItem 
+ 
+serviceRelationship 
+ 
+serviceSpecification 
+ 
+serviceType 
+ 
+startDate 
+ 
+startMode 
+ 
+supportingResource 
+ 
+supportingService 
+ 
+ 
+Usage Samples 
+Here's an example of a request for activating a new service on the network. 
+ 
+Request 
+ 
+POST /tmf-api/ServiceActivationAndConfiguration/v4/service 
+Content-Type: application/json 
+ 
+{ 
+    "category": "MobileService", 
+    "description": "Mobile Line ", 
+    "feature": [ 
+        { 
+            "id": "1", 
+            "isBundle": false, 
+            "isEnabled": true, 
+            "name": "Voice", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "1", 
+                    "name": "VoiceFeatureCharacteristic", 
+                    "valueType": "object", 
+                    "value": [ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 36 of 51 
+                        { 
+                            "voiceStandard": "enable", 
+                            "voWifi": "disable", 
+                            "roaming": "enable", 
+                            "@schemaLocation": 
+".../serviceSpecification/11/featureSpecification/1/VoiceFeatureCharacteristic.json", 
+                            "@type": "VoiceFeatureCharacteristic" 
+                        } 
+                    ], 
+                    "@type": "FeatureCharacteristic" 
+                } 
+            ], 
+            "@type": "Feature" 
+        }, 
+        { 
+            "id": "2", 
+            "isEnabled": false, 
+            "name": "Data", 
+            "@type": "Feature", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "75", 
+                    "name": "isGreen", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ] 
+        }, 
+        { 
+            "id": "3", 
+            "isEnabled": true, 
+            "name": "Messaging", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "74", 
+                    "name": "incomingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                }, 
+                { 
+                    "id": "73", 
+                    "name": "outgoingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ], 
+            "@type": "Feature" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "78", 
+            "name": "TMF Telco", 
+            "role": "Service Provider", 
+            "@referredType": "Organization" 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 37 of 51 
+        }, 
+        { 
+            "id": "12", 
+            "name": "Jean Pontus", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "serviceCharacteristic": [ 
+        { 
+            "id": "89", 
+            "name": "MSISDN", 
+            "valueType": "string", 
+            "value": "415-275-7439" 
+        } 
+    ], 
+    "serviceSpecification": { 
+        "id": "cfs45", 
+        "name": "c_Mobile", 
+        "@type": "serviceSpecification", 
+        "@referredType": "ServiceSpecification" 
+    }, 
+    "state": "active", 
+    "supportingService": [ 
+        { 
+            "serviceSpecification": { 
+                "id": "cfs89", 
+                "href": ".../serviceCatalog/v4/serviceSpecification/cfs89", 
+                "name": "c_MobileSupport", 
+                "@type": "serviceSpecification", 
+                "@referredType": "ServiceSpecification" 
+            }, 
+            "serviceCharacteristic": [ 
+                { 
+                    "id": "sd-8", 
+                    "name": "IMSI", 
+                    "valueType": "string", 
+                    "value": "228 01 21 76510739 " 
+                } 
+            ], 
+            "state": "active", 
+            "@type": "Service" 
+        }, 
+        { 
+            "id": "741-853", 
+            "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/741-853", 
+            "@referredType": "Service", 
+            "@type": "ServiceRef" 
+        } 
+    ], 
+    "@type": "Service" 
+} 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 38 of 51 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "123-456", 
+    "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-456", 
+    "category": "MobileService", 
+    "description": "Mobile Line ", 
+    "hasStarted": true, 
+    "isBundle": false, 
+    "isServiceEnabled": true, 
+    "isStateful": true, 
+    "serviceDate": "020-04-01T12:15:39.434Z", 
+    "startDate": "2020-04-03T12:15:39.434Z", 
+    "feature": [ 
+        { 
+            "id": "1", 
+            "isBundle": false, 
+            "isEnabled": true, 
+            "name": "Voice", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "1", 
+                    "name": "VoiceFeatureCharacteristic", 
+                    "valueType": "object", 
+                    "value": [ 
+                        { 
+                            "voiceStandard": "enable", 
+                            "voWifi": "disable", 
+                            "roaming": "enable", 
+                            "@schemaLocation": 
+".../serviceSpecification/11/featureSpecification/1/VoiceFeatureCharacteristic.json", 
+                            "@type": "VoiceFeatureCharacteristic" 
+                        } 
+                    ], 
+                    "@type": "FeatureCharacteristic" 
+                } 
+            ], 
+            "@type": "Feature" 
+        }, 
+        { 
+            "id": "2", 
+            "isEnabled": false, 
+            "name": "Data", 
+            "@type": "Feature", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "75", 
+                    "name": "isGreen", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ] 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 39 of 51 
+        }, 
+        { 
+            "id": "3", 
+            "isEnabled": true, 
+            "name": "Messaging", 
+            "featureCharacteristic": [ 
+                { 
+                    "id": "74", 
+                    "name": "incomingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                }, 
+                { 
+                    "id": "73", 
+                    "name": "outgoingSMS", 
+                    "valueType": "string", 
+                    "value": "enable" 
+                } 
+            ], 
+            "@type": "Feature" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "78", 
+            "href": "..../partyManagement/v4/organization/78", 
+            "name": "TMF Telco", 
+            "role": "Service Provider", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "id": "12", 
+            "href": "..../partyManagement/v4/individual/12", 
+            "name": "Jean Pontus", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "serviceCharacteristic": [ 
+        { 
+            "id": "89", 
+            "name": "MSISDN", 
+            "valueType": "string", 
+            "value": "415-275-7439" 
+        } 
+    ], 
+    "serviceSpecification": { 
+        "id": "cfs45", 
+        "href": ".../serviceCatalog/v4/serviceSpecification/cfs45", 
+        "name": "c_Mobile", 
+        "@type": "serviceSpecification", 
+        "@referredType": "ServiceSpecification" 
+    }, 
+    "state": "active", 
+    "supportingService": [ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 40 of 51 
+        { 
+            "id": "123-457", 
+            "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-457", 
+            "hasStarted": true, 
+            "serviceDate": "020-04-01T12:15:39.434Z", 
+            "startDate": "2020-04-03T12:15:39.434Z", 
+            "serviceSpecification": { 
+                "id": "cfs89", 
+                "href": ".../serviceCatalog/v4/serviceSpecification/cfs89", 
+                "name": "c_MobileSupport", 
+                "@type": "serviceSpecification", 
+                "@referredType": "ServiceSpecification" 
+            }, 
+            "serviceCharacteristic": [ 
+                { 
+                    "id": "sd-8", 
+                    "name": "IMSI", 
+                    "valueType": "string", 
+                    "value": "228 01 21 76510739 " 
+                } 
+            ], 
+            "state": "active", 
+            "@type": "Service" 
+        }, 
+        { 
+            "id": "741-853", 
+            "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/741-853", 
+            "@referredType": "Service", 
+            "@type": "ServiceRef" 
+        } 
+    ], 
+    "@type": "Service" 
+} 
+ 
+Patch service 
+  PATCH /service/{id} 
+Description 
+This operation allows partial updates of a service entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 41 of 51 
+Patchable Attributes 
+Rule 
+category 
+ 
+description 
+ 
+endDate 
+ 
+feature 
+ 
+hasStarted 
+ 
+isBundle 
+ 
+isServiceEnabled 
+ 
+isStateful 
+ 
+name 
+ 
+note 
+ 
+place 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+serviceCharacteristic 
+ 
+serviceOrderItem 
+ 
+serviceRelationship 
+ 
+serviceSpecification 
+ 
+serviceType 
+ 
+startDate 
+ 
+startMode 
+ 
+state 
+ 
+supportingResource 
+ 
+supportingService 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+serviceDate 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating a service in the network. In this example, a new state is set. 
+ 
+Request 
+ 
+PATCH /tmf-api/ServiceActivationAndConfiguration/v4/service/123-456 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "id": "123-456", 
+    "serviceSpecification": { 
+        "id": "cfs45", 
+        "name": "c_Mobile", 
+        "@type": "serviceSpecification", 
+        "@referredType": "ServiceSpecification" 
+    }, 
+    "state": "inactive", 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 42 of 51 
+    "@type": "Service" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "123-456", 
+    "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-456", 
+    "category": "MobileService", 
+    "description": "Mobile Line ", 
+    "hasStarted": true, 
+    "isBundle": false, 
+    "isServiceEnabled": true, 
+    "isStateful": true, 
+    "serviceDate": "020-04-01T12:15:39.434Z", 
+    "startDate": "2020-04-03T12:15:39.434Z", 
+    "serviceSpecification": { 
+        "id": "cfs45", 
+        "href": ".../serviceCatalog/v4/serviceSpecification/cfs45", 
+        "name": "c_Mobile", 
+        "@type": "serviceSpecification", 
+        "@referredType": "ServiceSpecification" 
+    }, 
+    "state": "inactive", 
+    "@type": "Service" 
+} 
+ 
+ 
+Here's an example of a request for updating a service in the network. In this example, a new state is set. 
+ 
+Request 
+ 
+PATCH /tmf-api/ServiceActivationAndConfiguration/v4/service/123-456 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "replace", 
+        "path": "state", 
+        "value": "inactive" 
+    } 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 43 of 51 
+{ 
+    "id": "123-456", 
+    "href": "http://serverlocation:port/serviceActivationConfiguration/v4/service/123-456", 
+    "category": "MobileService", 
+    "description": "Mobile Line ", 
+    "hasStarted": true, 
+    "isBundle": false, 
+    "isServiceEnabled": true, 
+    "isStateful": true, 
+    "serviceDate": "020-04-01T12:15:39.434Z", 
+    "startDate": "2020-04-03T12:15:39.434Z", 
+    "serviceSpecification": { 
+        "id": "cfs45", 
+        "href": ".../serviceCatalog/v4/serviceSpecification/cfs45", 
+        "name": "c_Mobile", 
+        "@type": "serviceSpecification", 
+        "@referredType": "ServiceSpecification" 
+    }, 
+    "state": "inactive", 
+    "@type": "Service" 
+} 
+ 
+Delete service 
+  DELETE /service/{id} 
+Description 
+This operation deletes a service entity. 
+ 
+Usage Samples 
+Here's an example of a request for deactivating a service in the network. 
+ 
+Request 
+ 
+DELETE /tmf-api/ServiceActivationAndConfiguration/v4/service/123-456 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 44 of 51 
+Operations on Monitor 
+List monitors 
+  GET /monitor?fields=...&{filtering} 
+Description 
+This operation list monitor entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving monitors for service activation. 
+ 
+Request 
+ 
+GET /tmf-api/ServiceActivationAndConfiguration/v4/monitor?category=MobileService&state=InProgress 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "44555", 
+        "href": "https://mycsp.com:8080/tmf-api/ServiceActivationAndConfiguration/v4/monitor/44555", 
+        "state": "In Progress" 
+    }, 
+    { 
+        "id": "78523", 
+        "href": "https://mycsp.com:8080/tmf-api/ServiceActivationAndConfiguration/v4/monitor/78523", 
+        "state": "In Progress" 
+    }, 
+    { 
+        "id": "45469", 
+        "href": "https://mycsp.com:8080/tmf-api/ServiceActivationAndConfiguration/v4/monitor/45469", 
+        "state": "In Progress" 
+    } 
+] 
+ 
+Retrieve monitor 
+  GET /monitor/{id}?fields=...&{filtering} 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 45 of 51 
+Description 
+This operation retrieves a monitor entity.  Attribute selection is enabled for all first level attributes. Filtering on sub-
+resources may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving a specific monitor for service activation. 
+ 
+Request 
+ 
+GET /tmf-api/ServiceActivationAndConfiguration/v4/monitor/44555 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "44555", 
+    "href": "https://mycsp.com:8080/tmf-api/ServiceActivationAndConfiguration/v4/monitor/44555", 
+    "state": "In Progress", 
+    "request": { 
+        "method": "http", 
+        "to": "https://mycsp.com:5050/netAPIs/activate", 
+        "body": "ACTIVATE BBAND 144445", 
+        "header": [ 
+            { 
+                "name": "locale", 
+                "value": "en-us" 
+            } 
+        ] 
+    }, 
+    "response": { 
+        "statusCode": "344", 
+        "body": "ACTIVATE BBAND 144445 REQUEST RECEIVED PENDING", 
+        "header": [ 
+            { 
+                "name": "locale", 
+                "value": "en-us" 
+            } 
+        ] 
+    }, 
+    "sourceHref": "https://mycsp.com:8080/tmf-api/ServiceActivationAndConfiguration/v4/service/5351", 
+    "@type": "Monitor" 
+} 
+ 
+ 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 46 of 51 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines part 1. Refer to the guidelines for more details. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 47 of 51 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 48 of 51 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines Part 1 document. 
+ 
+ 
+ 
+
+
+TMF640 Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 49 of 51 
+Acknowledgements 
+Version History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Version 1.0.0 
+12 Nov 2015 
+Pierre Gauthier 
+TM Forum 
+Submitted for Fx15.5 
+Version 1.0.1 
+12 Nov 2015 
+Alicja Kawecki 
+TM Forum 
+Updated cover, header; minor 
+formatting/style corrections prior to 
+publishing 
+Version 1.0.2 
+02 May 2016 
+Alicja Kawecki, 
+TM Forum 
+Updated cover, footer, Notice to 
+reflect TM Forum Approved status 
+Version 3.0.0 
+14 Jan 2019 
+Jonathan Goldberg 
+Amdocs 
+Jonathan.Goldberg@amdocs.com 
+Schema alignment for NaaS APIs 
+Version 4.0.0 
+28-May-2020 
+Ludovic Robert 
+Orange 
+API alignment with 4.0.0 
+Version 4.0.1 
+20-Jul-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+Release 20.0 
+Version 4.0.2 
+15-09-2021 
+Pierre Gauthier 
+TM Forum 
+ 
+Ludovic Robert 
+Orange 
+Update Service lifecycle 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+15.5.1 
+02 May 2016 
+Alicja Kawecki, 
+TM Forum 
+Updated to reflect TM Forum 
+Approved Status 
+18.5.0 
+14 Jan 2019 
+Jonathan Goldberg 
+Amdocs 
+Jonathan.Goldberg@amdocs.com 
+Schema alignment for NaaS APIs 
+Pre-production 
+28-May-2020 
+Ludovic Robert 
+Orange 
+API alignment with 4.0.0 
+Production 
+20-Jul-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+
+
+TMF640 Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 50 of 51 
+ 
+ 
+
+
+TMF640 Service Activation and Configuration API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved                                                                                            Page 51 of 51 
+Contributors to Document 
+Andrew Forth 
+Amdocs 
+August-Wilhelm Jagau 
+Ericsson 
+Pierre Gauthier 
+TM Forum 
+Jonathan Goldberg 
+Amdocs 
+Ludovic Robert 
+Orange  
+ 
+
+

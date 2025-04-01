@@ -1,0 +1,4355 @@
+TM Forum Specification 
+Service Inventory 
+Management
+Maturity Level: General availability
+Team Approved Date: 29-09-2023
+Approval Status: Team Approved
+IPR Mode: RAND
+Release Status: Production
+Version 5.0.0
+TMF638
+© TM Forum 2023. All Rights Reserved.
+
+
+  
+ 
+ 
+ NOTICE
+Copyright © TM Forum 2023. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page i
+
+
+  
+ 
+ 
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  1
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Service inventory query for a customer. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Service inventory update as part of service provisioning . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Service entity can be requested with: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Service Life Cycle . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Support Of Polymorphism And Extension Patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+Resource Model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Service resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+Service Attribute Value Change Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  34
+Service Delete Event. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  35
+Service Operating Status Change Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  36
+Service Create Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  36
+Service State Change Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  40
+API Operations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  41
+Operations on Service. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  41
+Retrieves a Service by ID . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  41
+List or find Service objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  47
+Creates a Service . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  50
+Updates partially a Service . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  60
+Deletes a Service . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  71
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  72
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  72
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  73
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  73
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  75
+Release History. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  75
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  75
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  75
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page ii
+
+
+  
+ 
+ 
+ Introduction
+The following document is intended to provide details of the REST API interface for Service
+Inventory. The intent of this API is to provide a consistent/standardized mechanism to query
+and manipulate the Service inventory.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 1
+
+
+  
+ 
+ 
+ Sample Use Cases
+Service inventory query for a customer
+The Service Inventory API can be used to query the service instances for a customer via
+Self Service Portal or the Call Centre operator can query the service instances on behalf of
+the customer while a customer may have a complaint or a query.
+Note: Only the CustomerFacingServices instances will be presented to the customer.
+Service inventory update as part of service provisioning
+The Service Inventory API can be called by the Service Order Management to create a new
+service instance/ update an existing service instance in the Service Inventory.
+Service entity can be requested with:
+• service features and/or service characteristics OR;
+• an explicit intent based entity
+The intent based request uses an expression language to express the expectations of the
+intent.
+Service Life Cycle
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 2
+
+
+  
+ 
+ 
+ Support Of Polymorphism And Extension
+Patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below. Polymorphism in
+collections occurs when entities inherit from base entities, for instance a TypeAService or
+TypeBService inheriting properties from the base Service entity.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines v3.0 Part 2 document.
+The @type attribute provides a way to represent the actual class type of an entity. For
+example, within a list of Service instances some may be instances of TypeAService where
+other could be instances of TypeBService. The @type gives this information. All resources
+and sub-resources of this API have a @type attributes that can be provided when this is
+useful.
+The @referredType can be used within reference entities (like for instance an RelatedParty
+object) to explicitly denote the actual entity type of the referred class. Notice that in reference
+entities the @type, when used, denotes the class type of the reference itself, such as
+RelatedParty, and not the class type of the referred object. However since reference classes
+are rarely sub-classed, @type is generally not useful in reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 3
+
+
+  
+ 
+ 
+ Resource Model
+Managed Entity and Task Resource Models
+Service resource
+Service is a base class for defining the Service hierarchy. All Services are characterized as
+either being possibly visible and usable by a Customer or not. This gives rise to the two
+subclasses of Service: CustomerFacingService and ResourceFacingService.
+Resource model
+Figure 1 - Service
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 4
+
+
+  
+ 
+ 
+ 
+Figure 2 - EntityRefOrValue
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 5
+
+
+  
+ 
+ 
+ 
+Figure 3 - IntentExpression
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 6
+
+
+  
+ 
+ 
+ 
+Figure 4 - GeographicAddress
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 7
+
+
+  
+ 
+ 
+ 
+Figure 5 - Intent
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 8
+
+
+  
+ 
+ 
+ 
+Figure 6 - Characteristic
+Field descriptions
+Service fields
+category
+A String. Is it a customer facing or resource facing service.
+description
+A String. Free-text description of the service.
+endDate
+A DateTime. Date when the service ends.
+externalIdentifier
+An ExternalIdentifier. A list of external identifiers assoicated with
+this service.
+feature
+A Feature. A list of feature associated with this service.
+hasStarted
+A Boolean. If TRUE, this Service has already been started.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+intent
+An IntentRefOrValue. Intent Ref (if Intent already exists) or Value
+(if Intent be created or its details be presented).
+isBundle
+A Boolean. If true, the service is a ServiceBundle which regroup
+a service hierachy. If false, the service is a 'atomic' service
+(hierachy leaf).
+isServiceEnabled
+A Boolean. If FALSE and hasStarted is FALSE, this particular
+Service has NOT been enabled for use - if FALSE and
+hasStarted is TRUE then the service has failed.
+isStateful
+A Boolean. If TRUE, this Service can be changed without
+affecting any other services.
+name
+A String. Name of the service.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 9
+
+
+  
+ 
+ 
+ 
+note
+A Note. A list of notes made on this service.
+operatingStatus
+A ServiceOperatingStatusType. Valid values for the Operating
+status of the service.
+place
+A RelatedPlaceRefOrValue. A list of places (Place [*]). Used to
+define a place useful for the service (for example a geographical
+place whre the service is installed).
+relatedEntity
+A RelatedEntityRefOrValue. A list of related entities in
+relationship with this service.
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. A list of related party
+references (RelatedParty [*]). A related party defines party or
+party role linked to a specific entity.
+serviceCharacteristic
+A Characteristic. A list of characteristics that characterize this
+service (ServiceCharacteristic [*]).
+serviceDate
+A String. Date when the service was created (whatever its
+status).
+serviceOrderItem
+A RelatedServiceOrderItem. A list of service order items related
+to this service.
+serviceRelationship
+A ServiceRelationship. A list of service relationships
+(ServiceRelationship [*]). Describes links with other service(s) in
+the inventory.
+serviceSpecification
+A ServiceSpecificationRef. Service specification reference:
+ServiceSpecification(s) required to realize a
+ProductSpecification.
+serviceType
+A String. Business type of the service.
+startDate
+A DateTime. Date when the service starts.
+startMode
+A String. This attribute is an enumerated integer that indicates
+how the Service is started, such as: 0: Unknown; 1:
+Automatically by the managed environment; 2: Automatically by
+the owning device; 3: Manually by the Provider of the Service; 4:
+Manually by a Customer of the Provider; 5: Any of the above.
+state
+A ServiceStateType. Valid values for the lifecycle state of the
+service.
+supportingResource
+A ResourceRef. A list of supporting resources
+(SupportingResource [*]).Note: only Service of type RFS can be
+associated with Resources.
+supportingService
+A ServiceRefOrValue. A list of supporting services
+(SupportingService [*]). A collection of services that support this
+service (bundling, link CFS to RFS).
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Attachment sub-resource fields
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 10
+
+
+  
+ 
+ 
+ 
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+content
+A Base64. The actual contents of the attachment object, if
+embedded, encoded as base64.
+description
+A String. A narrative text describing the content of the
+attachment.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+mimeType
+A String. A technical characterization of the attachment content
+format using IETF Mime Types.
+name
+A String. The name of the attachment.
+size
+A Quantity. An amount in a given unit.
+url
+A String. Uniform Resource Locator, is a web page address (a
+subset of URI).
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+AttachmentRef sub-resource fields
+description
+A String. A narrative text describing the content of the
+attachment.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+url
+A String. Link to the attachment media/content.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+BooleanArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 11
+
+
+  
+ 
+ 
+ 
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Boolean.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+BooleanCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Boolean. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CalendarPeriod sub-resource fields
+day
+A String. Day where the calendar status applies (e.g.: monday,
+mon-to-fri, weekdays, weekend, all week, …).
+hourPeriod
+A HourPeriod.
+status
+A String. Indication of the availability of the caledar period (e.g.:
+available, booked, etc.).
+timeZone
+A String. Indication of the timezone applicable to the calendar
+information (e.g.: Paris, GMT+1).
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Characteristic sub-resource fields
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 12
+
+
+  
+ 
+ 
+ 
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CharacteristicRelationship sub-resource fields
+id
+A String. Unique identifier of the characteristic.
+relationshipType
+A String. The type of relationship.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Entity sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+EntityRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 13
+
+
+  
+ 
+ 
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+EntityRelationship sub-resource fields
+associationSpec
+An EntityRef. Entity reference schema to be use for all entityRef
+class.
+href
+A String.
+id
+A String.
+name
+A String.
+relationshipType
+A String. Type of relationship such as migration, substitution,
+dependency, exclusivity.
+role
+A String. The association role for this entity.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String.
+ExternalIdentifier sub-resource fields
+externalIdentifierType
+A String. Type of the identification, typically would be the type of
+the entity within the external system.
+id
+A String. Identification of the entity within the external system.
+owner
+A String. Name of the external system that owns the entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Feature sub-resource fields
+featureCharacteristic
+A Characteristic. This is a list of Characteristics for a particular
+feature.
+featureRelationship
+A FeatureRelationship. Configuration feature.
+id
+A String. Unique identifier.
+isBundle
+A Boolean. True if this is a feature group. Default is false.
+isEnabled
+A Boolean. True if this feature is enabled. Default is true.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 14
+
+
+  
+ 
+ 
+ 
+name
+A String. This is the name for the feature.
+policyConstraint
+A PolicyRef. Reference to mangage a list of feature specification
+policy constraints.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+FeatureRelationship sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+relationshipType
+A String. This is the type of the feature relationship.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicAddress sub-resource fields
+city
+A String. City that the address is in.
+country
+A String. Country that the address is in.
+countryCode
+A StandardIdentifier. Country codes are short alphabetic or
+numeric geographical codes (geocodes) developed to represent
+countries and dependent areas, for use in data processing and
+communications. Several different systems have been developed
+to do this. The term country code frequently refers to ISO 3166-1
+alpha-2 or international dialing codes, the E.164 country calling
+codes.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 15
+
+
+  
+ 
+ 
+ 
+externalIdentifier
+An ExternalIdentifier. An identification of an entity that is owned
+by or originates in a software system different from the current
+system, for example a ProductOrder handed off from a
+commerce platform into an order handling system. The structure
+identifies the system itself, the nature of the entity within the
+system (e.g. class name) and the unique ID of the entity within
+the system. It is anticipated that multiple external IDs can be held
+for a single entity, e.g. if the entity passed through multiple
+systems on the way to the current system. In this case the
+consumer is expected to sequence the IDs in the array in reverse
+order of provenance, i.e. most recent system first in the list.
+geographicAddressType
+A String. Classification of the address, e.g., residential, industrial.
+geographicLocation
+A GeographicLocationRefOrValue. The polymorphic attributes
+@type, @schemaLocation & @referredType are related to the
+GeographicLocation entity and not the
+GeographicLocationRefOrValue class itself.
+geographicSubAddress
+A GeographicSubAddress. Representation of a
+GeographicSubAddress 
+It is used for addressing within a property in an urban area
+(country properties are often defined differently). It may refer to a
+building, a building cluster, or a floor of a multistory building.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+locality
+A String. An area of defined or undefined boundaries within a
+local authority or other legislatively defined area, usually rural or
+semi rural in nature. [ANZLIC-STREET], or a suburb, a bounded
+locality within a city, town or shire principally of urban character
+[ANZLICSTREET].
+postcode
+A String. Descriptor for a postal delivery area, used to speed and
+simplify the delivery of mail (also know as zipcode).
+stateOrProvince
+A String. The State or Province that the address is in.
+streetName
+A String. Name of the street or other street type.
+streetNr
+A String. Number identifying a specific property on a public
+street. It may be combined with streetNrLast for ranged
+addresses.
+streetNrLast
+A String. Last number in a range of street numbers allocated to a
+property.
+streetNrLastSuffix
+A String. Last street number suffix for a ranged address.
+streetNrSuffix
+A String. The first street number suffix.
+streetSuffix
+A String. A modifier denoting a relative direction.
+streetType
+A String. Alley, avenue, boulevard, brae, crescent, drive,
+highway, lane, terrace, parade, place, tarn, way, wharf.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 16
+
+
+  
+ 
+ 
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicLocation sub-resource fields
+bbox
+A Number. A bounding box array that contains the geometry. The
+axes order follows the axes order of the geometry.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicLocationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicSite sub-resource fields
+calendar
+A CalendarPeriod.
+code
+A String. A code that may be used for some addressing schemes
+eg: [ANSI T1.253-1999].
+creationDate
+A DateTime. Date and time when the GeographicSite was
+created.
+description
+A String. Text describing additional information regarding the site.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 17
+
+
+  
+ 
+ 
+ 
+externalIdentifier
+An ExternalIdentifier. An identification of an entity that is owned
+by or originates in a software system different from the current
+system, for example a ProductOrder handed off from a
+commerce platform into an order handling system. The structure
+identifies the system itself, the nature of the entity within the
+system (e.g. class name) and the unique ID of the entity within
+the system. It is anticipated that multiple external IDs can be held
+for a single entity, e.g. if the entity passed through multiple
+systems on the way to the current system. In this case the
+consumer is expected to sequence the IDs in the array in reverse
+order of provenance, i.e. most recent system first in the list.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+place
+A PlaceRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the Place
+entity and not the PlaceRefOrValue class itself.
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+siteRelationship
+A GeographicSiteRelationship.
+status
+A String. The condition of the GeographicSite, such as planned,
+underConstruction, cancelled, active, inactive, former.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicSiteRelationship sub-resource fields
+href
+A String. Reference of the related geographic site.
+id
+A String. Unique identifier of the related site entity within the
+server.
+relationshipType
+A String. Type of relationship.
+role
+A String. Role of the related site in the relationship.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicSubAddress sub-resource fields
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 18
+
+
+  
+ 
+ 
+ 
+buildingName
+A String. Allows for buildings that have well-known names.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+levelNumber
+A String. Used where a level type may be repeated e.g.
+BASEMENT 1, BASEMENT 2.
+levelType
+A String. Describes level types within a building.
+name
+A String. Name of the subAddress to identify it with a meaningful
+identification.
+privateStreetName
+A String. Private streets internal to a property (e.g. a university)
+may have internal names that are not recorded by the land title
+office.
+privateStreetNumber
+A String. Private streets numbers internal to a private street.
+subAddressType
+A String. Type of subAddress : it can be a subunit or a private
+street.
+subUnit
+A GeographicSubAddressUnit. Representation of a SubUnit. It is
+used for describing subunit within a subAddress e.g. BERTH,
+FLAT, PIER, SUITE, SHOP, TOWER, UNIT, WHARF.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicSubAddressUnit sub-resource fields
+subUnitNumber
+A String. The discriminator used for the subunit, often just a
+simple number but may also be a range.
+subUnitType
+A String. The type of subunit e.g.BERTH, FLAT, PIER, SUITE,
+SHOP, TOWER, UNIT, WHARF, RACK.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+HourPeriod sub-resource fields
+endHour
+A String. The time when the status ends applying.
+startHour
+A String. The time when the status starts applying.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 19
+
+
+  
+ 
+ 
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IntegerArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An Integer.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IntegerCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An Integer. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Intent sub-resource fields
+attachment
+An AttachmentRefOrValue. Attachments that may be of
+relevance to this intent, such as picture, document, media.
+characteristic
+A Characteristic. Describes a given characteristic of an object or
+entity through a name/value pair.
+context
+A String. A string used to give a context to the intent.
+creationDate
+A DateTime. Date and time of the creation of this REST
+resource.
+description
+A String. The description of the intent.
+expression
+An IntentExpression. An Intent expression.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 20
+
+
+  
+ 
+ 
+ 
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+intentRelationship
+An EntityRelationship. A list of intents related to this intent.
+intentSpecification
+An EntityRef. Entity reference schema to be use for all entityRef
+class.
+isBundle
+A Boolean. IsBundle determines whether an intent represents a
+single intent (false), or a bundle of intents(true).
+lastUpdate
+A DateTime. Date and time of the last update of this REST
+resource.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status of this
+intent.
+name
+A String. The name of the intent.
+priority
+A String. Can be used by intent owner to prioritize intents in an
+intent management system.
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+statusChangeDate
+A DateTime. A date time( DateTime). The date that the entity
+status changed to the current one.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. A field that identifies the specific version of an instance
+of an intent.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IntentExpression sub-resource fields
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IntentRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 21
+
+
+  
+ 
+ 
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+JsonLdExpression sub-resource fields
+expressionValue
+An object. JsonLdExpression is the ontology-encoded form of the
+Intent as JSON-LD as defined in https://www.w3.org/TR/json-ld/
+should be validated against https://raw.githubusercontent.com/
+json-ld/json-ld.org/main/schemas/jsonld-schema.json.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Note sub-resource fields
+author
+A String. Author of the note.
+date
+A DateTime. Date of the note.
+id
+A String. Identifier of the note within its containing entity.
+text
+A String. Text of the note.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+NumberArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Number.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 22
+
+
+  
+ 
+ 
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+NumberCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Number. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ObjectArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An object.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ObjectCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An object. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 23
+
+
+  
+ 
+ 
+ 
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRoleRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+partyId
+A String. The identifier of the engaged party that is linked to the
+PartyRole object.
+partyName
+A String. The name of the engaged party that is linked to the
+PartyRole object.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Place sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 24
+
+
+  
+ 
+ 
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PlaceRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PolicyRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+version
+A String.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RdfXmlExpression sub-resource fields
+expressionValue
+A String. RDF XML Expression value encoded object.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedEntityRefOrValue sub-resource fields
+entity
+An EntityRefOrValue.
+role
+A String.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 25
+
+
+  
+ 
+ 
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedPartyRefOrPartyRoleRef sub-resource fields
+partyOrPartyRole
+A PartyRefOrPartyRoleRef.
+role
+A String. Role played by the related party or party role in the
+context of the specific entity it is linked to. Such as 'initiator',
+'customer', 'salesAgent', 'user'.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedPlaceRefOrValue sub-resource fields
+place
+A PlaceRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the Place
+entity and not the PlaceRefOrValue class itself.
+role
+A String.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedServiceOrderItem sub-resource fields
+itemAction
+An OrderItemActionType. Action to be performed on the product.
+itemId
+A String. Identifier of the order item where the service was
+managed.
+role
+A String. Role of the service order item for this service.
+serviceOrderHref
+A String. Reference of the related entity.
+serviceOrderId
+A String. Unique identifier of a related entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 26
+
+
+  
+ 
+ 
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ServiceRelationship sub-resource fields
+relationshipType
+A String.
+service
+A ServiceRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the Service
+entity and not the ServiceRefOrValue class itself.
+serviceRelationshipCharacteristic
+A Characteristic. Describes a given characteristic of an object or
+entity through a name/value pair.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ServiceSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+version
+A String. Service specification version.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 27
+
+
+  
+ 
+ 
+ 
+StandardIdentifier sub-resource fields
+format
+A String. Standard/Regulatory definition identifier. e.g., ISO
+3166-1.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+value
+A String. The value of the resource in the corresponding
+standard.e.g., a country code value.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+StringArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A String.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+StringCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A String. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 28
+
+
+  
+ 
+ 
+ 
+TurtleExpression sub-resource fields
+expressionValue
+A String. Turtle Expression value is the ontology-encoded form of
+the Intent as Turtle RDF as defined in https://www.w3.org/TR/
+turtle/.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'Service' resource object.
+{
+  "id": "5351",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+  "serviceType": "Cloud",
+  "name": "vCPE serial 1355615",
+  "description": "Instantiation of vCPE",
+  "state": "active",
+  "category": "CFS",
+  "isServiceEnabled": true,
+  "hasStarted": true,
+  "startMode": "1",
+  "isStateful": true,
+  "serviceDate" : "2018-01-15T12:26:11.747Z",
+  "startDate": "2018-01-15T12:26:11.747Z",
+  "serviceSpecification": {
+    "id": "1212",
+    "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+    "name": "vCPE",
+    "version": "1.0.0",
+    "@type": "ServiceSpecificationRef",
+    "@referredType": "ServiceSpecification"
+  },
+  "feature": [
+    {
+      "id": "Feat1",
+      "isEnabled": true,
+      "name": "ElasticBandwith",
+      "featureCharacteritic": [
+        {
+          "id": "45gh-fg",
+          "name": "isCapped",
+          "value": true,
+          "valueType": "boolean",
+          "@type": "BooleanCharacteristic"
+        }
+      ],
+      "@type": "Feature"
+    }
+  ],
+  "serviceCharacteristic": [
+    {
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 29
+
+
+  
+ 
+ 
+       "id": "452-gh6",
+      "name": "vCPE",
+      "valueType": "object",
+      "value": {
+        "@type": "VCPE",
+        "@schemaLocation": "http://host:port/schema/VCPE.schema.json",
+        "vCPE_IP": "193.218.236.21",
+        "MaxTxRate": 300,
+        "TransmitPower": "11 dBm",
+        "maxTream": "OFF"
+      },
+      "@type": "ObjectCharacteristic"
+    }
+  ],
+  "serviceRelationship": [
+    {
+      "relationshipType": "DependentOn",
+      "service": {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5645",
+        "id": "5645",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      },
+      "ServiceRelationshipCharacteristic": [
+        {
+          "id": "126",
+          "name": "CrossRef",
+          "value": "44-11-h",
+          "valueType": "string",
+          "@type": "StringCharacteristic"
+        }
+      ],
+      "@type": "ServiceRelationship"
+    }
+  ],
+  "supportingService": [
+    {
+      "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5885",
+      "id": "5885",
+      "@type": "ServiceRef",
+      "@referredType": "Service"
+    }
+  ],
+  "supportingResource": [
+    {
+      "id": "6161",
+      "href": "https://mycsp.com:8080/tmf-
+api/resourceInventoryManagement/v5/resource/5351",
+      "name": "GenInfra",
+      "@type": "ResourceRef",
+      "@referredType": "VirtualResource"
+    },
+    {
+      "id": "7171",
+      "href": "https://mycsp.com:8080/tmf-
+api/resourceInventoryManagement/v5/resource/7171",
+      "name": "BNG_MUX",
+      "value": "01 25 65",
+      "@type": "ResourceRef",
+      "@referredType": "VNF"
+    }
+  ],
+  "relatedParty": [
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 30
+
+
+  
+ 
+ 
+     {
+      "role": "user",
+      "partyOrPartyRole": {
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/456",
+        "id": "456",
+        "name": "John Doe",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+      },
+      "@type": "RelatedPartyRefOrPartyRoleRef"
+    }
+  ],
+  "serviceOrderItem": [
+    {
+      "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/42",
+      "serviceOrderId": "42",
+      "role" : "initiator",
+      "@referredType" : "ServiceOrderItem",
+      "@type": "RelatedServiceOrderItem",
+      "itemId": "1",
+      "itemAction": "add"
+    },
+    {
+        "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/896",
+        "serviceOrderId": "896",
+        "role" : "activator",
+        "@referredType" : "ServiceOrderItem",
+        "@type": "RelatedServiceOrderItem",
+        "itemId": "4",
+        "itemAction": "modify"
+      }
+  ],
+  "place": [
+    {
+      "role": "InstallationAddress",
+      "place": {
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+        "id": "2435",
+        "name": "Customer primary location",
+        "@type": "PlaceRef",
+        "@referredType" : "GeographicAddress"
+      },
+      "@type": "RelatedPlaceRefOrValue"
+    }
+  ],
+  "note": [
+    {
+      "id": "77456",
+      "author": "Harvey Poupon",
+      "date": "2018-01-15T12:26:11.748Z",
+      "text": "This service was installed automatically, no issues were noted in
+testing.",
+      "@type": "Note"
+    }
+  ],
+  "@type": "Service"
+}
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 31
+
+
+  
+ 
+ 
+ 
+The following table provides service state explanation:
+A service is in state…
+when the Service Component Activation Interface shall support the
+following operations
+feasabilityChecked
+The service component OS is requested to determine whether the
+necessary resources are available and sufficient for the installation
+of a given service.
+It should be noted that this is just an initial feasibility check and no
+RFS is created.
+designed
+The Service Component OS is requested to design the service.
+This could be use to allocate resource but nothing is supposed to
+be reserved.
+reserved
+The Service Component OS is requested to reserve a resource, or
+a set of resources, required for a service. This situation allows for
+the requesting OS to determine whether the underlying resources
+are available and reserve them in order to support a service (a
+RFS).
+As a result of the reservation request, a servce is instantiated &
+reserved.
+inactive
+The service is deactivated - The Resource Facing service is
+deactivated and thus is no longer available for service. It remains
+allocated to the CFS that is managed by the high level service
+activation OS
+active
+The service component OS is requested to activate a given
+resource facing service such that the component is fully available
+and active as part of the CFS.
+When this request is complete, all RFS component shall be in
+active state
+suspended
+When a service is suspended, its usage is restricted. Restrictions
+can be added/removed for a feature or for the complete service.
+terminated
+The service is ‘logically deleted’. The resource facing service is
+deleted and thus allocated from the CFS. All associated resources
+are freed and made available for service to other users.
+The following table provides service operating status explanation:
+Service operating status
+Definition
+pending
+The service provisioning has been initiated and/or the service is
+undergoing configuration.
+configured
+The service is configured fully on the network and ready to become
+operational.
+starting
+The service is transitioning and preparing to be in running status.
+running
+The service is fully up and in standard running status.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 32
+
+
+  
+ 
+ 
+ 
+Service operating status
+Definition
+degraded
+The service is degraded in some respect, such as in speed or
+operating capacity. Failure of a test or an unacceptable
+performance measurement has established that the service is not
+fully operating or is degraded.
+failed
+The service has an internal fault that prevents it from operating.
+limited
+Particular aspect(s) of the service is restricted for use and hence
+not fully operating.
+stopping
+The service is transitioning and preparing to be in stopped status.
+stopped
+The service is in stopped status and is not operational.
+unknown
+The operating status of the service not able to be determined.
+Notification Resource Models
+5 notifications are defined for this API.
+Notifications related to Service:
+• Service Attribute Value Change Event
+• Service Delete Event
+• Service Operating Status Change Event
+• Service Create Event
+• Service State Change Event
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 33
+
+
+  
+ 
+ 
+ 
+Figure 7 Notification Pattern
+Service Attribute Value Change Event
+Message example for ServiceAttributeValueChangeEvent event
+Content-Type: application/json
+{
+    "correlationId": "7af07271-5f0c",
+    "description": "ServiceAttributeValueChangeEvent illustration",
+    "domain": "Commercial",
+    "eventId": "4414-a94c-43a0a142a98c",
+    "eventTime": "2022-08-25T12:19:28.526Z",
+    "eventType": "ServiceAttributeValueChangeEvent",
+    "priority": "3",
+    "timeOcurred": "2022-08-25T12:19:19.786Z",
+    "title": "ServiceAttributeValueChangeEvent",
+    "event": {
+        "service": {
+            "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5351",
+            "id": "5351",
+            "@type": "Service",
+            "place": [
+                {
+                  "role": "InstallationAddress",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 34
+
+
+  
+ 
+ 
+                   "place": {
+                    "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+                    "id": "2435",
+                    "name": "Customer primary location",
+                    "@type": "PlaceRefOrValue",
+                    "@referredType" : "GeographicAddress"
+                  },
+                  "@type": "RelatedPlaceRefOrValue"
+                }
+              ]
+        }
+    },
+    "reportingSystem": {
+        "id": "427",
+        "name": "APP-755",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "149",
+        "name": "APP-78",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ServiceAttributeValueChangeEvent"
+}
+Service Delete Event
+Message example for ServiceDeleteEvent event
+Content-Type: application/json
+{
+    "correlationId": "36af9e61-4a51",
+    "description": "ServiceDeleteEvent illustration",
+    "domain": "Commercial",
+    "eventId": "4154-a76e-bf08c4bccb2e",
+    "eventTime": "2022-08-25T12:19:28.549Z",
+    "eventType": "ServiceDeleteEvent",
+    "priority": "1",
+    "timeOcurred": "2022-08-25T12:19:24.023Z",
+    "title": "ServiceDeleteEvent",
+    "event": {
+        "service": {
+            "id": "5351",
+            "href": "http://servername/service/5351",
+            "@type": "Service"
+        }
+    },
+    "reportingSystem": {
+        "id": "427",
+        "name": "APP-755",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "149",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 35
+
+
+  
+ 
+ 
+         "name": "APP-78",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ServiceDeleteEvent"
+}
+Service Operating Status Change Event
+Message 
+example 
+for 
+ServiceOperatingStatusChangeEvent 
+event 
+with
+?fields=OperatingStatus property only
+Content-Type: application/json
+{
+    "correlationId": "b382501b-c423",
+    "description": "ServiceOperatingStatusChangeEvent illustration",
+    "domain": "Commercial",
+    "eventId": "4da6-b0f1-5a7fce3edc94",
+    "eventTime": "2022-08-25T12:19:28.512Z",
+    "eventType": "ServiceOperatingStatusChangeEvent",
+    "priority": "4",
+    "timeOcurred": "2022-08-25T12:19:28.180Z",
+    "title": "ServiceOperatingStatusChangeEvent",
+    "event": {
+        "service": {
+            "id": "5351",
+            "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5351",
+            "operatingStatus": "running",
+            "@type": "Service"
+        }
+    },
+    "reportingSystem": {
+        "id": "427",
+        "name": "APP-755",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "149",
+        "name": "APP-78",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ServiceOperatingStatusChangeEvent"
+}
+Service Create Event
+Message example for ServiceCreateEvent event
+Content-Type: application/json
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 36
+
+
+  
+ 
+ 
+ {
+    "correlationId": "b382501b-c423",
+    "description": "ServiceCreateEvent illustration",
+    "domain": "Commercial",
+    "eventId": "4da6-b0f1-5a7fce3edc94",
+    "eventTime": "2022-08-25T12:19:28.512Z",
+    "eventType": "ServiceCreateEvent",
+    "priority": "4",
+    "timeOcurred": "2022-08-25T12:19:28.180Z",
+    "title": "ServiceCreateEvent",
+    "event": {
+        "service": {
+            "id": "5351",
+            "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5351",
+            "serviceType": "Cloud",
+            "name": "vCPE serial 1355615",
+            "description": "Instantiation of vCPE",
+            "state": "active",
+            "category": "CFS",
+            "isServiceEnabled": true,
+            "hasStarted": true,
+            "startMode": "1",
+            "isStateful": true,
+            "startDate": "2018-01-15T12:26:11.747Z",
+            "serviceSpecification": {
+                "id": "1212",
+                "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+                "name": "vCPE",
+                "version": "1.0.0",
+                "@type": "ServiceSpecificationRef",
+                "@referredType": "ServiceSpecification"
+            },
+            "feature": [
+                {
+                    "id": "Feat1",
+                    "isEnabled": true,
+                    "name": "ElasticBandwith",
+                    "featureCharacteritic": [
+                        {
+                            "name": "isCapped",
+                            "value": true,
+                            "id": "45gh-fg",
+                            "valueType": "boolean",
+                            "@type": "BooleanCharacteristic"
+                        }
+                    ],
+                    "@type": "Feature"
+                }
+            ],
+            "serviceCharacteristic": [
+                {
+                    "id": "452-gh6",
+                    "name": "vCPE",
+                    "valueType": "object",
+                    "value": {
+                        "@type": "VCPE",
+                        "@schemaLocation": "http://my.schemas/vCPE.schema.json",
+                        "vCPE_IP": "193.218.236.21",
+                        "MaxTxRate": 300,
+                        "TransmitPower": "11 dBm",
+                        "maxTream": "OFF"
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 37
+
+
+  
+ 
+ 
+                     },
+                    "@type": "ObjectCharacteristic"
+                }
+            ],
+            "serviceRelationship": [
+                {
+                    "relationshipType": "DependentOn",
+                    "ServiceRelationshipCharacteristic": [
+                        {
+                            "id": "126",
+                            "name": "CrossRef",
+                            "value": "44-11-h",
+                            "valueType": "string",
+                            "@type": "StringCharacteristic"
+                        }
+                    ],
+                    "service": {
+                        "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5645",
+                        "id": "5645",
+                        "@type": "ServiceRef",
+                        "@referredType": "Service"
+                    },
+                    "@type": "ServiceRelationship"
+                }
+            ],
+            "supportingService": [
+                {
+                    "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5885",
+                    "id": "5885",
+                    "@type": "ServiceRef",
+                    "@referredType": "Service"
+                }
+            ],
+            "supportingResource": [
+                {
+                    "id": "6161",
+                    "href": "https://mycsp.com:8080/tmf-
+api/resourceInventoryManagement/v5/resource/5351",
+                    "name": "GenInfra",
+                    "@type": "ResourceRef",
+                    "@referredType": "VirtualResource"
+                },
+                {
+                    "id": "7171",
+                    "href": "https://mycsp.com:8080/tmf-
+api/resourceInventoryManagement/v5/resource/7171",
+                    "name": "BNG_MUX",
+                    "value": "01 25 65",
+                    "@type": "ResourceRef",
+                    "@referredType": "VNF"
+                }
+            ],
+            "relatedParty": [
+                {
+                  "role": "user",
+                  "partyOrPartyRole": {
+                    "href": "https://mycsp.com:8080/tmf-
+api/partyManagement/v5/individual/456",
+                    "id": "456",
+                    "name": "John Doe",
+                    "@type": "PartyRef",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 38
+
+
+  
+ 
+ 
+                     "@referredType": "Individual"
+                  },
+                  "@type": "RelatedPartyRefOrPartyRoleRef"
+                }
+              ],
+            "serviceOrderItem": [
+                {
+                    "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrder/v5/serviceOrder/42",
+                    "serviceOrderId": "42",
+                    "role": "initiator",
+                    "@referredType" : "ServiceOrderItem",
+                    "@type": "RelatedServiceOrderItem",
+                    "itemId": "1",
+                    "itemAction": "add"
+                },
+                {
+                    "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrder/v5/serviceOrder/896",
+                    "serviceOrderId": "896",
+                    "role": "activation",
+                    "@referredType" : "ServiceOrderItem",
+                    "@type": "RelatedServiceOrderItem",
+                    "itemId": "4",
+                    "itemAction": "modify"
+                }
+            ],
+            "place": [
+                {
+                  "role": "InstallationAddress",
+                  "place": {
+                    "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+                    "id": "2435",
+                    "name": "Customer primary location",
+                    "@type": "PlaceRefOrValue",
+                    "@referredType" : "GeographicAddress"
+                  },
+                  "@type": "RelatedPlaceRefOrValue"
+                }
+              ],
+              "note": [
+                {
+                  "id": "77456",
+                  "author": "Harvey Poupon",
+                  "date": "2018-01-15T12:26:11.748Z",
+                  "text": "This service was installed automatically, no issues were
+noted in testing.",
+                  "@type": "Note"
+                }
+              ],
+            "@type": "Service"
+        }
+    },
+    "reportingSystem": {
+        "id": "427",
+        "name": "APP-755",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "149",
+        "name": "APP-78",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 39
+
+
+  
+ 
+ 
+         "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ServiceCreateEvent"
+}
+Service State Change Event
+Message example for ServiceStateChangeEvent event with ?fields=state property only
+Content-Type: application/json
+{
+    "correlationId": "9b374459-e9b0",
+    "description": "ServiceStateChangeEvent illustration",
+    "domain": "Commercial",
+    "eventId": "40c3-a3a0-2379e9894a7d",
+    "eventTime": "2022-08-25T12:19:28.538Z",
+    "eventType": "ServiceStateChangeEvent",
+    "priority": "3",
+    "timeOcurred": "2022-08-25T12:19:25.724Z",
+    "title": "ServiceStateChangeEvent",
+    "event": {
+        "service": {
+            "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5351",
+            "id": "5351",
+            "@type": "Service",
+            "state": "active"
+        }
+    },
+    "reportingSystem": {
+        "id": "427",
+        "name": "APP-755",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "149",
+        "name": "APP-78",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ServiceStateChangeEvent"
+}
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 40
+
+
+  
+ 
+ 
+ API Operations
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines Part
+1 document.
+Notifications are also described in a subsequent section.
+Operations on Service
+Retrieves a Service by ID
+GET /service/{id}?fields=…
+Description
+This operation retrieves a Service entity. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Here's an example of a request for retrieving a specific service.
+Request
+GET /service/5351
+Content-Type: application/json
+Response
+200
+{
+  "id": "5351",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+  "serviceType": "Cloud",
+  "name": "vCPE serial 1355615",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 41
+
+
+  
+ 
+ 
+   "description": "Instantiation of vCPE",
+  "state": "inactive",
+  "category": "CFS",
+  "startDate": "2018-01-15T12:26:11.747Z",
+  "serviceSpecification": {
+    "id": "1212",
+    "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+    "name": "vCPE",
+    "version": "1.0.0",
+    "@type": "ServiceSpecificationRef",
+    "@referredType": "ServiceSpecification"
+  },
+  "serviceCharacteristic": [
+    {
+      "id": "452-gh6",
+      "name": "vCPE",
+      "valueType": "object",
+      "value": {
+        "@type": "VCPE",
+        "@schemaLocation": "http://host:port/schema/VCPE.schema.json",
+        "vCPE_IP": "193.218.236.21",
+        "MaxTxRate": 300,
+        "TransmitPower": "11 dBm",
+        "maxTream": "OFF"
+      },
+      "@type": "ObjectCharacteristic"
+    }
+  ],
+  "serviceRelationship": [
+    {
+      "relationshipType": "DependentOn",
+      "ServiceRelationshipCharacteristic": [
+        {
+          "id": "126",
+          "name": "CrossRef",
+          "value": "44-11-h",
+          "valueType": "string",
+          "@type": "StringCharacteristic"
+        }
+      ],
+      "service": {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5645",
+        "id": "5645",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      },
+      "@type": "ServiceRelationship"
+    }
+  ],
+  "supportingService": [
+    {
+      "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/6500",
+      "id": "6500",
+      "@type": "ServiceRef",
+      "@referredType": "Service"
+    }
+  ],
+  "relatedParty": [
+    {
+      "role": "user",
+      "partyOrPartyRole": {
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/456",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 42
+
+
+  
+ 
+ 
+         "id": "456",
+        "name": "John Doe",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+      },
+      "@type": "RelatedPartyRefOrPartyRoleRef"
+    }
+  ],
+  "serviceOrderItem": [
+    {
+      "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/42",
+      "serviceOrderId": "42",
+      "role" : "initiator",
+      "@referredType" : "ServiceOrderItem",
+      "@type": "RelatedServiceOrderItem",
+      "itemId": "1",
+      "itemAction": "add"
+    }
+  ],
+  "place": [
+    {
+      "role": "InstallationAddress",
+      "place": {
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+        "id": "2435",
+        "name": "Customer primary location",
+        "@type": "PlaceRef",
+        "@referredType" : "GeographicAddress"
+      },
+      "@type": "RelatedPlaceRefOrValue"
+    }
+  ],
+  "note": [
+    {
+      "id": "77456",
+      "author": "Harvey Poupon",
+      "date": "2018-01-15T12:26:11.748Z",
+      "text": "This service was installed automatically, no issues were noted in
+testing.",
+      "@type": "Note"
+    }
+  ],
+  "@type": "Service"
+}
+Here's an example of a request for retrieving a specific service with Intent.
+Request
+GET /service/5352
+Content-Type: application/json
+Response
+200
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 43
+
+
+  
+ 
+ 
+ 
+{
+  "id": "5352",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5352",
+  "category": "MobileService",
+  "description": "Mobile Line ",
+  "hasStarted": true,
+  "isBundle": false,
+  "isServiceEnabled": true,
+  "isStateful": true,
+  "serviceDate": "020-04-01T12:15:39.434Z",
+  "startDate": "2020-04-03T12:15:39.434Z",
+ 
+  "relatedParty": [
+    {
+      "role": "member",
+      "@type": "RelatedPartyRefOrPartyRoleRef",
+      "partyOrPartyRole": {
+        "id": "9866",
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/9866",
+        "name": "Sandy Smith",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+    }
+  }
+  ],
+ 
+  "serviceSpecification": {
+    "id": "cfs45",
+    "href": ".../serviceCatalog/v5/serviceSpecification/cfs45",
+    "name": "c_Mobile",
+    "@type": "ServiceSpecificationRef"
+  },
+  "state": "active",
+  "supportingService": [
+    {
+      "serviceSpecification": {
+        "id": "cfs89",
+        "href": ".../serviceCatalog/v5/serviceSpecification/cfs89",
+        "name": "c_MobileSupport",
+        "@type": "ServiceSpecificationRef"
+      },
+      "serviceCharacteristic": [
+        {
+          "id": "sd-8",
+          "name": "IMSI",
+          "valueType": "string",
+          "value": "228 01 21 76510739 ",
+          "@type": "StringCharacteristic"
+        }
+      ],
+      "state": "active",
+      "@type": "Service"
+    },
+    {
+      "id": "741-853",
+      "href": "http://serverlocation:port/tmf-api/serviceInventory/v5/service/741-
+853",
+      "@referredType": "Service",
+      "@type": "ServiceRef"
+    }
+  ],
+  "intent": {
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 44
+
+
+  
+ 
+ 
+     "@type": "Intent",
+    "id": "42",
+    "creationDate":"2022-10-23T00:30:00.00Z",
+    "lifecycleStatus":"active",
+    "description": "Intent for ordering live broadcast service for an event",
+    "validFor": {
+      "startDateTime": "2022-10-23T00:30:00.00Z",
+      "endDateTime": "2022-10-19T23:30:00.00Z"
+    },
+    "isBundle": true,
+    "version": "1.0.0",
+    "intentSpecification": {
+      "@type": "IntentSpecificationRef",
+      "id": "EventLiveBroadcast_IntentSpec",
+      "name": "EventLiveBroadcastIntentSpec",
+      "@referredType": "IntentSpecification",
+      "@href": "/intent/v5/IntentSpecification/EventLiveBroadcast_IntentSpec"
+    },
+    "name": "EventLiveBroadcast",
+    "expression": {
+      "@type": "JsonLdExpression",
+      "expressionValue": {
+        "@context": {
+          "icm": "http://www.models.tmforum.org/tio/v1.0.0/IntentCommonModel#",
+          "cat": "http://www.operator.com/Catalog#",
+          "idan": "http://www.idan-tmforum-
+catalyst.org/IntentDrivenAutonomousNetworks#",
+          "xsd": "http://www.w3.org/2001/XMLSchema#",
+          "t": "http://www.w3.org/2006/time#",
+          "elb": "http://www.operator.com/Catalog/EventWirelessAccess#",
+          "app": "http://www.operator.com/Catalog/StreamingApplication#",
+          "geo": "https://tmforum.org/2020/07/geographicPoint#"
+        },
+        "idan:EventLiveBroadcast000001": {
+          "@type": "icm:Intent",
+          "icm:intentOwner": "idan:Salesforce",
+          "icm:hasExpectation": {
+            "idan:Delivery_service": {
+              "@type": "icm:DeliveryExpectation",
+              "icm:target": "_:service",
+              "icm:params": {
+                "icm:targetDescription": "cat:EventWirelessAccess"
+              }
+            },
+            "idan:Delivery_app": {
+              "@type": "icm:DeliveryExpectation",
+              "icm:target": "_:application",
+              "icm:params": {
+                "icm:targetDescription": "cat:StreamingApplication"
+              }
+            },
+            "idan:Property_service": {
+              "@type": "icm:PropertyExpectation",
+              "icm:target": "_:service",
+              "icm:params": {
+                "elb:serviceQuality": [{
+                  "icm:value": "4KUHD"
+                }],
+                "elb:numberOfParticipants": [{
+                  "icm:atMost": "200"
+                }],
+                "elb:areaOfService": [{
+                  "geo:geographicPoints": [{
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 45
+
+
+  
+ 
+ 
+                       "geo:longitude": 90,
+                      "geo:latitude": 44,
+                      "geo:altitude": 84
+                    },
+                    {
+                      "geo:longitude": 84,
+                      "geo:latitude": -12,
+                      "geo:altitude": 24
+                    },
+                    {
+                      "geo:longitude": 131,
+                      "geo:latitude": -36,
+                      "geo:altitude": 29
+                    },
+                    {
+                      "geo:longitude": 7,
+                      "geo:latitude": 81,
+                      "geo:altitude": -42
+                    }
+                  ]
+                }]
+              }
+            },
+            "idan:Property_app": {
+              "@type": "icm:PropertyExpectation",
+              "icm:target": "_:application",
+              "icm:params": {
+                "app:appType": [{
+                    "icm:value": "AWS MediaLive"
+                  },
+                  {
+                    "icm:value": "Facebook Live"
+                  },
+                  {
+                    "icm:value": "YouTube"
+                  }
+                ]
+              }
+            },
+            "idan:Reporting": {
+              "@type": "icm:ReportingExpectation",
+              "icm:target": "idan:EventLiveBroadcast",
+              "icm:params": {
+                "icm:reportingInterval": [{
+                  "t:Duration": [{
+                    "t:numbericDuration": 10,
+                    "t:temporalUnit": "unitMinute"
+                  }]
+                }],
+                "icm:reportingEvent": [
+                  "icm:StateComplies",
+                  "icm:StateDegrades"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "lastUpdate": "2023-03-09T08:42:33.044Z"
+  },
+  "@type": "Service"
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 46
+
+
+  
+ 
+ 
+ }
+List or find Service objects
+GET /service?fields=…
+Description
+This operation list Service entities. Attribute selection is enabled for all first level attributes.
+Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Here's an example of a request for retrieving multiple services with filter.
+Request
+GET /service?serviceType=Cloud&state=active
+Content-Type: application/json
+Response
+200
+[
+    {
+        "id": "5351",
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+        "serviceType": "Cloud",
+        "name": "vCPE serial 1355615",
+        "description": "Instantiation of vCPE",
+        "state": "active",
+        "category": "CFS",
+        "isServiceEnabled": true,
+        "hasStarted": true,
+        "startMode": "1",
+        "isStateful": true,
+        "serviceDate" : "2018-01-15T12:26:11.747Z",
+        "startDate": "2018-01-15T12:26:11.747Z",
+        "serviceSpecification": {
+          "id": "1212",
+          "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+          "name": "vCPE",
+          "version": "1.0.0",
+          "@type": "ServiceSpecificationRef",
+          "@referredType": "ServiceSpecification"
+        },
+        "feature": [
+          {
+            "id": "Feat1",
+            "isEnabled": true,
+            "name": "ElasticBandwith",
+            "featureCharacteritic": [
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 47
+
+
+  
+ 
+ 
+               {
+                "id": "45gh-fg",
+                "name": "isCapped",
+                "value": true,
+                "valueType": "boolean",
+                "@type": "BooleanCharacteristic"
+              }
+            ],
+            "@type": "Feature"
+          }
+        ],
+        "serviceCharacteristic": [
+          {
+            "id": "452-gh6",
+            "name": "vCPE",
+            "valueType": "object",
+            "value": {
+              "@type": "VCPE",
+              "@schemaLocation": "http://my.schemas/VCPE.schema.json",
+              "vCPE_IP": "193.218.236.21",
+              "MaxTxRate": 300,
+              "TransmitPower": "11 dBm",
+              "maxTream": "OFF"
+            },
+            "@type": "ObjectCharacteristic"
+          }
+        ],
+        "serviceRelationship": [
+          {
+            "relationshipType": "DependentOn",
+            "ServiceRelationshipCharacteristic": [
+              {
+                "id": "126",
+                "name": "CrossRef",
+                "value": "44-11-h",
+                "valueType": "string",
+                "@type": "StringCharacteristic"
+              }
+            ],
+            "service": {
+              "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5645",
+              "id": "5645",
+              "@type": "ServiceRef",
+              "@referredType": "Service"
+            },
+            "@type": "ServiceRelationship"
+          }
+        ],
+        "supportingService": [
+          {
+            "href": "https://mycsp.com:8080/tmf-
+api/serviceInventory/v5/service/5885",
+            "id": "5885",
+            "@type": "ServiceRef",
+            "@referredType": "Service"
+          }
+        ],
+        "relatedParty": [
+          {
+            "role": "user",
+            "partyOrPartyRole": {
+              "href": "https://mycsp.com:8080/tmf-
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 48
+
+
+  
+ 
+ 
+ api/partyManagement/v5/individual/456",
+              "id": "456",
+              "name": "John Doe",
+              "@type": "PartyRef",
+              "@referredType": "Individual"
+            },
+            "@type": "RelatedPartyRefOrPartyRoleRef"
+          }
+        ],
+        "serviceOrderItem": [
+          {
+            "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/42",
+            "serviceOrderId": "42",
+            "role" : "initiator",
+            "@referredType" : "ServiceOrderItem",
+            "@type": "RelatedServiceOrderItem",
+            "itemId": "1",
+            "itemAction": "add"
+          }
+        ],
+        "place": [
+          {
+            "role": "InstallationAddress",
+            "@type": "RelatedPlaceRefOrValue",
+            "place": {
+              "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+              "id": "2435",
+              "name": "Customer primary location",
+              "@referredType" : "GeographicAddress",
+              "@type": "PlaceRef"
+            }
+          }
+        ],
+        "note": [
+          {
+            "id": "77456",
+            "author": "Harvey Poupon",
+            "date": "2018-01-15T12:26:11.748Z",
+            "text": "This service was installed automatically, no issues were noted
+in testing.",
+            "@type": "Note"
+          }
+        ],
+        "@type": "Service"
+      }      
+]
+Here's an example of a request for retrieving multiple services with field selector.
+Request
+GET /service?state=active&fields=id,name,state
+Content-Type: application/json
+Response
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 49
+
+
+  
+ 
+ 
+ 
+200
+[
+    {
+        "id": "5351",
+        "name": "vCPE serial 1355615",
+        "state": "active",
+        "@type": "Service"
+    },
+    {
+        "id": "5352",
+        "name": "vDPI serial 1355445",
+        "state": "active",
+        "@type": "Service"
+    }
+]
+Creates a Service
+POST /service?fields=…
+Description
+This operation creates a Service entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+serviceSpecification
+serviceSpecification.@type
+serviceSpecification.id
+state
+@type
+Usage samples
+Creation of a new Service with POST operation
+Request
+POST /service
+Content-Type: application/json
+{
+  "serviceType": "Cloud",
+  "name": "vCPE serial 1355615",
+  "description": "Instantiation of vCPE",
+  "state": "active",
+  "category": "CFS",
+  "serviceSpecification": {
+    "id": "1212",
+    "href": "https://mycsp.com:8080/tmf-
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 50
+
+
+  
+ 
+ 
+ api/serviceCatalogManagement/v5/serviceSpecification/1212",
+    "name": "vCPE",
+    "version": "1.0.0",
+    "@type": "ServiceSpecificationRef",
+    "@referredType": "ServiceSpecification"
+  },
+  "feature": [
+    {
+      "id": "Feat1",
+      "isEnabled": true,
+      "name": "ElasticBandwith",
+      "featureCharacteritic": [
+        {
+          "id": "45gh-fg",
+          "name": "isCapped",
+          "value": true,
+          "valueType": "boolean",
+          "@type": "BooleanCharacteristic"
+        }
+      ],
+      "@type": "Feature"
+    }
+  ],
+  "serviceCharacteristic": [
+    {
+      "id": "452-gh6",
+      "name": "vCPE",
+      "valueType": "object",
+      "value": {
+        "@type": "VCPE",
+        "@schemaLocation": "http://host:port/schema/VCPE.schema.json",
+        "vCPE_IP": "193.218.236.21",
+        "MaxTxRate": 300,
+        "TransmitPower": "11 dBm",
+        "maxTream": "OFF"
+      },
+      "@type": "ObjectCharacteristic"
+    }
+  ],
+  "serviceRelationship": [
+    {
+      "relationshipType": "DependentOn",
+      "service": {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5645",
+        "id": "5645",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      },
+      "@type": "ServiceRelationship"
+    }
+  ],
+  "relatedParty": [
+    {
+      "role": "user",
+      "partyOrPartyRole": {
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/456",
+        "id": "456",
+        "name": "John Doe",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+      },
+      "@type": "RelatedPartyRefOrPartyRoleRef"
+    }
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 51
+
+
+  
+ 
+ 
+   ],
+  "place": [
+    {
+      "role": "InstallationAddress",
+      "place": {
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+        "id": "2435",
+        "name": "Customer primary location",
+        "@type": "PlaceRef",
+        "@referredType" : "GeographicAddress"
+      },
+      "@type": "RelatedPlaceRefOrValue"
+    }
+  ],
+  "note": [
+    {
+      "id": "77456",
+      "author": "Harvey Poupon",
+      "date": "2018-01-15T12:26:11.748Z",
+      "text": "This service was installed for a rock star.",
+      "@type": "Note"
+    }
+  ],
+  "@type": "Service"
+}
+Response
+201
+{
+  "id": "5351",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+  "serviceType": "Cloud",
+  "name": "vCPE serial 1355615",
+  "description": "Instantiation of vCPE",
+  "state": "active",
+  "category": "CFS",
+  "serviceDate" : "2018-01-15T12:26:11.747Z",
+  "startDate": "2018-01-15T12:26:11.747Z",
+  "serviceSpecification": {
+    "id": "1212",
+    "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+    "name": "vCPE",
+    "version": "1.0.0",
+    "@type": "ServiceSpecificationRef",
+    "@referredType": "ServiceSpecification"
+  },
+  "feature": [
+    {
+      "id": "Feat1",
+      "isEnabled": true,
+      "name": "ElasticBandwith",
+      "featureCharacteristic": [
+        {
+          "id": "45gh-fg",
+          "name": "isCapped",
+          "value": true,
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 52
+
+
+  
+ 
+ 
+           "valueType": "boolean",
+          "@type": "BooleanCharacteristic"
+        }
+      ],
+      "@type": "Feature"
+    }
+  ],
+  "serviceCharacteristic": [
+    {
+      "id": "452-gh6",
+      "name": "vCPE",
+      "valueType": "object",
+      "value": {
+        "@type": "VCPE",
+        "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/VCPE.schema.json",
+        "vCPE_IP": "193.218.236.21",
+        "MaxTxRate": 300,
+        "TransmitPower": "11 dBm",
+        "maxTream": "OFF"
+      },
+      "@type": "ObjectCharacteristic"
+    }
+  ],
+  "serviceRelationship": [
+    {
+      "relationshipType": "DependentOn",
+      "service": {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5645",
+        "id": "5645",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      },
+      "@type": "ServiceRelationship"
+    }
+  ],
+  "supportingResource": [
+    {
+      "id": "7171",
+      "href": "https://mycsp.com:8080/tmf-
+api/resourceInventoryManagement/v5/resource/7171",
+      "name": "BNG_MUX",
+      "value": "01 25 65",
+      "@type": "ResourceRef",
+      "@referredType": "VNF"
+    }
+  ],
+  "relatedParty": [
+    {
+      "role": "user",
+      "partyOrPartyRole": {
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/456",
+        "id": "456",
+        "name": "John Doe",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+      },
+      "@type": "RelatedPartyRefOrPartyRoleRef"
+    }
+  ],
+  "place": [
+    {
+      "role": "InstallationAddress",
+      "place": {
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 53
+
+
+  
+ 
+ 
+         "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+        "id": "2435",
+        "name": "Customer primary location",
+        "@type": "PlaceRef",
+        "@referredType" : "GeographicAddress"
+      },
+      "@type": "RelatedPlaceRefOrValue"
+    }
+  ],
+  "note": [
+    {
+      "id": "77456",
+      "author": "Harvey Poupon",
+      "date": "2018-01-15T12:26:11.748Z",
+      "text": "This service was installed for a rock star.",
+      "@type": "Note"
+    }
+  ],
+  "@type": "Service"
+}
+Creation of a new Service with intent with POST operation
+Request
+POST /service
+Content-Type: application/json
+{
+  "category": "MobileService",
+  "description": "Mobile Line ",
+  "relatedParty": [
+    {
+      "role": "member",
+      "@type": "RelatedPartyRefOrPartyRoleRef",
+      "partyOrPartyRole": {
+        "id": "9866",
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/9866",
+        "name": "Sandy Smith",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+    }
+  }
+  ],
+  "serviceSpecification": {
+    "id": "cfs45",
+    "href": ".../serviceCatalog/v5/serviceSpecification/cfs45",
+    "name": "c_Mobile",
+    "@type": "ServiceSpecificationRef"
+  },
+  "state": "active",
+  "supportingService": [
+    {
+      "serviceSpecification": {
+        "id": "cfs89",
+        "href": ".../serviceCatalog/v5/serviceSpecification/cfs89",
+        "name": "c_MobileSupport",
+        "@type": "ServiceSpecificationRef"
+      },
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 54
+
+
+  
+ 
+ 
+       "serviceCharacteristic": [
+        {
+          "id": "sd-8",
+          "name": "IMSI",
+          "valueType": "string",
+          "value": "228 01 21 76510739 ",
+          "@type": "StringCharacteristic"
+        }
+      ],
+      "state": "active",
+      "@type": "Service"
+    },
+    {
+      "id": "741-853",
+      "href": "http://serverlocation:port/tmf-api/serviceInventory/v5/service/741-
+853",
+      "@referredType": "Service",
+      "@type": "ServiceRef"
+    }
+  ],
+  "intent": {
+    "@type": "Intent",
+    "id": "42",
+    "creationDate":"2022-10-23T00:30:00.00Z",
+    "lifecycleStatus":"active",
+    "description": "Intent for ordering live broadcast service for an event",
+    "validFor": {
+      "startDateTime": "2022-10-23T00:30:00.00Z",
+      "endDateTime": "2022-10-19T23:30:00.00Z"
+    },
+    "isBundle": true,
+    "version": "1.0.0",
+    "intentSpecification": {
+      "@type": "IntentSpecificationRef",
+      "id": "EventLiveBroadcast_IntentSpec",
+      "name": "EventLiveBroadcastIntentSpec",
+      "@referredType": "IntentSpecification",
+      "@href": "/intent/v5/IntentSpecification/EventLiveBroadcast_IntentSpec"
+    },
+    "name": "EventLiveBroadcast",
+    "expression": {
+      "@type": "JsonLdExpression",
+      "expressionValue": {
+        "@context": {
+          "icm": "http://www.models.tmforum.org/tio/v1.0.0/IntentCommonModel#",
+          "cat": "http://www.operator.com/Catalog#",
+          "idan": "http://www.idan-tmforum-
+catalyst.org/IntentDrivenAutonomousNetworks#",
+          "xsd": "http://www.w3.org/2001/XMLSchema#",
+          "t": "http://www.w3.org/2006/time#",
+          "elb": "http://www.operator.com/Catalog/EventWirelessAccess#",
+          "app": "http://www.operator.com/Catalog/StreamingApplication#",
+          "geo": "https://tmforum.org/2020/07/geographicPoint#"
+        },
+        "idan:EventLiveBroadcast000001": {
+          "@type": "icm:Intent",
+          "icm:intentOwner": "idan:Salesforce",
+          "icm:hasExpectation": {
+            "idan:Delivery_service": {
+              "@type": "icm:DeliveryExpectation",
+              "icm:target": "_:service",
+              "icm:params": {
+                "icm:targetDescription": "cat:EventWirelessAccess"
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 55
+
+
+  
+ 
+ 
+               }
+            },
+            "idan:Delivery_app": {
+              "@type": "icm:DeliveryExpectation",
+              "icm:target": "_:application",
+              "icm:params": {
+                "icm:targetDescription": "cat:StreamingApplication"
+              }
+            },
+            "idan:Property_service": {
+              "@type": "icm:PropertyExpectation",
+              "icm:target": "_:service",
+              "icm:params": {
+                "elb:serviceQuality": [{
+                  "icm:value": "4KUHD"
+                }],
+                "elb:numberOfParticipants": [{
+                  "icm:atMost": "200"
+                }],
+                "elb:areaOfService": [{
+                  "geo:geographicPoints": [{
+                      "geo:longitude": 90,
+                      "geo:latitude": 44,
+                      "geo:altitude": 84
+                    },
+                    {
+                      "geo:longitude": 84,
+                      "geo:latitude": -12,
+                      "geo:altitude": 24
+                    },
+                    {
+                      "geo:longitude": 131,
+                      "geo:latitude": -36,
+                      "geo:altitude": 29
+                    },
+                    {
+                      "geo:longitude": 7,
+                      "geo:latitude": 81,
+                      "geo:altitude": -42
+                    }
+                  ]
+                }]
+              }
+            },
+            "idan:Property_app": {
+              "@type": "icm:PropertyExpectation",
+              "icm:target": "_:application",
+              "icm:params": {
+                "app:appType": [{
+                    "icm:value": "AWS MediaLive"
+                  },
+                  {
+                    "icm:value": "Facebook Live"
+                  },
+                  {
+                    "icm:value": "YouTube"
+                  }
+                ]
+              }
+            },
+            "idan:Reporting": {
+              "@type": "icm:ReportingExpectation",
+              "icm:target": "idan:EventLiveBroadcast",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 56
+
+
+  
+ 
+ 
+               "icm:params": {
+                "icm:reportingInterval": [{
+                  "t:Duration": [{
+                    "t:numbericDuration": 10,
+                    "t:temporalUnit": "unitMinute"
+                  }]
+                }],
+                "icm:reportingEvent": [
+                  "icm:StateComplies",
+                  "icm:StateDegrades"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "lastUpdate": "2023-03-09T08:42:33.044Z"
+  },
+  "@type": "Service"
+}
+Response
+201
+{
+  "id": "5352",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5352",
+  "category": "MobileService",
+  "description": "Mobile Line ",
+  "hasStarted": true,
+  "isBundle": false,
+  "isServiceEnabled": true,
+  "isStateful": true,
+  "serviceDate": "020-04-01T12:15:39.434Z",
+  "startDate": "2020-04-03T12:15:39.434Z",
+ 
+  "relatedParty": [
+    {
+      "role": "member",
+      "@type": "RelatedPartyRefOrPartyRoleRef",
+      "partyOrPartyRole": {
+        "id": "9866",
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/9866",
+        "name": "Sandy Smith",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+    }
+  }
+  ],
+ 
+  "serviceSpecification": {
+    "id": "cfs45",
+    "href": ".../serviceCatalog/v5/serviceSpecification/cfs45",
+    "name": "c_Mobile",
+    "@type": "ServiceSpecificationRef"
+  },
+  "state": "active",
+  "supportingService": [
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 57
+
+
+  
+ 
+ 
+     {
+      "serviceSpecification": {
+        "id": "cfs89",
+        "href": ".../serviceCatalog/v5/serviceSpecification/cfs89",
+        "name": "c_MobileSupport",
+        "@type": "ServiceSpecificationRef"
+      },
+      "serviceCharacteristic": [
+        {
+          "id": "sd-8",
+          "name": "IMSI",
+          "valueType": "string",
+          "value": "228 01 21 76510739 ",
+          "@type": "StringCharacteristic"
+        }
+      ],
+      "state": "active",
+      "@type": "Service"
+    },
+    {
+      "id": "741-853",
+      "href": "http://serverlocation:port/tmf-api/serviceInventory/v5/service/741-
+853",
+      "@referredType": "Service",
+      "@type": "ServiceRef"
+    }
+  ],
+  "intent": {
+    "@type": "Intent",
+    "id": "42",
+    "creationDate":"2022-10-23T00:30:00.00Z",
+    "lifecycleStatus":"active",
+    "description": "Intent for ordering live broadcast service for an event",
+    "validFor": {
+      "startDateTime": "2022-10-23T00:30:00.00Z",
+      "endDateTime": "2022-10-19T23:30:00.00Z"
+    },
+    "isBundle": true,
+    "version": "1.0.0",
+    "intentSpecification": {
+      "@type": "IntentSpecificationRef",
+      "id": "EventLiveBroadcast_IntentSpec",
+      "name": "EventLiveBroadcastIntentSpec",
+      "@referredType": "IntentSpecification",
+      "@href": "/intent/v5/IntentSpecification/EventLiveBroadcast_IntentSpec"
+    },
+    "name": "EventLiveBroadcast",
+    "expression": {
+      "@type": "JsonLdExpression",
+      "expressionValue": {
+        "@context": {
+          "icm": "http://www.models.tmforum.org/tio/v1.0.0/IntentCommonModel#",
+          "cat": "http://www.operator.com/Catalog#",
+          "idan": "http://www.idan-tmforum-
+catalyst.org/IntentDrivenAutonomousNetworks#",
+          "xsd": "http://www.w3.org/2001/XMLSchema#",
+          "t": "http://www.w3.org/2006/time#",
+          "elb": "http://www.operator.com/Catalog/EventWirelessAccess#",
+          "app": "http://www.operator.com/Catalog/StreamingApplication#",
+          "geo": "https://tmforum.org/2020/07/geographicPoint#"
+        },
+        "idan:EventLiveBroadcast000001": {
+          "@type": "icm:Intent",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 58
+
+
+  
+ 
+ 
+           "icm:intentOwner": "idan:Salesforce",
+          "icm:hasExpectation": {
+            "idan:Delivery_service": {
+              "@type": "icm:DeliveryExpectation",
+              "icm:target": "_:service",
+              "icm:params": {
+                "icm:targetDescription": "cat:EventWirelessAccess"
+              }
+            },
+            "idan:Delivery_app": {
+              "@type": "icm:DeliveryExpectation",
+              "icm:target": "_:application",
+              "icm:params": {
+                "icm:targetDescription": "cat:StreamingApplication"
+              }
+            },
+            "idan:Property_service": {
+              "@type": "icm:PropertyExpectation",
+              "icm:target": "_:service",
+              "icm:params": {
+                "elb:serviceQuality": [{
+                  "icm:value": "4KUHD"
+                }],
+                "elb:numberOfParticipants": [{
+                  "icm:atMost": "200"
+                }],
+                "elb:areaOfService": [{
+                  "geo:geographicPoints": [{
+                      "geo:longitude": 90,
+                      "geo:latitude": 44,
+                      "geo:altitude": 84
+                    },
+                    {
+                      "geo:longitude": 84,
+                      "geo:latitude": -12,
+                      "geo:altitude": 24
+                    },
+                    {
+                      "geo:longitude": 131,
+                      "geo:latitude": -36,
+                      "geo:altitude": 29
+                    },
+                    {
+                      "geo:longitude": 7,
+                      "geo:latitude": 81,
+                      "geo:altitude": -42
+                    }
+                  ]
+                }]
+              }
+            },
+            "idan:Property_app": {
+              "@type": "icm:PropertyExpectation",
+              "icm:target": "_:application",
+              "icm:params": {
+                "app:appType": [{
+                    "icm:value": "AWS MediaLive"
+                  },
+                  {
+                    "icm:value": "Facebook Live"
+                  },
+                  {
+                    "icm:value": "YouTube"
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 59
+
+
+  
+ 
+ 
+                   }
+                ]
+              }
+            },
+            "idan:Reporting": {
+              "@type": "icm:ReportingExpectation",
+              "icm:target": "idan:EventLiveBroadcast",
+              "icm:params": {
+                "icm:reportingInterval": [{
+                  "t:Duration": [{
+                    "t:numbericDuration": 10,
+                    "t:temporalUnit": "unitMinute"
+                  }]
+                }],
+                "icm:reportingEvent": [
+                  "icm:StateComplies",
+                  "icm:StateDegrades"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "lastUpdate": "2023-03-09T08:42:33.044Z"
+  },
+  "@type": "Service"
+}
+Updates partially a Service
+PATCH /service/{id}?fields=…
+Description
+This operation allows partial updates of a Service entity. Support of json/merge
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/
+html/rfc5789) is optiona. Note: If the update operation yields to the creation of sub-resources
+or relationships, the same rules concerning mandatory sub-resource attributes and default
+value settings in the POST operation applies to the PATCH operation. Hence these tables
+are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+href
+id
+serviceDate
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 60
+
+
+  
+ 
+ 
+ 
+Patchable Attributes
+Rule
+category
+description
+endDate
+externalIdentifier
+feature
+hasStarted
+intent
+isBundle
+isServiceEnabled
+isStateful
+name
+note
+operatingStatus
+place
+relatedEntity
+relatedParty
+serviceCharacteristic
+serviceOrderItem
+serviceRelationship
+serviceSpecification
+serviceType
+startDate
+startMode
+state
+supportingResource
+supportingService
+Usage samples
+Here's an example of a request for patching a service using merge-patch+json. In this
+example, service status is changed to inactive and supporting service is updated.
+Request
+PATCH /service/5351
+Content-Type: application/merge-patch+json
+{
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 61
+
+
+  
+ 
+ 
+   "state": "inactive",
+  "supportingService": [
+    {
+      "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/6500",
+      "id": "6500",
+      "@type": "ServiceRef",
+      "@referredType": "Service"
+    }
+  ],
+  "@type": "Service"
+}
+Response
+200
+{
+  "id": "5351",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+  "serviceType": "Cloud",
+  "name": "vCPE serial 1355615",
+  "description": "Instantiation of vCPE",
+  "state": "inactive",
+  "category": "CFS",
+  "startDate": "2018-01-15T12:26:11.747Z",
+  "serviceSpecification": {
+    "id": "1212",
+    "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+    "name": "vCPE",
+    "version": "1.0.0",
+    "@type": "ServiceSpecificationRef",
+    "@referredType": "ServiceSpecification"
+  },
+  "serviceCharacteristic": [
+    {
+      "id": "452-gh6",
+      "name": "vCPE",
+      "valueType": "object",
+      "value": {
+        "@type": "VCPE",
+        "@schemaLocation": "http://host:port/schema/VCPE.schema.json",
+        "vCPE_IP": "193.218.236.21",
+        "MaxTxRate": 300,
+        "TransmitPower": "11 dBm",
+        "maxTream": "OFF"
+      },
+      "@type": "ObjectCharacteristic"
+    }
+  ],
+  "serviceRelationship": [
+    {
+      "relationshipType": "DependentOn",
+      "ServiceRelationshipCharacteristic": [
+        {
+          "id": "126",
+          "name": "CrossRef",
+          "value": "44-11-h",
+          "valueType": "string",
+          "@type": "StringCharacteristic"
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 62
+
+
+  
+ 
+ 
+         }
+      ],
+      "service": {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5645",
+        "id": "5645",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      },
+      "@type": "ServiceRelationship"
+    }
+  ],
+  "supportingService": [
+    {
+      "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/6500",
+      "id": "6500",
+      "@type": "ServiceRef",
+      "@referredType": "Service"
+    }
+  ],
+  "relatedParty": [
+    {
+      "role": "user",
+      "partyOrPartyRole": {
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/456",
+        "id": "456",
+        "name": "John Doe",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+      },
+      "@type": "RelatedPartyRefOrPartyRoleRef"
+    }
+  ],
+  "serviceOrderItem": [
+    {
+      "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/42",
+      "serviceOrderId": "42",
+      "role" : "initiator",
+      "@referredType" : "ServiceOrderItem",
+      "@type": "RelatedServiceOrderItem",
+      "itemId": "1",
+      "itemAction": "add"
+    }
+  ],
+  "place": [
+    {
+      "role": "InstallationAddress",
+      "place": {
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+        "id": "2435",
+        "name": "Customer primary location",
+        "@type": "PlaceRef",
+        "@referredType" : "GeographicAddress"
+      },
+      "@type": "RelatedPlaceRefOrValue"
+    }
+  ],
+  "note": [
+    {
+      "id": "77456",
+      "author": "Harvey Poupon",
+      "date": "2018-01-15T12:26:11.748Z",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 63
+
+
+  
+ 
+ 
+       "text": "This service was installed automatically, no issues were noted in
+testing.",
+      "@type": "Note"
+    }
+  ],
+  "@type": "Service"
+}
+Here's an example of a request for updating a service using json-patch+json. In this
+example, service status is changed to inactive.
+Request
+PATCH /service/5351
+Content-Type: application/json-patch+json
+[
+  {"op":"replace",
+    "path": "state",
+    "value": "inactive"
+  }
+]
+Response
+200
+{
+  "id": "5351",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+  "serviceType": "Cloud",
+  "name": "vCPE serial 1355615",
+  "description": "Instantiation of vCPE",
+  "state": "inactive",
+  "category": "CFS",
+  "startDate": "2018-01-15T12:26:11.747Z",
+  "serviceSpecification": {
+    "id": "1212",
+    "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+    "name": "vCPE",
+    "version": "1.0.0",
+    "@type": "ServiceSpecificationRef",
+    "@referredType": "ServiceSpecification"
+  },
+  "serviceCharacteristic": [
+    {
+      "id": "452-gh6",
+      "name": "vCPE",
+      "valueType": "object",
+      "value": {
+        "@type": "VCPE",
+        "@schemaLocation": "http://host:port/schema/VCPE.schema.json",
+        "vCPE_IP": "193.218.236.21",
+        "MaxTxRate": 300,
+        "TransmitPower": "11 dBm",
+        "maxTream": "OFF"
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 64
+
+
+  
+ 
+ 
+       },
+      "@type": "ObjectCharacteristic"
+    }
+  ],
+  "serviceRelationship": [
+    {
+      "relationshipType": "DependentOn",
+      "ServiceRelationshipCharacteristic": [
+        {
+          "id": "126",
+          "name": "CrossRef",
+          "value": "44-11-h",
+          "valueType": "string",
+          "@type": "StringCharacteristic"
+        }
+      ],
+      "service": {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5645",
+        "id": "5645",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      },
+      "@type": "ServiceRelationship"
+    }
+  ],
+  "supportingService": [
+    {
+      "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/6500",
+      "id": "6500",
+      "@type": "ServiceRef",
+      "@referredType": "Service"
+    }
+  ],
+  "relatedParty": [
+    {
+      "role": "user",
+      "partyOrPartyRole": {
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/456",
+        "id": "456",
+        "name": "John Doe",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+      },
+      "@type": "RelatedPartyRefOrPartyRoleRef"
+    }
+  ],
+  "serviceOrderItem": [
+    {
+      "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/42",
+      "serviceOrderId": "42",
+      "role" : "initiator",
+      "@referredType" : "ServiceOrderItem",
+      "@type": "RelatedServiceOrderItem",
+      "itemId": "1",
+      "itemAction": "add"
+    }
+  ],
+  "place": [
+    {
+      "role": "InstallationAddress",
+      "place": {
+        "href": "https://mycsp.com:8080/tmf-
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 65
+
+
+  
+ 
+ 
+ api/geographicAddressManagement/v5/geographicAddress/2435",
+        "id": "2435",
+        "name": "Customer primary location",
+        "@type": "PlaceRef",
+        "@referredType" : "GeographicAddress"
+      },
+      "@type": "RelatedPlaceRefOrValue"
+    }
+  ],
+  "note": [
+    {
+      "id": "77456",
+      "author": "Harvey Poupon",
+      "date": "2018-01-15T12:26:11.748Z",
+      "text": "This service was installed automatically, no issues were noted in
+testing.",
+      "@type": "Note"
+    }
+  ],
+  "@type": "Service"
+}
+Here's an example of a request for updating a service using json-patch-query - In this
+example, service related party role is updated.
+Request
+PATCH /service/5351
+Content-Type: application/json-patch-query+json
+[
+    {
+      "op": "replace",
+      "path": "/note/author?note.id=77456",
+      "value": "Mr. N. Bene"
+    }
+  ]
+Response
+200
+{
+    "id": "5351",
+    "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+    "serviceType": "Cloud",
+    "name": "vCPE serial 1355615",
+    "description": "Instantiation of vCPE",
+    "state": "inactive",
+    "category": "CFS",
+    "startDate": "2018-01-15T12:26:11.747Z",
+    "serviceSpecification": {
+      "id": "1212",
+      "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+      "name": "vCPE",
+      "version": "1.0.0",
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 66
+
+
+  
+ 
+ 
+       "@type": "ServiceSpecificationRef",
+      "@referredType": "ServiceSpecification"
+    },
+    "serviceCharacteristic": [
+      {
+        "id": "452-gh6",
+        "name": "vCPE",
+        "valueType": "object",
+        "value": {
+          "@type": "VCPE",
+          "@schemaLocation": "http://host:port/schema/VCPE.schema.json",
+          "vCPE_IP": "193.218.236.21",
+          "MaxTxRate": 300,
+          "TransmitPower": "11 dBm",
+          "maxTream": "OFF"
+        },
+        "@type": "ObjectCharacteristic"
+      }
+    ],
+    "serviceRelationship": [
+      {
+        "relationshipType": "DependentOn",
+        "ServiceRelationshipCharacteristic": [
+          {
+            "id": "126",
+            "name": "CrossRef",
+            "value": "44-11-h",
+            "valueType": "string",
+            "@type": "StringCharacteristic"
+          }
+        ],
+        "service": {
+          "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5645",
+          "id": "5645",
+          "@type": "ServiceRef",
+          "@referredType": "Service"
+        },
+        "@type": "ServiceRelationship"
+      }
+    ],
+    "supportingService": [
+      {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/6500",
+        "id": "6500",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      }
+    ],
+    "relatedParty": [
+      {
+        "role": "user",
+        "partyOrPartyRole": {
+          "href": "https://mycsp.com:8080/tmf-
+api/partyManagement/v5/individual/456",
+          "id": "456",
+          "name": "John Doe",
+          "@type": "PartyRef",
+          "@referredType": "Individual"
+        },
+        "@type": "RelatedPartyRefOrPartyRoleRef"
+      }
+    ],
+    "serviceOrderItem": [
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 67
+
+
+  
+ 
+ 
+       {
+        "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/42",
+        "serviceOrderId": "42",
+        "role" : "initiator",
+        "@referredType" : "ServiceOrderItem",
+        "@type": "RelatedServiceOrderItem",
+        "itemId": "1",
+        "itemAction": "add"
+      }
+    ],
+    "place": [
+      {
+        "role": "InstallationAddress",
+        "place": {
+          "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+          "id": "2435",
+          "name": "Customer primary location",
+          "@type": "PlaceRef",
+          "@referredType" : "GeographicAddress"
+        },
+        "@type": "RelatedPlaceRefOrValue"
+      }
+    ],
+    "note": [
+      {
+        "id": "77456",
+        "author": "Mr. N. Bene",
+        "date": "2018-01-15T12:26:11.748Z",
+        "text": "This service was installed automatically, no issues were noted in
+testing.",
+        "@type": "Note"
+      }
+    ],
+    "@type": "Service"
+  }
+Here's an example of a request for patching a service using application/json. In this example,
+service status is changed to inactive and supporting service is updated.
+Request
+PATCH /service/5351
+Content-Type: application/json
+{
+  "state": "inactive",
+  "supportingService": [
+    {
+      "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/6500",
+      "id": "6500",
+      "@type": "ServiceRef",
+      "@referredType": "Service"
+    }
+  ],
+  "@type": "Service"
+}
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 68
+
+
+  
+ 
+ 
+ 
+Response
+200
+{
+  "id": "5351",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+  "serviceType": "Cloud",
+  "name": "vCPE serial 1355615",
+  "description": "Instantiation of vCPE",
+  "state": "inactive",
+  "category": "CFS",
+  "startDate": "2018-01-15T12:26:11.747Z",
+  "serviceSpecification": {
+    "id": "1212",
+    "href": "https://mycsp.com:8080/tmf-
+api/serviceCatalogManagement/v5/serviceSpecification/1212",
+    "name": "vCPE",
+    "version": "1.0.0",
+    "@type": "ServiceSpecificationRef",
+    "@referredType": "ServiceSpecification"
+  },
+  "serviceCharacteristic": [
+    {
+      "id": "452-gh6",
+      "name": "vCPE",
+      "valueType": "object",
+      "value": {
+        "@type": "VCPE",
+        "@schemaLocation": "http://host:port/schema/VCPE.schema.json",
+        "vCPE_IP": "193.218.236.21",
+        "MaxTxRate": 300,
+        "TransmitPower": "11 dBm",
+        "maxTream": "OFF"
+      },
+      "@type": "ObjectCharacteristic"
+    }
+  ],
+  "serviceRelationship": [
+    {
+      "relationshipType": "DependentOn",
+      "ServiceRelationshipCharacteristic": [
+        {
+          "id": "126",
+          "name": "CrossRef",
+          "value": "44-11-h",
+          "valueType": "string",
+          "@type": "StringCharacteristic"
+        }
+      ],
+      "service": {
+        "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5656",
+        "id": "5656",
+        "@type": "ServiceRef",
+        "@referredType": "Service"
+      },
+      "@type": "ServiceRelationship"
+    }
+  ],
+  "supportingService": [
+    {
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 69
+
+
+  
+ 
+ 
+       "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/6500",
+      "id": "6500",
+      "@type": "ServiceRef",
+      "@referredType": "Service"
+    }
+  ],
+  "relatedParty": [
+    {
+      "role": "user",
+      "partyOrPartyRole": {
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v5/individual/456",
+        "id": "456",
+        "name": "John Doe",
+        "@type": "PartyRef",
+        "@referredType": "Individual"
+      },
+      "@type": "RelatedPartyRefOrPartyRoleRef"
+    }
+  ],
+  "serviceOrderItem": [
+    {
+      "serviceOrderHref": "https://mycsp.com:8080/tmf-
+api/serviceOrdering/v5/serviceOrder/42",
+      "serviceOrderId": "42",
+      "role" : "initiator",
+      "@referredType" : "ServiceOrderItem",
+      "@type": "RelatedServiceOrderItem",
+      "itemId": "1",
+      "itemAction": "add"
+    }
+  ],
+  "place": [
+    {
+      "role": "InstallationAddress",
+      "place": {
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicAddressManagement/v5/geographicAddress/2435",
+        "id": "2435",
+        "name": "Customer primary location",
+        "@type": "PlaceRef",
+        "@referredType" : "GeographicAddress"
+      },
+      "@type": "RelatedPlaceRefOrValue"
+    }
+  ],
+  "note": [
+    {
+      "id": "77456",
+      "author": "Harvey Poupon",
+      "date": "2018-01-15T12:26:11.748Z",
+      "text": "This service was installed automatically, no issues were noted in
+testing.",
+      "@type": "Note"
+    }
+  ],
+  "@type": "Service"
+}
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 70
+
+
+  
+ 
+ 
+ 
+Deletes a Service
+DELETE /service/{id}
+Description
+This operation deletes a Service entity.
+Usage samples
+Here's an example of a request for deleting a specific service.
+Request
+DELETE /service/5351
+Content-Type: application/json
+Response
+204
+{
+  "id": "5351",
+  "href": "https://mycsp.com:8080/tmf-api/serviceInventory/v5/service/5351",
+  "@type": "Service"
+}
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 71
+
+
+  
+ 
+ 
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 72
+
+
+  
+ 
+ 
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 73
+
+
+  
+ 
+ 
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 74
+
+
+  
+ 
+ 
+ Acknowledgements
+Release History
+Release
+Number
+Date
+Release led by:
+Description
+Version 5.0.0
+December
+2022
+Amita Giriya
+Telstra
+amita.giriya@team.telstra.co
+m
+Upgrade to V5 design patterns and
+OAS3
+Version 5.0.0
+December
+2022
+Anu Aulakh
+Telstra
+anu.aulakh@team.telstra.co
+m
+Upgrade to V5 design patterns and
+OAS3
+Contributors to Document
+Contributors to Document
+Amita Giriya
+Telstra
+Anu Aulakh
+Telstra
+Service Inventory Management
+© TM Forum 2023. All Rights Reserved.
+Page 75
+
+

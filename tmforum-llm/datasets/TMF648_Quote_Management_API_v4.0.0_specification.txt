@@ -1,0 +1,3582 @@
+ 
+©TM Forum 2019. All Rights Reserved. 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+TMF648 Quote API REST Specification 
+ 
+ 
+ 
+ 
+ 
+TMF648 
+Release 19.0.0 
+June 2019  
+ 
+ 
+Latest Update: TM Forum Release 19.0.0 Member Evaluation 
+Version 4.0.1 
+IPR Mode: RAND 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 2 sur 74 
+ 
+NOTICE 
+Copyright © TM Forum 2019. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 3 sur 74 
+ 
+Table of Contents 
+NOTICE 2 
+Table of Contents 
+Error! Bookmark not defined. 
+List of Tables 
+4 
+Introduction 
+5 
+SAMPLE USE CASES 
+6 
+Support of polymorphism and extension patterns 
+7 
+RESOURCE MODEL 
+8 
+Managed Entity and Task Resource Models ............................................................................................................... 8 
+FIRST resource .......................................................................................................... Error! Bookmark not defined. 
+Notification Resource Models .................................................................................................................................. 31 
+First Notification ....................................................................................................... Error! Bookmark not defined. 
+API OPERATIONS 
+35 
+VERB  url ...................................................................................................................... Error! Bookmark not defined. 
+API NOTIFICATIONS 
+62 
+Register listener ........................................................................................................................................................ 62 
+Unregister listener .................................................................................................................................................... 64 
+Publish Event to listener ........................................................................................................................................... 64 
+Acknowledgements 
+73 
+Release History ......................................................................................................................................................... 73 
+Contributors to Document........................................................................................................................................ 73 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 4 sur 74 
+ 
+List of Tables 
+ 
+N/A 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 5 sur 74 
+ 
+Introduction 
+ 
+ 
+The following document is the specification of the REST API for customer quote management. It includes the model 
+definition as well as all available operations. Possible actions are creating, updating and retrieving customer quotes.  
+The customer Quote API provides a standardized mechanism for placing a customer quote with all of the necessary 
+quote parameters. The API consists of a simple set of operations that interact with CRM/Order Negotiation systems 
+in a consistent manner. A customer quote is created based on a product offer that is defined in a catalog. The quote 
+identifies the product or set of products that are available to a customer, and includes characteristics such as pricing 
+(eventually special pricing for the customer described in the quote), product options and agreement.  
+Quote API performs the following operations on customer quote: 
+- 
+Retrieval of a customer quote or a collection of customer quote depending on filter criteria 
+- 
+Partial update of a customer quote (including updating rules) 
+- 
+Creation of a customer quote (including versioning, default values and creation rules) 
+- 
+Deletion of customer quote (for administration purposes) 
+- 
+Notification of events on quote 
+o Quote creation 
+o Quote removal 
+o Quote state change 
+o Quote value change used to notify that any data in an quote has just changed 
+o Quote information required used to notify that some data in the quote need to be filled / are missing 
+o Quote is a pending state waiting approval (for the whole quote or only for quote item) 
+o quote is accepted by the customer but there is a least one agreement to be signed 
+ 
+The following Assumptions were considered in the development of this document: 
+- 
+The customer quote management system has access to the commercial catalog system.  
+- 
+Supplier Quote is not managed in the scope of this document 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 6 sur 74 
+ 
+Sample Use Cases 
+Reader will find example of use cases using Usage API in “Open Digital Business Scenarios and Use Cases” document. 
+The following table maps out the UC case with Internal/External actors. An internal actor is a representative of the 
+ISP – an external is typically a representative of the prospect/customer. 
+ 
+UC 
+Actor 
+Rule 
+A new quote or a new version of a 
+quote is created 
+Internal 
+External (Customer) 
+ 
+An existing quote should be 
+updated 
+Internal 
+External (Customer) 
+Quote in status In Progress or Pending 
+An existing quote should be 
+validated before to be send to the 
+customer  
+Internal 
+Quote in status In Progress or Pending 
+An existing quote should be 
+updated after submission to the 
+customer 
+Internal 
+External 
+Only status could be updated 
+a quote or a collection of quotes 
+should be retrieved 
+Internal 
+External (customer) 
+For an external access special checks and 
+conditions are required (quote status, 
+fields retrieved) 
+For technical reason a quote should 
+be removed 
+Internal 
+ 
+ 
+In order to illustrate JSON message we will use a Quote with following features: 
+• 
+A global authorization  
+• 
+3 quote items: 
+• 
+For 10 lines for a TMF Tarif plan –  an 10% off catalog price will be awared 
+• 
+For 10 handsets (a commercial brochure will be provided in quote respone) 
+• 
+For a support free for the 12 first months. 
+ 
+ 
+ 
+ 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 7 sur 74 
+ 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance a PricingRequest and Quoting inheriting properties from the Quote entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of Quote 
+instances some may be instances of PricingRequest where other could be instances of Quoting. The @type gives this 
+information. All resources and sub-resources of this API have a @type attributes that can be provided when this is 
+useful. 
+The @referredType can be used within reference entities (like for instance a QuoteRef object) to explicitly denote 
+the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes the class 
+type of the reference itself, such as PricingRequestRef or QuotingRef, and not the class type of the referred object. 
+However since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 8 sur 74 
+ 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Quote resource 
+Quote can be used to negotiate service and product acquisition or modification between a customer and a service 
+provider. Quote contain list of quote items, a reference to customer (partyRole), a list of productOffering and 
+attached prices and conditions. 
+
+
+ 
+©TM Forum 2019. All Rights Reserved. 
+Resource model 
+ 
+
+
+ 
+©TM Forum 2019. All Rights Reserved. 
+Lifecycle 
+ 
+State definition:  
+ State 
+Definition 
+InProgress  
+The In Progress state is when the quote is currently in the hands of the SP sales team to 
+build it regarding customer requirements. The quote is under construction and needs more 
+information. Everything should be updatable in this state 
+Pending  
+The Pending state is used when a quote needs to be validated from the SP perspective for 
+tariff validation or to capture detailed information. The Pending state could be only for 
+some quote items. 
+Approved  
+The Approved state is where the quote has been internally approved and sent to the 
+customer. The quote is no longer updatable.  
+Cancelled  
+The Cancelled state is when the quote process is stopped from a SP decision. A cancelled 
+quote has never been send to the customer. 
+Accepted  
+The Accepted state is used when the customer agreed to commit to the order and signed 
+the quote.  
+Rejected  
+The Rejected state is used when the customer does not wish to progress with the 
+quotation. It could his final decision and no other quote will be initiated from this quote or 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 11 sur 74 
+ 
+it could be during negotiation phase and a new quote version is triggered from this quote. 
+This new version of the quote is created with the in Progress state. 
+ 
+Quote Item State 
+Significance 
+In Progress  
+The In Progress state is when the quote item is currently in the hands of the SP sales team 
+to build it regarding customer requirements. The quote item is under construction and 
+should need more information. Everything should be updatable in this state 
+Pending  
+The Pending state is used when a quote item needs to be validated from the SP 
+perspective for tariff validation or to capture detailed information.  
+Approved  
+The Approved state is where the quote has been internally approved and sent to the 
+customer. When the quote is shifted to the Approved state, all quote item are marked as 
+Approved  
+Rejected  
+The Rejected state is used when the customer does not wish to progress with the 
+quotation. It could be for the whole quote or for only some quote item. If at least one 
+quote item is rejected the quote is rejected.  
+ 
+At the quote level it could his final decision and no other quote will be initiated from this 
+quote or it could be during negotiation phase and a new quote version is triggered from 
+this quote. All quote item will be set as In Progress in this new version. 
+ 
+Note that the quote and quote item states are tightly linked and need to be consistent – To provide example of 
+rules (informative): 
+Quote status 
+Quote item status eligible 
+In Progress 
+In Progress 
+Pending 
+Pending 
+In Progress 
+Validated 
+Validated 
+Cancelled 
+Pending 
+In Progress 
+Accepted 
+Validated 
+ 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 12 sur 74 
+ 
+Field descriptions 
+Quote fields 
+agreement 
+A list of agreement references (AgreementRef [*]). A reference to an 
+agreement defining the context of the quote. 
+authorization 
+A list of authorizations (Authorization [*]). An authorization provided for the 
+quote. 
+billingAccount 
+A list of billing account references (BillingAccountRef [*]). A reference to a 
+billing account to provide quote context information. 
+category 
+A string. Used to categorize the quote from a business perspective that can 
+be useful for the CRM system (e.g. "enterprise", "residential", ...). 
+contactMedium 
+A list of contact mediums (ContactMedium [*]). Information contact related 
+to the quote requester. 
+description 
+A string. Description of the quote. 
+effectiveQuoteCompletionDate 
+A date time (DateTime). Date when the quote has been completed. 
+expectedFulfillmentStartDate 
+A date time (DateTime). this is the date wished by the requester to have the 
+requested quote item delivered. 
+expectedQuoteCompletionDate 
+A date time (DateTime). This is expected date - from quote supplier - to be 
+able to send back  a response for this quote. 
+externalId 
+A string. ID given by the consumer and only understandable by him (to 
+facilitate his searches afterwards). 
+href 
+A string. Hyperlink to access the quote. 
+id 
+A string. Unique identifier - attributed by quoting system. 
+instantSyncQuote 
+A boolean. An indicator which when the value is "true" means that requester 
+expects to get quoting result immediately in the response. If the indicator is 
+true then the response code of 200 indicates the operation is successful 
+otherwise a task is created with a response 201. 
+note 
+A list of notes (Note [*]). Free form text associated with the quote. 
+productOfferingQualification 
+A list of product offering qualification references 
+(ProductOfferingQualificationRef [*]). A reference to a previously done 
+product offering qualification. 
+quoteDate 
+A date time (DateTime). Date and time when the quote was created. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 13 sur 74 
+ 
+quoteItem 
+A list of quote items (QuoteItem [1..*]). An item of the quote - it is used to 
+descirbe an operation on a product to be quoted. 
+quoteTotalPrice 
+A list of quote prices (QuotePrice [*]). Quote total price. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A reference to a party playing a role 
+in this quote (customer, seller, requester, etc.). 
+requestedQuoteCompletionDate A date time (DateTime). This is requested date - from quote requester - to get 
+a complete response for this quote. 
+state 
+A quote state type (QuoteStateType). State of the quote : described in the 
+state-machine diagram. 
+validFor 
+A time period. Quote validity period. 
+version 
+A string. Quote version - if the customer rejected the quote but  negotiations 
+still open a new version of the quote is managed. 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. For AttachmentRefOrValue, the attribute type,schemaLocation and 
+referredType are related to the contained entity and not to AttchmentRefOrValue itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+A string. URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+url 
+A string. Uniform Resource Locator, is a web page address (a subset of URI). 
+href 
+A string. URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+name 
+A string. The name of the attachment. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A string. The actual contents of the attachment object, if embedded, encoded as 
+base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+A string. URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 14 sur 74 
+ 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+A string. Uniform Resource Locator, is a web page address (a subset of URI). 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Authorization sub-resource 
+If special discount or special product offering price or specific condition need an approval for ISP sale 
+representative it is described here. 
+approver 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+givenDate 
+A date time (DateTime). Date when the authorization (approved or declined) was 
+done. 
+name 
+A string. Name of the required authorization. 
+requestedDate 
+A date time (DateTime). Date when the authorization is requested for. 
+signatureRepresentation A string. To describe a digital or manual signature. 
+state 
+A string. State of the authorization, such as: approved or declined. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 15 sur 74 
+ 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping instalation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Money sub-resource 
+A base / value business entity used to represent money. 
+unit 
+A string. Currency (ISO4217 norm uses 3 letters to define the currency). 
+value 
+A float. A positive floating point number. 
+Note sub-resource 
+Extra information about a given entity. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be globally 
+unique, depending on provider implementation). 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 16 sur 74 
+ 
+text 
+A string. Text of the note. 
+Price sub-resource 
+Provides all amounts (tax included, duty free, tax rate), used currency and percentage to apply for Price Alteration. 
+dutyFreeAmount 
+A money (Money). All taxes excluded amount (expressed in the given currency). 
+percentage 
+A float. Percentage to apply for ProdOfferPriceAlteration. 
+taxIncludedAmount 
+A money (Money). All taxes included amount (expressed in the given currency). 
+taxRate 
+A float. Tax rate. 
+PriceAlteration sub-resource 
+Is an amount, usually of money, that modifies the price charged for an order item. 
+applicationDuration 
+An integer. Duration during which the alteration applies on the order item price (for 
+instance 2 months free of charge for the recurring charge). 
+description 
+A string. A narrative that explains in detail the semantics of this order item price 
+alteration. 
+name 
+A string. Name of the order item price alteration. 
+price 
+A price (Price). Provides all amounts (tax included, duty free, tax rate), used currency 
+and percentage to apply for Price Alteration. 
+priceType 
+A string. A category that describes the price such as recurring, one time and usage. 
+priority 
+An integer. Priority level for applying this alteration among all the defined alterations 
+on the order item price. 
+productOfferingPrice 
+A product offering price reference (ProductOfferingPriceRef). ProductPriceOffering 
+reference. An amount, usually of money, that is asked for or allowed when a 
+ProductOffering is bought, rented, or leased. 
+recurringChargePeriod 
+A string. Could be month, week... 
+unitOfMeasure 
+A string. Could be minutes, GB... 
+ProductPrice sub-resource 
+An amount, usually of money, that represents the actual price paid by a Customer for a purchase, a rent or a lease 
+of a Product. The price is valid for a defined period of time. 
+billingAccount 
+A billing account reference (BillingAccountRef). A BillingAccount is a detailed 
+description of a bill structure. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 17 sur 74 
+ 
+description 
+A string. A narrative that explains in detail the semantics of this product price. 
+name 
+A string. A short descriptive name such as "Subscription price". 
+price 
+A price (Price). Provides all amounts (tax included, duty free, tax rate), used currency 
+and percentage to apply for Price Alteration. 
+priceType 
+A string. A category that describes the price, such as recurring, discount, allowance, 
+penalty, and so forth. 
+productOfferingPrice 
+A product offering price reference (ProductOfferingPriceRef). ProductPriceOffering 
+reference. An amount, usually of money, that is asked for or allowed when a 
+ProductOffering is bought, rented, or leased. 
+productPriceAlteration A list of price alterations (PriceAlteration [*]). Is an amount, usually of money, that 
+modifies the price charged for an order item. 
+recurringChargePeriod 
+A string. Could be month, week... 
+unitOfMeasure 
+A string. Could be minutes, GB... 
+ProductRefOrValue sub-resource 
+A product to be created defined by value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the product entity and not the RelatedProductRefOrValue class 
+itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the product. 
+id 
+A string. Unique identifier of the product. 
+name 
+A string. Name of the product. It could be the same as the name of the product 
+offering. 
+description 
+A string. Is the description of the product. It could be copied from the description of 
+the Product Offering. 
+href 
+A string. Reference of the product. 
+id 
+A string. Unique identifier of the product. 
+isBundle 
+A boolean. If true, the product is a ProductBundle which is an instantiation of a 
+BundledProductOffering. If false, the product is a ProductComponent which is an 
+instantiation of a SimpleProductOffering. 
+isCustomerVisible 
+A boolean. If true, the product is visible by the customer. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 18 sur 74 
+ 
+name 
+A string. Name of the product. It could be the same as the name of the product 
+offering. 
+orderDate 
+A date time (DateTime). Is the date when the product was ordered. 
+productSerialNumber 
+A string. Is the serial number for the product. This is typically applicable to tangible 
+products e.g. Broadband Router. 
+startDate 
+A date time (DateTime). Is the date from which the product starts. 
+terminationDate 
+A date time (DateTime). Is the date when the product was terminated. 
+agreement 
+A list of agreement item references (AgreementItemRef [*]). Agreement reference. 
+An agreement represents a contract or arrangement, either written or verbal and 
+sometimes enforceable by law, such as a service level agreement or a customer price 
+agreement. An agreement involves a number of other business entities, such as 
+products, services, and resources and/or their specifications. 
+billingAccount 
+A billing account reference (BillingAccountRef). A BillingAccount is a detailed 
+description of a bill structure. 
+place 
+A list of related place ref or values (RelatedPlaceRefOrValue [*]). Related Entity 
+reference. A related place defines a place described by reference or by value linked to 
+a specific entity. The polymorphic attributes @type, @schemaLocation & 
+@referredType are related to the place entity and not the RelatedPlaceRefOrValue 
+class itself. 
+product 
+A list of product ref or values (ProductRefOrValue [*]). A product to be created 
+defined by value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the product entity and not the 
+RelatedProductRefOrValue class itself. 
+productCharacteristic 
+A list of characteristics (Characteristic [*]). Describes a given characteristic of an 
+object or entity through a name/value pair. 
+productOffering 
+A product offering reference (ProductOfferingRef). A product offering represents 
+entities that are orderable from the provider of the catalog, this resource includes 
+pricing information. 
+productOrderItem 
+A list of related product order items (RelatedProductOrderItem [*]). 
+RelatedProductOrderItem (ProductOrder item) .The product order item which 
+triggered product creation/change/termination. 
+productPrice 
+A list of product prices (ProductPrice [*]). An amount, usually of money, that 
+represents the actual price paid by a Customer for a purchase, a rent or a lease of a 
+Product. The price is valid for a defined period of time. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 19 sur 74 
+ 
+productRelationship 
+A list of product relationships (ProductRelationship [*]). Linked products to the one 
+instantiate, such as [bundled] if the product is a bundle and you want to describe the 
+bundled products inside this bundle; [reliesOn] if the product needs another already 
+owned product to rely on (e.g. an option on an already owned mobile access product) 
+[targets] or [isTargeted] (depending on the way of expressing the link) for any other 
+kind of links that may be useful. 
+productSpecification 
+A product specification reference (ProductSpecificationRef). A ProductSpecification is 
+a detailed description of a tangible or intangible object made available externally in 
+the form of a ProductOffering to customers or other parties playing a party role. 
+productTerm 
+A list of product terms (ProductTerm [*]). Description of a productTerm linked to this 
+product. This represent a commitment with a duration. 
+realizingResource 
+A list of resource references (ResourceRef [*]). 
+realizingService 
+A list of service references (ServiceRef [*]). for when Service is used by other entities. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+status 
+A product status type (ProductStatusType). Is the lifecycle status of the product. 
+ProductRelationship sub-resource 
+Linked products to the one instantiate, such as [bundled] if the product is a bundle and you want to describe the 
+bundled products inside this bundle; [reliesOn] if the product needs another already owned product to rely on (e.g. 
+an option on an already owned mobile access product) [targets] or [isTargeted] (depending on the way of 
+expressing the link) for any other kind of links that may be useful. 
+product 
+A product ref or value (ProductRefOrValue). A product to be created defined by value 
+or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the product entity and not the 
+RelatedProductRefOrValue class itself. 
+relationshipType 
+A string. Type of the product relationship, such as [bundled] if the product is a bundle 
+and you want to describe the bundled products inside this bundle; [reliesOn] if the 
+product needs another already owned product to rely on (e.g. an option on an already 
+owned mobile access product) [targets] or [isTargeted] (depending on the way of 
+expressing the link) for any other kind of links that may be useful. 
+ProductTerm sub-resource 
+Description of a productTerm linked to this product. This represent a commitment with a duration. 
+description 
+A string. Description of the productTerm. 
+duration 
+A quantity (Quantity). Duration of the productTerm. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 20 sur 74 
+ 
+name 
+A string. Name of the productTerm. 
+validFor 
+A time period. productTerm validity period. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+QuoteItem sub-resource 
+A quote items describe an action to be performed on a productOffering or a product in order to get pricing 
+elements and condition. 
+action 
+A string. Action to be performed on this quote item (add, modify, remove, 
+etc.). 
+appointment 
+A list of appointment references (AppointmentRef [*]). A reference to 
+appointment(s) associated with this quote item. 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). A reference to 
+attachment(s) associated with this quote item. 
+id 
+A string. Identifier of the quote item (generally it is a sequence number 01, 
+02, 03, ...). 
+note 
+A list of notes (Note [*]). Free form text associated with the quote item. 
+product 
+A product ref or value (ProductRefOrValue). A product to be created defined 
+by value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the product entity and 
+not the RelatedProductRefOrValue class itself. 
+productOffering 
+A product offering reference (ProductOfferingRef). A product offering 
+represents entities that are orderable from the provider of the catalog, this 
+resource includes pricing information. 
+productOfferingQualificationItem A product offering qualification item reference 
+(ProductOfferingQualificationItemRef). A reference to a previously done POQ 
+with item specified. 
+quantity 
+An integer. Quantity asked for this quote item. 
+quoteItem 
+A list of quote items (QuoteItem [*]). A structure to embedded quote item 
+within quote item. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 21 sur 74 
+ 
+quoteItemAuthorization 
+A list of authorizations (Authorization [*]). Authorization related to this 
+quote item. 
+quoteItemPrice 
+A list of quote prices (QuotePrice [*]). Price for this quote item. 
+quoteItemRelationship 
+A list of quote item relationships (QuoteItemRelationship [*]). A relationship 
+from item within a quote. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A reference to a party playing a 
+role in this quote item. 
+state 
+A string. State of the quote item : described in the state machine diagram. 
+QuoteItemRelationship sub-resource 
+Used to describe relationship between quote item. These relationship could have an impact on pricing and 
+conditions. 
+id 
+A string. ID of the related order item (must be in the same quote). 
+relationshipType 
+A string. Relationship type as relies on, bundles, etc... 
+QuotePrice sub-resource 
+Description of price and discount awarded. 
+description 
+A string. Description of the quote/quote item price. 
+name 
+A string. Name of the quote /quote item price. 
+price 
+A price (Price). Provides all amounts (tax included, duty free, tax rate), used currency 
+and percentage to apply for Price Alteration. 
+priceAlteration 
+A list of price alterations (PriceAlteration [*]). Is an amount, usually of money, that 
+modifies the price charged for an order item. 
+priceType 
+A string. indicate if the price is for recurrent or no-recurrent charge. 
+productOfferingPrice 
+A product offering price reference (ProductOfferingPriceRef). An amount, usually of 
+money, that is asked for or allowed when a ProductOffering is bought, rented, or 
+leased. The price is valid for a defined period of time. 
+recurringChargePeriod 
+A string. Used for recurring charge to indicate period (month, week, etc..). 
+unitOfMeasure 
+A string. Unit of Measure if price depending on it (Gb, SMS volume, etc..). 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 22 sur 74 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. Role played by the related party. 
+RelatedPlaceRefOrValue sub-resource 
+Related Entity reference. A related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are related to the place entity and 
+not the RelatedPlaceRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+role 
+A string. 
+RelatedProductOrderItem sub-resource 
+RelatedProductOrderItem (ProductOrder item) .The product order item which triggered product 
+creation/change/termination. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+orderItemAction 
+A string. Action of the order item for this product. 
+orderItemId 
+A string. Identifier of the order item where the product was managed. 
+productOrderHref 
+A string. Reference of the related entity. 
+productOrderId 
+A string. Unique identifier of a related entity. 
+role 
+A string. role of the product order item for this product. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 23 sur 74 
+ 
+TargetProductSchema sub-resource 
+The reference object to the schema and type of target product which is described by product specification. 
+@schemaLocation 
+A string. This field provides a link to the schema describing the target product. 
+@type 
+A string. Class type of the target product. 
+AgreementItemRef relationship 
+Agreement reference. An agreement represents a contract or arrangement, either written or verbal and sometimes 
+enforceable by law, such as a service level agreement or a customer price agreement. An agreement involves a 
+number of other business entities, such as products, services, and resources and/or their specifications. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+agreementItemId 
+A string. Identifier of the agreement. 
+AgreementRef relationship 
+Agreement reference. An agreement represents a contract or arrangement, either written or verbal and sometimes 
+enforceable by law, such as a service level agreement or a customer price agreement. An agreement involves a 
+number of other business entities, such as products, services, and resources and/or their specifications. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the agreement. 
+name 
+A string. Name of the agreement. 
+AppointmentRef relationship 
+Refers an appointment, such as a Customer presentation or internal meeting or site visit. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. An explanatory text regarding the appointment made with a party. 
+href 
+A string. The reference of the appointment. 
+id 
+A string. The identifier of the referred appointment. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 24 sur 74 
+ 
+BillingAccountRef relationship 
+BillingAccount reference. A BillingAccount is a detailed description of a bill structure. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the billing account. 
+id 
+A string. Unique identifier of the billing account. 
+name 
+A string. Name of the billing account. 
+ProductOfferingPriceRef relationship 
+ProductPriceOffering reference. An amount, usually of money, that is asked for or allowed when a ProductOffering 
+is bought, rented, or leased. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+ProductOfferingQualificationItemRef relationship 
+It's a productOfferingQualification item that has been executed previously. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Id of an item of a product offering qualification. 
+name 
+A string. Name of the related entity. 
+id 
+A string. Id of an item of a product offering qualification. 
+productOfferingQualificationHref 
+A string. Reference of the related entity. 
+productOfferingQualificationId 
+A string. Unique identifier of a related entity. 
+productOfferingQualificationName A string. Name of the related entity. 
+ProductOfferingQualificationRef relationship 
+It's a productOfferingQualification that has been executed previously. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 25 sur 74 
+ 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+ProductOfferingRef relationship 
+ProductOffering reference. A product offering represents entities that are orderable from the provider of the 
+catalog, this resource includes pricing information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+ProductSpecificationRef relationship 
+Product specification reference: A ProductSpecification is a detailed description of a tangible or intangible object 
+made available externally in the form of a ProductOffering to customers or other parties playing a party role. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+targetProductSchema 
+A target product schema (TargetProductSchema). A target product schema reference. 
+The reference object to the schema and type of target product which is described by 
+product specification. 
+version 
+A string. Version of the product specification. 
+ResourceRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the resource. 
+name 
+A string. Name of the resource. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 26 sur 74 
+ 
+value 
+A string. The resource value that can be used to identify a resource with a public key 
+(e.g.: a tel nr, an msisdn). 
+ServiceRef relationship 
+Service reference, for when Service is used by other entities. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+Json representation sample 
+We provide below the json representation of an example of a 'Quote' resource object 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-013T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-06T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "agreement": [ 
+        { 
+            "id": "7778-jj56", 
+            "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+            "name": "Global Agrrement", 
+            "@type": "Agreement", 
+            "@referredType": "MassAgreement" 
+        } 
+    ], 
+    "billingAccount": [ 
+        { 
+            "id": "BA4569", 
+            "href": "https://host:port/accountManagement/v4/billingAccount/BA4569", 
+            "@type": "BillingAccount" 
+        } 
+    ], 
+  "contactMedium": [ 
+    { 
+      "mediumType": "email", 
+      "preferred": true, 
+      "characteristic": { 
+        "emailAddress": "jean.pontus@PerfectCustomer.com", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 27 sur 74 
+ 
+      }, 
+      "validFor": { 
+        "startDateTime": "2019-05-06T12:45:12.028Z" 
+      } 
+    } 
+  ], 
+    "note": [ 
+        { 
+            "id": "1", 
+            "author": "Jean Pontus", 
+            "date": "2019-05-06T12:45:12.031Z", 
+            "text": "This is a quote request following today call", 
+            "@type": "Note" 
+        } 
+    ], 
+    "productOfferingQualification": [ 
+        { 
+            "id": "22ds-ty55", 
+            "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-ty55" 
+        } 
+    ], 
+    "authorization": [ 
+        { 
+            "givenDate": "2019-05-08T12:45:12.031Z", 
+            "name": "Discount validation", 
+            "requestedDate": "2019-05-09T12:45:12.031Z", 
+            "signatureRepresentation": "Manager approval", 
+            "state": "validated", 
+            "approver": [ 
+                { 
+                    "name": "Joe Doe", 
+                    "role": "B2B Discount approver" 
+                } 
+            ] 
+        } 
+    ], 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+            "@type": "QuoteItem", 
+            "action": "add", 
+            "quantity": 10, 
+            "state": "approved", 
+            "product": { 
+                "@type": "product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 28 sur 74 
+ 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            }, 
+            "quoteItemPrice": [ 
+                { 
+                    "description": "Tariff plan 25 fee", 
+                    "name": "Tariff Plan 25 tariff", 
+                    "priceType": "recurring", 
+                    "recurringChargePeriod": "month", 
+                    "price": { 
+                        "taxRate": 16, 
+                        "dutyFreeAmount": { 
+                            "unit": "EUR", 
+                            "value": 30 
+                        }, 
+                        "taxIncludedAmount": { 
+                            "unit": "EUR", 
+                            "value": 34.8 
+                        } 
+                    }, 
+                    "priceAlteration": [ 
+                        { 
+                            "applicationDuration": 0, 
+                            "description": "Specific Discount for PerfectCustomer company", 
+                            "name": "10% off", 
+                            "priceType": "recurring", 
+                            "priority": 1, 
+                            "recurringChargePeriod": "month", 
+                            "price": { 
+                                "percentage": 10 
+                            } 
+                        } 
+                    ] 
+                } 
+            ] 
+        }, 
+        { 
+            "id": "2", 
+            "@type": "QuoteItem", 
+            "action": "add", 
+            "quantity": 10, 
+            "state": "approved", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 29 sur 74 
+ 
+            "attachment": [ 
+                { 
+                    "attachmentType": "brochure", 
+                    "description": "handset brochure", 
+                    "mimeType": "pdf", 
+                    "name": "Handset commercial brochure.pdf", 
+                    "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                    "size": { 
+                        "amount": 3.7, 
+                        "units": "Mb" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2019-05-06T12:45:12.031Z" 
+                    } 
+                } 
+            ], 
+            "product": { 
+                "@type": "Product", 
+                "productSpecification": { 
+                    "id": "qq45-ytr7", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                    "name": "Handset", 
+                    "version": "1" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "z789-78ga", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                "name": "TMF handset T9+" 
+            }, 
+            "quoteItemPrice": [ 
+                { 
+                    "description": "Handset", 
+                    "name": "Handset Fee", 
+                    "priceType": "nonRecurring", 
+                    "price": { 
+                        "taxRate": 16, 
+                        "dutyFreeAmount": { 
+                            "unit": "EUR", 
+                            "value": 350 
+                        }, 
+                        "taxIncludedAmount": { 
+                            "unit": "EUR", 
+                            "value": 406 
+                        } 
+                    } 
+                } 
+            ] 
+        }, 
+        { 
+            "id": "3", 
+            "@type": "QuoteItem", 
+            "action": "add", 
+            "quantity": 1, 
+            "state": "approved", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 30 sur 74 
+ 
+            "productOffering": { 
+                "id": "ssdd-4dfd", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                "name": "Gold Support" 
+            }, 
+            "quoteItemPrice": [ 
+                { 
+                    "description": "Gold support annual fee", 
+                    "name": "GoldAnnualFee", 
+                    "priceType": "recurring", 
+                    "recurringChargePeriod": "year", 
+                    "price": { 
+                        "taxRate": 16, 
+                        "dutyFreeAmount": { 
+                            "unit": "EUR", 
+                            "value": 100 
+                        }, 
+                        "taxIncludedAmount": { 
+                            "unit": "EUR", 
+                            "value": 116 
+                        } 
+                    }, 
+                    "priceAlteration": [ 
+                        { 
+                            "applicationDuration": 1, 
+                            "description": "First year free", 
+                            "name": "FreeYear", 
+                            "priceType": "recurring", 
+                            "priority": 1, 
+                            "recurringChargePeriod": "year", 
+                            "price": { 
+                                "percentage": 100 
+                            } 
+                        } 
+                    ] 
+                } 
+            ] 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Jean Pontus", 
+            "role": "Buyer Contact", 
+            "id": "qsdd-9888", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 31 sur 74 
+ 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "approved", 
+    "validFor": { 
+        "endDateTime": "2019-05-06T12:45:12.033Z", 
+        "startDateTime": "2019-05-06T12:45:12.033Z" 
+    }, 
+    "@type": "Quote" 
+} 
+ 
+Notification Resource Models 
+ 
+5 notifications are defined for this API 
+Notifications related to Quote: 
+    - QuoteCreateEvent 
+    - QuoteStateChangeEvent 
+    - QuoteDeleteEvent 
+    - QuoteInformationRequiredEvent 
+    - QuoteAttributeValueChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 32 sur 74 
+ 
+ 
+Quote Create Event 
+Notification QuoteCreateEvent case for resource Quote 
+Json representation sample 
+We provide below the json representation of an example of a 'QuoteCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"QuoteCreateEvent", 
+     "event": { 
+        "quote" :  
+            {-- SEE Quote RESOURCE SAMPLE --} 
+    } 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 33 sur 74 
+ 
+} 
+ 
+Quote State Change Event 
+Notification QuoteStateChangeEvent case for resource Quote 
+Json representation sample 
+We provide below the json representation of an example of a 'QuoteStateChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"QuoteStateChangeEvent", 
+     "event": { 
+        "quote" :  
+            {-- SEE Quote RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Quote Delete Event 
+Notification QuoteDeleteEvent case for resource Quote 
+Json representation sample 
+We provide below the json representation of an example of a 'QuoteDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"QuoteDeleteEvent", 
+     "event": { 
+        "quote" :  
+            {-- SEE Quote RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Quote Information Required Event 
+Notification QuoteInformationRequiredEvent case for resource Quote 
+Json representation sample 
+We provide below the json representation of an example of a 'QuoteInformationRequiredEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 34 sur 74 
+ 
+    "eventType":"QuoteInformationRequiredEvent", 
+     "event": { 
+        "quote" :  
+            {-- SEE Quote RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Quote Attribute Value Change Event 
+Notification QuoteAttributeValueChangeEvent case for resource Quote 
+Json representation sample 
+We provide below the json representation of an example of a 'QuoteAttributeValueChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"QuoteAttributeValueChangeEvent", 
+     "event": { 
+        "quote" :  
+            {-- SEE Quote RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 35 sur 74 
+ 
+API OPERATIONS 
+Only allowed operations are listed: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Quote 
+GET must be used to retrieve a 
+representation of a resource. 
+ 
+Create Entity 
+POST Quote 
+(could be used to create a new 
+quote version) 
+POST must be used to create a 
+new resource 
+Note that POST Quote with 
+instantSyncResponse set to true 
+will provide quoting in the 
+response; The resource could 
+not be created in this case (up 
+to API provider). In this case 
+code 200 is send back. 
+If resource is created code 201 
+is send back. 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to partially 
+update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to remove 
+a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Quote 
+List quotes 
+  GET /quote?fields=...&{filtering} 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 36 sur 74 
+ 
+Description 
+This operation list quote entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of quote(s). The given criteria is the state (inProgess) and 
+expectedQuoteCompletionDate (.gt). 
+ 
+Request 
+ 
+GET https://serverRoot/tmf-api/quoteManagement/v4/quote?fields=id,href,expectedQuoteCompletionDate 
+&state=inProgress&expectedQuoteCompletionDate.gt=2019-04-12T12:33:43.331Z 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "9ffg-ze56-ed51", 
+        "href": ".../QuoteManagement/v4/quote/9ffg-ze56-ed51", 
+        "state": "accepted", 
+        "expectedQuoteCompletionDate": "2019-04-11T14:52:21.823Z" 
+    }, 
+    { 
+        "id": "7412", 
+        "href": ".../QuoteManagement/v4/quote/7412", 
+        "state": "approved", 
+        "expectedQuoteCompletionDate": "2019-04-18T14:21:31.325Z" 
+    }, 
+    { 
+        "id": "3214", 
+        "href": ".../QuoteManagement/v4/quote/3214", 
+        "state": "pending", 
+        "expectedQuoteCompletionDate": "2019-04-21T18:08:31.325Z" 
+    }, 
+    { 
+        "id": "6547", 
+        "href": ".../QuoteManagement/v4/quote/6547", 
+        "state": "inProgress", 
+        "expectedQuoteCompletionDate": "2019-04-29T10:48:28.325Z" 
+    } 
+] 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 37 sur 74 
+ 
+Retrieve quote 
+  GET /quote/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a quote entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a quote. The given criteria is the quote id 12dd-78hg. 
+ 
+Request 
+ 
+GET https://serverRoot/tmf-api/quoteManagement/v4/quote/12dd-78hg 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-013T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-06T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "agreement": [ 
+        { 
+            "id": "7778-jj56", 
+            "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+            "name": "Global Agrrement", 
+            "@baseType": "Agreement", 
+            "@referredType": "MassAgreement" 
+        } 
+    ], 
+    "billingAccount": [ 
+        { 
+            "id": "BA4569", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 38 sur 74 
+ 
+            "href": "https://host:port/accountManagement/v4/billingAccount/BA4569" 
+        } 
+    ], 
+  "contactMedium": [ 
+    { 
+      "mediumType": "email", 
+      "preferred": true, 
+      "characteristic": { 
+        "emailAddress": "jean.pontus@PerfectCustomer.com", 
+      }, 
+      "validFor": { 
+        "startDateTime": "2019-05-06T12:45:12.028Z" 
+      } 
+    } 
+  ], 
+    "note": [ 
+        { 
+            "id": "1", 
+            "author": "Jean Pontus", 
+            "date": "2019-05-06T12:45:12.031Z", 
+            "text": "This is a quote request following today call" 
+        } 
+    ], 
+    "productOfferingQualification": [ 
+        { 
+            "id": "22ds-ty55", 
+            "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-ty55" 
+        } 
+    ], 
+    "authorization": [ 
+        { 
+            "givenDate": "2019-05-08T12:45:12.031Z", 
+            "name": "Discount validation", 
+            "requestedDate": "2019-05-09T12:45:12.031Z", 
+            "signatureRepresentation": "Manager approval", 
+            "state": "validated", 
+            "approver": [ 
+                { 
+                    "name": "Joe Doe", 
+                    "role": "B2B Discount approver" 
+                } 
+            ] 
+        } 
+    ], 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "quantity": 10, 
+            "state": "approved", 
+            "product": { 
+                "@type": "Product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 39 sur 74 
+ 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            }, 
+            "quoteItemPrice": [ 
+                { 
+                    "description": "Tariff plan 25 fee", 
+                    "name": "Tariff Plan 25 tariff", 
+                    "priceType": "recurring", 
+                    "recurringChargePeriod": "month", 
+                    "price": { 
+                        "taxRate": 16, 
+                        "dutyFreeAmount": { 
+                            "unit": "EUR", 
+                            "value": 30 
+                        }, 
+                        "taxIncludedAmount": { 
+                            "unit": "EUR", 
+                            "value": 34.8 
+                        } 
+                    }, 
+                    "priceAlteration": [ 
+                        { 
+                            "applicationDuration": 0, 
+                            "description": "Specific Discount for PerfectCustomer company", 
+                            "name": "10% off", 
+                            "priceType": "recurring", 
+                            "priority": 1, 
+                            "recurringChargePeriod": "month", 
+                            "price": { 
+                                "percentage": 10 
+                            } 
+                        } 
+                    ] 
+                } 
+            ] 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 40 sur 74 
+ 
+        }, 
+        { 
+            "id": "2", 
+            "action": "add", 
+            "quantity": 10, 
+            "state": "approved", 
+            "attachment": [ 
+                { 
+                    "attachmentType": "brochure", 
+                    "description": "handset brochure", 
+                    "mimeType": "pdf", 
+                    "name": "Handset commercial brochure.pdf", 
+                    "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                    "size": { 
+                        "amount": 3.7, 
+                        "units": "Mb" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2019-05-06T12:45:12.031Z" 
+                    } 
+                } 
+            ], 
+            "product": { 
+                "@type": "Product", 
+                "productSpecification": { 
+                    "id": "qq45-ytr7", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                    "name": "Handset", 
+                    "version": "1" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "z789-78ga", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                "name": "TMF handset T9+" 
+            }, 
+            "quoteItemPrice": [ 
+                { 
+                    "description": "Handset", 
+                    "name": "Handset Fee", 
+                    "priceType": "nonRecurring", 
+                    "price": { 
+                        "taxRate": 16, 
+                        "dutyFreeAmount": { 
+                            "unit": "EUR", 
+                            "value": 350 
+                        }, 
+                        "taxIncludedAmount": { 
+                            "unit": "EUR", 
+                            "value": 406 
+                        } 
+                    } 
+                } 
+            ] 
+        }, 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 41 sur 74 
+ 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "quantity": 1, 
+            "state": "approved", 
+            "productOffering": { 
+                "id": "ssdd-4dfd", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                "name": "Gold Support" 
+            }, 
+            "quoteItemPrice": [ 
+                { 
+                    "description": "Gold support annual fee", 
+                    "name": "GoldAnnualFee", 
+                    "priceType": "recurring", 
+                    "recurringChargePeriod": "year", 
+                    "price": { 
+                        "taxRate": 16, 
+                        "dutyFreeAmount": { 
+                            "unit": "EUR", 
+                            "value": 100 
+                        }, 
+                        "taxIncludedAmount": { 
+                            "unit": "EUR", 
+                            "value": 116 
+                        } 
+                    }, 
+                    "priceAlteration": [ 
+                        { 
+                            "applicationDuration": 1, 
+                            "description": "First year free", 
+                            "name": "FreeYear", 
+                            "priceType": "recurring", 
+                            "priority": 1, 
+                            "recurringChargePeriod": "year", 
+                            "price": { 
+                                "percentage": 100 
+                            } 
+                        } 
+                    ] 
+                } 
+            ] 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Jean Pontus", 
+            "role": "Buyer Contact", 
+            "id": "qsdd-9888", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 42 sur 74 
+ 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "approved", 
+    "validFor": { 
+        "endDateTime": "2019-05-06T12:45:12.033Z", 
+        "startDateTime": "2019-05-06T12:45:12.033Z" 
+    }, 
+    "@type": "Quote" 
+} 
+ 
+Create quote 
+  POST /quote 
+Description 
+This operation creates a quote entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a Quote, including 
+any possible rule conditions and applicable default values. Notice that it is up to an implementer to add additional 
+mandatory attributes. 
+Mandatory Attributes 
+Rule 
+quoteItem 
+At least one quoteItem must be present 
+ 
+Non Mandatory Attributes 
+Rule 
+agreement 
+ 
+authorization 
+Must be not provided in the POST request 
+billingAccount 
+ 
+category 
+ 
+contactMedium 
+ 
+description 
+ 
+effectiveQuoteCompletionDate 
+Must be not provided in the POST request 
+expectedFulfillmentStartDate 
+ 
+expectedQuoteCompletionDate 
+Must be not provided in the POST request 
+externalId 
+ 
+instantSyncQuote 
+By default False 
+note 
+ 
+productOfferingQualification 
+ 
+quoteDate 
+Must be not provided in the POST request 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 43 sur 74 
+ 
+quoteTotalPrice 
+ 
+relatedParty 
+ 
+requestedQuoteCompletionDate 
+ 
+state 
+ 
+validFor 
+ 
+version 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships when 
+creating a Quote resource. 
+Context 
+Mandatory Sub-Attributes 
+relatedParty 
+id, @referredType 
+note 
+text, id 
+billingAccount 
+id 
+agreement 
+id 
+productOffering 
+id 
+realizingService 
+id 
+realizingResource 
+id 
+productRelationship 
+relationshipType, product 
+quoteItemRelationship 
+id, relationshipType 
+productSpecification 
+id 
+relatedPlace 
+role, @referredType 
+productOrderItem 
+productOrderId 
+quotePrice 
+priceType 
+productOfferingQualification 
+id 
+appointment 
+id 
+productOfferingQualificationItem 
+productOfferingQualificationId, id 
+ 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+When creating a quote (post) a quote item should not have the state field valued 
+When creating a quote (post) a quote item should not have the quoteItemAuthorization valued 
+When creating a quote (post) a quote item should not have the quoteItemPrice valued 
+if quantity is not specified, by defaut 1 is considered 
+ 
+Usage Samples 
+Here's an example of a request for creating a quote with instantSync set to false - a quote resource is created -  the 
+resulting quote is 87h-98g. 
+ 
+Request 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 44 sur 74 
+ 
+POST https://serverRoot/tmf-api/quoteManagement/v4/quote 
+Content-Type: application/json 
+ 
+{ 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "agreement": [ 
+        { 
+            "id": "7778-jj56", 
+            "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+            "name": "Global Agrrement", 
+            "@baseType": "Agreement", 
+            "@referredType": "MassAgreement" 
+        } 
+    ], 
+    "billingAccount": [ 
+        { 
+            "id": "BA4569", 
+            "href": "https://host:port/accountManagement/v4/billingAccount/BA4569" 
+        } 
+    ], 
+  "contactMedium": [ 
+    { 
+      "mediumType": "email", 
+      "preferred": true, 
+      "characteristic": { 
+        "emailAddress": "jean.pontus@PerfectCustomer.com", 
+      }, 
+      "validFor": { 
+        "startDateTime": "2019-05-06T12:45:12.028Z" 
+      } 
+    } 
+  ], 
+    "note": [ 
+        { 
+            "id": "1", 
+            "author": "Jean Pontus", 
+            "date": "2019-05-06T12:45:12.031Z", 
+            "text": "This is a quote request following today call", 
+            "@type": "Note" 
+        } 
+    ], 
+    "productOfferingQualification": [ 
+        { 
+            "id": "22ds-ty55", 
+            "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-ty55" 
+        } 
+    ], 
+    "quoteItem": [ 
+        { 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 45 sur 74 
+ 
+            "id": "1", 
+            "action": "add", 
+            "quantity": 10, 
+            "product": { 
+                "@type": "product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            } 
+        }, 
+        { 
+            "id": "2", 
+            "action": "add", 
+            "quantity": 10, 
+            "attachment": [ 
+                { 
+                    "attachmentType": "brochure", 
+                    "description": "handset brochure", 
+                    "mimeType": "pdf", 
+                    "name": "Handset commercial brochure.pdf", 
+                    "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                    "size": { 
+                        "amount": 3.7, 
+                        "units": "Mb" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2019-05-06T12:45:12.031Z" 
+                    } 
+                } 
+            ], 
+            "product": { 
+                "@type": "product", 
+                "productSpecification": { 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 46 sur 74 
+ 
+                    "id": "qq45-ytr7", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                    "name": "Handset", 
+                    "version": "1" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "z789-78ga", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                "name": "TMF handset T9+" 
+            } 
+        }, 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "quantity": 1, 
+            "productOffering": { 
+                "id": "ssdd-4dfd", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                "name": "Gold Support" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Jean Pontus", 
+            "role": "Buyer Contact", 
+            "id": "qsdd-9888", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "Quote" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "12dd-78hg", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 47 sur 74 
+ 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-06T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "agreement": [ 
+        { 
+            "id": "7778-jj56", 
+            "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+            "name": "Global Agreement", 
+            "@baseType": "Agreement", 
+            "@referredType": "MassAgreement" 
+        } 
+    ], 
+    "billingAccount": [ 
+        { 
+            "id": "BA4569", 
+            "href": "https://host:port/accountManagement/v4/billingAccount/BA4569" 
+        } 
+    ], 
+  "contactMedium": [ 
+    { 
+      "mediumType": "email", 
+      "preferred": true, 
+      "characteristic": { 
+        "emailAddress": "jean.pontus@PerfectCustomer.com", 
+      }, 
+      "validFor": { 
+        "startDateTime": "2019-05-06T12:45:12.028Z" 
+      } 
+    } 
+  ], 
+    "note": [ 
+        { 
+            "id": "1", 
+            "author": "Jean Pontus", 
+            "date": "2019-05-06T12:45:12.031Z", 
+            "text": "This is a quote request following today call" 
+        } 
+    ], 
+    "productOfferingQualification": [ 
+        { 
+            "id": "22ds-ty55", 
+            "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-ty55" 
+        } 
+    ], 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 48 sur 74 
+ 
+            "quantity": 10, 
+            "state": "inProgress", 
+            "product": { 
+                "@type": "Product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            } 
+        }, 
+        { 
+            "id": "2", 
+            "action": "add", 
+            "quantity": 10, 
+            "state": "inProgress", 
+            "attachment": [ 
+                { 
+                    "attachmentType": "brochure", 
+                    "description": "handset brochure", 
+                    "mimeType": "pdf", 
+                    "name": "Handset commercial brochure.pdf", 
+                    "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                    "size": { 
+                        "amount": 3.7, 
+                        "units": "Mb" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2019-05-06T12:45:12.031Z" 
+                    } 
+                } 
+            ], 
+            "product": { 
+                "@type": "Product", 
+                "productSpecification": { 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 49 sur 74 
+ 
+                    "id": "qq45-ytr7", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                    "name": "Handset", 
+                    "version": "1" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "z789-78ga", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                "name": "TMF handset T9+" 
+            } 
+        }, 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "quantity": 1, 
+            "state": "inProgress", 
+            "productOffering": { 
+                "id": "ssdd-4dfd", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                "name": "Gold Support" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Jean Pontus", 
+            "role": "Buyer Contact", 
+            "id": "qsdd-9888", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "inProgress", 
+    "@type": "Quote" 
+} 
+ 
+ 
+Here's an example of a request for creating a quote with instantSync set to true - quoting result is directly provided 
+in response and not resource is created. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 50 sur 74 
+ 
+ 
+Request 
+ 
+POST https://serverRoot/tmf-api/quoteManagement/v4/quote 
+Content-Type: application/json 
+ 
+{ 
+    "category": "BSBS Quote", 
+    "description": "instantSyncQuote Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "instantSyncQuote": true, 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "quantity": 1, 
+            "product": { 
+                "@type": "Product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Jean Pontus", 
+            "role": "Buyer Contact", 
+            "id": "qsdd-9888", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 51 sur 74 
+ 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "@type": "Quote" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "category": "BSBS Quote", 
+    "description": "instantSyncQuote Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-013T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "instantSyncQuote": true, 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "quantity": 1, 
+            "product": { 
+                "@type": "Product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            }, 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 52 sur 74 
+ 
+            "quoteItemPrice": [ 
+                { 
+                    "description": "Tariff plan 25 fee", 
+                    "name": "Tariff Plan 25 tariff", 
+                    "priceType": "recurring", 
+                    "recurringChargePeriod": "month", 
+                    "price": { 
+                        "taxRate": 16, 
+                        "dutyFreeAmount": { 
+                            "unit": "EUR", 
+                            "value": 30 
+                        }, 
+                        "taxIncludedAmount": { 
+                            "unit": "EUR", 
+                            "value": 34.8 
+                        } 
+                    }, 
+                    "priceAlteration": [ 
+                        { 
+                            "applicationDuration": 0, 
+                            "description": "Specific Discount for PerfectCustomer company", 
+                            "name": "10% off", 
+                            "priceType": "recurring", 
+                            "priority": 1, 
+                            "recurringChargePeriod": "month", 
+                            "price": { 
+                                "percentage": 10 
+                            } 
+                        } 
+                    ] 
+                } 
+            ] 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Jean Pontus", 
+            "role": "Buyer Contact", 
+            "id": "qsdd-9888", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "validFor": { 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 53 sur 74 
+ 
+        "endDateTime": "2019-05-06T12:45:12.033Z", 
+        "startDateTime": "2019-05-06T12:45:12.033Z" 
+    }, 
+    "@type": "Quote" 
+} 
+ 
+Patch quote 
+  PATCH /quote/{id} 
+Description 
+This operation allows partial updates of a quote entity. Support of json/merge (https://tools.ietf.org/html/rfc7386) 
+is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+agreement 
+ 
+authorization 
+ 
+billingAccount 
+ 
+category 
+ 
+contactMedium 
+ 
+description 
+ 
+effectiveQuoteCompletionDate 
+ 
+expectedFulfillmentStartDate 
+ 
+expectedQuoteCompletionDate 
+ 
+externalId 
+ 
+instantSyncQuote 
+ 
+note 
+ 
+productOfferingQualification 
+ 
+quoteDate 
+ 
+quoteItem 
+ 
+quoteTotalPrice 
+ 
+relatedParty 
+ 
+requestedQuoteCompletionDate 
+ 
+state 
+ 
+validFor 
+ 
+version 
+ 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 54 sur 74 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+ 
+quoteDate 
+ 
+ 
+Additional Rules 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+When creating a quote (post) a quote item should not have the state field valued 
+When creating a quote (post) a quote item should not have the quoteItemAuthorization valued 
+When creating a quote (post) a quote item should not have the quoteItemPrice valued 
+ 
+Usage Samples 
+Here's an example of a request for updating a quote - In this example buyer contact is changed and items 1 & 2 
+quantity is changed to 12. 
+ 
+Request 
+ 
+PATCH https://serverRoot/tmf-api/quoteManagement/v4/quote/12dd-78hg 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "replace", 
+        "path": "/relatedParty/name?relatedParty.role=Buyer Contact", 
+        "value": "Louise Pontus" 
+    }, 
+    { 
+        "op": "replace", 
+        "path": "/quoteItem/quantity?id=2", 
+        "value": 12 
+    }, 
+    { 
+        "op": "replace", 
+        "path": "/quoteItem/quantity?id=3", 
+        "value": 12 
+    } 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 55 sur 74 
+ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-06T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "agreement": [ 
+        { 
+            "id": "7778-jj56", 
+            "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+            "name": "Global Agreement", 
+            "@baseType": "Agreement", 
+            "@referredType": "MassAgreement" 
+        } 
+    ], 
+    "billingAccount": [ 
+        { 
+            "id": "BA4569", 
+            "href": "https://host:port/accountManagement/v4/billingAccount/BA4569" 
+        } 
+    ], 
+  "contactMedium": [ 
+    { 
+      "mediumType": "email", 
+      "preferred": true, 
+      "characteristic": { 
+        "emailAddress": "jean.pontus@PerfectCustomer.com", 
+      }, 
+      "validFor": { 
+        "startDateTime": "2019-05-06T12:45:12.028Z" 
+      } 
+    } 
+  ], 
+    "note": [ 
+        { 
+            "id": "1", 
+            "author": "Jean Pontus", 
+            "date": "2019-05-06T12:45:12.031Z", 
+            "text": "This is a quote request following today call" 
+        } 
+    ], 
+    "productOfferingQualification": [ 
+        { 
+            "id": "22ds-ty55", 
+            "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-ty55" 
+        } 
+    ], 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 56 sur 74 
+ 
+            "action": "add", 
+            "quantity": 12, 
+            "state": "inProgress", 
+            "product": { 
+                "@type": "Product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            } 
+        }, 
+        { 
+            "id": "2", 
+            "action": "add", 
+            "quantity": 12, 
+            "state": "inProgress", 
+            "attachment": [ 
+                { 
+                    "attachmentType": "brochure", 
+                    "description": "handset brochure", 
+                    "mimeType": "pdf", 
+                    "name": "Handset commercial brochure.pdf", 
+                    "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                    "size": { 
+                        "amount": 3.7, 
+                        "units": "Mb" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2019-05-06T12:45:12.031Z" 
+                    } 
+                } 
+            ], 
+            "product": { 
+                "@type": "Product", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 57 sur 74 
+ 
+                "productSpecification": { 
+                    "id": "qq45-ytr7", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                    "name": "Handset", 
+                    "version": "1" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "z789-78ga", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                "name": "TMF handset T9+" 
+            } 
+        }, 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "quantity": 1, 
+            "state": "inProgress", 
+            "productOffering": { 
+                "id": "ssdd-4dfd", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                "name": "Gold Support" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Louise Pontus", 
+            "role": "Buyer Contact", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "inProgress", 
+    "@type": "Quote" 
+} 
+ 
+ 
+Here's an example of a request for updating a quote - In this example buyer contact is changed and items 1 & 2 
+quantity is changed to 12. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 58 sur 74 
+ 
+ 
+Request 
+ 
+PATCH https://serverRoot/tmf-api/quoteManagement/v4/quote/12dd-78hg 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "id": "12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "quantity": 12 
+        }, 
+        { 
+            "id": "2", 
+            "action": "add", 
+            "quantity": 12 
+        }, 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "quantity": 1 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Louise Pontus", 
+            "role": "Buyer Contact", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "inProgress", 
+    "@type": "Quote" 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 59 sur 74 
+ 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-06T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "agreement": [ 
+        { 
+            "id": "7778-jj56", 
+            "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+            "name": "Global Agreement", 
+            "@baseType": "Agreement", 
+            "@referredType": "MassAgreement" 
+        } 
+    ], 
+    "billingAccount": [ 
+        { 
+            "id": "BA4569", 
+            "href": "https://host:port/accountManagement/v4/billingAccount/BA4569" 
+        } 
+    ], 
+  "contactMedium": [ 
+    { 
+      "mediumType": "email", 
+      "preferred": true, 
+      "characteristic": { 
+        "emailAddress": "jean.pontus@PerfectCustomer.com", 
+      }, 
+      "validFor": { 
+        "startDateTime": "2019-05-06T12:45:12.028Z" 
+      } 
+    } 
+  ], 
+    "note": [ 
+        { 
+            "id": "1", 
+            "author": "Jean Pontus", 
+            "date": "2019-05-06T12:45:12.031Z", 
+            "text": "This is a quote request following today call" 
+        } 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 60 sur 74 
+ 
+    ], 
+    "productOfferingQualification": [ 
+        { 
+            "id": "22ds-ty55", 
+            "href": "https://host:port/productOfferingQualificationManagement/v4/productOfferingQualification/22ds-ty55" 
+        } 
+    ], 
+    "quoteItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "quantity": 12, 
+            "state": "inProgress", 
+            "product": { 
+                "@type": "Product", 
+                "productCharacteristic": [ 
+                    { 
+                        "name": "Voice Bundle", 
+                        "valueType": "string", 
+                        "value": "unlimited" 
+                    }, 
+                    { 
+                        "name": "Data Bundle", 
+                        "valueType": "object", 
+                        "value": { 
+                            "volume": 50, 
+                            "unit": "Gb/month" 
+                        } 
+                    } 
+                ], 
+                "productSpecification": { 
+                    "id": "ssp7-ty89", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/ssp7-ty89", 
+                    "name": "TMF Tariff Plan" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "54gg-zza1", 
+                "href": "https://host:port/productCatalogManagement/v4/productSpecification/54gg-zza1", 
+                "name": "TMF Tarif Plan 25" 
+            } 
+        }, 
+        { 
+            "id": "2", 
+            "action": "add", 
+            "quantity": 12, 
+            "state": "inProgress", 
+            "attachment": [ 
+                { 
+                    "attachmentType": "brochure", 
+                    "description": "handset brochure", 
+                    "mimeType": "pdf", 
+                    "name": "Handset commercial brochure.pdf", 
+                    "url": "www.tmf_hanset/contentMangement/brochure.pdf", 
+                    "size": { 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 61 sur 74 
+ 
+                        "amount": 3.7, 
+                        "units": "Mb" 
+                    }, 
+                    "validFor": { 
+                        "startDateTime": "2019-05-06T12:45:12.031Z" 
+                    } 
+                } 
+            ], 
+            "product": { 
+                "@type": "Product", 
+                "productSpecification": { 
+                    "id": "qq45-ytr7", 
+                    "href": "https://host:port/productCatalogManagement/v4/productSpecification/qq45-ytr7", 
+                    "name": "Handset", 
+                    "version": "1" 
+                } 
+            }, 
+            "productOffering": { 
+                "id": "z789-78ga", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/z789-78ga", 
+                "name": "TMF handset T9+" 
+            } 
+        }, 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "quantity": 1, 
+            "state": "inProgress", 
+            "productOffering": { 
+                "id": "ssdd-4dfd", 
+                "href": "https://host:port/productCatalogManagement/v4/productOffering/ssdd-4dfd", 
+                "name": "Gold Support" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "name": "Louise Pontus", 
+            "role": "Buyer Contact", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "name": "PerfectCustomer", 
+            "role": "Buyer organization", 
+            "id": "55", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "name": "Joe Doe", 
+            "role": "Seller Contact", 
+            "id": "45gh-gh89", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "inProgress", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 62 sur 74 
+ 
+    "@type": "Quote" 
+} 
+ 
+Delete quote 
+  DELETE /quote/{id} 
+Description 
+This operation deletes a quote entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a quote. 
+ 
+Request 
+ 
+DELETE https://serverRoottmf-api/quoteManagement/v4/quote/87g-8tt 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+API Notifications 
+For every single of operation on the entities use the following templates and provide sample REST notification POST 
+calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST Guidelines 
+reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health state, 
+execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not support 
+multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created again. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 63 sur 74 
+ 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 64 sur 74 
+ 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the callback 
+url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 65 sur 74 
+ 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by one 
+of the notification types supported by this API (see Notification resources Models section) and EVENT BODY refers to 
+the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design Guidelines. 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 66 sur 74 
+ 
+Lifecycle management extension to quote 
+ 
+ 
+ 
+In Lifecycle Management, there is a requirement to distinguish between entities existing with different life cycle 
+version numbers. The same quote may exist but with different version numbers.  
+It may be possible for a sale administrator to see all the existing versions or for a partner to see only a subset of all 
+the existing versions.  
+The entity version number is not dependent on the version number of the API.  
+In order to distinguish resources representing entities running with different version numbers and accessible 
+though the same API version, the following directive can be used /id:(version=x) and the version attribute is added 
+to each entity. 
+ 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-013T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-06T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+    "agreement": [ 
+        { 
+            "id": "7778-jj56", 
+            "href": "https://host:port/agreementManagement/v4/agreement/7778-jj56", 
+            "name": "Global Agrrement", 
+            "@baseType": "Agreement", 
+            "@referredType": "MassAgreement" 
+        } 
+    ], 
+    …. 
+ 
+Note that the quote resources in this case may have the same ID but may be distinguished by the inclusion of the 
+version number in their ID i.e. /Quote: 12dd-78hg (version=1.0), /Quote: 12dd-78hg (version=2.0). 
+In the following examples, we will assume that two versions of the Quote exist. The Inactive and Active version 
+have respectively version 1.0 and version 2.0. 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 67 sur 74 
+ 
+ 
+ 
+Query all versioned quote resources 
+ 
+Users with different roles may have access to different versions of the entities in the quote repository.  For 
+example, user A may have access to only the version 1.0 of the entities while user B may have access to version 1.0 
+and version 2.0. 
+Sales Admin user has access to all the versions of the resources while other users have by default access to only the 
+latest version of the quote.   
+For example, the following request on the admin endpoint will return all the versioned resources matching a 
+specific ID.  
+ 
+REQUEST 
+GET serverRoot/tmf-api/quoteManagement/v4/quote?id=12dd-78hg 
+Accept: application/json 
+RESPONSE 
+200 
+Content-Type: application/json 
+[ 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-013T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "externalId": "QO-tr-89", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-06T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-14T12:45:12.028Z", 
+    "version": "1", 
+….. 
+}, 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 68 sur 74 
+ 
+{ 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-016T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-16T12:45:12.028Z", 
+    "externalId": "QO-tr-89bis", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-15T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-16T12:45:12.028Z", 
+    "version": "2", 
+….. 
+} 
+] 
+ 
+ 
+Query a specific versioned quote resource 
+ 
+In general, a non-sales admin API user only has visibility to the latest version number or visibility to a subset of 
+versioned catalog resources.   
+It may be possible for an admin API user to retrieve a resource with a specific version number by using an ID and 
+versioning filtering criteria. 
+ 
+REQUEST 
+GET serverRoot/tmf-api/quoteManagement/v4/quote?id=12dd-78hg&version=2.0 
+Accept: application/json 
+RESPONSE 
+200 
+Content-Type: application/json 
+[ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 69 sur 74 
+ 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-016T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-16T12:45:12.028Z", 
+    "externalId": "QO-tr-89bis", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-15T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-16T12:45:12.028Z", 
+    "version": "2", 
+….. 
+} 
+] 
+ 
+ 
+Query current version of a quote resource 
+ 
+By default, only the most current version is returned (for admin and non-admin). 
+ 
+REQUEST 
+GET serverRoot/tmf-api/quoteManagement/v4/quote/12dd-78hg 
+Accept: application/json 
+RESPONSE 
+200 
+Content-Type: application/json 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "effectiveQuoteCompletionDate": "2019-05-016T12:45:12.028Z", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 70 sur 74 
+ 
+    "expectedQuoteCompletionDate": "2019-05-16T12:45:12.028Z", 
+    "externalId": "QO-tr-89bis", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-15T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-16T12:45:12.028Z", 
+    "version": "2", 
+….. 
+} 
+ 
+Create new version of a quote 
+ 
+POST is used to create a new version of a quote resource.  
+The constraint is that the version numbers for the resource having the same ID must differ. 
+REQUEST 
+POST serverRoot/tmf-api/quoteManagement/quote 
+Content-type: application/json 
+ 
+{ 
+    "id": "12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "externalId": "QO-tr-89ter", 
+    "instantSyncQuote": false, 
+    "requestedQuoteCompletionDate": "2019-05-20T12:45:12.028Z", 
+    "version": "3", 
+….. 
+} 
+RESPONSE 
+201 
+Content-Type: application/json 
+ 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "BSBS Quote", 
+    "description": "Quote illustration", 
+    "expectedFulfillmentStartDate": "2019-05-21T12:45:12.028Z", 
+    "expectedQuoteCompletionDate": "2019-05-20T12:45:12.028Z", 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 71 sur 74 
+ 
+    "externalId": "QO-tr-89ter", 
+    "instantSyncQuote": false, 
+    "quoteDate": "2019-05-18T12:45:12.028Z", 
+    "requestedQuoteCompletionDate": "2019-05-20T12:45:12.028Z", 
+    "version": "3", 
+….. 
+} 
+ 
+ 
+Modify an existing version of a catalog resource 
+ 
+By default, PATCH or PUT will be acting only on the latest version of a quote. For example, PATCH /…/quote/12dd-
+78hg will only update the quote 12dd-78hg at Version 2.0 (which is the most current). 
+To update a specific version of an entity the (Version=X) directive is added to the ID (i.e. /id:(version=x).  
+Note that this capability is only available to API users having the proper authorizations to change the catalog 
+entities with specific version numbers. 
+ 
+For example, to change the quote 12dd-78hg versioned at 1.0 we could use: /quote/12dd-78hg (Version=1.0) 
+REQUEST 
+PATCH serverRoot/tmf-api/quoteManagement/v4/quote/12dd-78hg (Version=1.0) 
+Content-type: application/merge-patch+json 
+{ 
+"category": "B2B Quote " 
+} 
+RESPONSE 
+200 
+Content-Type: application/json 
+{ 
+    "id": "12dd-78hg", 
+    "href": "https://host:port/quoteManagement/v4/quote/12dd-78hg", 
+    "category": "B2B Quote", 
+    "description": "Quote illustration", 
+… 
+    "version": "1", 
+….. 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 72 sur 74 
+ 
+}, 
+ 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 73 sur 74 
+ 
+Acknowledgements 
+ 
+VERSION History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 1.0.0 
+04/15/2016 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+First Release of Draft Version of the 
+Document. 
+Release 1.1.0 
+ 
+ 
+Updated for use in the Paris Spec 
+Jam – and rebranded.  
+Release 2.0.0 
+04/15/2016 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Mariano Belaunde 
+Orange 
+mariano.belaunde@oran
+ge.com 
+Regenerated from the API Data 
+Model – and rebranded.  
++update to comply with API new 
+pattern 
++ AP 935 feedbacks 
+Release 4.0.0 
+ 
+P. Gauthier / L.Robert 
+Schema-driven API with 
+polymorphism pattern 
+Following Jira have been integrated: 
+• 
+AP-1248 
+• 
+AP-1253 
+• 
+AP-1245 
+• 
+AP-1252 
+• 
+AP-1272 
+Nota: the version 4.0 is assigned to all 
+the APIs delivered in the release 19.0 
+ 
+Release History 
+
+
+Quote API REST Specification 
+ 
+© TM Forum 2019. All Rights Reserved                                                                                            Page 74 sur 74 
+ 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 17.5 
+ 
+10/15/2017 
+Ludovic Robert 
+Orange 
+ludovic.robert@orange.com 
+ 
+ 
+Release 19.0 
+ 
+Ludovic Robert 
+Orange 
+ludovic.robert@orange.com 
+ 
+Version 4.0 of the API REST 
+Nota: the version 4.0 is assigned to all 
+the APIs delivered in the release 19.0 
+ 
+
+

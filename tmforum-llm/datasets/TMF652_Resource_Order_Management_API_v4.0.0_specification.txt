@@ -1,0 +1,2331 @@
+ 
+TM Forum 2020. All Rights Reserved. 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Resource Order Management API 
+User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF652 
+Team Approved Date: 26-Jul-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 51 
+ 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 51 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 51 
+ 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 6 
+Introduction .............................................................................................................................................................. 7 
+SAMPLE USE CASES ......................................................................................................................................................... 8 
+Support of polymorphism and extension patterns ........................................................................................................ 9 
+RESOURCE MODEL ........................................................................................................................................................ 10 
+Lifecycle ................................................................................................................................................................... 10 
+Managed Entity and Task Resource Models ..................................................................................................... 10 
+Resource Order resource ...................................................................................................................................... 10 
+Cancel Resource Order resource ........................................................................................................................... 24 
+Notification Resource Models .............................................................................................................................. 26 
+Resource Order Create Event ................................................................................................................................ 27 
+Resource Order Attribute Value Change Event ..................................................................................................... 28 
+Resource Order State Change Event ..................................................................................................................... 28 
+Resource Order Delete Event ................................................................................................................................ 28 
+Resource Order Information Required Event ........................................................................................................ 29 
+Cancel Resource Order Create Event .................................................................................................................... 29 
+Cancel Resource Order State Change Event .......................................................................................................... 30 
+Cancel Resource Order Information Required Event ............................................................................................ 30 
+API OPERATIONS ........................................................................................................................................................... 31 
+Operations on Resource Order ................................................................................................................................. 31 
+List resource orders ............................................................................................................................................... 31 
+Retrieve resource order ........................................................................................................................................ 32 
+Create resource order ........................................................................................................................................... 35 
+Patch resource order ............................................................................................................................................. 40 
+Delete resource order ........................................................................................................................................... 43 
+Operations on Cancel Resource Order ..................................................................................................................... 44 
+List cancel resource orders .................................................................................................................................... 44 
+Retrieve cancel resource order ............................................................................................................................. 45 
+Create cancel resource order ................................................................................................................................ 46 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 51 
+ 
+API NOTIFICATIONS....................................................................................................................................................... 48 
+Register listener ........................................................................................................................................................ 48 
+Unregister listener .................................................................................................................................................... 49 
+Publish Event to listener ........................................................................................................................................... 49 
+Acknowledgements ...................................................................................................................................................... 51 
+Version History.......................................................................................................................................................... 51 
+Release History ......................................................................................................................................................... 51 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 51 
+ 
+List of Tables 
+N/A 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 51 
+ 
+Introduction 
+ 
+The following document is the specification of the REST API for Resource Order Management. It includes the model 
+definition as well as all available operations. Possible actions are creating, updating and retrieving Resource Orders 
+(including filtering). 
+A Resource Order API provides a standard mechanism for placing a Resource Order with all necessary order 
+parameters. A Resource Order is created based on a resource candidate that is defined in the resource catalog. The 
+Resource candidate is an entity that makes a Resource Specification available to a resource catalog. 
+Resources are physical or non-physical components (or some combination of these) within an enterprise's 
+infrastructure or inventory. They are typically consumed or used by Services (for example a physical port assigned 
+to a service) or contribute to the realization of a Product (for example, a SIM card). They can be drawn from the 
+Application, Computing and Network domains, and include, for example, Network Elements, software, IT systems, 
+content and information, and technology components. 
+A Resource Specification is an abstract base class for representing a generic means for implementing a particular 
+type of Resource. In essence, a Resource Specification defines the common attributes and relationships of a set of 
+related Resources, while Resource defines a specific instance that is based on a particular Resource Specification. 
+Resource Order API manages resource order resource: 
+- 
+A Resource Order is a type of order which can be used to place an order between a service provider and a 
+partner and vice versa 
+- 
+Main order items attributes are the orders resource candidates and resource characteristics with the 
+related action to be performed (e.g: add or delete resources), state. 
+Resource Order API performs the following operations on the Resource Order: 
+- 
+Retrieval of a Resource Order or a collection of Resource Orders depending on filter criteria 
+- 
+Partial update of a ResourceOrder 
+- 
+Creation of a Resource order 
+- 
+Deletion of a resource order (for admin purposes) 
+- 
+Notifications of events on resource order 
+o Order creation 
+o Order removal 
+o Order state change 
+o Order value change 
+o Order information required 
+The following Assumptions were considered in the development of this document: 
+- 
+The Order Management system has access to the catalog system 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 51 
+ 
+SAMPLE USE CASES 
+Ordering Optical Cable 
+  
+There is a use-case through the examples provided: 
+The operator is buying 7km of optical cable (the Physical Resource) made by FiberOpticsRUs (in the role of 
+Manufacturer) on behalf of Acme Inc (in the role of Customer). There is a note (of type Note) associated with this 
+order, and a link to a previous Site Survey (Appointment). The order is known to Acme under its own internal ordering 
+number (passed as an “ExternalReference”). The Account manager (an Individual related party in the role of Account 
+Manager) is Gwen Howells. 
+Once created, later examples show: 
+- 
+Retrieval of orders under a Premium category 
+- 
+Update this order to change the priority to 2 
+- 
+Delete this order using its id: 5130d5131a23 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 51 
+ 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance a LogicalResource and PhysicalResource inheriting properties from the abstract Resource entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Resource instances some may be instances of LogicalResource where other could be instances of PhysicalResource. 
+The @type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance a ResourceRef object) to explicitly denote 
+the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes the class 
+type of the reference itself, such as LogicalResourceRef or PhysicalResourceRef, and not the class type of the referred 
+object. However, since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 51 
+ 
+RESOURCE MODEL 
+Lifecycle 
+Below is the state-transition diagram for a ResourceOrder: 
+ 
+Managed Entity and Task Resource Models 
+Resource Order resource 
+A Resource Order is a request to provision a set of Resources (logical and physical) triggered by the request to 
+provision a Service through a Service Order. 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 51 
+ 
+ 
+Resource model 
+ 
+Field descriptions 
+ResourceOrder fields 
+href 
+An uri (Uri). Hyperlink to access the order. 
+id 
+A string. Identifier of an instance of the Resource Order. Required to be unique 
+within the resource type. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+cancellationDate 
+A date time (DateTime). Date when the order is cancelled - if cancelled, in RFC3339 
+(subset of ISO8601) format. 
+cancellationReason 
+A string. Reason why the order is cancelled - if cancelled. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 51 
+ 
+category 
+A string. Used to categorize the order from a business perspective that can be 
+useful for the order management system. 
+completionDate 
+A date time (DateTime). Date when the order was actually completed, in RFC3339 
+(subset of ISO8601) format. 
+description 
+A string. Free-text description of the Resource Order. 
+expectedCompletionDate 
+A date time (DateTime). Date when the order is expected to be completed, in 
+RFC3339 (subset of ISO8601) format. 
+externalId 
+A string. DEPRECATED: Use externalReference Instead. ID given by the consumer (to 
+facilitate searches afterwards). 
+externalReference 
+A list of external references (ExternalReference [*]). External reference of the 
+individual or reference in other system. 
+href 
+An uri (Uri). Hyperlink to access the order. 
+id 
+A string. Identifier of an instance of the Resource Order. Required to be unique 
+within the resource type. 
+name 
+A string. A string used to give a name to the Resource Order. 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+orderDate 
+A date time (DateTime). Date when the order was created, in RFC3339 (subset of 
+ISO8601) format. 
+orderItem 
+A list of resource order items (ResourceOrderItem [*]). An identified part of the 
+order. A resource order is decomposed into one or more order items. 
+orderType 
+A string. Name of the Resource Order type. 
+priority 
+An integer. A way that can be used by consumers to prioritize orders in OM system 
+(such as: 0 is the highest priority, and 4 the lowest). 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+requestedCompletionDate A date time (DateTime). Requested delivery date from the requestor perspective, in 
+RFC3339 (subset of ISO8601) format. 
+requestedStartDate 
+A date time (DateTime). Order start date wished by the requestor, in RFC3339 
+(subset of ISO8601) format. 
+startDate 
+A date time (DateTime). Date when the order was actually started, in RFC3339 
+(subset of ISO8601) format. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 51 
+ 
+state 
+A resource order state type (ResourceOrderStateType). Possible values for the state 
+of the order. 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. An attachment complements the description of an element, for example 
+through a document, a video, a picture. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+name 
+A string. The name of the attachment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 51 
+ 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ExternalReference sub-resource 
+External reference of the individual or reference in other system. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+externalReferenceType A string. Type of the external reference. 
+name 
+A string. External reference name. 
+Feature sub-resource 
+Configuration feature. 
+constraint 
+A list of constraint references (ConstraintRef [*]). This is a list of feature constraints. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 51 
+ 
+featureCharacteristic 
+A list of characteristics (Characteristic [1..*]). This is a list of Characteristics for a 
+particular feature. 
+featureRelationship 
+A list of feature relationships (FeatureRelationship [*]). Configuration feature. 
+id 
+A string. Unique identifier of the feature. 
+isBundle 
+A boolean. True if this is a feature group. Default is false. 
+isEnabled 
+A boolean. True if this feature is enabled. Default is true. 
+name 
+A string. This is the name for the feature. 
+FeatureRelationship sub-resource 
+Configuration feature. 
+id 
+A string. Unique identifier of the target feature. 
+name 
+A string. This is the name of the target feature. 
+relationshipType 
+A string. This is the type of the feature relationship. 
+validFor 
+A time period. The period for which this feature relationship is valid. 
+Note sub-resource 
+Extra information about a given entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be globally 
+unique, depending on provider implementation). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+text 
+A string. Text of the note. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 51 
+ 
+units 
+A string. Unit. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+RelatedPlaceRefOrValue sub-resource 
+Related Entity reference. A related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are related to the place entity and 
+not the RelatedPlaceRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. 
+ResourceOrderItem sub-resource 
+An identified part of the order. A resource order is decomposed into one or more order items. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 51 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Identifier of the line item (such as a sequence number 01, 02, 03). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+action 
+An order item action type (OrderItemActionType). action to be performed on the 
+product. 
+appointment 
+An appointment reference (AppointmentRef). Refers an appointment, such as a 
+Customer presentation or internal meeting or site visit. 
+orderItemRelationship 
+A list of resource order item relationships (ResourceOrderItemRelationship [*]). 
+quantity 
+An integer. Quantity ordered. 
+resource 
+A resource ref or value (ResourceRefOrValue). Resource is an abstract entity that 
+describes the common set of attributes shared by all concrete resources. The 
+polymorphic attributes @type, @schemaLocation & @referredType are related to the 
+Resource entity and not the related ResourceRefOrValue class itself. 
+resourceSpecification 
+A resource specification reference (ResourceSpecificationRef). Resources are physical 
+or non-physical components (or some combination of these) within an enterprise's 
+infrastructure or inventory. They are typically consumed or used by services (for 
+example a physical port assigned to a service) or contribute to the realization of a 
+Product (for example, a SIM card). They can be drawn from the Application, 
+Computing and Network domains, and include, for example, Network Elements, 
+software, IT systems, content and information, and technology components. 
+A ResourceSpecification is an abstract base class for representing a generic means for 
+implementing a particular type of Resource. In essence, a ResourceSpecification 
+defines the common attributes and relationships of a set of related Resources, while 
+Resource defines a specific instance that is based on a particular 
+ResourceSpecification. 
+state 
+A resource order item state type (ResourceOrderItemStateType). Possible values for 
+the state of the order item. 
+ResourceOrderItemRelationship sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 51 
+ 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+orderItem 
+A resource order item reference (ResourceOrderItemRef). 
+relationshipType 
+A string. Type of the order item relationship. 
+ResourceRefOrValue sub-resource 
+Resource is an abstract entity that describes the common set of attributes shared by all concrete resources. The 
+polymorphic attributes @type, @schemaLocation & @referredType are related to the Resource entity and not the 
+related ResourceRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A string used to give a name to the resource. 
+href 
+A string. The URI for the object itself. 
+id 
+A string. Identifier of an instance of the resource. Required to be unique within the 
+resource type.  Used in URIs as the identifier for specific instances of a type. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+category 
+A string. Category of the concrete resource. e.g., Gold, Silver for MSISDN concrete 
+resource. 
+description 
+A string. free-text description of the resource. 
+endOperatingDate 
+A date time (DateTime). A date time( DateTime). The date till the resource is 
+operating. 
+resourceVersion 
+A string. A field that identifies the specific version of an instance of a resource. 
+startOperatingDate 
+A date time (DateTime). A date time( DateTime). The date from which the resource is 
+operating. 
+activationFeature 
+A list of features (Feature [*]). Configuration features. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 51 
+ 
+administrativeState 
+A resource administrative state type (ResourceAdministrativeStateType). Tracks the 
+lifecycle status of the resource, such as planning, installing, opereating, retiring and so 
+on. 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). An attachment by 
+value or by reference. An attachment complements the description of an element, for 
+example through a document, a video, a picture. 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+operationalState 
+A resource operational state type (ResourceOperationalStateType). Tracks the 
+lifecycle status of the resource, such as planning, installing, operating, retiring and so 
+on. 
+place 
+A related place ref or value (RelatedPlaceRefOrValue). Related Entity reference. A 
+related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are 
+related to the place entity and not the RelatedPlaceRefOrValue class itself. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+resourceCharacteristic 
+A list of characteristics (Characteristic [*]). Describes a given characteristic of an 
+object or entity through a name/value pair. 
+resourceRelationship 
+A list of resource relationships (ResourceRelationship [*]). Linked resources to the one 
+instantiate, such as [bundled] if the resource is a bundle and you want to describe the 
+bundled resources inside this bundle; [reliesOn] if the resource needs another already 
+owned resource to rely on (e.g. an option on an already owned mobile access 
+resource) [targets] or [isTargeted] (depending on the way of expressing the link) for 
+any other kind of links that may be useful. 
+resourceSpecification 
+A resource specification reference (ResourceSpecificationRef). Resources are physical 
+or non-physical components (or some combination of these) within an enterprise's 
+infrastructure or inventory. They are typically consumed or used by services (for 
+example a physical port assigned to a service) or contribute to the realization of a 
+Product (for example, a SIM card). They can be drawn from the Application, 
+Computing and Network domains, and include, for example, Network Elements, 
+software, IT systems, content and information, and technology components. 
+A ResourceSpecification is an abstract base class for representing a generic means for 
+implementing a particular type of Resource. In essence, a ResourceSpecification 
+defines the common attributes and relationships of a set of related Resources, while 
+Resource defines a specific instance that is based on a particular 
+ResourceSpecification. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 51 
+ 
+resourceStatus 
+A resource status type (ResourceStatusType). Tracks the lifecycle status of the 
+resource, such as planning, installing, opereating, retiring and so on. 
+usageState 
+A resource usage state type (ResourceUsageStateType). Tracks the lifecycle status of 
+the resource, such as planning, installing, opereating, retiring and so on. 
+ResourceRelationship sub-resource 
+Linked resources to the one instantiate, such as [bundled] if the resource is a bundle and you want to describe the 
+bundled resources inside this bundle; [reliesOn] if the resource needs another already owned resource to rely on 
+(e.g. an option on an already owned mobile access resource) [targets] or [isTargeted] (depending on the way of 
+expressing the link) for any other kind of links that may be useful. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. Type of the resource relationship, such as [bundled] if the resource is a 
+bundle and you want to describe the bundled resources inside this bundle; [reliesOn] 
+if the resource needs another already owned resource to rely on (eg: an option on an 
+already owned mobile access resource) [targets] or [isTargeted] (depending on the 
+way of expressing the link) for any other kind of links that may be useful. 
+resource 
+A resource ref or value (ResourceRefOrValue). Resource is an abstract entity that 
+describes the common set of attributes shared by all concrete resources. The 
+polymorphic attributes @type, @schemaLocation & @referredType are related to the 
+Resource entity and not the related ResourceRefOrValue class itself. 
+AppointmentRef relationship 
+Refers an appointment, such as a Customer presentation or internal meeting or site visit. 
+href 
+A string. The reference of the appointment. 
+id 
+A string. The identifier of the referred appointment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 51 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. An explanatory text regarding the appointment made with a party. 
+ConstraintRef relationship 
+Constraint reference. The Constraint resource represents a policy/rule applied to an entity or entity spec. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+version 
+A string. constraint version. 
+ResourceOrderItemRef relationship 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+itemId 
+A string. Identifier of the line item. 
+resourceOrderHref 
+An uri (Uri). Link to the order to which this item belongs to. 
+resourceOrderId 
+A string. Identifier of the resource order that this item belongs to. 
+ResourceSpecificationRef relationship 
+Resources are physical or non-physical components (or some combination of these) within an enterprise's 
+infrastructure or inventory. They are typically consumed or used by services (for example a physical port assigned 
+to a service) or contribute to the realization of a Product (for example, a SIM card). They can be drawn from the 
+Application, Computing and Network domains, and include, for example, Network Elements, software, IT systems, 
+content and information, and technology components. 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 51 
+ 
+A ResourceSpecification is an abstract base class for representing a generic means for implementing a particular 
+type of Resource. In essence, a ResourceSpecification defines the common attributes and relationships of a set of 
+related Resources, while Resource defines a specific instance that is based on a particular ResourceSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+version 
+A string. Resource Specification version. 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceOrder' resource object 
+{ 
+    "id": "5130d5131a23", 
+    "href": "http://host/resourceOrder/resourceOrder/5130d5131a23", 
+    "category": "Premium", 
+    "description": "7000m of Optical Cable", 
+    "expectedCompletionDate": "2020-05-31T20:50:27.275Z", 
+    "name": "7km Optical Cable for Acme Inc", 
+    "orderDate": "2020-03-31T20:50:27.275Z", 
+    "priority": 0, 
+    "requestedCompletionDate": "2020-03-31T19:50:43.214Z", 
+    "requestedStartDate": "2020-03-31T19:50:43.214Z", 
+    "startDate": "2020-03-31T19:50:43.214Z", 
+    "externalReference": [ 
+        { 
+            "externalReferenceType": "Acme Ordering Number", 
+            "name": "8b032c8ca734" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "id": "9ba1047c38ce", 
+            "date": "2020-03-31T19:50:43.214Z", 
+            "text": "Cable must be double jacketed as it may be exposed to water" 
+        } 
+    ], 
+    "orderItem": [ 
+        { 
+            "id": "049eb3108ed5", 
+            "quantity": 7000, 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 51 
+ 
+            "action": "add", 
+            "appointment": { 
+                "id": "74da513bdc6c", 
+                "href": "https:/host/tmf-api/appointment/v4/appointment/74da513bdc6c", 
+                "description": "Site Survey" 
+            }, 
+            "resource": { 
+                "category": "Premium", 
+                "description": "LG Series: FAA-Compliant Loose Tube Cable - Double Jacket", 
+                "name": "LG006-C5111N1", 
+                "resourceVersion": "6", 
+                "attachment": [ 
+                    { 
+                        "id": "305f2215715f", 
+                        "href": "http://host/Attachment/305f2215715f", 
+                        "attachmentType": "PDF", 
+                        "description": "Fiber Optic Cable Data Sheet", 
+                        "mimeType": "application/pdf", 
+                        "name": "FAA-Compliant_Loose_Tube_Cable_-_Double_Jacket.pdf", 
+                        "url": "http://host/Content/d08d1967b82f" 
+                    } 
+                ], 
+                "operationalState": "disable", 
+                "place": { 
+                    "id": "49c2c42cbd2f", 
+                    "href": "http://host/GeographicAddress/address/49c2c42cbd2f", 
+                    "name": "Acme Inc Headquarters", 
+                    "role": "Customer Site", 
+                    "@baseType": "Place", 
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Common/GeographicAddress.schema.json", 
+                    "@referredType": "GeographicAddress" 
+                }, 
+                "relatedParty": [ 
+                    { 
+                        "role": "Manufacturer", 
+                        "id": "091b56cc3864", 
+                        "href": "http://host/PartyManagement/organization/091b56cc3864", 
+                        "name": "FiberOpticsRUs Inc", 
+                        "@referredType": "Organization" 
+                    } 
+                ], 
+                "resourceSpecification": { 
+                    "id": "e362d12b54f2", 
+                    "href": "http://host/ResourceCatalog/resourceSpecification/e362d12b54f2", 
+                    "name": "LG006-C5111N1", 
+                    "version": "6" 
+                }, 
+                "@baseType": "Resource", 
+                "@type": "PhysicalResource" 
+            }, 
+            "state": "acknowledged" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "role": "Customer", 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 51 
+ 
+            "id": "b5bd5f0b9f33", 
+            "href": "http://host/PartyManagement/organization/b5bd5f0b9f33", 
+            "name": "Acme Inc", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "role": "Account Manager", 
+            "id": "8f0585d639f6", 
+            "href": "http://host/PartyManagement/organization/8f0585d639f6", 
+            "name": "Gwen Howells", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "acknowledged" 
+} 
+Cancel Resource Order resource 
+Request for cancellation an existing resource order. 
+Resource model 
+ 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 51 
+ 
+ 
+Field descriptions 
+CancelResourceOrder fields 
+cancellationReason 
+A string. Reason why the order is cancelled. 
+effectiveCancellationDate 
+A date time (DateTime). Date when the order is cancelled. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+requestedCancellationDate A date time (DateTime). Date when the submitter wants the order to be cancelled. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+resourceOrder 
+A resource order reference (ResourceOrderRef). 
+state 
+A task state type (TaskStateType). Tracks the lifecycle status of the cancellation 
+request, such as Acknowledged, Rejected, InProgress, Pending and so on. 
+ResourceOrderRef relationship 
+ 
+href 
+A string. Hyperlink to access the related Resource Order. 
+id 
+A string. The unique identifier of the related resource order. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelResourceOrder' resource object 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 51 
+ 
+{ 
+    "id": "5130d5131a23", 
+    "href": "https:/host/tmf-api/cancelResourceOrder/v4/cancelResourceOrder/5130d5131a23", 
+    "cancellationReason": "No longer required", 
+    "effectiveCancellationDate": "2020-07-10T18:00:00.000Z", 
+    "requestedCancellationDate": "2020-07-10T17:18:14.523Z", 
+    "resourceOrder": { 
+        "id": "fde8c6a47450", 
+        "href": "http://host/resourceOrder/fde8c6a47450" 
+    }, 
+    "state": "assessingCancellation" 
+} 
+ 
+Notification Resource Models 
+ 
+8 notifications are defined for this API 
+Notifications related to ResourceOrder: 
+    - ResourceOrderCreateEvent 
+    - ResourceOrderAttributeValueChangeEvent 
+    - ResourceOrderStateChangeEvent 
+    - ResourceOrderDeleteEvent 
+    - ResourceOrderInformationRequiredEvent 
+Notifications related to CancelResourceOrder: 
+    - CancelResourceOrderCreateEvent 
+    - CancelResourceOrderStateChangeEvent 
+    - CancelResourceOrderInformationRequiredEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 51 
+ 
+ 
+Resource Order Create Event 
+Notification ResourceOrderCreateEvent case for resource ResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceOrderCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceOrderCreateEvent", 
+     "event": { 
+        "resourceOrder" :  
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 51 
+ 
+            {-- SEE ResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Order Attribute Value Change Event 
+Notification ResourceOrderAttributeValueChangeEvent case for resource ResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceOrderAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceOrderAttributeValueChangeEvent", 
+     "event": { 
+        "resourceOrder" :  
+            {-- SEE ResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Order State Change Event 
+Notification ResourceOrderStateChangeEvent case for resource ResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceOrderStateChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceOrderStateChangeEvent", 
+     "event": { 
+        "resourceOrder" :  
+            {-- SEE ResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Order Delete Event 
+Notification ResourceOrderDeleteEvent case for resource ResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceOrderDeleteEvent' notification event object 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 51 
+ 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceOrderDeleteEvent", 
+     "event": { 
+        "resourceOrder" :  
+            {-- SEE ResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+Resource Order Information Required Event 
+Notification ResourceOrderInformationRequiredEvent case for resource ResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceOrderInformationRequiredEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceOrderInformationRequiredEvent", 
+     "event": { 
+        "resourceOrder" :  
+            {-- SEE ResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Cancel Resource Order Create Event 
+Notification CancelResourceOrderCreateEvent case for resource CancelResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelResourceOrderCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelResourceOrderCreateEvent", 
+     "event": { 
+        "cancelResourceOrder" :  
+            {-- SEE CancelResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 51 
+ 
+Cancel Resource Order State Change Event 
+Notification CancelResourceOrderStateChangeEvent case for resource CancelResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelResourceOrderStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelResourceOrderStateChangeEvent", 
+     "event": { 
+        "cancelResourceOrder" :  
+            {-- SEE CancelResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Cancel Resource Order Information Required Event 
+Notification CancelResourceOrderInformationRequiredEvent case for resource CancelResourceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelResourceOrderInformationRequiredEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelResourceOrderInformationRequiredEvent", 
+     "event": { 
+        "cancelResourceOrder" :  
+            {-- SEE CancelResourceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 51 
+ 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an Entity 
+POST on TASK Resource 
+POST must be used to execute 
+Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be used 
+to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Resource Order 
+List resource orders 
+  GET /resourceOrder?fields=...&{filtering} 
+Description 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 51 
+ 
+This operation list resource order entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Retrieving brief details of a previous Resource Order. The request criteria is the category (Premium) 
+ 
+Request 
+ 
+GET /tmf-
+api/resourceOrdering/v4/resourceOrder?fields=id,href,expectedCompletionDate,state,category&category=Premium 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "5130d5131a23", 
+        "href": "http://host/resourceOrder/resourceOrder/5130d5131a23", 
+        "category": "Premium", 
+        "expectedCompletionDate": "2020-03-31T21:05:37.168Z", 
+        "state": "inProgress" 
+    } 
+] 
+ 
+Retrieve resource order 
+  GET /resourceOrder/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a resource order entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+A request for the previous ResourceOrder. The criteria is the Resource id 5130d5131a23 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 51 
+ 
+ 
+Request 
+ 
+GET /tmf-api/resourceOrdering/v4/resourceOrder/5130d5131a23 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "5130d5131a23", 
+    "href": "http://host/resourceOrder/resourceOrder/5130d5131a23", 
+    "category": "Premium", 
+    "description": "7000m of Optical Cable", 
+    "expectedCompletionDate": "2020-05-31T20:50:27.275Z", 
+    "name": "7km Optical Cable for Acme Inc", 
+    "orderDate": "2020-03-31T20:50:27.275Z", 
+    "priority": 0, 
+    "requestedCompletionDate": "2020-03-31T19:50:43.214Z", 
+    "requestedStartDate": "2020-03-31T19:50:43.214Z", 
+    "startDate": "2020-03-31T19:50:43.214Z", 
+    "externalReference": [ 
+        { 
+            "externalReferenceType": "Acme Ordering Number", 
+            "name": "8b032c8ca734" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "id": "9ba1047c38ce", 
+            "date": "2020-03-31T19:50:43.214Z", 
+            "text": "Cable must be double jacketed as it may be exposed to water" 
+        } 
+    ], 
+    "orderItem": [ 
+        { 
+            "id": "049eb3108ed5", 
+            "quantity": 7000, 
+            "action": "add", 
+            "appointment": { 
+                "id": "74da513bdc6c", 
+                "href": "https:/host/tmf-api/appointment/v4/appointment/74da513bdc6c", 
+                "description": "Site Survey" 
+            }, 
+            "resource": { 
+                "id": "56fcbd0673c3", 
+                "href": "http://host/resourceCatalog/resource/56fcbd0673c3", 
+                "category": "Premium", 
+                "description": "LG Series: FAA-Compliant Loose Tube Cable - Double Jacket", 
+                "name": "LG006-C5111N1", 
+                "resourceVersion": "6", 
+                "attachment": [ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 51 
+ 
+                    { 
+                        "id": "305f2215715f", 
+                        "href": "http://host/Attachment/305f2215715f", 
+                        "attachmentType": "PDF", 
+                        "description": "Fiber Optic Cable Data Sheet", 
+                        "mimeType": "application/pdf", 
+                        "name": "FAA-Compliant_Loose_Tube_Cable_-_Double_Jacket.pdf", 
+                        "url": "http://host/Content/d08d1967b82f" 
+                    } 
+                ], 
+                "operationalState": "disable", 
+                "place": { 
+                    "id": "49c2c42cbd2f", 
+                    "href": "http://host/GeographicAddress/address/49c2c42cbd2f", 
+                    "name": "Acme Inc Headquarters", 
+                    "role": "Customer Site", 
+                    "@baseType": "Place", 
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Common/GeographicAddress.schema.json", 
+                    "@referredType": "GeographicAddress" 
+                }, 
+                "relatedParty": [ 
+                    { 
+                        "role": "Manufacturer", 
+                        "id": "091b56cc3864", 
+                        "href": "http://host/PartyManagement/organization/091b56cc3864", 
+                        "name": "FiberOpticsRUs Inc", 
+                        "@referredType": "Organization" 
+                    } 
+                ], 
+                "resourceSpecification": { 
+                    "id": "e362d12b54f2", 
+                    "href": "http://host/ResourceCatalog/resourceSpecification/e362d12b54f2", 
+                    "name": "LG006-C5111N1", 
+                    "version": "6" 
+                }, 
+                "@baseType": "Resource", 
+                "@type": "PhysicalResource" 
+            }, 
+            "state": "inProgress" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "role": "Customer", 
+            "id": "b5bd5f0b9f33", 
+            "href": "http://host/PartyManagement/organization/b5bd5f0b9f33", 
+            "name": "Acme Inc", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "role": "Account Manager", 
+            "id": "8f0585d639f6", 
+            "href": "http://host/PartyManagement/organization/8f0585d639f6", 
+            "name": "Gwen Howells", 
+            "@referredType": "Individual" 
+        } 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 51 
+ 
+    ], 
+    "state": "inProgress" 
+} 
+ 
+Create resource order 
+  POST /resourceOrder 
+Description 
+This operation creates a resource order entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a ResourceOrder, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+resourceOrderItem 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+cancellationDate 
+ 
+cancellationReason 
+ 
+category 
+ 
+completionDate 
+ 
+description 
+ 
+expectedCompletionDate 
+ 
+externalId 
+ 
+externalReference 
+ 
+name 
+ 
+note 
+ 
+orderDate 
+ 
+orderItem 
+ 
+orderType 
+ 
+priority 
+ 
+relatedParty 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+startDate 
+ 
+state 
+ 
+ 
+Additional Rules 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 51 
+ 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships when 
+creating a ResourceOrder resource. 
+Context 
+Mandatory Sub-Attributes 
+resourceOrderItem 
+id, action 
+relatedParty 
+id, @referredType 
+note 
+text, id 
+orderRelationship 
+id, relationshipType 
+orderItem.resource.resourceCharacteristic 
+name 
+orderItem.orderItemRelationship 
+orderItem 
+orderItem.orderItemRelationship.orderItem itemId 
+appointment 
+id 
+externalReference 
+name 
+ 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+When creating a resource order (post) an order must not have the state, cancellationDate, 
+cancellationReason, completionDate, orderDate fields 
+When creating a resource order (post) an order item must not have the state field 
+In relatedParty, the role is mandatory if the id identifies a party - optional if it is a party role. 
+ 
+Usage Samples 
+An example request to create an order for Optical Cable for use case 1 - the resulting resource ID is 5130d5131a23 
+ 
+Request 
+ 
+POST /tmf-api/resourceOrdering/v4/resourceOrder 
+Content-Type: application/json 
+ 
+{ 
+    "category": "Premium", 
+    "description": "7000m of Optical Cable", 
+    "name": "7km Optical Cable for Acme Inc", 
+    "priority": 0, 
+    "requestedCompletionDate": "2020-03-31T19:50:43.214Z", 
+    "requestedStartDate": "2020-03-31T19:50:43.214Z", 
+    "externalReference": [ 
+        { 
+            "externalReferenceType": "Acme Ordering Number", 
+            "name": "8b032c8ca734" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "id": "9ba1047c38ce", 
+            "date": "2020-03-31T19:50:43.214Z", 
+            "text": "Cable must be double jacketed as it may be exposed to water" 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 51 
+ 
+        } 
+    ], 
+    "orderItem": [ 
+        { 
+            "id": "049eb3108ed5", 
+            "quantity": 7000, 
+            "action": "add", 
+            "appointment": { 
+                "id": "74da513bdc6c", 
+                "href": "https:/host/tmf-api/appointment/v4/appointment/74da513bdc6c", 
+                "description": "Site Survey" 
+            }, 
+            "resource": { 
+                "category": "Premium", 
+                "description": "LG Series: FAA-Compliant Loose Tube Cable - Double Jacket", 
+                "name": "LG006-C5111N1", 
+                "resourceVersion": "6", 
+                "attachment": [ 
+                    { 
+                        "id": "305f2215715f", 
+                        "href": "http://host/Attachment/305f2215715f", 
+                        "attachmentType": "PDF", 
+                        "description": "Fiber Optic Cable Data Sheet", 
+                        "mimeType": "application/pdf", 
+                        "name": "FAA-Compliant_Loose_Tube_Cable_-_Double_Jacket.pdf", 
+                        "url": "http://host/Content/d08d1967b82f" 
+                    } 
+                ], 
+                "operationalState": "disable", 
+                "place": { 
+                    "id": "49c2c42cbd2f", 
+                    "href": "http://host/GeographicAddress/address/49c2c42cbd2f", 
+                    "name": "Acme Inc Headquarters", 
+                    "role": "Customer Site", 
+                    "@baseType": "Place", 
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Common/GeographicAddress.schema.json", 
+                    "@referredType": "GeographicAddress" 
+                }, 
+                "relatedParty": [ 
+                    { 
+                        "role": "Manufacturer", 
+                        "id": "091b56cc3864", 
+                        "href": "http://host/PartyManagement/organization/091b56cc3864", 
+                        "name": "FiberOpticsRUs Inc", 
+                        "@referredType": "Organization" 
+                    } 
+                ], 
+                "resourceSpecification": { 
+                    "id": "e362d12b54f2", 
+                    "href": "http://host/ResourceCatalog/resourceSpecification/e362d12b54f2", 
+                    "name": "LG006-C5111N1", 
+                    "version": "6" 
+                }, 
+                "@baseType": "Resource", 
+                "@type": "PhysicalResource" 
+            } 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 51 
+ 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "role": "Customer", 
+            "id": "b5bd5f0b9f33", 
+            "href": "http://host/PartyManagement/organization/b5bd5f0b9f33", 
+            "name": "Acme Inc", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "role": "Account Manager", 
+            "id": "8f0585d639f6", 
+            "href": "http://host/PartyManagement/organization/8f0585d639f6", 
+            "name": "Gwen Howells", 
+            "@referredType": "Individual" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "5130d5131a23", 
+    "href": "http://host/resourceOrder/resourceOrder/5130d5131a23", 
+    "category": "Premium", 
+    "description": "7000m of Optical Cable", 
+    "expectedCompletionDate": "2020-05-31T20:50:27.275Z", 
+    "name": "7km Optical Cable for Acme Inc", 
+    "orderDate": "2020-03-31T20:50:27.275Z", 
+    "priority": 0, 
+    "requestedCompletionDate": "2020-03-31T19:50:43.214Z", 
+    "requestedStartDate": "2020-03-31T19:50:43.214Z", 
+    "startDate": "2020-03-31T19:50:43.214Z", 
+    "externalReference": [ 
+        { 
+            "externalReferenceType": "Acme Ordering Number", 
+            "name": "8b032c8ca734" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "id": "9ba1047c38ce", 
+            "date": "2020-03-31T19:50:43.214Z", 
+            "text": "Cable must be double jacketed as it may be exposed to water" 
+        } 
+    ], 
+    "orderItem": [ 
+        { 
+            "id": "049eb3108ed5", 
+            "quantity": 7000, 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 51 
+ 
+            "action": "add", 
+            "appointment": { 
+                "id": "74da513bdc6c", 
+                "href": "https:/host/tmf-api/appointment/v4/appointment/74da513bdc6c", 
+                "description": "Site Survey" 
+            }, 
+            "resource": { 
+                "id": "56fcbd0673c3", 
+                "href": "http://host/resourceOrder/resource/56fcbd0673c3", 
+                "category": "Premium", 
+                "description": "LG Series: FAA-Compliant Loose Tube Cable - Double Jacket", 
+                "name": "LG006-C5111N1", 
+                "resourceVersion": "6", 
+                "attachment": [ 
+                    { 
+                        "id": "305f2215715f", 
+                        "href": "http://host/Attachment/305f2215715f", 
+                        "attachmentType": "PDF", 
+                        "description": "Fiber Optic Cable Data Sheet", 
+                        "mimeType": "application/pdf", 
+                        "name": "FAA-Compliant_Loose_Tube_Cable_-_Double_Jacket.pdf", 
+                        "url": "http://host/Content/d08d1967b82f" 
+                    } 
+                ], 
+                "operationalState": "disable", 
+                "place": { 
+                    "id": "49c2c42cbd2f", 
+                    "href": "http://host/GeographicAddress/address/49c2c42cbd2f", 
+                    "name": "Acme Inc Headquarters", 
+                    "role": "Customer Site", 
+                    "@baseType": "Place", 
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Common/GeographicAddress.schema.json", 
+                    "@referredType": "GeographicAddress" 
+                }, 
+                "relatedParty": [ 
+                    { 
+                        "role": "Manufacturer", 
+                        "id": "091b56cc3864", 
+                        "href": "http://host/PartyManagement/organization/091b56cc3864", 
+                        "name": "FiberOpticsRUs Inc", 
+                        "@referredType": "Organization" 
+                    } 
+                ], 
+                "resourceSpecification": { 
+                    "id": "e362d12b54f2", 
+                    "href": "http://host/ResourceCatalog/resourceSpecification/e362d12b54f2", 
+                    "name": "LG006-C5111N1", 
+                    "version": "6" 
+                }, 
+                "@baseType": "Resource", 
+                "@type": "PhysicalResource" 
+            }, 
+            "state": "acknowledged" 
+        } 
+    ], 
+    "relatedParty": [ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 40 of 51 
+ 
+        { 
+            "role": "Customer", 
+            "id": "b5bd5f0b9f33", 
+            "href": "http://host/PartyManagement/organization/b5bd5f0b9f33", 
+            "name": "Acme Inc", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "role": "Account Manager", 
+            "id": "8f0585d639f6", 
+            "href": "http://host/PartyManagement/organization/8f0585d639f6", 
+            "name": "Gwen Howells", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "acknowledged" 
+} 
+ 
+Patch resource order 
+  PATCH /resourceOrder/{id} 
+Description 
+This operation allows partial updates of a resource order entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+cancellationDate 
+ 
+cancellationReason 
+ 
+category 
+ 
+description 
+ 
+expectedCompletionDate 
+ 
+externalId 
+ 
+externalReference 
+ 
+name 
+ 
+note 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 41 of 51 
+ 
+orderItem 
+ 
+orderType 
+ 
+priority 
+ 
+relatedParty 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+startDate 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+orderDate 
+ 
+completionDate 
+ 
+correlationId 
+ 
+ 
+Additional Rules 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+When creating a resource order (post) an order must not have the state, cancellationDate, 
+cancellationReason, completionDate, orderDate fields 
+When creating a resource order (post) an order item must not have the state field 
+In relatedParty, the role is mandatory if the id identifies a party - optional if it is a party role. 
+ 
+Usage Samples 
+A request for updating a previous ResourceOrder, changing the priority for ResourceOrder 5130d5131a23 
+ 
+Request 
+ 
+PATCH /tmf-api/resourceOrdering/v4/resourceOrder/5130d5131a23 
+Content-Type: application/json 
+ 
+{ 
+    "priority": 2 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "5130d5131a23", 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 42 of 51 
+ 
+    "href": "http://host/resourceOrder/resourceOrder/5130d5131a23", 
+    "category": "Premium", 
+    "description": "7000m of Optical Cable", 
+    "expectedCompletionDate": "2020-05-31T20:50:27.275Z", 
+    "name": "7km Optical Cable for Acme Inc", 
+    "orderDate": "2020-03-31T20:50:27.275Z", 
+    "priority": 2, 
+    "requestedCompletionDate": "2020-03-31T19:50:43.214Z", 
+    "requestedStartDate": "2020-03-31T19:50:43.214Z", 
+    "startDate": "2020-03-31T19:50:43.214Z", 
+    "externalReference": [ 
+        { 
+            "externalReferenceType": "Acme Ordering Number", 
+            "name": "8b032c8ca734" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "id": "9ba1047c38ce", 
+            "date": "2020-03-31T19:50:43.214Z", 
+            "text": "Cable must be double jacketed as it may be exposed to water" 
+        } 
+    ], 
+    "orderItem": [ 
+        { 
+            "id": "049eb3108ed5", 
+            "quantity": 7000, 
+            "action": "add", 
+            "appointment": { 
+                "id": "74da513bdc6c", 
+                "href": "https:/host/tmf-api/appointment/v4/appointment/74da513bdc6c", 
+                "description": "Site Survey" 
+            }, 
+            "resource": { 
+                "id": "56fcbd0673c3", 
+                "href": "http://host/resourceCatalog/resource/56fcbd0673c3", 
+                "category": "Premium", 
+                "description": "LG Series: FAA-Compliant Loose Tube Cable - Double Jacket", 
+                "name": "LG006-C5111N1", 
+                "resourceVersion": "6", 
+                "attachment": [ 
+                    { 
+                        "id": "305f2215715f", 
+                        "href": "http://host/Attachment/305f2215715f", 
+                        "attachmentType": "PDF", 
+                        "description": "Fiber Optic Cable Data Sheet", 
+                        "mimeType": "application/pdf", 
+                        "name": "FAA-Compliant_Loose_Tube_Cable_-_Double_Jacket.pdf", 
+                        "url": "http://host/Content/d08d1967b82f" 
+                    } 
+                ], 
+                "operationalState": "disable", 
+                "place": { 
+                    "id": "49c2c42cbd2f", 
+                    "href": "http://host/GeographicAddress/address/49c2c42cbd2f", 
+                    "name": "Acme Inc Headquarters", 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 43 of 51 
+ 
+                    "role": "Customer Site", 
+                    "@baseType": "Place", 
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-api/schema/Common/GeographicAddress.schema.json", 
+                    "@referredType": "GeographicAddress" 
+                }, 
+                "relatedParty": [ 
+                    { 
+                        "role": "Manufacturer", 
+                        "id": "091b56cc3864", 
+                        "href": "http://host/PartyManagement/organization/091b56cc3864", 
+                        "name": "FiberOpticsRUs Inc", 
+                        "@referredType": "Organization" 
+                    } 
+                ], 
+                "resourceSpecification": { 
+                    "id": "e362d12b54f2", 
+                    "href": "http://host/ResourceCatalog/resourceSpecification/e362d12b54f2", 
+                    "name": "LG006-C5111N1", 
+                    "version": "6" 
+                }, 
+                "@baseType": "Resource", 
+                "@type": "PhysicalResource" 
+            }, 
+            "state": "inProgress" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "role": "Customer", 
+            "id": "b5bd5f0b9f33", 
+            "href": "http://host/PartyManagement/organization/b5bd5f0b9f33", 
+            "name": "Acme Inc", 
+            "@referredType": "Organization" 
+        }, 
+        { 
+            "role": "Account Manager", 
+            "id": "8f0585d639f6", 
+            "href": "http://host/PartyManagement/organization/8f0585d639f6", 
+            "name": "Gwen Howells", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "state": "inProgress" 
+} 
+ 
+Delete resource order 
+  DELETE /resourceOrder/{id} 
+Description 
+This operation deletes a resource order entity. 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 44 of 51 
+ 
+Usage Samples 
+A request to delete an existing ResourceOrder 
+ 
+Request 
+ 
+DELETE /tmf-api/resourceOrdering/v4/resourceOrder/5130d5131a23 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Cancel Resource Order 
+List cancel resource orders 
+  GET /cancelResourceOrder?fields=...&{filtering} 
+Description 
+This operation list cancel resource order entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving CancelResourceOrder resources. 
+ 
+Request 
+ 
+GET /tmf-api/resourceOrdering/v4/cancelResourceOrder 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "5130d5131a23", 
+    "href": "https:/host/tmf-api/cancelResourceOrder/v4/cancelResourceOrder/5130d5131a23", 
+    "cancellationReason": "No longer required", 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 45 of 51 
+ 
+    "effectiveCancellationDate": "2020-07-10T18:00:00.000Z", 
+    "requestedCancellationDate": "2020-07-10T17:18:14.523Z", 
+    "resourceOrder": { 
+        "id": "fde8c6a47450", 
+        "href": "http://host/resourceOrder/fde8c6a47450" 
+    }, 
+    "state": "assessingCancellation" 
+} 
+] 
+ 
+Retrieve cancel resource order 
+  GET /cancelResourceOrder/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a cancel resource order entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a CancelResourceOrder resource. 
+ 
+Request 
+ 
+GET /tmf-api/resourceOrdering/v4/cancelResourceOrder/5130d5131a23 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "5130d5131a23", 
+    "href": "https:/host/tmf-api/cancelResourceOrder/v4/cancelResourceOrder/5130d5131a23", 
+    "cancellationReason": "No longer required", 
+    "effectiveCancellationDate": "2020-07-10T18:00:00.000Z", 
+    "requestedCancellationDate": "2020-07-10T17:18:14.523Z", 
+    "resourceOrder": { 
+        "id": "fde8c6a47450", 
+        "href": "http://host/resourceOrder/fde8c6a47450" 
+    }, 
+    "state": "assessingCancellation" 
+} 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 46 of 51 
+ 
+Create cancel resource order 
+  POST /cancelResourceOrder 
+Description 
+This operation creates a cancel resource order entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+CancelResourceOrder, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+resourceOrder 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+cancellationReason 
+ 
+effectiveCancellationDate 
+ 
+requestedCancellationDate 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+state 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships when 
+creating a CancelResourceOrder resource. 
+Context 
+Mandatory Sub-Attributes 
+resourceOrder 
+id 
+ 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+Resource order id must exist 
+When creating a cancel resource order (post) the id, href, effectiveCancellationDate and state fields must not 
+be present in the request 
+ 
+Usage Samples 
+Here's an example of a request for creating a CancelResourceOrder resource. In this example the request only 
+passes mandatory attributes. 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 47 of 51 
+ 
+ 
+Request 
+ 
+POST /tmf-api/resourceOrdering/v4/cancelResourceOrder 
+Content-Type: application/json 
+ 
+{ 
+    "resourceOrder": { 
+        "id": "fde8c6a47450", 
+        "href": "http://host/resourceOrder/fde8c6a47450" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "5130d5131a23", 
+    "href": "https:/host/tmf-api/cancelResourceOrder/v4/cancelResourceOrder/5130d5131a23", 
+    "resourceOrder": { 
+        "id": "fde8c6a47450", 
+        "href": "http://host/resourceOrder/fde8c6a47450" 
+    } 
+} 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 48 of 51 
+ 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 49 of 51 
+ 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+ 
+ 
+
+
+TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 50 of 51 
+ 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+        EVENT BODY  
+    }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+ 
+ 
+
+
+ TMF652 Resource Order Management API User Guide 
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 51 of 51 
+ 
+Acknowledgements 
+Version History 
+ 
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+4.0.0 
+26-Jul-2020 
+Alan Pope 
+Final edits prior to publication 
+ 
+Release History 
+ 
+Release Status 
+Date  
+Release led by: 
+Description  
+Release 1.0 
+15-Apr-2016 
+Pierre Gauthier 
+TM Forum 
+Nicoleta Stoica 
+Vodafone Group 
+ 
+Mariano Belaunde 
+Orange Labs 
+Generated using the API data model 
+Pre-production 
+26-Jul-2020 
+Yasen Pavlov 
+Vodafone Germany 
+Stephen Harrop 
+Vodafone Group 
+Updated based on schema-library 
+and Design Guideline v4 patterns 
+Production 
+23-Sep-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+ 
+
+

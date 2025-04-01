@@ -1,0 +1,1400 @@
+ 
+TM Forum 2018. All Rights Reserved. 
+ 
+    TM Forum Specification 
+ 
+Geographic Location 
+API REST Specification 
+ 
+ 
+ 
+ 
+      TMF675 
+      Release 17.5.0 
+      January 2018 
+ 
+ 
+ 
+ 
+ 
+Latest Update: TM Forum Release 17.5.0 
+Member Evaluation 
+Version 1.0.2 
+IPR Mode: RAND 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 2  
+NOTICE 
+Copyright © TM Forum 2018. All Rights Reserved. 
+This document and translations of it may be copied and furnished to others, and derivative works that 
+comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, 
+and distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice 
+and this section are included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to TM FORUM, 
+except as needed for the purpose of developing any document or deliverable produced by a TM FORUM 
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in the TM 
+FORUM IPR Policy, must be followed) or as required to translate it into languages other than English. 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its 
+successors or assigns.  
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM 
+DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY 
+OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+PARTICULAR PURPOSE.  
+ 
+Direct inquiries to the TM Forum office:  
+4 Century Drive 
+Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 973 944 5100 
+Fax No.  +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 3  
+TABLE OF CONTENTS 
+NOTICE ..................................................................................................................................................... 2 
+Table of Contents ....................................................................................................................................... 3 
+List of Tables ............................................................................................................................................. 5 
+Introduction ................................................................................................................................................ 6 
+SAMPLE USE CASES ............................................................................................................................... 7 
+RESOURCE MODEL ................................................................................................................................. 8 
+Managed Entity and Task Resource Models .......................................................................................... 8 
+Geographic Location resource ............................................................................................................. 8 
+Retrieve Geographic Location resource ............................................................................................... 9 
+Retrieve Location Relation resource .................................................................................................. 13 
+Notification Resource Models ............................................................................................................... 16 
+Retrieve Geographic Location Creation Notification ........................................................................... 17 
+Retrieve Geographic Location Change Notification ............................................................................ 17 
+Retrieve Location Relation Creation Notification ................................................................................ 18 
+Retrieve Location Relation Change Notification ................................................................................. 18 
+API OPERATIONS ................................................................................................................................... 20 
+Operations on Geographic Location ..................................................................................................... 21 
+List geographic locations ................................................................................................................... 21 
+Retrieve geographic location ............................................................................................................. 21 
+Operations on Retrieve Geographic Location ....................................................................................... 23 
+List retrieve geographic locations ...................................................................................................... 23 
+Retrieve retrieve geographic location ................................................................................................. 24 
+Create retrieve geographic location ................................................................................................... 25 
+Operations on Retrieve Location Relation ............................................................................................ 26 
+List retrieve location relations ............................................................................................................ 26 
+Retrieve retrieve location relation ...................................................................................................... 27 
+Create retrieve location relation ......................................................................................................... 28 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 4  
+API NOTIFICATIONS............................................................................................................................... 31 
+Register listener ................................................................................................................................... 31 
+Unregister listener ................................................................................................................................ 32 
+Publish Event to listener ....................................................................................................................... 32 
+Acknowledgements .................................................................................................................................. 34 
+Release History .................................................................................................................................... 34 
+Contributors to Document ..................................................................................................................... 34 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 5  
+LIST OF TABLES 
+ 
+N/A 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 6  
+INTRODUCTION 
+ 
+The following document is the specification of the REST API for geographic location management. It 
+includes the model definition as well as all available operations. 
+A Geographic Location is a point, a surface or a volume defined by geographic point(s). These points 
+should be associated with accuracy and a spatial reference. 
+The geographic location API provides a standardized client interface to a location management system. 
+. 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 7  
+SAMPLE USE CASES 
+Reader will find example of use cases using Usage API in “Open Digital Business Scenarios and Use 
+Cases” document. 
+ 
+ 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 8  
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+GEOGRAPHIC LOCATION RESOURCE 
+Structured textual way of describing a geographic location. A geographic location allows describing 
+through coordinate(s), a point, a line or a space. 
+Resource model 
+ 
+Field descriptions 
+GeographicLocation fields 
+Field 
+Description 
+id 
+A string. Unique identifier of the geographic location. 
+href 
+A string. An URI used to access to the geographic location resource. 
+name 
+A string. Name of the geo location. 
+geometryType 
+A string. Type of the geographic location - one of: point, line, graph, ring 
+polygon. 
+accuracy 
+A string. Accuracy of the coordinate specified. 
+spatialRef 
+A string. Geocoding referential. 
+geometry 
+A list of geographic points (GeographicPoint [*]). A GeoPoint defines a 
+geographic point through coordinates. 
+@baseType 
+A string. Indicates the base type of the resource. Here can be 
+'geographicLocation'. 
+@type 
+A string. Indicates the type of the resource.  
+@schemaLocation 
+A string. A link to the schema describing this REST Resource. 
+ class GeoLocation resource
+GeographicLocation
+id  :String
+href  :String
+name  :String
+geometryType  :String
+accuracy  :String
+spatialRef  :String
+@baseType  :String
+@type  :String
+@schemaLocation  :String
+GeographicPoint
+x  :String
+y  :String
+z  :String
+geometry 0..*
+0..1
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 9  
+ 
+GeographicPoint sub-resource 
+A GeoPoint defines a geographic point through coordinates. 
+Field 
+Description 
+x 
+A string. x coordinate (usually latitude). 
+y 
+A string. y coordinate (usually longitude). 
+z 
+A string. z coordinate (usually elevation). 
+ 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicLocation' resource object 
+{ 
+    "id": "8980",  
+    "href": "https://host:port/location/geographicLocation/4164",  
+    "name": "London",  
+    "geometryType": "polygon",  
+    "accuracy": "",  
+    "spatialRef": "WGS84", 
+    "geometry": [ 
+        { 
+            "x": "1.430937",  
+            "y": "43.597208",  
+            "z": "" 
+        }, 
+        { 
+            "x": "22.65899",  
+            "y": "43.597208",  
+            "z": "" 
+        }, 
+        { 
+            "x": "13.26589",  
+            "y": "53.236589",  
+            "z": "" 
+        }, 
+        { 
+            "x": "1.430937",  
+            "y": "53.597208",  
+            "z": "" 
+        } 
+    ] 
+} 
+RETRIEVE GEOGRAPHIC LOCATION RESOURCE 
+This resource is used to manage the request and response to retrieve a thing (any object). 
+Resource model 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 10  
+ 
+Lifecycle 
+Rejected: Task request is rejected - data provided in the request do not fit API structure 
+In Progress: Task execution has begun and it is in progress 
+Done: Task has been done and the result could be a successor a fail 
+Terminated with Error: Task has not been executed correctly and no response is provided. This status do 
+not means a 'fail' status.  
+Note that an implementation of the specification may enrich the list of states depicted in the diagram. The 
+state machine specifying the typical state change transitions is provided below. 
+ class RetrieveGeographicLocation
+RetrieveGeographicLocation
+id  :String
+href  :String
+status  :String
+requestedAccuracy  :Float
+time  :DateTime
+object
+type  :String
+uri  :String
+geographicLocation
+id  :String
+href  :String
+name  :String
+geometryType  :String
+spatialRef  :String
+accuracy  :String
+@type  :String
+GeographicPoint
+x  :String
+y  :String
+z  :String
+geometry
+0..*
+0..1
+geographicLocation
+1
+0..1
+thing 1
+1
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 11  
+ 
+ 
+Field descriptions 
+RetrieveGeographicLocation fields 
+Field 
+Description 
+id 
+A string. Unique identifier of the task. 
+href 
+A string. An URI used to access to the task resource. 
+status 
+A string. Status of the task (inProgress, terminatedWithErrror, done). 
+requestedAccuracy 
+A float. Requested accuracy of the retrieval. 
+time 
+A date time (DateTime). Timestamp of end of task execution. 
+geographicLocation A geographic location (GeographicLocation). A geographic location allows 
+describing through coordinate(s), a point, a line or a space. 
+thing 
+An object (Object). the location is retrieved for. 
+ 
+GeographicLocation sub-resource 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 12  
+Structured textual way of describing a geographic location. A geographic location allows describing 
+through coordinate(s), a point, a line or a space. 
+Field 
+Description 
+id 
+A string. Unique identifier of the geographic location. 
+href 
+A string. An URI used to access to the geographic location resource. 
+name 
+A string. Name of the geo location. 
+geometryType 
+A string. Type of the geographic location - one of: point, line, graph, ring 
+polygon. 
+accuracy 
+A string. Accuracy of the coordinate specified. 
+spatialRef 
+A string. Geocoding referential. 
+geometry 
+A list of geographic points (GeographicPoint [*]). A GeoPoint defines a 
+geographic point through coordinates. 
+@type 
+A string. Indicates the type of the resource. 
+ 
+GeographicPoint sub-resource 
+A GeoPoint defines a geographic point through coordinates. 
+Field 
+Description 
+x 
+A string. x coordinate (usually latitude). 
+y 
+A string. y coordinate (usually longitude). 
+z 
+A string. z coordinate (usually elevation). 
+ 
+Object sub-resource 
+Object, the location is retrieved for. 
+Field 
+Description 
+type 
+A string. 
+uri 
+A string. 
+ 
+Json representation sample 
+We provide below the json representation of an example of a 'RetrieveGeographicLocation' resource 
+object 
+{ 
+    "id": "2008",  
+    "href": "https://host:port/location/geographicLocation/4264",  
+    "status": "done",  
+    "requestedAccuracy": 34.78,  
+    "time": "2017-07-18T00:00",  
+    "geographicLocation": { 
+        "id": "3488",  
+        "href": "https://host:port/location/geographicLocation/4164",  
+        "name": "London",  
+        "geometryType": "point",  
+         "accuracy": "0.01",  
+         "spatialRef": "WGS84",  
+        "geometry": [ 
+            { 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 13  
+                "x": "1.430937",  
+                "y": "43.597208",  
+                "z": "" 
+            } 
+        ] 
+    },  
+    "thing": { 
+        "type": "tel",  
+        "uri": "00447572116425" 
+    } 
+} 
+RETRIEVE LOCATION RELATION RESOURCE 
+This resource is used to manage the request and response to retrieve the relation between two 
+geographic locations. 
+Resource model 
+ 
+Lifecycle 
+Rejected: Task request is rejected - data provided in the request do not fit API structure 
+In Progress: Task execution has begun and it is in progress 
+Done: Task has been done and the result could be a successor a fail 
+Terminated with Error: Task has not been executed correctly and no response is provided. This status do 
+not means a 'fail' status.  
+Note that an implementation of the specification may enrich the list of states depicted in the diagram. The 
+state machine specifying the typical state change transitions is provided below. 
+ class RetrieveLocationRelation
+RetrieveLocationRelation
+id  :String
+href  :String
+status  :String
+distance  :String
+time  :DateTime
+geographicLocation
+id  :String
+href  :String
+name  :String
+geometryType  :String
+spatialRef  :String
+accuracy  :String
+@type  :String
+GeographicLocationRef
+id  :String
+href  :String
+GeographicPoint
+x  :String
+y  :String
+z  :String
+location
+2
+0..1
+intersection
+0..*
+1
+geometry 0..*
+0..1
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 14  
+ 
+ 
+Field descriptions 
+RetrieveLocationRelation fields 
+Field 
+Description 
+id 
+A string. Unique identifier of the task. 
+href 
+A string. An URI used to access to the task resource. 
+status 
+A string. Status of the task (inProgress, terminatedWithErrror, done). 
+distance 
+A string. Calculated distance between location A and location B. 
+time 
+A date time (DateTime). Timestamp of end of task execution. 
+intersection 
+A list of geographic locations (GeographicLocation [*]). Structured textual way 
+of describing a geographic location. A geographic location allows describing 
+through coordinate(s), a point, a line or a space. 
+geographicLocation A list of geographic location references (GeographicLocationRef [2..2]). 
+Defines a geographic location and/or identifies an existing geographic location 
+entity 
+A geographic Location allows describing through coordinate(s) a point, a line or 
+a space. 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 15  
+ 
+GeographicLocation sub-resource 
+Structured textual way of describing a geographic location. A geographic location allows describing 
+through coordinate(s), a point, a line or a space. 
+Field 
+Description 
+id 
+A string. Unique identifier of the geographic location. 
+href 
+A string. An URI used to access to the geographic location resource. 
+name 
+A string. Name of the geo location. 
+geometryType 
+A string. Type of the geographic location - one of: point, line, graph, ring 
+polygon. 
+accuracy 
+A string. Accuracy of the coordinate specified. 
+spatialRef 
+A string. Geocoding referential. 
+geometry 
+A list of geographic points (GeographicPoint [*]). A GeoPoint defines a 
+geographic point through coordinates. 
+ 
+GeographicPoint sub-resource 
+A GeoPoint defines a geographic point through coordinates. 
+Field 
+Description 
+x 
+A string. x coordinate (usually latitude). 
+y 
+A string. y coordinate (usually longitude). 
+z 
+A string. z coordinate (usually elevation). 
+ 
+GeographicLocationRef relationship 
+Defines a geographic location and/or identifies an existing geographic location entity 
+A geographic Location allows describing through coordinate(s) a point, a line or a space. 
+Field 
+Description 
+id 
+A string. A String. 
+href 
+A string. A String. 
+ 
+Json representation sample 
+We provide below the json representation of an example of a 'RetrieveLocationRelation' resource object 
+{ 
+    "id": "3870",  
+    "href": "https://host:port/geographicLocation/retrieveLocationRelation/3870",  
+    "status": "inProgress",  
+    "distance": 123,  
+    "time": "2017-07-18T00:00",  
+    "intersection": [ 
+        { 
+            "id": "3759",  
+            "href": "https://host:port/location/geographicLocation/4164",  
+            "name": "London",  
+            "geometryType": "line",  
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 16  
+            "accuracy": "0.01",  
+             "spatialRef": "WGS84",  
+            "geometry": [ 
+               { 
+                "x": "1.430937",  
+                "y": "43.597208",  
+                "z": "" 
+               }, 
+               { 
+                "x": "2.369825",  
+                "y": "44.2365",  
+                "z": "" 
+               } 
+           ] 
+        } 
+    ],  
+    "location": [ 
+     { 
+        "id": "9207",  
+        "href": "https://host:port/location/geographicLocation/9207" 
+    }, 
+     { 
+        "id": "4164",  
+        "href": "https://host:port/location/geographicLocation/4164" 
+    } 
+  ] 
+} 
+ 
+Notification Resource Models 
+ 
+4 notifications are defined for this API 
+Notifications related to RetrieveGeographicLocation: 
+    - RetrieveGeographicLocationCreationNotification 
+    - RetrieveGeographicLocationChangeNotification 
+Notifications related to RetrieveLocationRelation: 
+    - RetrieveLocationRelationCreationNotification 
+    - RetrieveLocationRelationChangeNotification 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification resource (depicted by "SpecificNotification" placeholder) is a sub class of a generic 
+Notification structure containing an id of the event occurrence (eventId), an event timestamp (eventTime), 
+and the name of the notification resource (eventType).  
+This notification structure owns an event structure ("SpecificEvent" placeholder) linked to the resource 
+concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 17  
+ 
+RETRIEVE GEOGRAPHIC LOCATION CREATION NOTIFICATION 
+Notification sent when a new RetrieveGeographicLocation resource is created. 
+Json representation sample 
+We provide below the json representation of an example of a 
+'RetrieveGeographicLocationCreationNotification' notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"RetrieveGeographicLocationCreationNotification", 
+     "event": { 
+        "retrieveGeographicLocation" :  
+            {-- SEE RetrieveGeographicLocation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+RETRIEVE GEOGRAPHIC LOCATION CHANGE NOTIFICATION 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 18  
+Notification sent when changing a RetrieveGeographicLocation resource. 
+Json representation sample 
+We provide below the json representation of an example of a 
+'RetrieveGeographicLocationChangeNotification' notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"RetrieveGeographicLocationChangeNotification", 
+     "event": { 
+        "retrieveGeographicLocation" :  
+            {-- SEE RetrieveGeographicLocation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+RETRIEVE LOCATION RELATION CREATION NOTIFICATION 
+Notification sent when a new RetrieveLocationRelation resource is created. 
+Json representation sample 
+We provide below the json representation of an example of a 
+'RetrieveLocationRelationCreationNotification' notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"RetrieveLocationRelationCreationNotification", 
+     "event": { 
+        "retrieveLocationRelation" :  
+            {-- SEE RetrieveLocationRelation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+RETRIEVE LOCATION RELATION CHANGE NOTIFICATION 
+Notification sent when changing a RetrieveLocationRelation resource. 
+Json representation sample 
+We provide below the json representation of an example of a 
+'RetrieveLocationRelationChangeNotification' notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"RetrieveLocationRelationChangeNotification", 
+     "event": { 
+        "retrieveLocationRelation" :  
+            {-- SEE RetrieveLocationRelation RESOURCE SAMPLE --} 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 19  
+    } 
+} 
+ 
+ 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 20  
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to 
+retrieve a representation of 
+a resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to 
+create a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Complete Update of an 
+Entity 
+PUT Resource 
+PUT must be used to 
+completely update a 
+resource identified by its 
+resource URL  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not 
+be used to tunnel other 
+request methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+ 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 21  
+OPERATIONS ON GEOGRAPHIC LOCATION 
+LIST GEOGRAPHIC LOCATIONS 
+  GET /geographicLocation?fields=...&{filtering} 
+Description 
+This operation list geographic location entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+Providing filtering criteria is mandatory to avoid too many answers retrieved. To provide example it 
+could filtering on name or on geographic point(s) plan/volume. 
+Usage Samples 
+Here's an example of a request for retrieving GeographicLocation resources. 
+ 
+Request 
+ 
+GET /geographicLocationManagement/geographicLocation?name=London 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "8980",  
+    "href": "https://host:port/location/geographicLocation/4164",  
+    "name": "London",  
+    "geometryType": "point",  
+     "accuracy": 0.1"",  
+    "spatialRef": "WGS84", 
+    "geometry": [ 
+        { 
+            "x": "1.430937",  
+            "y": "43.597208",  
+            "z": "" 
+        } 
+    ] 
+} 
+] 
+ 
+RETRIEVE GEOGRAPHIC LOCATION 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 22  
+  GET /geographicLocation/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a geographic location entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a GeographicLocation resource. 
+ 
+Request 
+ 
+GET /geographicLocationManagement/geographicLocation/8980 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "8980",  
+    "href": "https://host:port/location/geographicLocation/4164",  
+    "name": "London",  
+    "geometryType": "graph",  
+     "accuracy": "0.1",  
+    "spatialRef": "WGS84", 
+    "geometry": [ 
+        { 
+            "x": "1.430937",  
+            "y": "43.597208",  
+            "z": "" 
+        }, 
+        { 
+            "x": "2.36589",  
+            "y": "44.597208",  
+            "z": "" 
+        }, 
+       { 
+            "x": "3.25698",  
+            "y": "42.597208",  
+            "z": "" 
+        } 
+    ] 
+} 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 23  
+OPERATIONS ON RETRIEVE GEOGRAPHIC LOCATION 
+LIST RETRIEVE GEOGRAPHIC LOCATIONS 
+  GET /retrieveGeographicLocation?fields=...&{filtering} 
+Description 
+This operation list retrieveGeographicLocation entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving RetrieveGeographicLocation resources. 
+ 
+Request 
+ 
+GET /geographicLocationManagement/retrieveGeographicLocation?name=London 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "2008",  
+    "href": "https://host:port/location/geographicLocation/4264",  
+    "status": "done",  
+    "requestedAccuracy": 34.78,  
+    "time": "2017-07-18T00:00",  
+    "geographicLocation": { 
+        "id": "3488",  
+        "href": "https://host:port/location/geographicLocation/4164",  
+        "name": "London",  
+        "geometryType": "polygon",  
+         "accuracy": "0.1",  
+         "spatialRef": "WGS84", 
+        "geometry": [ 
+            { 
+                "x": "1.430937",  
+                "y": "43.597208",  
+                "z": "" 
+            }, 
+            { 
+                "x": "1.430937",  
+                "y": "53.597208",  
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 24  
+                "z": "" 
+            }, 
+            { 
+                "x": "2.430937",  
+                "y": "53.597208",  
+                "z": "" 
+            } 
+        ] 
+    },  
+    "thing": { 
+        "type": "tel",  
+        "uri": "00447572116425" 
+    } 
+} 
+] 
+ 
+RETRIEVE RETRIEVE GEOGRAPHIC LOCATION 
+  GET /retrieveGeographicLocation/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a retrieve geographic location entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a RetrieveGeographicLocation resource. 
+ 
+Request 
+ 
+GET /geographicLocationManagement/retrieveGeographicLocation/2008 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "2008",  
+    "href": "https://host:port/location/geographicLocation/4264",  
+    "status": "done",  
+    "requestedAccuracy": 1.0,  
+    "time": "2017-07-18T00:00",  
+    "geographicLocation": { 
+        "id": "3488",  
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 25  
+        "href": "https://host:port/location/geographicLocation/4164",  
+        "name": "London",  
+        "geometryType": "point",  
+         "accuracy": "",  
+        "spatialRef": "WGS84", 
+        "geometry": [ 
+            { 
+                "x": "1.430937",  
+                "y": "43.597208",  
+                "z": "" 
+            } 
+        ] 
+    },  
+    "thing": { 
+        "type": "tel",  
+        "uri": "00447572116425" 
+    } 
+} 
+ 
+CREATE RETRIEVE GEOGRAPHIC LOCATION 
+  POST /retrieveGeographicLocation 
+Description 
+This operation creates a retrieve geographic location entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provides the list of mandatory and non mandatory attributes when creating a 
+RetrieveGeographicLocation, including any possible rule conditions and applicable default values. Notice 
+that it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+creation 
+ 
+change 
+ 
+ 
+Non Mandatory Attributes 
+Default Value 
+Rule 
+status 
+ 
+ 
+requestedAccuracy 
+ 
+ 
+time 
+ 
+ 
+geographicLocation 
+ 
+ 
+thing 
+ 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a RetrieveGeographicLocation resource. In this example the 
+request only passes mandatory attributes. 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 26  
+ 
+Request 
+ 
+POST /geographicLocationManagement/retrieveGeographicLocation 
+Content-Type: application/json 
+ 
+{} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "2008",  
+    "href": "https://host:port/location/geographicLocation/4264" 
+} 
+ 
+OPERATIONS ON RETRIEVE LOCATION RELATION 
+LIST RETRIEVE LOCATION RELATIONS 
+  GET /retrieveLocationRelation?fields=...&{filtering} 
+Description 
+This operation list retrieve location relation entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving RetrieveLocationRelation resources. 
+ 
+Request 
+ 
+GET /geographicLocationManagement/retrieveLocationRelation 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "3870",  
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 27  
+    "href": "https://host:port/geographicLocation/retrieveLocationRelation/3870",  
+    "status": "inProgress",  
+    "locationA": { 
+        "href": "/DSGeographicLocation/api/geographiclocation/geographiclocation/1" 
+    },  
+    "locationB": { 
+        "href": "/DSGeographicLocation/api/geographiclocation/geographiclocation/2" 
+    },  
+    "distance": 123,  
+    "time": "2017-07-18T00:00",  
+    "intersection": [ 
+        { 
+            "id": "3759",  
+            "href": "https://host:port/location/geographicLocation/4164",  
+            "name": "London",  
+            "geometryType": "point",  
+             "accuracy": "0.1",  
+            "spatialRef": "WGS84", 
+            "geometry": [ 
+                { 
+                    "x": "1.430937",  
+                    "y": "43.597208",  
+                    "z": "" 
+                } 
+            ] 
+        } 
+    ],  
+    "geographicLocation": { 
+        "id": "9207",  
+        "href": "https://host:port/location/geographicLocation/4164" 
+    } 
+} 
+] 
+ 
+RETRIEVE RETRIEVE LOCATION RELATION 
+  GET /retrieveLocationRelation/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a retrieve location relation entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a RetrieveLocationRelation resource. 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 28  
+ 
+Request 
+ 
+GET /geographicLocationManagement/retrieveLocationRelation/3870 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "3870",  
+    "href": "https://host:port/geographicLocation/retrieveLocationRelation/3870",  
+    "status": "inProgress",  
+    "distance": 123,  
+    "time": "2017-07-18T00:00",  
+    "intersection": [ 
+        { 
+            "id": "3759",  
+            "href": "https://host:port/location/geographicLocation/4164",  
+            "name": "London",  
+            "geometryType": "line",  
+            "accuracy": "0.1",  
+            "spatialRef": "WGS84", 
+            "geometry": [ 
+                { 
+                    "x": "1.430937",  
+                    "y": "43.597208",  
+                    "z": "" 
+                }, 
+                { 
+                    "x": "1.8956",  
+                    "y": "43.597208",  
+                    "z": "" 
+                } 
+            ] 
+        } 
+    ],  
+    "location": [ 
+     { 
+        "id": "9207",  
+        "href": "https://host:port/location/geographicLocation/9207" 
+    }, 
+     { 
+        "id": "4164",  
+        "href": "https://host:port/location/geographicLocation/4164" 
+    } 
+  ] 
+} 
+ 
+CREATE RETRIEVE LOCATION RELATION 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 29  
+  POST /retrieveLocationRelation 
+Description 
+This operation creates a retrieve location relation entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provides the list of mandatory and non-mandatory attributes when creating a 
+RetrieveLocationRelation, including any possible rule conditions and applicable default values. Notice that 
+it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+creation 
+ 
+change 
+ 
+ 
+Non Mandatory Attributes 
+Default Value 
+Rule 
+status 
+ 
+ 
+locationA 
+ 
+ 
+locationB 
+ 
+ 
+distance 
+ 
+ 
+time 
+ 
+ 
+intersection 
+ 
+ 
+geographicLocation 
+ 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a RetrieveLocationRelation resource. In this example the 
+request only passes mandatory attributes. 
+ 
+Request 
+ 
+POST /geographicLocationManagement/retrieveLocationRelation 
+Content-Type: application/json 
+ 
+{ 
+    "location": [ 
+     { 
+        "id": "9207",  
+        "href": "https://host:port/location/geographicLocation/9207" 
+    }, 
+     { 
+        "id": "4164",  
+        "href": "https://host:port/location/geographicLocation/4164" 
+    } 
+  ] 
+ 
+} 
+ 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 30  
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "3870",  
+    "href": "https://host:port/geographicLocation/retrieveLocationRelation/3870" 
+} 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 31  
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+REGISTER LISTENER 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its 
+health state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if 
+it does not support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint 
+can be created again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 32  
+UNREGISTER LISTENER 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+PUBLISH EVENT TO LISTENER 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be 
+replaced by one of the notification types supported by this API (see Notification Resources Models 
+section) and EVENT BODY refers to the data structure of the given notification type. 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                       © TM Forum 2018. All Rights Reserved.  
+ Page 33  
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+
+
+Any Management API REST Specification                                                            
+ 
+                                                              © TM Forum 2018. All Rights Reserved.  
+ Page 34  
+ACKNOWLEDGEMENTS 
+ 
+RELEASE HISTORY 
+ 
+Release / 
+Version 
+Number 
+Date  
+Modified by: 
+Description  
+Release 
+17.5.0 
+Version 1.0.0 
+11-Sep-
+2017 
+Dirk Rejahl 
+First Release of Draft 
+Version of the Document 
+Release 
+17.5.0 
+Version 1.0.1 
+04-Dec-
+2017 
+Ludovic Robert 
+Aligned with Guidelines 3.0 
+taking into account Patrick Huls 
+comments 
+Release 
+17.5.0 
+Version 1.0.2 
+22-Jan-2018 
+Adrienne Walcott 
+Formatting/style edits prior to 
+publishing 
+ 
+CONTRIBUTORS TO DOCUMENT 
+Ludovic Robert 
+Orange 
+Luis Velarde 
+Telefonica 
+Dirk Rejahl 
+Bearing Point 
+Pierre Gauthier 
+TM Forum 
+Patrick Huls 
+ESRI 
+ 
+ 
+ 
+
+
