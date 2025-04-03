@@ -20,7 +20,7 @@ model = get_peft_model(model, lora_config)
 
 # Load tokenized dataset
 dataset = load_from_disk("tokenized_data")
-train_dataset = dataset["train"]
+train_dataset = dataset
 
 # Define function to add labels to the dataset
 def add_labels(examples):
