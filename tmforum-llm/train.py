@@ -20,7 +20,15 @@ model = get_peft_model(model, lora_config)
 
 # Load tokenized dataset
 dataset = load_from_disk("tokenized_data")
-train_dataset = dataset.train_test_split(test_size=0.1)["train"]
+train_dataset = dataset["train"]
+
+# Define function to add labels to the dataset
+def add_labels(examples):
+    examples["labels"] = examples["input_ids"].copy()
+    return examples
+
+# Add labels to the dataset
+train_dataset = train_dataset.map(add_labels, batched=True)
 
 # Define training arguments
 training_args = TrainingArguments(
