@@ -1,0 +1,3662 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Test Execution API User Guide 
+ 
+ 
+ 
+ 
+ 
+ 
+TMF708 
+Team Approved Date:  31-Jul-2020 
+ 
+Release Status: Production 
+Approval Status: Team Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 2 of 88 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 3 of 88 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 4 of 88 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 7 
+Introduction .............................................................................................................................................................. 8 
+SAMPLE USE CASES ......................................................................................................................................................... 9 
+Support of polymorphism and extension patterns ...................................................................................................... 10 
+RESOURCE MODEL ........................................................................................................................................................ 11 
+Managed Entity and Task Resource Models ..................................................................................................... 11 
+Test Environment Allocation Execution resource ................................................................................................. 11 
+Test Environment Provisioning Execution resource .............................................................................................. 16 
+Test Case Execution resource ................................................................................................................................ 21 
+Test Suite Execution resource ............................................................................................................................... 29 
+Non Functional Test Execution resource ............................................................................................................... 36 
+Notification Resource Models .............................................................................................................................. 44 
+Test Environment Allocation Execution Create Event ........................................................................................... 45 
+Test Environment Allocation Execution Delete Event ........................................................................................... 46 
+Test Environment Allocation Execution State Change Event ................................................................................ 46 
+Test Environment Provisioning Execution Create Event ....................................................................................... 47 
+Test Environment Provisioning Execution Delete Event ....................................................................................... 47 
+Test Environment Provisioning Execution State Change Event ............................................................................ 47 
+Test Case Execution Create Event ......................................................................................................................... 48 
+Test Case Execution Delete Event ......................................................................................................................... 48 
+Test Case Execution State Change Event............................................................................................................... 49 
+Test Suite Execution Create Event ......................................................................................................................... 49 
+Test Suite Execution Delete Event ......................................................................................................................... 49 
+Test Suite Execution State Change Event .............................................................................................................. 50 
+Non Functional Test Execution Create Event ........................................................................................................ 50 
+Non Functional Test Execution Delete Event ........................................................................................................ 50 
+Non Functional Test Execution State Change Event ............................................................................................. 51 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 5 of 88 
+API OPERATIONS ........................................................................................................................................................... 52 
+Operations on Test Environment Allocation Execution ............................................................................................ 52 
+List test environment allocation executions ......................................................................................................... 52 
+Retrieve test environment allocation execution ................................................................................................... 53 
+Create test environment allocation execution ...................................................................................................... 55 
+Delete test environment allocation execution ...................................................................................................... 56 
+Operations on Test Environment Provisioning Execution ........................................................................................ 57 
+List test environment provisioning executions ..................................................................................................... 57 
+Retrieve test environment provisioning execution ............................................................................................... 58 
+Create test environment provisioning execution .................................................................................................. 60 
+Delete test environment provisioning execution .................................................................................................. 62 
+Operations on Test Case Execution .......................................................................................................................... 63 
+List test case executions ........................................................................................................................................ 63 
+Retrieve test case execution ................................................................................................................................. 64 
+Create test case execution .................................................................................................................................... 65 
+Delete test case execution .................................................................................................................................... 67 
+Operations on Test Suite Execution .......................................................................................................................... 68 
+List test suite executions ....................................................................................................................................... 68 
+Retrieve test suite execution ................................................................................................................................. 70 
+Create test suite execution ................................................................................................................................... 72 
+Delete test suite execution.................................................................................................................................... 75 
+Operations on Non Functional Test Execution ......................................................................................................... 76 
+List non functional test executions ....................................................................................................................... 76 
+Retrieve non functional test execution ................................................................................................................. 78 
+Create non functional test execution .................................................................................................................... 80 
+Delete non functional test execution .................................................................................................................... 83 
+API NOTIFICATIONS....................................................................................................................................................... 85 
+Register listener ........................................................................................................................................................ 85 
+Unregister listener .................................................................................................................................................... 86 
+Publish Event to listener ........................................................................................................................................... 86 
+Acknowledgements ...................................................................................................................................................... 88 
+Version History.......................................................................................................................................................... 88 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 6 of 88 
+Release History ......................................................................................................................................................... 88 
+Contributors to Document ........................................................................................................................................ 88 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 7 of 88 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 8 of 88 
+Introduction 
+The following document is the specification of the REST API for test execution. It includes the model definition as 
+well as all available operations.  
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 9 of 88 
+SAMPLE USE CASES 
+The reader will find examples of use cases in TMF913 “Test API Component Suite” document. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 10 of 88 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance TestCaseExecution and TestSuiteExecution inheriting properties from the abstract TestExecution entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+TestExecution instances some may be instances of TestCaseExecution where other could be instances of 
+TestSuiteExecution. The @type gives this information. All resources and sub-resources of this API have a @type 
+attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities (like for instance a TestExecutionRef object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as TestCaseExecutionRef or TestSuiteExecutionRef, and not the class type 
+of the referred object. However, since reference classes are rarely sub-classed, @type is generally not useful in 
+reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 11 of 88 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Test Environment Allocation Execution resource 
+REST resource for test environment allocation lifecycle. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 12 of 88 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 13 of 88 
+Field descriptions 
+TestEnvironmentAllocationExecution fields 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractEnvironment 
+An abstract environment reference (AbstractEnvironmentRef). A reference to a 
+managed test abstract environment resource. 
+concreteResourceMapping A list of concrete resource mappings (ConcreteResourceMapping [*]). Individual 
+mapping from an abstract resource to a list of concrete resources. 
+resourceManagerUrl 
+An uri (Uri). 
+testScenario 
+A test scenario reference (TestScenarioRef). A reference to a managed test scenario 
+resource. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A reference to 
+a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the state of the 
+execution. 
+ConcreteResource sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 14 of 88 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+name 
+A string. Concrete resource name. 
+ConcreteResourceMapping sub-resource 
+Individual mapping from an abstract resource to a list of concrete resources. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractResource 
+A string. 
+concreteResource 
+A list of concrete resources (ConcreteResource [*]). 
+AbstractEnvironmentRef relationship 
+A reference to a managed test abstract environment resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+GeneralTestArtifactRef relationship 
+A reference to a managed general test artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 15 of 88 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestScenarioRef relationship 
+A reference to a managed test scenario resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'TestEnvironmentAllocationExecution' resource 
+object 
+{ 
+    "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+    "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+    "resourceManagerUrl": "https://myserver.com/resourceManager", 
+    "testScenario": { 
+        "id": "35776d4f-1851-435c-8573-802438f41e7a", 
+        "href": "https://mycsp:8080/tmf-api/testScenario/v4/testScenario/35776d4f-1851-435c-8573-802438f41e7a", 
+        "@referredType": "TestScenario" 
+    }, 
+    "concreteResourceMapping": [ 
+        { 
+            "abstractResource": "phone", 
+            "concreteResource": [ 
+                { 
+                    "name": "iPhone_1289" 
+                } 
+            ] 
+        } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 16 of 88 
+    ], 
+    "state": "completed", 
+    "@baseType": "Execution", 
+    "@type": "TestEnvironmentAllocationExecution" 
+} 
+Test Environment Provisioning Execution resource 
+REST resource for test environment provisioning lifecycle. 
+Resource model 
+ 
+Field descriptions 
+TestEnvironmentProvisioningExecution fields 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 17 of 88 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+provisioningArtifact 
+A list of provisioning artifact references (ProvisioningArtifactRef [*]). A 
+reference to a managed provisioning artifact resource. 
+testEnvironmentAllocationExecution A test environment allocation execution 
+(TestEnvironmentAllocationExecution). REST resource for test 
+environment allocation lifecycle. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A 
+reference to a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the 
+state of the execution. 
+ConcreteResource sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+name 
+A string. Concrete resource name. 
+ConcreteResourceMapping sub-resource 
+Individual mapping from an abstract resource to a list of concrete resources. 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 18 of 88 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractResource 
+A string. 
+concreteResource 
+A list of concrete resources (ConcreteResource [*]). 
+TestEnvironmentAllocationExecution sub-resource 
+REST resource for test environment allocation lifecycle. 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractEnvironment 
+An abstract environment reference (AbstractEnvironmentRef). A reference to a 
+managed test abstract environment resource. 
+concreteResourceMapping A list of concrete resource mappings (ConcreteResourceMapping [*]). Individual 
+mapping from an abstract resource to a list of concrete resources. 
+resourceManagerUrl 
+An uri (Uri). 
+testScenario 
+A test scenario reference (TestScenarioRef). A reference to a managed test scenario 
+resource. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A reference to 
+a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the state of the 
+execution. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 19 of 88 
+AbstractEnvironmentRef relationship 
+A reference to a managed test abstract environment resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+GeneralTestArtifactRef relationship 
+A reference to a managed general test artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ProvisioningArtifactRef relationship 
+A reference to a managed provisioning artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 20 of 88 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestScenarioRef relationship 
+A reference to a managed test scenario resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'TestEnvironmentProvisioningExecution' resource 
+object 
+{ 
+    "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-4cb6-
+b608-5b28d5d73a8d", 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+    "provisioningArtifact": [ 
+        { 
+            "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+            "@referredType": "ProvisioningArtifact" 
+        } 
+    ], 
+    "testEnvironmentAllocationExecution": { 
+        "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+        "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+        "resourceManagerUrl": "https://myserver.com/resourceManager", 
+        "abstractEnvironment": { 
+            "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+            "@referredType": "AbstractEnvironment" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 21 of 88 
+        }, 
+        "concreteResourceMapping": [ 
+            { 
+                "abstractResource": "phone", 
+                "concreteResources": [ 
+                    { 
+                        "name": "iPhone_1289" 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentAllocationExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "Execution", 
+    "@type": "TestEnvironmentProvisioningExecution" 
+} 
+Test Case Execution resource 
+REST resource for the test case execution lifecycle. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 22 of 88 
+ 
+Field descriptions 
+TestCaseExecution fields 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 23 of 88 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+testCase 
+A test case reference (TestCaseRef). A reference to a managed test case 
+artifact. 
+testDataInstance 
+A list of test data instance references (TestDataInstanceRef [*]). A 
+reference to a managed test data instance resource. 
+testEnvironmentProvisioningExecution A test environment provisioning execution 
+(TestEnvironmentProvisioningExecution). REST resource for test 
+environment provisioning lifecycle. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A 
+reference to a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the 
+state of the execution. 
+ConcreteResource sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+name 
+A string. Concrete resource name. 
+ConcreteResourceMapping sub-resource 
+Individual mapping from an abstract resource to a list of concrete resources. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 24 of 88 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractResource 
+A string. 
+concreteResource 
+A list of concrete resources (ConcreteResource [*]). 
+TestEnvironmentAllocationExecution sub-resource 
+REST resource for test environment allocation lifecycle. 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractEnvironment 
+An abstract environment reference (AbstractEnvironmentRef). A reference to a 
+managed test abstract environment resource. 
+concreteResourceMapping A list of concrete resource mappings (ConcreteResourceMapping [*]). Individual 
+mapping from an abstract resource to a list of concrete resources. 
+resourceManagerUrl 
+An uri (Uri). 
+testScenario 
+A test scenario reference (TestScenarioRef). A reference to a managed test scenario 
+resource. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A reference to 
+a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the state of the 
+execution. 
+TestEnvironmentProvisioningExecution sub-resource 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 25 of 88 
+REST resource for test environment provisioning lifecycle. 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+provisioningArtifact 
+A list of provisioning artifact references (ProvisioningArtifactRef [*]). A 
+reference to a managed provisioning artifact resource. 
+testEnvironmentAllocationExecution A test environment allocation execution 
+(TestEnvironmentAllocationExecution). REST resource for test 
+environment allocation lifecycle. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A 
+reference to a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the 
+state of the execution. 
+AbstractEnvironmentRef relationship 
+A reference to a managed test abstract environment resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+GeneralTestArtifactRef relationship 
+A reference to a managed general test artifact resource. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 26 of 88 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ProvisioningArtifactRef relationship 
+A reference to a managed provisioning artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestCaseRef relationship 
+A reference to a managed test case artifact. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 27 of 88 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestDataInstanceRef relationship 
+A reference to a managed test data instance resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestScenarioRef relationship 
+A reference to a managed test scenario resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseExecution' resource object 
+{ 
+    "id": "1a522dd3-83c9-411b-9fd6-c375a7856621", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testCaseExecution/1a522dd3-83c9-411b-9fd6-c375a7856621", 
+    "dataCorrelationId": "77d3aa51-d90b-4c04-aa28-950fe2874bc7", 
+    "testCase": { 
+        "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 28 of 88 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "@referredType": "TestCase" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "testScenario": { 
+                "id": "35776d4f-1851-435c-8573-802438f41e7a", 
+                "href": "https://mycsp:8080/tmf-api/testScenario/v4/testScenario/35776d4f-1851-435c-8573-802438f41e7a", 
+                "@referredType": "TestScenario" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 29 of 88 
+    "@type": "TestCaseExecution" 
+} 
+Test Suite Execution resource 
+REST resource for the test suite execution lifecycle. 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 30 of 88 
+Field descriptions 
+TestSuiteExecution fields 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+testSuite 
+A test suite reference (TestSuiteRef). A reference to a managed test 
+suite resource. 
+testDataInstance 
+A list of test data instance references (TestDataInstanceRef [*]). A 
+reference to a managed test data instance resource. 
+testEnvironmentProvisioningExecution A test environment provisioning execution 
+(TestEnvironmentProvisioningExecution). REST resource for test 
+environment provisioning lifecycle. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A 
+reference to a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the 
+state of the execution. 
+ConcreteResource sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 31 of 88 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+name 
+A string. Concrete resource name. 
+ConcreteResourceMapping sub-resource 
+Individual mapping from an abstract resource to a list of concrete resources. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractResource 
+A string. 
+concreteResource 
+A list of concrete resources (ConcreteResource [*]). 
+TestEnvironmentAllocationExecution sub-resource 
+REST resource for test environment allocation lifecycle. 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractEnvironment 
+An abstract environment reference (AbstractEnvironmentRef). A reference to a 
+managed test abstract environment resource. 
+concreteResourceMapping A list of concrete resource mappings (ConcreteResourceMapping [*]). Individual 
+mapping from an abstract resource to a list of concrete resources. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 32 of 88 
+resourceManagerUrl 
+An uri (Uri). 
+testScenario 
+A test scenario reference (TestScenarioRef). A reference to a managed test scenario 
+resource. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A reference to 
+a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the state of the 
+execution. 
+TestEnvironmentProvisioningExecution sub-resource 
+REST resource for test environment provisioning lifecycle. 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+provisioningArtifact 
+A list of provisioning artifact references (ProvisioningArtifactRef [*]). A 
+reference to a managed provisioning artifact resource. 
+testEnvironmentAllocationExecution A test environment allocation execution 
+(TestEnvironmentAllocationExecution). REST resource for test 
+environment allocation lifecycle. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A 
+reference to a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the 
+state of the execution. 
+AbstractEnvironmentRef relationship 
+A reference to a managed test abstract environment resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 33 of 88 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+GeneralTestArtifactRef relationship 
+A reference to a managed general test artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ProvisioningArtifactRef relationship 
+A reference to a managed provisioning artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 34 of 88 
+TestDataInstanceRef relationship 
+A reference to a managed test data instance resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestScenarioRef relationship 
+A reference to a managed test scenario resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestSuiteRef relationship 
+A reference to a managed test suite resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 35 of 88 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteExecution' resource object 
+{ 
+    "id": "48c76edf-31fc-4f2b-a409-1e80c8b13124", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testSuiteExecution/48c76edf-31fc-4f2b-a409-1e80c8b13124", 
+    "dataCorrelationId": "77d3aa51-d90b-4c04-aa28-950fe2874bc7", 
+    "testSuite": { 
+        "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "@referredType": "TestSuite" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "testScenario": { 
+                "id": "35776d4f-1851-435c-8573-802438f41e7a", 
+                "href": "https://mycsp:8080/tmf-api/testScenario/v4/testScenario/35776d4f-1851-435c-8573-802438f41e7a", 
+                "@referredType": "TestScenario" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 36 of 88 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+    "@type": "TestSuiteExecution" 
+} 
+Non Functional Test Execution resource 
+REST resource for the non-functional test execution lifecycle. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 37 of 88 
+ 
+Field descriptions 
+NonFunctionalTestExecution fields 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 38 of 88 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+nonFunctionalTestModel 
+A non functional test model reference (NonFunctionalTestModelRef). A 
+reference to a managed non-functional test model resource. 
+testDataInstance 
+A list of test data instance references (TestDataInstanceRef [*]). A 
+reference to a managed test data instance resource. 
+testEnvironmentProvisioningExecution A test environment provisioning execution 
+(TestEnvironmentProvisioningExecution). REST resource for test 
+environment provisioning lifecycle. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A 
+reference to a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the 
+state of the execution. 
+ConcreteResource sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+name 
+A string. Concrete resource name. 
+ConcreteResourceMapping sub-resource 
+Individual mapping from an abstract resource to a list of concrete resources. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 39 of 88 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractResource 
+A string. 
+concreteResource 
+A list of concrete resources (ConcreteResource [*]). 
+TestEnvironmentAllocationExecution sub-resource 
+REST resource for test environment allocation lifecycle. 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractEnvironment 
+An abstract environment reference (AbstractEnvironmentRef). A reference to a 
+managed test abstract environment resource. 
+concreteResourceMapping A list of concrete resource mappings (ConcreteResourceMapping [*]). Individual 
+mapping from an abstract resource to a list of concrete resources. 
+resourceManagerUrl 
+An uri (Uri). 
+testScenario 
+A test scenario reference (TestScenarioRef). A reference to a managed test scenario 
+resource. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A reference to 
+a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the state of the 
+execution. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 40 of 88 
+TestEnvironmentProvisioningExecution sub-resource 
+REST resource for test environment provisioning lifecycle. 
+dataCorrelationId 
+A string. Data correlation ID passed in by the API consumer. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+provisioningArtifact 
+A list of provisioning artifact references (ProvisioningArtifactRef [*]). A 
+reference to a managed provisioning artifact resource. 
+testEnvironmentAllocationExecution A test environment allocation execution 
+(TestEnvironmentAllocationExecution). REST resource for test 
+environment allocation lifecycle. 
+generalTestArtifact 
+A list of general test artifact references (GeneralTestArtifactRef [*]). A 
+reference to a managed general test artifact resource. 
+state 
+An execution state type (ExecutionStateType). Possible values for the 
+state of the execution. 
+AbstractEnvironmentRef relationship 
+A reference to a managed test abstract environment resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 41 of 88 
+GeneralTestArtifactRef relationship 
+A reference to a managed general test artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+NonFunctionalTestModelRef relationship 
+A reference to a managed non-functional test model resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ProvisioningArtifactRef relationship 
+A reference to a managed provisioning artifact resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 42 of 88 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestDataInstanceRef relationship 
+A reference to a managed test data instance resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+TestScenarioRef relationship 
+A reference to a managed test scenario resource. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestExecution' resource object 
+{ 
+    "id": "195dae44-a433-49bf-a15b-9ab198dad0e2", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/nonFunctionalTestExecution/195dae44-a433-49bf-a15b-
+9ab198dad0e2", 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 43 of 88 
+    "nonFunctionalTestModel": { 
+        "id": "16db32a3-e008-401b-8168-4ebac788f9d8", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/16db32a3-e008-401b-8168-
+4ebac788f9d8", 
+        "@referredType": "NonFunctionalTestModel" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "testScenario": { 
+                "id": "35776d4f-1851-435c-8573-802438f41e7a", 
+                "href": "https://mycsp:8080/tmf-api/testScenario/v4/testScenario/35776d4f-1851-435c-8573-802438f41e7a", 
+                "@referredType": "TestScenario" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    }, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 44 of 88 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+    "@type": "NonFunctionalTestExecution" 
+} 
+ 
+Notification Resource Models 
+ 
+15 notifications are defined for this API 
+Notifications related to TestEnvironmentAllocationExecution: 
+    - TestEnvironmentAllocationExecutionCreateEvent 
+    - TestEnvironmentAllocationExecutionDeleteEvent 
+    - TestEnvironmentAllocationExecutionStateChangeEvent 
+Notifications related to TestEnvironmentProvisioningExecution: 
+    - TestEnvironmentProvisioningExecutionCreateEvent 
+    - TestEnvironmentProvisioningExecutionDeleteEvent 
+    - TestEnvironmentProvisioningExecutionStateChangeEvent 
+Notifications related to TestCaseExecution: 
+    - TestCaseExecutionCreateEvent 
+    - TestCaseExecutionDeleteEvent 
+    - TestCaseExecutionStateChangeEvent 
+Notifications related to TestSuiteExecution: 
+    - TestSuiteExecutionCreateEvent 
+    - TestSuiteExecutionDeleteEvent 
+    - TestSuiteExecutionStateChangeEvent 
+Notifications related to NonFunctionalTestExecution: 
+    - NonFunctionalTestExecutionCreateEvent 
+    - NonFunctionalTestExecutionDeleteEvent 
+    - NonFunctionalTestExecutionStateChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType). 
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 45 of 88 
+ 
+Test Environment Allocation Execution Create Event 
+Notification TestEnvironmentAllocationExecutionCreateEvent case for resource 
+TestEnvironmentAllocationExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestEnvironmentAllocationExecutionCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 46 of 88 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestEnvironmentAllocationExecutionCreateEvent", 
+     "event": { 
+        "testEnvironmentAllocationExecution" :  
+            {-- SEE TestEnvironmentAllocationExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Environment Allocation Execution Delete Event 
+Notification TestEnvironmentAllocationExecutionDeleteEvent case for resource 
+TestEnvironmentAllocationExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestEnvironmentAllocationExecutionDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestEnvironmentAllocationExecutionDeleteEvent", 
+     "event": { 
+        "testEnvironmentAllocationExecution" :  
+            {-- SEE TestEnvironmentAllocationExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Environment Allocation Execution State Change Event 
+Notification TestEnvironmentAllocationExecutionStateChangeEvent case for resource 
+TestEnvironmentAllocationExecution 
+Json representation sample 
+We provide below the json representation of an example of a 
+'TestEnvironmentAllocationExecutionStateChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestEnvironmentAllocationExecutionStateChangeEvent", 
+     "event": { 
+        "testEnvironmentAllocationExecution" :  
+            {-- SEE TestEnvironmentAllocationExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 47 of 88 
+Test Environment Provisioning Execution Create Event 
+Notification TestEnvironmentProvisioningExecutionCreateEvent case for resource 
+TestEnvironmentProvisioningExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestEnvironmentProvisioningExecutionCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestEnvironmentProvisioningExecutionCreateEvent", 
+     "event": { 
+        "testEnvironmentProvisioningExecution" :  
+            {-- SEE TestEnvironmentProvisioningExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Environment Provisioning Execution Delete Event 
+Notification TestEnvironmentProvisioningExecutionDeleteEvent case for resource 
+TestEnvironmentProvisioningExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestEnvironmentProvisioningExecutionDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestEnvironmentProvisioningExecutionDeleteEvent", 
+     "event": { 
+        "testEnvironmentProvisioningExecution" :  
+            {-- SEE TestEnvironmentProvisioningExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Environment Provisioning Execution State Change Event 
+Notification TestEnvironmentProvisioningExecutionStateChangeEvent case for resource 
+TestEnvironmentProvisioningExecution 
+Json representation sample 
+We provide below the json representation of an example of a 
+'TestEnvironmentProvisioningExecutionStateChangeEvent' notification event object 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 48 of 88 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestEnvironmentProvisioningExecutionStateChangeEvent", 
+     "event": { 
+        "testEnvironmentProvisioningExecution" :  
+            {-- SEE TestEnvironmentProvisioningExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Case Execution Create Event 
+Notification TestCaseExecutionCreateEvent case for resource TestCaseExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseExecutionCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseExecutionCreateEvent", 
+     "event": { 
+        "testCaseExecution" :  
+            {-- SEE TestCaseExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Case Execution Delete Event 
+Notification TestCaseExecutionDeleteEvent case for resource TestCaseExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseExecutionDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseExecutionDeleteEvent", 
+     "event": { 
+        "testCaseExecution" :  
+            {-- SEE TestCaseExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 49 of 88 
+Test Case Execution State Change Event 
+Notification TestCaseExecutionStateChangeEvent case for resource TestCaseExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestCaseExecutionStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestCaseExecutionStateChangeEvent", 
+     "event": { 
+        "testCaseExecution" :  
+            {-- SEE TestCaseExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Suite Execution Create Event 
+Notification TestSuiteExecutionCreateEvent case for resource TestSuiteExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteExecutionCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestSuiteExecutionCreateEvent", 
+     "event": { 
+        "testSuiteExecution" :  
+            {-- SEE TestSuiteExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Suite Execution Delete Event 
+Notification TestSuiteExecutionDeleteEvent case for resource TestSuiteExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteExecutionDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 50 of 88 
+    "eventType":"TestSuiteExecutionDeleteEvent", 
+     "event": { 
+        "testSuiteExecution" :  
+            {-- SEE TestSuiteExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Suite Execution State Change Event 
+Notification TestSuiteExecutionStateChangeEvent case for resource TestSuiteExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'TestSuiteExecutionStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestSuiteExecutionStateChangeEvent", 
+     "event": { 
+        "testSuiteExecution" :  
+            {-- SEE TestSuiteExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Execution Create Event 
+Notification NonFunctionalTestExecutionCreateEvent case for resource NonFunctionalTestExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestExecutionCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"NonFunctionalTestExecutionCreateEvent", 
+     "event": { 
+        "nonFunctionalTestExecution" :  
+            {-- SEE NonFunctionalTestExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Execution Delete Event 
+Notification NonFunctionalTestExecutionDeleteEvent case for resource NonFunctionalTestExecution 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 51 of 88 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestExecutionDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"NonFunctionalTestExecutionDeleteEvent", 
+     "event": { 
+        "nonFunctionalTestExecution" :  
+            {-- SEE NonFunctionalTestExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Non Functional Test Execution State Change Event 
+Notification NonFunctionalTestExecutionStateChangeEvent case for resource NonFunctionalTestExecution 
+Json representation sample 
+We provide below the json representation of an example of a 'NonFunctionalTestExecutionStateChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"NonFunctionalTestExecutionStateChangeEvent", 
+     "event": { 
+        "nonFunctionalTestExecution" :  
+            {-- SEE NonFunctionalTestExecution RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 52 of 88 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Test Environment Allocation Execution 
+List test environment allocation executions 
+  GET 
+/testEnvironmentAllocationExecution?fields=...&{filtering} 
+Description 
+This operation list test environment allocation execution entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 53 of 88 
+Usage Samples 
+Here's an example of a request for retrieving a list of test environment allocation executions. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testEnvironmentAllocationExecution 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+        "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+        "resourceManagerUrl": "https://myserver.com/resourceManager", 
+        "abstractEnvironment": { 
+            "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+            "@referredType": "AbstractEnvironment" 
+        }, 
+        "concreteResourceMapping": [ 
+            { 
+                "abstractResource": "phone", 
+                "concreteResource": [ 
+                    { 
+                        "name": "iPhone_1289" 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentAllocationExecution" 
+    } 
+] 
+ 
+Retrieve test environment allocation execution 
+  GET 
+/testEnvironmentAllocationExecution/{id}?fields=...&{filterin
+g} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 54 of 88 
+Description 
+This operation retrieves a test environment allocation execution entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific test environment allocation execution. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-b64e-93f8db9b614a 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+    "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+    "resourceManagerUrl": "https://myserver.com/resourceManager", 
+    "abstractEnvironment": { 
+        "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+        "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+        "@referredType": "AbstractEnvironment" 
+    }, 
+    "concreteResourceMapping": [ 
+        { 
+            "abstractResource": "phone", 
+            "concreteResource": [ 
+                { 
+                    "name": "iPhone_1289" 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "completed", 
+    "@baseType": "Execution", 
+    "@type": "TestEnvironmentAllocationExecution" 
+} 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 55 of 88 
+Create test environment allocation execution 
+  POST /testEnvironmentAllocationExecution 
+Description 
+This operation creates a test environment allocation execution entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TestEnvironmentAllocationExecution, including any possible rule conditions and applicable default values. Notice 
+that it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+resourceManagerUrl 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+dataCorrelationId 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+abstractEnvironment 
+ 
+concreteResourceMapping 
+ 
+testScenario 
+ 
+generalTestArtifact 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a test environment allocation execution. 
+ 
+Request 
+ 
+POST /tmf-api/testExecution/v4/testEnvironmentAllocationExecution 
+Content-Type: application/json 
+ 
+{ 
+    "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+    "resourceManagerUrl": "https://myserver.com/resourceManager", 
+    "abstractEnvironment": { 
+        "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+        "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+        "@referredType": "AbstractEnvironment" 
+    } 
+} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 56 of 88 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+    "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+    "resourceManagerUrl": "https://myserver.com/resourceManager", 
+    "abstractEnvironment": { 
+        "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+        "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+        "@referredType": "AbstractEnvironment" 
+    }, 
+    "concreteResourceMapping": [ 
+        { 
+            "abstractResource": "phone", 
+            "concreteResource": [ 
+                { 
+                    "name": "iPhone_1289" 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "completed", 
+    "@baseType": "Execution", 
+    "@type": "TestEnvironmentAllocationExecution" 
+} 
+ 
+Delete test environment allocation execution 
+  DELETE /testEnvironmentAllocationExecution/{id} 
+Description 
+This operation deletes a test environment allocation execution entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a test environment allocation execution. 
+ 
+Request 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 57 of 88 
+DELETE /tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-b64e-93f8db9b614a 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Test Environment Provisioning Execution 
+List test environment provisioning executions 
+  GET 
+/testEnvironmentProvisioningExecution?fields=...&{filtering} 
+Description 
+This operation list test environment provisioning execution entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of test environment provisioning executions. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testEnvironmentProvisioningExecution 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "provisioningArtifact": [ 
+            { 
+                "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 58 of 88 
+835242ee505a", 
+                "@referredType": "ProvisioningArtifact" 
+            } 
+        ], 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "abstractEnvironment": { 
+                "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                "@referredType": "AbstractEnvironment" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    } 
+] 
+ 
+Retrieve test environment provisioning execution 
+  GET 
+/testEnvironmentProvisioningExecution/{id}?fields=...&{filter
+ing} 
+Description 
+This operation retrieves a test environment provisioning execution entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 59 of 88 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific test environment provisioning execution. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-4cb6-b608-5b28d5d73a8d 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-4cb6-
+b608-5b28d5d73a8d", 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+    "provisioningArtifact": [ 
+        { 
+            "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+            "@referredType": "ProvisioningArtifact" 
+        } 
+    ], 
+    "testEnvironmentAllocationExecution": { 
+        "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+        "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+        "resourceManagerUrl": "https://myserver.com/resourceManager", 
+        "abstractEnvironment": { 
+            "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+            "@referredType": "AbstractEnvironment" 
+        }, 
+        "concreteResourceMapping": [ 
+            { 
+                "abstractResource": "phone", 
+                "concreteResources": [ 
+                    { 
+                        "name": "iPhone_1289" 
+                    } 
+                ] 
+            } 
+        ], 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 60 of 88 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentAllocationExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "Execution", 
+    "@type": "TestEnvironmentProvisioningExecution" 
+} 
+ 
+Create test environment provisioning execution 
+  POST /testEnvironmentProvisioningExecution 
+Description 
+This operation creates a test environment provisioning execution entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TestEnvironmentProvisioningExecution, including any possible rule conditions and applicable default values. Notice 
+that it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+testEnvironmentAllocationExecution  
+ 
+Non Mandatory Attributes 
+Rule 
+dataCorrelationId 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+provisioningArtifact 
+ 
+generalTestArtifact 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a test environment provisioning execution. 
+ 
+Request 
+ 
+POST /tmf-api/testExecution/v4/testEnvironmentProvisioningExecution 
+Content-Type: application/json 
+ 
+{ 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+    "provisioningArtifact": [ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 61 of 88 
+        { 
+            "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+            "@referredType": "ProvisioningArtifact" 
+        } 
+    ], 
+    "testEnvironmentAllocationExecution": { 
+        "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+        "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+        "resourceManagerUrl": "https://myserver.com/resourceManager", 
+        "abstractEnvironment": { 
+            "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+            "@referredType": "AbstractEnvironment" 
+        }, 
+        "concreteResourceMapping": [ 
+            { 
+                "abstractResource": "phone", 
+                "concreteResources": [ 
+                    { 
+                        "name": "iPhone_1289" 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentAllocationExecution" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-4cb6-
+b608-5b28d5d73a8d", 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+    "provisioningArtifact": [ 
+        { 
+            "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+            "@referredType": "ProvisioningArtifact" 
+        } 
+    ], 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 62 of 88 
+    "testEnvironmentAllocationExecution": { 
+        "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+        "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+        "resourceManagerUrl": "https://myserver.com/resourceManager", 
+        "abstractEnvironment": { 
+            "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+            "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+            "@referredType": "AbstractEnvironment" 
+        }, 
+        "concreteResourceMapping": [ 
+            { 
+                "abstractResource": "phone", 
+                "concreteResources": [ 
+                    { 
+                        "name": "iPhone_1289" 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentAllocationExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "Execution", 
+    "@type": "TestEnvironmentProvisioningExecution" 
+} 
+ 
+Delete test environment provisioning execution 
+  DELETE /testEnvironmentProvisioningExecution/{id} 
+Description 
+This operation deletes a test environment provisioning execution entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a test environment provisioning execution. 
+ 
+Request 
+ 
+DELETE /tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-4cb6-b608-5b28d5d73a8d 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 63 of 88 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Test Case Execution 
+List test case executions 
+  GET /testCaseExecution?fields=...&{filtering} 
+Description 
+This operation list test case execution entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an ONAP VTP example of a request for retrieving a list of test case executions. This example does not use 
+test environments. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testCaseExecution 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "1a522dd3-83c9-411b-9fd6-c375a7856621", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testCaseExecution/1a522dd3-83c9-411b-9fd6-
+c375a7856621", 
+        "dataCorrelationId": "c38a6acf-ec2d-43b7-a3c6-2d39de1d300c", 
+        "testCase": { 
+            "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+            "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+            "@referredType": "TestCase" 
+        }, 
+        "generalTestArtifact": [ 
+            { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 64 of 88 
+                "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+                "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+                "@referredType": "GeneralTestArtifact" 
+            } 
+        ], 
+        "testDataInstance": [ 
+            { 
+                "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+                "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+                "@referredType": "TestDataInstance" 
+            } 
+        ], 
+        "state": "completed", 
+        "@baseType": "TestExecution", 
+        "@type": "TestCaseExecution" 
+    } 
+] 
+ 
+Retrieve test case execution 
+  GET /testCaseExecution/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a test case execution entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an ONAP VTP example of a request for retrieving a specific test case execution. This example does not use 
+test environments. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testCaseExecution/1a522dd3-83c9-411b-9fd6-c375a7856621 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "1a522dd3-83c9-411b-9fd6-c375a7856621", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testCaseExecution/1a522dd3-83c9-411b-9fd6-c375a7856621", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 65 of 88 
+    "dataCorrelationId": "c38a6acf-ec2d-43b7-a3c6-2d39de1d300c", 
+    "testCase": { 
+        "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "@referredType": "TestCase" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+    "@type": "TestCaseExecution" 
+} 
+ 
+Create test case execution 
+  POST /testCaseExecution 
+Description 
+This operation creates a test case execution entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TestCaseExecution, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+testEnvironmentProvisioningExecution  
+ 
+Non Mandatory Attributes 
+Rule 
+dataCorrelationId 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+testCase 
+ 
+testDataInstance 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 66 of 88 
+Non Mandatory Attributes 
+Rule 
+generalTestArtifact 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an ONAP VTP example of a request for creating a test case execution. This example does not use test 
+environments. 
+ 
+Request 
+ 
+POST /tmf-api/testExecution/v4/testCaseExecution 
+Content-Type: application/json 
+ 
+{ 
+    "dataCorrelationId": "c38a6acf-ec2d-43b7-a3c6-2d39de1d300c", 
+    "testCase": { 
+        "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "@referredType": "TestCase" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "1a522dd3-83c9-411b-9fd6-c375a7856621", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testCaseExecution/1a522dd3-83c9-411b-9fd6-c375a7856621", 
+    "dataCorrelationId": "c38a6acf-ec2d-43b7-a3c6-2d39de1d300c", 
+    "testCase": { 
+        "id": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testCase/aac9969d-219d-4ff1-b256-1765dcf9b342", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 67 of 88 
+        "@referredType": "TestCase" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+    "@type": "TestCaseExecution" 
+} 
+ 
+Delete test case execution 
+  DELETE /testCaseExecution/{id} 
+Description 
+This operation deletes a test case execution entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a test case execution. 
+ 
+Request 
+ 
+DELETE /tmf-api/testExecution/v4/testCaseExecution/1a522dd3-83c9-411b-9fd6-c375a7856621 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 68 of 88 
+Operations on Test Suite Execution 
+List test suite executions 
+  GET /testSuiteExecution?fields=...&{filtering} 
+Description 
+This operation list test suite execution entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of test suite executions. This example uses a test environment. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testSuiteExecution 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "48c76edf-31fc-4f2b-a409-1e80c8b13124", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testSuiteExecution/48c76edf-31fc-4f2b-a409-
+1e80c8b13124", 
+        "dataCorrelationId": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+        "testSuite": { 
+            "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+            "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+            "@referredType": "TestSuite" 
+        }, 
+        "generalTestArtifact": [ 
+            { 
+                "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+                "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+                "@referredType": "GeneralTestArtifact" 
+            } 
+        ], 
+        "testDataInstance": [ 
+            { 
+                "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 69 of 88 
+                "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+                "@referredType": "TestDataInstance" 
+            } 
+        ], 
+        "TestEnvironmentProvisioningExecution": { 
+            "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+            "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+            "provisioningArtifact": [ 
+                { 
+                    "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                    "@referredType": "ProvisioningArtifact" 
+                } 
+            ], 
+            "testEnvironmentAllocationExecution": { 
+                "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+                "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-
+4f48-b64e-93f8db9b614a", 
+                "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+                "resourceManagerUrl": "https://myserver.com/resourceManager", 
+                "abstractEnvironment": { 
+                    "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                    "@referredType": "AbstractEnvironment" 
+                }, 
+                "concreteResourceMapping": [ 
+                    { 
+                        "abstractResource": "phone", 
+                        "concreteResources": [ 
+                            { 
+                                "name": "iPhone_1289" 
+                            } 
+                        ] 
+                    } 
+                ], 
+                "state": "completed", 
+                "@baseType": "Execution", 
+                "@type": "TestEnvironmentAllocationExecution" 
+            }, 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentProvisioningExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "TestExecution", 
+        "@type": "TestSuiteExecution" 
+    } 
+] 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 70 of 88 
+Retrieve test suite execution 
+  GET /testSuiteExecution/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a test suite execution entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific test suite execution. This example uses a test environment. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/testSuiteExecution/48c76edf-31fc-4f2b-a409-1e80c8b13124 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "48c76edf-31fc-4f2b-a409-1e80c8b13124", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testSuiteExecution/48c76edf-31fc-4f2b-a409-1e80c8b13124", 
+    "dataCorrelationId": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "testSuite": { 
+        "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "@referredType": "TestSuite" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 71 of 88 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "provisioningArtifact": [ 
+            { 
+                "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                "@referredType": "ProvisioningArtifact" 
+            } 
+        ], 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "abstractEnvironment": { 
+                "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                "@referredType": "AbstractEnvironment" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+    "@type": "TestSuiteExecution" 
+} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 72 of 88 
+Create test suite execution 
+  POST /testSuiteExecution 
+Description 
+This operation creates a test suite execution entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TestSuiteExecution, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+testEnvironmentProvisioningExecution  
+ 
+Non Mandatory Attributes 
+Rule 
+dataCorrelationId 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+@referredType 
+ 
+name 
+ 
+testSuite 
+ 
+testDataInstance 
+ 
+generalTestArtifact 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a test suite execution. This example uses a test environment. 
+ 
+Request 
+ 
+POST /tmf-api/testExecution/v4/testSuiteExecution 
+Content-Type: application/json 
+ 
+{ 
+    "dataCorrelationId": "ab6ef98b-7af0-4ce6-b658-f98c56ebcd38", 
+    "testSuite": { 
+        "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "@referredType": "TestSuite" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 73 of 88 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "provisioningArtifact": [ 
+            { 
+                "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                "@referredType": "ProvisioningArtifact" 
+            } 
+        ], 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "abstractEnvironment": { 
+                "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                "@referredType": "AbstractEnvironment" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 74 of 88 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "48c76edf-31fc-4f2b-a409-1e80c8b13124", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/testSuiteExecution/48c76edf-31fc-4f2b-a409-1e80c8b13124", 
+    "dataCorrelationId": "aac9969d-219d-4ff1-b256-1765dcf9b342", 
+    "testSuite": { 
+        "id": "4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/testSuite/4cb18d40-a35f-4261-a9e9-20ab58498c42", 
+        "@referredType": "TestSuite" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "provisioningArtifact": [ 
+            { 
+                "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                "@referredType": "ProvisioningArtifact" 
+            } 
+        ], 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "abstractEnvironment": { 
+                "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 75 of 88 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                "@referredType": "AbstractEnvironment" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+    "@type": "TestSuiteExecution" 
+} 
+ 
+Delete test suite execution 
+  DELETE /testSuiteExecution/{id} 
+Description 
+This operation deletes a test suite execution entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a test suite execution. 
+ 
+Request 
+ 
+DELETE /tmf-api/testExecution/v4/testSuiteExecution/48c76edf-31fc-4f2b-a409-1e80c8b13124 
+ 
+ 
+ 
+Response 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 76 of 88 
+204 
+ 
+ 
+Operations on Non Functional Test Execution 
+List non functional test executions 
+  GET /nonFunctionalTestExecution?fields=...&{filtering} 
+Description 
+This operation list non functional test execution entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of non-functional test executions. This example uses a test 
+environment. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/nonFunctionalTestExecution 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "195dae44-a433-49bf-a15b-9ab198dad0e2", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/nonFunctionalTestExecution/195dae44-a433-49bf-a15b-
+9ab198dad0e2", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "nonFunctionalTestModel": { 
+            "id": "16db32a3-e008-401b-8168-4ebac788f9d8", 
+            "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/16db32a3-e008-401b-8168-
+4ebac788f9d8", 
+            "@referredType": "NonFunctionalTestModel" 
+        }, 
+        "generalTestArtifact": [ 
+            { 
+                "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+                "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 77 of 88 
+dd86a40b8974", 
+                "@referredType": "GeneralTestArtifact" 
+            } 
+        ], 
+        "testDataInstance": [ 
+            { 
+                "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+                "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+                "@referredType": "TestDataInstance" 
+            } 
+        ], 
+        "TestEnvironmentProvisioningExecution": { 
+            "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+            "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+            "provisioningArtifact": [ 
+                { 
+                    "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                    "@referredType": "ProvisioningArtifact" 
+                } 
+            ], 
+            "testEnvironmentAllocationExecution": { 
+                "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+                "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-
+4f48-b64e-93f8db9b614a", 
+                "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+                "resourceManagerUrl": "https://myserver.com/resourceManager", 
+                "abstractEnvironment": { 
+                    "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                    "@referredType": "AbstractEnvironment" 
+                }, 
+                "concreteResourceMapping": [ 
+                    { 
+                        "abstractResource": "phone", 
+                        "concreteResources": [ 
+                            { 
+                                "name": "iPhone_1289" 
+                            } 
+                        ] 
+                    } 
+                ], 
+                "state": "completed", 
+                "@baseType": "Execution", 
+                "@type": "TestEnvironmentAllocationExecution" 
+            }, 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentProvisioningExecution" 
+        }, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 78 of 88 
+        "state": "completed", 
+        "@baseType": "TestExecution", 
+        "@type": "NonFunctionalTestExecution" 
+    } 
+] 
+ 
+Retrieve non functional test execution 
+  GET /nonFunctionalTestExecution/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a non functional test execution entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific non-functional test execution. This example uses a test 
+environment. 
+ 
+Request 
+ 
+GET /tmf-api/testExecution/v4/nonFunctionalTestExecution/195dae44-a433-49bf-a15b-9ab198dad0e2 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "195dae44-a433-49bf-a15b-9ab198dad0e2", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/nonFunctionalTestExecution/195dae44-a433-49bf-a15b-
+9ab198dad0e2", 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+    "nonFunctionalTestModel": { 
+        "id": "16db32a3-e008-401b-8168-4ebac788f9d8", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/16db32a3-e008-401b-8168-
+4ebac788f9d8", 
+        "@referredType": "NonFunctionalTestModel" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 79 of 88 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "provisioningArtifact": [ 
+            { 
+                "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                "@referredType": "ProvisioningArtifact" 
+            } 
+        ], 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "abstractEnvironment": { 
+                "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                "@referredType": "AbstractEnvironment" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    }, 
+    "state": "completed", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 80 of 88 
+    "@baseType": "TestExecution", 
+    "@type": "NonFunctionalTestExecution" 
+} 
+ 
+Create non functional test execution 
+  POST /nonFunctionalTestExecution 
+Description 
+This operation creates a non functional test execution entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+NonFunctionalTestExecution, including any possible rule conditions and applicable default values. Notice that it is 
+up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+testEnvironmentProvisioningExecution  
+ 
+Non Mandatory Attributes 
+Rule 
+dataCorrelationId 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+nonFunctionalTestModel 
+ 
+testDataInstance 
+ 
+generalTestArtifact 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a non-functional test execution. This example uses a test environment. 
+ 
+Request 
+ 
+POST /tmf-api/testExecution/v4/nonFunctionalTestExecution 
+Content-Type: application/json 
+ 
+{ 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+    "nonFunctionalTestModel": { 
+        "id": "16db32a3-e008-401b-8168-4ebac788f9d8", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/16db32a3-e008-401b-8168-
+4ebac788f9d8", 
+        "@referredType": "NonFunctionalTestModel" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 81 of 88 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "provisioningArtifact": [ 
+            { 
+                "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                "@referredType": "ProvisioningArtifact" 
+            } 
+        ], 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "abstractEnvironment": { 
+                "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                "@referredType": "AbstractEnvironment" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 82 of 88 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "195dae44-a433-49bf-a15b-9ab198dad0e2", 
+    "href": "https://mycsp:8080/tmf-api/testExecution/v4/nonFunctionalTestExecution/195dae44-a433-49bf-a15b-
+9ab198dad0e2", 
+    "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+    "nonFunctionalTestModel": { 
+        "id": "16db32a3-e008-401b-8168-4ebac788f9d8", 
+        "href": "https://mycsp:8080/tmf-api/testCase/v4/nonFunctionalTestModel/16db32a3-e008-401b-8168-
+4ebac788f9d8", 
+        "@referredType": "NonFunctionalTestModel" 
+    }, 
+    "generalTestArtifact": [ 
+        { 
+            "id": "178ca8bb-81bc-47ef-911e-dd86a40b8974", 
+            "href": "https://mycsp:8080/tmf-api/generalTestArtifact/v4/generalTestArtifact/178ca8bb-81bc-47ef-911e-
+dd86a40b8974", 
+            "@referredType": "GeneralTestArtifact" 
+        } 
+    ], 
+    "testDataInstance": [ 
+        { 
+            "id": "2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "href": "https://mycsp:8080/tmf-api/testData/v4/testDataInstance/2db74193-e5fb-462a-98e0-6b1ed970dfc7", 
+            "@referredType": "TestDataInstance" 
+        } 
+    ], 
+    "TestEnvironmentProvisioningExecution": { 
+        "id": "622815ac-5811-4cb6-b608-5b28d5d73a8d", 
+        "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentProvisioningExecution/622815ac-5811-
+4cb6-b608-5b28d5d73a8d", 
+        "dataCorrelationId": "29d7832e-9970-4af8-8d80-19444e1973ea", 
+        "provisioningArtifact": [ 
+            { 
+                "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+                "@referredType": "ProvisioningArtifact" 
+            } 
+        ], 
+        "testEnvironmentAllocationExecution": { 
+            "id": "418b253c-0cf3-4f48-b64e-93f8db9b614a", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 83 of 88 
+            "href": "https://mycsp:8080/tmf-api/testExecution/v4/testEnvironmentAllocationExecution/418b253c-0cf3-4f48-
+b64e-93f8db9b614a", 
+            "dataCorrelationId": "156cf43a-fd6a-488e-a8dd-6b01ccef12cd", 
+            "resourceManagerUrl": "https://myserver.com/resourceManager", 
+            "abstractEnvironment": { 
+                "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+                "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+                "@referredType": "AbstractEnvironment" 
+            }, 
+            "concreteResourceMapping": [ 
+                { 
+                    "abstractResource": "phone", 
+                    "concreteResources": [ 
+                        { 
+                            "name": "iPhone_1289" 
+                        } 
+                    ] 
+                } 
+            ], 
+            "state": "completed", 
+            "@baseType": "Execution", 
+            "@type": "TestEnvironmentAllocationExecution" 
+        }, 
+        "state": "completed", 
+        "@baseType": "Execution", 
+        "@type": "TestEnvironmentProvisioningExecution" 
+    }, 
+    "state": "completed", 
+    "@baseType": "TestExecution", 
+    "@type": "NonFunctionalTestExecution" 
+} 
+ 
+Delete non functional test execution 
+  DELETE /nonFunctionalTestExecution/{id} 
+Description 
+This operation deletes a non functional test execution entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a non-functional test execution. 
+ 
+Request 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 84 of 88 
+DELETE /tmf-api/testExecution/v4/nonFunctionalTestExecution/195dae44-a433-49bf-a15b-9ab198dad0e2 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 85 of 88 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 86 of 88 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 87 of 88 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                               Page 88 of 88 
+Acknowledgements 
+ 
+Version History 
+ 
+Version 
+Number 
+Date  
+Release led by: 
+Description 
+4.0.0 
+31-Jul-2020 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Edward Pershwitz 
+ITEA Technologies 
+edward.pershwitz@iteatechnologie
+s.com  
+ 
+First Release of the Document. 
+ 
+Release History 
+ 
+Release Status 
+Date  
+Release led by: 
+Description 
+Pre-production 
+31-Jul-2020 
+Pierre Gauthier 
+ 
+Edward Pershwitz 
+ 
+First Release of the Document. 
+Production 
+23-Sep-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Contributors to Document 
+ 
+Kanagaraj Manickam 
+Huawei Technologies Co., Ltd 
+ 
+
+

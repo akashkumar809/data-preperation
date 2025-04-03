@@ -1,0 +1,4449 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+TMF686 Topology Graph Discovery  
+API User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF686 
+Release 22.0.0 
+October 2022 
+ 
+ 
+Latest Update: TM Forum Release 22.0.0 Member Evaluation 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 2 of 108 
+NOTICE 
+Copyright © TM Forum 2022. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 3 of 108 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents .................................................................................................................................................... 3 
+List of Tables ............................................................................................................................................................ 7 
+Introduction .............................................................................................................................................................. 8 
+Overview .................................................................................................................................................................... 8 
+Roles ........................................................................................................................................................................... 8 
+Topology Consumer ................................................................................................................................................ 8 
+Topology Discovery Service .................................................................................................................................... 8 
+Topology Provider ................................................................................................................................................... 8 
+Discovery Directives ................................................................................................................................................... 9 
+Default Discovery .................................................................................................................................................... 9 
+Example .................................................................................................................................................................. 9 
+SAMPLE USE CASES ...................................................................................................................................................... 10 
+Support of polymorphism and extension patterns ...................................................................................................... 11 
+RESOURCE MODEL ....................................................................................................................................................... 12 
+Managed Entity and Task Resource Models ..................................................................................................... 12 
+Graph resource ..................................................................................................................................................... 12 
+Vertex resource .................................................................................................................................................... 14 
+Edge resource ....................................................................................................................................................... 19 
+Vertex Specification resource ............................................................................................................................... 25 
+Edge Specification resource .................................................................................................................................. 31 
+Topology Discovery Job resource ......................................................................................................................... 37 
+Merge Topology Graph Job resource .................................................................................................................... 38 
+Topology Query Job resource ............................................................................................................................... 40 
+Notification Resource Models .............................................................................................................................. 45 
+Graph Create Event ............................................................................................................................................... 47 
+Graph Change Event ............................................................................................................................................. 48 
+Graph Delete Event ............................................................................................................................................... 48 
+Vertex Create Event .............................................................................................................................................. 48 
+Vertex Change Event ............................................................................................................................................. 49 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 4 of 108 
+Vertex Delete Event .............................................................................................................................................. 49 
+Edge Create Event ................................................................................................................................................. 49 
+Edge Change Event ............................................................................................................................................... 50 
+Edge Delete Event ................................................................................................................................................. 50 
+Vertex Specification Create Event ........................................................................................................................ 50 
+Vertex Specification Change Event ....................................................................................................................... 51 
+Vertex Specification Delete Event ......................................................................................................................... 51 
+Edge Specification Create Event ........................................................................................................................... 52 
+Edge Specification Change Event .......................................................................................................................... 52 
+Edge Specification Delete Event ........................................................................................................................... 52 
+Topology Discovery Job Create Event ................................................................................................................... 53 
+Topology Discovery Job State Change Event ........................................................................................................ 53 
+Merge Topology Graph Job Create Event ............................................................................................................. 54 
+Merge Topology Graph Job State Change Event .................................................................................................. 54 
+Topology Query Job Create Event ......................................................................................................................... 54 
+Topology Query Job State Change Event .............................................................................................................. 55 
+API OPERATIONS .......................................................................................................................................................... 56 
+Operations on Graph ................................................................................................................................................ 56 
+List graphs ............................................................................................................................................................. 57 
+Retrieve graph ...................................................................................................................................................... 57 
+Create graph ......................................................................................................................................................... 58 
+Patch graph ........................................................................................................................................................... 59 
+Delete graph ......................................................................................................................................................... 61 
+Operations on Vertex ............................................................................................................................................... 61 
+List vertexs ............................................................................................................................................................ 61 
+Retrieve vertex ...................................................................................................................................................... 63 
+Create vertex ........................................................................................................................................................ 64 
+Patch vertex .......................................................................................................................................................... 65 
+Delete vertex ........................................................................................................................................................ 67 
+Operations on Edge .................................................................................................................................................. 68 
+List edges .............................................................................................................................................................. 68 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 5 of 108 
+Retrieve edge ........................................................................................................................................................ 69 
+Create edge ........................................................................................................................................................... 71 
+Patch edge ............................................................................................................................................................ 72 
+Delete edge ........................................................................................................................................................... 74 
+Operations on Vertex Specification ......................................................................................................................... 75 
+List vertex specifications ....................................................................................................................................... 75 
+Retrieve vertex specification ................................................................................................................................ 76 
+Create vertex specification ................................................................................................................................... 77 
+Patch vertex specification ..................................................................................................................................... 78 
+Delete vertex specification ................................................................................................................................... 79 
+Operations on Edge Specification ............................................................................................................................ 80 
+List edge specifications ......................................................................................................................................... 80 
+Retrieve edge specification ................................................................................................................................... 81 
+Create edge specification ..................................................................................................................................... 82 
+Patch edge specification ....................................................................................................................................... 83 
+Delete edge specification ..................................................................................................................................... 85 
+Operations on Topology Discovery Job .................................................................................................................... 85 
+List topology discovery jobs .................................................................................................................................. 85 
+Retrieve topology discovery job ........................................................................................................................... 86 
+Create topology discovery job .............................................................................................................................. 87 
+Patch topology discovery job ................................................................................................................................ 89 
+Operations on Merge Topology Graph Job .............................................................................................................. 91 
+List merge topology graph jobs ............................................................................................................................ 91 
+Retrieve merge topology graph job ...................................................................................................................... 92 
+Create merge topology graph job ......................................................................................................................... 93 
+Patch merge topology graph job .......................................................................................................................... 95 
+Operations on Topology Query Job .......................................................................................................................... 96 
+List topology query jobs ........................................................................................................................................ 96 
+Retrieve topology query job ................................................................................................................................. 97 
+Create topology query job .................................................................................................................................... 98 
+Patch topology query job .................................................................................................................................... 101 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 6 of 108 
+API NOTIFICATIONS .................................................................................................................................................... 103 
+Register listener ..................................................................................................................................................... 103 
+Unregister listener ................................................................................................................................................. 105 
+Publish Event to listener ........................................................................................................................................ 105 
+Acknowledgements .................................................................................................................................................... 107 
+Release History ....................................................................................................................................................... 107 
+Contributors to Document ..................................................................................................................................... 107 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 7 of 108 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 8 of 108 
+Introduction 
+The following document is the user guide of the REST API for Topology Graph Discovery management. It includes 
+the model definition as well as all available operations. 
+Overview 
+The Topology Discovery Service provides an overlay view of the relational information available across TM Forum 
+domains in the form of directed graphs. 
+ 
+Roles 
+The Topology Graph Discovery Service may be viewed from the perspective of three actors: 
+Topology Consumer 
+The Topology Consumer uses this API (TMF686) to interact with the Topology Discovery Service for the 
+management of topology discovery and topology graphs. 
+Topology Discovery Service 
+The Topology Discovery Service manages collections of topology graphs on behalf of Topology Consumers. 
+Those graphs may be discovered from Topology Providers or created directly by Topology Consumers.  
+Topology Provider 
+The Topology Providers are producers of any TM Forum Open APIs such as catalogs and inventories. 
+ 
+ 
+ 
+Market / Sales
+Product
+Customer
+Service
+Resource
+Engaged Party
+Enterprise
+Common
+Topology Discovery
+Service
+Provider
+Consumer
+TMF686
+TMFxxx
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 9 of 108 
+Discovery Directives 
+Topology Consumers may request the creation of a topology graph by representing information available in one or 
+more Topology Providers. A URI including the scheme, host, resource path and optional query, provides the 
+Topology Discovery Service with a starting point for discovery. If no other directives are provided the default 
+discovery rules shall be used. 
+Default Discovery 
+In the absence of more specific discovery directives a topology graph will be created where each of the items in the 
+response from the Topology Provider is represented by a vertex. Each attribute with a value having @baseType of 
+EntityRef, or array of, shall be represented by an Edge and a Vertex shall represent the referenced entity.  By 
+default the name of an Edge created in this way shall have the value of it’s name attribute equal to the attribute 
+name which caused it while the name value of a Vertex shall be equal to that of the referenced entity. 
+Example 
+The graphical representation of a directed graph below depicts the result of topology discovery on the example 
+Product Offering given in TMF620.  The Topology Provider URI for the discovery was:  
+/productCatalogManagement/v4/productOffering/7655 
+ 
+ 
+This example is used in one of the topology Discovery operation samples in a following section. 
+ProductOﬀering 
+(id=7655)
+ProductOﬀeringPrice 
+(id=1747)
+DeviceSpeciﬁca=on 
+(id=9881)
+GeographicAddress 
+(id=9979)
+place
+productOﬀeringPrice
+productSpeciﬁca3on
+BusinessSLA 
+(id=8082)
+serviceLevelAgreement
+ServiceCanadidate 
+(id=8167)
+serviceCandidate
+Category 
+(id=2646)
+category
+ResourceCandidate 
+(id=8937)
+resourceCandidate
+Channel 
+(id=4406)
+channel
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 10 of 108 
+SAMPLE USE CASES 
+Reader will find example of use cases using Usage API in “Open Digital Business Scenarios and Use Cases” 
+document. 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 11 of 108 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities, for instance a BillingAccount and SettlementAccount inheriting properties from the abstract Account 
+entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Account instances some may be instances of BillingAccount where other could be instances of SettlementAccount. 
+The @type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance an AccountRef object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as BillingAccountRef or SettlementAccountRef, and not the class type of 
+the referred object. However since reference classes are rarely sub-classed, @type is generally not useful in 
+reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 12 of 108 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Graph resource 
+Graph is a directed graph representing edges connecting vertices. 
+Resource model 
+Field descriptions 
+Graph fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 13 of 108 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+description 
+A string. Description of this REST resource. 
+edge 
+An edge collection reference (EdgeCollectionRef). Graph edge collection reference. 
+graphRelationship 
+A list of graph relationships (GraphRelationship [*]). Relationship to another Graph. 
+name 
+A string. Name given to this REST resource. 
+vertex 
+A vertex collection reference (VertexCollectionRef). Graph vertex collection reference. 
+GraphRelationship sub-resource 
+A relationship between Graphs. 
+href 
+A string. Reference of the target Graph. 
+id 
+A string. Unique identifier of target Graph. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+name 
+A string. The name given to the target Grapph instance. 
+relationshipType 
+A string. Type of relationship such as adjacency, connectivity. 
+role 
+A string. The association role for this Graph. 
+EdgeCollectionRef relationship 
+Graph edge collection reference. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+An uri (Uri). The type of the referred entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+VertexCollectionRef relationship 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 14 of 108 
+Graph vertex collection reference. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+An uri (Uri). The type of the referred entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+Json representation sample 
+We provide below the json representation of an example of a 'Graph' resource object 
+{ 
+    "id": "b965a5b8", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+    "name": "5GC", 
+    "description": "5G Core Subnet", 
+    "@type": "Graph", 
+    "vertex": { 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex" 
+    }, 
+    "edge": { 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8/edge" 
+    } 
+} 
+Vertex resource 
+A Vertex is connected by directed Edges to other vertices in a Graph. 
+Resource model 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 15 of 108 
+ 
+Field descriptions 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 16 of 108 
+Vertex fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+description 
+A string. Description of this REST resource. 
+edge 
+A list of edge references (EdgeRef [*]). Directed Edges which this Vertex is connected 
+by. (optional, read only). 
+entity 
+An entity reference (EntityRef). Entity which this Vertex represents. 
+graph 
+A graph reference (GraphRef). Graph which this Vertex is contained in. 
+name 
+A string. Name given to this REST resource. 
+subGraph 
+A graph reference (GraphRef). SubGraph which this Vertex represents. 
+vertexCharacteristic 
+A list of characteristics (Characteristic [*]). Describes a given characteristic of an 
+object or entity through a name/value pair. 
+vertexSpecification 
+A vertex specification reference (VertexSpecificationRef). A Vertex is connected by 
+directed Edges to other vertices in a Graph. 
+A VertexSpecification is a base class that represents a generic means for 
+implementing a particular type of Vertex. In essence, a VertexSpecification defines the 
+common attributes and relationships of a set of related Vertices, while Vertex defines 
+a specific instance that is based on a particular VertexSpecification. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 17 of 108 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+EdgeRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+EntityRef relationship 
+Entity reference schema to be use for all entityRef class. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 18 of 108 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+GraphRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+VertexSpecificationRef relationship 
+A Vertex is connected by directed Edges to other vertices in a Graph. 
+A VertexSpecification is a base class that represents a generic means for implementing a particular type of Vertex. 
+In essence, a VertexSpecification defines the common attributes and relationships of a set of related Vertices, while 
+Vertex defines a specific instance that is based on a particular VertexSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 19 of 108 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+version 
+A string. Vertex Specification version. 
+Json representation sample 
+We provide below the json representation of an example of a 'Vertex' resource object 
+{ 
+    "id": "8e516fb0", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+    "name": "AMF", 
+    "description": "5G Core AMF", 
+    "@type": "Vertex", 
+    "vertexSpecification": { 
+        "id": "6106de14", 
+        "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+        "name": "VNF", 
+        "@referredType": "VertexSpecification" 
+    }, 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edge": [ 
+        { 
+            "id": "446d7249", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+            "name": "N8", 
+            "@referredType": "Edge" 
+        } 
+    ], 
+    "vertexCharacteristic": [ 
+        { 
+            "name": "datacenter", 
+            "value": "DC005" 
+        } 
+    ], 
+    "entity": { 
+        "id": "5e86ec0a", 
+        "href": "/resourceInventory/v4/resource/5e86ec0a", 
+        "name": "NetworkSliceSubnet=1,ManagedElement=1,AMFFunction=1", 
+        "@referredType": "ResourceFunction" 
+    } 
+} 
+Edge resource 
+Edge is a directed edge connecting vertices in a directed Graph. 
+Resource model 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 20 of 108 
+ 
+Field descriptions 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 21 of 108 
+Edge fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+bidirectional 
+A boolean. Indicates if this Edge is birectional (true) or unidirection originating from 
+the first vertex (false). 
+description 
+A string. Description of this REST resource. 
+edgeCharacteristic 
+A list of characteristics (Characteristic [*]). Describes a given characteristic of an 
+object or entity through a name/value pair. 
+edgeSpecification 
+An edge specification reference (EdgeSpecificationRef). A directed Edge connects 
+Vertices in a Graph. 
+An EdgeSpecification is a base class that represents a generic means for implementing 
+a particular type of Edge. In essence, an EdgeSpecification defines the common 
+attributes and relationships of a set of related Edges, while Edge defines a specific 
+instance that is based on a particular EdgeSpecification. 
+entity 
+An entity reference (EntityRef). Entity which this Edge represents. 
+graph 
+A graph reference (GraphRef). Graph which this Edge is contained in. 
+name 
+A string. Name given to this REST resource. 
+subGraph 
+A graph reference (GraphRef). SubGraph which this Edge represents. 
+vertex 
+A list of vertex references (VertexRef [*]). Graph Vertices connected by this Edge. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 22 of 108 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+EdgeSpecificationRef relationship 
+A directed Edge connects Vertices in a Graph. 
+An EdgeSpecification is a base class that represents a generic means for implementing a particular type of Edge. In 
+essence, an EdgeSpecification defines the common attributes and relationships of a set of related Edges, while 
+Edge defines a specific instance that is based on a particular EdgeSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 23 of 108 
+version 
+A string. Edge Specification version. 
+EntityRef relationship 
+Entity reference schema to be use for all entityRef class. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+GraphRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+VertexRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 24 of 108 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'Edge' resource object 
+{ 
+    "id": "446d7249", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+    "name": "N8", 
+    "description": "5G Core N8 Reference Interface", 
+    "@type": "Edge", 
+    "edgeSpecification": { 
+        "id": "95e66eb7", 
+        "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+        "name": "Transport", 
+        "@referredType": "EdgeSpecification" 
+    }, 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edgeCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "value": "SDN45" 
+        } 
+    ], 
+    "bidirectional": true, 
+    "vertex": [ 
+        { 
+            "id": "8e516fb0", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+            "name": "AMF", 
+            "@referredType": "Vertex" 
+        }, 
+        { 
+            "id": "9b9f1c66", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/9b9f1c66", 
+            "name": "UDM", 
+            "@referredType": "Vertex" 
+        } 
+    ], 
+    "entity": { 
+        "id": "1fbfac41", 
+        "href": "/resourceInventory/v4/resource/1fbfac41", 
+        "name": "NetworkSlice=1,NetworkSliceSubnet=1,ManagedElement=1,Link_AMF_UDM=1", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 25 of 108 
+        "@referredType": "ResourceFunction" 
+    } 
+} 
+Vertex Specification resource 
+A Vertex is connected by directed Edges to other vertices in a Graph. 
+A VertexSpecification is a base class that represents a generic means for implementing a particular type of Vertex. 
+In essence, a VertexSpecification defines the common attributes and relationships of a set of related Vertices, while 
+Vertex defines a specific instance that is based on a particular VertexSpecification. 
+Resource model 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 26 of 108 
+ 
+Field descriptions 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 27 of 108 
+VertexSpecification fields 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+description 
+A string. Description of this REST resource. 
+lastUpdate 
+A date time (DateTime). Date and time of the last update of this REST resource. 
+lifecycleStatus 
+A string. Used to indicate the current lifecycle status of the vertex specification. 
+name 
+A string. Name given to this REST resource. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A related party defines party or party role 
+linked to a specific entity. 
+validFor 
+A time period. The period for which this REST resource is valid. 
+version 
+A string. Vertex Specification version. 
+vertexSpecCharacteristic A list of vertex specification characteristics (VertexSpecificationCharacteristic [*]). A 
+characteristic quality or distinctive feature of a VertexSpecification. 
+CharacteristicValueSpecification sub-resource 
+specification of a value (number or text or an object) that can be assigned to a Characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+isDefault 
+A boolean. If true, the Boolean Indicates if the value is the default value for a 
+characteristic. 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the valueFrom and 
+valueTo attributes. If applicable, possible values are "open", "closed", "closedBottom" 
+and "closedTop". 
+regex 
+A string. A regular JsonLdExpression constraint for given value. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 28 of 108 
+unitOfMeasure 
+A string. A length, surface, volume, dry measure, liquid measure, money, weight, 
+time, and the like. In general, a determinate quantity or magnitude of the kind 
+designated, taken as a standard of comparison for others of the same kind, in 
+assigning to them numerical values, as 1 foot, 1 yard, 1 mile, 1 square foot. 
+validFor 
+A time period. The period of time for which a value is applicable. 
+value 
+An any (Any). A discrete value that the characteristic can take on, or the actual value 
+of the characteristic. 
+valueFrom 
+An integer. The low range value that a characteristic can take on. 
+valueTo 
+An integer. The upper range value that a characteristic can take on. 
+valueType 
+A string. A kind of value that the characteristic value can take on, such as numeric, 
+text and so forth. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+VertexSpecificationCharacteristic sub-resource 
+This class defines the characteristic features of a vertex specification. Every VertexSpecification has a variety of 
+important attributes, methods, constraints, and relationships, which distinguish a vertex specification from other 
+vertex specifications. 
+@valueSchemaLocation 
+A string. This (optional) field provides a link to the schema describing the value 
+type. 
+configurable 
+A boolean. If true, the Boolean indicates that the target Characteristic is 
+configurable. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 29 of 108 
+description 
+A string. A narrative that explains the CharacteristicSpecification. 
+extensible 
+A boolean. An indicator that specifies that the values for the characteristic can be 
+extended by adding new values when instantiating a characteristic for a resource. 
+id 
+A string. Unique ID for the characteristic. 
+isUnique 
+A boolean. Specifies if the value of this characteristic is unique across all entities 
+instantiated from the specification that uses this characteristc. For example, 
+consider a ProductSpecification for a set-top box, with a 
+CharacteristicSpecification cardID. Each set-top box must have a different value for 
+cardID, so this isUnique attribute would be set to true for the characteristic. 
+maxCardinality 
+An integer. The maximum number of instances a CharacteristicValue can take on. 
+For example, zero to five phone numbers in a group calling plan, where five is the 
+value for the maxCardinality. 
+minCardinality 
+An integer. The minimum number of instances a CharacteristicValue can take on. 
+For example, zero to five phone numbers in a group calling plan, where zero is the 
+value for the minCardinality. 
+name 
+A string. A word, term, or phrase by which this characteristic specification is 
+known and distinguished from other characteristic specifications. 
+regex 
+A string. A rule or principle represented in regular JsonLdExpression used to derive 
+the value of a characteristic value. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as numeric, text 
+and so forth. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+vertexSpecCharRelationship 
+A list of vertex specification characteristic relationships 
+(VertexSpecificationCharacteristicRelationship [*]). An aggregation, migration, 
+substitution, dependency or exclusivity relationship between/among Specification 
+Characteristics. 
+vertexSpecCharacteristicValue A list of characteristic value specifications (CharacteristicValueSpecification [*]). A 
+CharacteristicValueSpecification object is used to define a set of attributes, each of 
+which can be assigned to a corresponding set of attributes in a 
+VertexSpecificationCharacteristic object. The values of the attributes in the 
+CharacteristicValueSpecification object describe the values of the attributes that a 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 30 of 108 
+corresponding VertexSpecificationCharacteristic object can take on. 
+validFor 
+A time period. The period of time for which a characteristic is applicable. 
+VertexSpecificationCharacteristicRelationship sub-resource 
+An aggregation, migration, substitution, dependency or exclusivity relationship between/among 
+VertexSpecificationCharacteristics. The specification characteristic is embedded within the specification whose ID 
+and href are in this entity, and identified by its ID. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicSpecificationId A string. Unique identifier of the characteristic within the specification. 
+name 
+A string. Name of the target characteristic within the specification. 
+relationshipType 
+A string. Type of relationship such as aggregation, migration, substitution, 
+dependency, exclusivity. 
+validFor 
+A time period. The period for which the object is valid. 
+vertexSpecificationHref 
+An uri (Uri). Hyperlink reference to the vertex specification containing the target 
+characteristic. 
+vertexSpecificationId 
+A string. Unique identifier of the vertex specification containing the target 
+characteristic. 
+Json representation sample 
+We provide below the json representation of an example of a 'VertexSpecification' resource object 
+{ 
+    "id": "6106de14", 
+    "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+    "@type": "VertexSpecification", 
+    "name": "VNF", 
+    "description": "Virtual Network Function (VNF)", 
+    "lastUpdate": "2021-04-08T12:22:08Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "vertexSpecCharacteristic": [ 
+        { 
+            "name": "datacenter", 
+            "description": "Identifies the datacenter where the VNF is located", 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 31 of 108 
+    ] 
+} 
+Edge Specification resource 
+A directed Edge connects Vertices in a Graph. 
+An EdgeSpecification is a base class that represents a generic means for implementing a particular type of Edge. In 
+essence, an EdgeSpecification defines the common attributes and relationships of a set of related Edges, while 
+Edge defines a specific instance that is based on a particular EdgeSpecification. 
+Resource model 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 32 of 108 
+ 
+Field descriptions 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 33 of 108 
+EdgeSpecification fields 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+description 
+A string. Description of this REST resource. 
+edgeSpecCharacteristic A list of edge specification characteristics (EdgeSpecificationCharacteristic [*]). A 
+characteristic quality or distinctive feature of an EdgeSpecification. 
+lastUpdate 
+A date time (DateTime). Date and time of the last update of this REST resource. 
+lifecycleStatus 
+A string. Used to indicate the current lifecycle status of the edge specification. 
+name 
+A string. Name given to this REST resource. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A related party defines party or party role 
+linked to a specific entity. 
+validFor 
+A time period. The period for which this REST resource is valid. 
+version 
+A string. Edge Specification version. 
+CharacteristicValueSpecification sub-resource 
+specification of a value (number or text or an object) that can be assigned to a Characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+isDefault 
+A boolean. If true, the Boolean Indicates if the value is the default value for a 
+characteristic. 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the valueFrom and 
+valueTo attributes. If applicable, possible values are "open", "closed", "closedBottom" 
+and "closedTop". 
+regex 
+A string. A regular JsonLdExpression constraint for given value. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 34 of 108 
+unitOfMeasure 
+A string. A length, surface, volume, dry measure, liquid measure, money, weight, 
+time, and the like. In general, a determinate quantity or magnitude of the kind 
+designated, taken as a standard of comparison for others of the same kind, in 
+assigning to them numerical values, as 1 foot, 1 yard, 1 mile, 1 square foot. 
+validFor 
+A time period. The period of time for which a value is applicable. 
+value 
+An any (Any). A discrete value that the characteristic can take on, or the actual value 
+of the characteristic. 
+valueFrom 
+An integer. The low range value that a characteristic can take on. 
+valueTo 
+An integer. The upper range value that a characteristic can take on. 
+valueType 
+A string. A kind of value that the characteristic value can take on, such as numeric, 
+text and so forth. 
+EdgeSpecificationCharacteristic sub-resource 
+This class defines the characteristic features of an edge specification. Every EdgeSpecification has a variety of 
+important attributes, methods, constraints, and relationships, which distinguish an edge specification from other 
+edge specifications. 
+@valueSchemaLocation 
+A string. This (optional) field provides a link to the schema describing the value type. 
+configurable 
+A boolean. If true, the Boolean indicates that the target Characteristic is 
+configurable. 
+description 
+A string. A narrative that explains the CharacteristicSpecification. 
+extensible 
+A boolean. An indicator that specifies that the values for the characteristic can be 
+extended by adding new values when instantiating a characteristic for a resource. 
+id 
+A string. Unique ID for the characteristic. 
+isUnique 
+A boolean. Specifies if the value of this characteristic is unique across all entities 
+instantiated from the specification that uses this characteristc. For example, 
+consider a ProductSpecification for a set-top box, with a CharacteristicSpecification 
+cardID. Each set-top box must have a different value for cardID, so this isUnique 
+attribute would be set to true for the characteristic. 
+maxCardinality 
+An integer. The maximum number of instances a CharacteristicValue can take on. 
+For example, zero to five phone numbers in a group calling plan, where five is the 
+value for the maxCardinality. 
+minCardinality 
+An integer. The minimum number of instances a CharacteristicValue can take on. 
+For example, zero to five phone numbers in a group calling plan, where zero is the 
+value for the minCardinality. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 35 of 108 
+name 
+A string. A word, term, or phrase by which this characteristic specification is known 
+and distinguished from other characteristic specifications. 
+regex 
+A string. A rule or principle represented in regular JsonLdExpression used to derive 
+the value of a characteristic value. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as numeric, text 
+and so forth. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+edgeSpecCharRelationship 
+A list of edge specification characteristic relationships 
+(EdgeSpecificationCharacteristicRelationship [*]). An aggregation, migration, 
+substitution, dependency or exclusivity relationship between/among Specification 
+Characteristics. 
+edgeSpecCharacteristicValue A list of characteristic value specifications (CharacteristicValueSpecification [*]). A 
+CharacteristicValueSpecification object is used to define a set of attributes, each of 
+which can be assigned to a corresponding set of attributes in a 
+EdgeSpecificationCharacteristic object. The values of the attributes in the 
+CharacteristicValueSpecification object describe the values of the attributes that a 
+corresponding EdgeSpecificationCharacteristic object can take on. 
+validFor 
+A time period. The period of time for which a characteristic is applicable. 
+EdgeSpecificationCharacteristicRelationship sub-resource 
+An aggregation, migration, substitution, dependency or exclusivity relationship between/among 
+EdgeSpecificationCharacteristics. The specification characteristic is embedded within the specification whose ID 
+and href are in this entity, and identified by its ID. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicSpecificationId A string. Unique identifier of the characteristic within the specification. 
+edgeSpecificationHref 
+An uri (Uri). Hyperlink reference to the edge specification containing the target 
+characteristic. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 36 of 108 
+edgeSpecificationId 
+A string. Unique identifier of the edge specification containing the target 
+characteristic. 
+name 
+A string. Name of the target characteristic within the specification. 
+relationshipType 
+A string. Type of relationship such as aggregation, migration, substitution, 
+dependency, exclusivity. 
+validFor 
+A time period. The period for which the object is valid. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+Json representation sample 
+We provide below the json representation of an example of a 'EdgeSpecification' resource object 
+{ 
+    "id": "95e66eb7", 
+    "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+    "@type": "EdgeSpecification", 
+    "name": "Transport", 
+    "description": "Link transport domain", 
+    "lastUpdate": "2021-04-08T13:54:32Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "edgeSpecCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "description": "Identifies the transport provider of the link", 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+    ] 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 37 of 108 
+} 
+Topology Discovery Job resource 
+Represents a task used to discover topology from providers. 
+Resource model 
+ 
+Field descriptions 
+TopologyDiscoveryJob fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+completionDate 
+A date time (DateTime). Date at which the job was completed. 
+creationDate 
+A date time (DateTime). Date at which the job was created. 
+status 
+A task state type (TaskStateType). Status of the topology discover job. 
+Json representation sample 
+We provide below the json representation of an example of a 'TopologyDiscoveryJob' resource object 
+{ 
+    "id": "b32a6d3b", 
+    "href": "/topologyDiscovery/v4/topologyDiscoveryJob/b32a6d3b", 
+    "@type": "TopologyDiscoveryJob", 
+    "creationDate": "2021-04-15T14:17:04.908Z", 
+    "completionDate": "2021-04-15T14:17:11.845Z", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 38 of 108 
+    "status": "done", 
+    "topologyProvider": [ 
+        { 
+            "url": "/resourceInventoryManagement/v4/resource?category=5GC" 
+        } 
+    ], 
+    "graphTemplate": { 
+        "name": "5GC", 
+        "description": "5G Core Subnet", 
+        "contained": true 
+    }, 
+    "graphResult": { 
+        "id": "41fbbd95", 
+        "href": "/topologyDiscovery/v4/graph/41fbbd95", 
+        "@referredType": "Graph" 
+    } 
+} 
+Merge Topology Graph Job resource 
+Merges two or more Graphs into a single graph. 
+Resource model 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 39 of 108 
+Field descriptions 
+MergeTopologyGraphJob fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+completionDate 
+A date time (DateTime). Date at which the job was completed. 
+creationDate 
+A date time (DateTime). Date at which the job was created. 
+graphResult 
+A graph reference (GraphRef). The created topology graph. 
+mergeTopologyGraph 
+A list of graph references (GraphRef [*]). URI with query string of the Topology 
+GraphIds to be merged. 
+status 
+A task state type (TaskStateType). Status of the merge job. 
+GraphRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'MergeTopologyGraphJob' resource object 
+{ 
+    "id": "333c231a", 
+    "href": "/topologyDiscovery/v4/MergeTopologyGraphJob/333c231a", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 40 of 108 
+    "@type": "MergeTopologyGraphJob", 
+    "creationDate": "2021-04-15T14:37:18.762Z", 
+    "completionDate": "2021-04-15T14:37:19.114Z", 
+    "status": "done", 
+    "mergeTopologyGraph": [ 
+        { 
+            "id": "91f9e74a", 
+            "href": "/topologyDiscovery/v4/graph/91f9e74a", 
+            "@referredType": "Graph" 
+        }, 
+        { 
+            "id": "0319108c", 
+            "href": "/topologyDiscovery/v4/graph/0319108c", 
+            "@referredType": "Graph" 
+        } 
+    ], 
+    "graph": { 
+        "id": "ded3c8be", 
+        "href": "/topologyDiscovery/v4/graph/ded3c8be", 
+        "@referredType": "Graph" 
+    } 
+} 
+Topology Query Job resource 
+Represents a task used to query topology in the service. 
+Resource model 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 41 of 108 
+ 
+Field descriptions 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 42 of 108 
+TopologyQueryJob fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+completionDate 
+A date time (DateTime). Date at which the job was completed. 
+creationDate 
+A date time (DateTime). Date at which the job was created. 
+graphResult 
+A list of graph references (GraphRef [*]). The topology graph(s) created by the query. 
+graphSource 
+A graph reference (GraphRef). The topology graph to be queried. 
+graphTemplate 
+A graph (Graph). Attributes of the created Graph. 
+queryMatch 
+A list of j s o n path query json ld expressions (JSONPathQueryJsonLdExpression [*]). 
+Pattern to search for in graph. 
+status 
+A task state type (TaskStateType). Status of the topology query job. 
+vertexResult 
+A list of vertex references (VertexRef [*]). The vertices result of the query. 
+Graph sub-resource 
+Graph is a directed graph representing edges connecting vertices. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+description 
+A string. Description of this REST resource. 
+edge 
+An edge collection reference (EdgeCollectionRef). Graph edge collection reference. 
+graphRelationship 
+A list of graph relationships (GraphRelationship [*]). Relationship to another Graph. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 43 of 108 
+name 
+A string. Name given to this REST resource. 
+vertex 
+A vertex collection reference (VertexCollectionRef). Graph vertex collection reference. 
+GraphRelationship sub-resource 
+A relationship between Graphs. 
+href 
+A string. Reference of the target Graph. 
+id 
+A string. Unique identifier of target Graph. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+name 
+A string. The name given to the target Grapph instance. 
+relationshipType 
+A string. Type of relationship such as adjacency, connectivity. 
+role 
+A string. The association role for this Graph. 
+EdgeCollectionRef relationship 
+Graph edge collection reference. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+An uri (Uri). The type of the referred entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+GraphRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 44 of 108 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+VertexCollectionRef relationship 
+Graph vertex collection reference. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+An uri (Uri). The type of the referred entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+VertexRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'TopologyQueryJob' resource object 
+{ 
+    "id": "714733ce", 
+    "href": "/topologyDiscovery/v4/topologyQueryJob/714733ce", 
+    "@type": "TopologyQueryJob", 
+    "creationDate": "2021-04-16T33:21:54.776Z", 
+    "completionDate": "2021-04-16T33:21:55.245Z", 
+    "status": "done", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 45 of 108 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu", 
+    "graphTemplate": { 
+        "description": "Query result subgraph", 
+        "contained": false 
+    }, 
+    "graphResult": { 
+        "id": "c765bfa9", 
+        "href": "/topologyDiscovery/v4/graph/c765bfa9", 
+        "@referredType": "Graph" 
+    } 
+} 
+ 
+Notification Resource Models 
+ 
+21 notifications are defined for this API 
+Notifications related to Graph: 
+    - GraphCreateEvent 
+    - GraphChangeEvent 
+    - GraphDeleteEvent 
+Notifications related to Vertex: 
+    - VertexCreateEvent 
+    - VertexChangeEvent 
+    - VertexDeleteEvent 
+Notifications related to Edge: 
+    - EdgeCreateEvent 
+    - EdgeChangeEvent 
+    - EdgeDeleteEvent 
+Notifications related to VertexSpecification: 
+    - VertexSpecificationCreateEvent 
+    - VertexSpecificationChangeEvent 
+    - VertexSpecificationDeleteEvent 
+Notifications related to EdgeSpecification: 
+    - EdgeSpecificationCreateEvent 
+    - EdgeSpecificationChangeEvent 
+    - EdgeSpecificationDeleteEvent 
+Notifications related to TopologyDiscoveryJob: 
+    - TopologyDiscoveryJobCreateEvent 
+    - TopologyDiscoveryJobStateChangeEvent 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 46 of 108 
+Notifications related to MergeTopologyGraphJob: 
+    - MergeTopologyGraphJobCreateEvent 
+    - MergeTopologyGraphJobStateChangeEvent 
+Notifications related to TopologyQueryJob: 
+    - TopologyQueryJobCreateEvent 
+    - TopologyQueryJobStateChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 47 of 108 
+ 
+Graph Create Event 
+Notification GraphCreateEvent case for resource Graph 
+Json representation sample 
+We provide below the json representation of an example of a 'GraphCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GraphCreateEvent", 
+     "event": { 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 48 of 108 
+        "graph" :  
+            {-- SEE Graph RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Graph Change Event 
+Notification GraphChangeEvent case for resource Graph 
+Json representation sample 
+We provide below the json representation of an example of a 'GraphChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GraphChangeEvent", 
+     "event": { 
+        "graph" :  
+            {-- SEE Graph RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Graph Delete Event 
+Notification GraphDeleteEvent case for resource Graph 
+Json representation sample 
+We provide below the json representation of an example of a 'GraphDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GraphDeleteEvent", 
+     "event": { 
+        "graph" :  
+            {-- SEE Graph RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Vertex Create Event 
+Notification VertexCreateEvent case for resource Vertex 
+Json representation sample 
+We provide below the json representation of an example of a 'VertexCreateEvent' notification event object 
+{ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 49 of 108 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"VertexCreateEvent", 
+     "event": { 
+        "vertex" :  
+            {-- SEE Vertex RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Vertex Change Event 
+Notification VertexChangeEvent case for resource Vertex 
+Json representation sample 
+We provide below the json representation of an example of a 'VertexChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"VertexChangeEvent", 
+     "event": { 
+        "vertex" :  
+            {-- SEE Vertex RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Vertex Delete Event 
+Notification VertexDeleteEvent case for resource Vertex 
+Json representation sample 
+We provide below the json representation of an example of a 'VertexDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"VertexDeleteEvent", 
+     "event": { 
+        "vertex" :  
+            {-- SEE Vertex RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Edge Create Event 
+Notification EdgeCreateEvent case for resource Edge 
+Json representation sample 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 50 of 108 
+We provide below the json representation of an example of a 'EdgeCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"EdgeCreateEvent", 
+     "event": { 
+        "edge" :  
+            {-- SEE Edge RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Edge Change Event 
+Notification EdgeChangeEvent case for resource Edge 
+Json representation sample 
+We provide below the json representation of an example of a 'EdgeChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"EdgeChangeEvent", 
+     "event": { 
+        "edge" :  
+            {-- SEE Edge RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Edge Delete Event 
+Notification EdgeDeleteEvent case for resource Edge 
+Json representation sample 
+We provide below the json representation of an example of a 'EdgeDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"EdgeDeleteEvent", 
+     "event": { 
+        "edge" :  
+            {-- SEE Edge RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Vertex Specification Create Event 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 51 of 108 
+Notification VertexSpecificationCreateEvent case for resource VertexSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'VertexSpecificationCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"VertexSpecificationCreateEvent", 
+     "event": { 
+        "vertexSpecification" :  
+            {-- SEE VertexSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Vertex Specification Change Event 
+Notification VertexSpecificationChangeEvent case for resource VertexSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'VertexSpecificationChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"VertexSpecificationChangeEvent", 
+     "event": { 
+        "vertexSpecification" :  
+            {-- SEE VertexSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Vertex Specification Delete Event 
+Notification VertexSpecificationDeleteEvent case for resource VertexSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'VertexSpecificationDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"VertexSpecificationDeleteEvent", 
+     "event": { 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 52 of 108 
+        "vertexSpecification" :  
+            {-- SEE VertexSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Edge Specification Create Event 
+Notification EdgeSpecificationCreateEvent case for resource EdgeSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'EdgeSpecificationCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"EdgeSpecificationCreateEvent", 
+     "event": { 
+        "edgeSpecification" :  
+            {-- SEE EdgeSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Edge Specification Change Event 
+Notification EdgeSpecificationChangeEvent case for resource EdgeSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'EdgeSpecificationChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"EdgeSpecificationChangeEvent", 
+     "event": { 
+        "edgeSpecification" :  
+            {-- SEE EdgeSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Edge Specification Delete Event 
+Notification EdgeSpecificationDeleteEvent case for resource EdgeSpecification 
+Json representation sample 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 53 of 108 
+We provide below the json representation of an example of a 'EdgeSpecificationDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"EdgeSpecificationDeleteEvent", 
+     "event": { 
+        "edgeSpecification" :  
+            {-- SEE EdgeSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Topology Discovery Job Create Event 
+Notification TopologyDiscoveryJobCreateEvent case for resource TopologyDiscoveryJob 
+Json representation sample 
+We provide below the json representation of an example of a 'TopologyDiscoveryJobCreateEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TopologyDiscoveryJobCreateEvent", 
+     "event": { 
+        "topologyDiscoveryJob" :  
+            {-- SEE TopologyDiscoveryJob RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Topology Discovery Job State Change Event 
+Notification TopologyDiscoveryJobStateChangeEvent case for resource TopologyDiscoveryJob 
+Json representation sample 
+We provide below the json representation of an example of a 'TopologyDiscoveryJobStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TopologyDiscoveryJobStateChangeEvent", 
+     "event": { 
+        "topologyDiscoveryJob" :  
+            {-- SEE TopologyDiscoveryJob RESOURCE SAMPLE --} 
+    } 
+} 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 54 of 108 
+ 
+Merge Topology Graph Job Create Event 
+Notification MergeTopologyGraphJobCreateEvent case for resource MergeTopologyGraphJob 
+Json representation sample 
+We provide below the json representation of an example of a 'MergeTopologyGraphJobCreateEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"MergeTopologyGraphJobCreateEvent", 
+     "event": { 
+        "mergeTopologyGraphJob" :  
+            {-- SEE MergeTopologyGraphJob RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Merge Topology Graph Job State Change Event 
+Notification MergeTopologyGraphJobStateChangeEvent case for resource MergeTopologyGraphJob 
+Json representation sample 
+We provide below the json representation of an example of a 'MergeTopologyGraphJobStateChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"MergeTopologyGraphJobStateChangeEvent", 
+     "event": { 
+        "mergeTopologyGraphJob" :  
+            {-- SEE MergeTopologyGraphJob RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Topology Query Job Create Event 
+Notification TopologyQueryJobCreateEvent case for resource TopologyQueryJob 
+Json representation sample 
+We provide below the json representation of an example of a 'TopologyQueryJobCreateEvent' notification event 
+object 
+{ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 55 of 108 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TopologyQueryJobCreateEvent", 
+     "event": { 
+        "topologyQueryJob" :  
+            {-- SEE TopologyQueryJob RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Topology Query Job State Change Event 
+Notification TopologyQueryJobStateChangeEvent case for resource TopologyQueryJob 
+Json representation sample 
+We provide below the json representation of an example of a 'TopologyQueryJobStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TopologyQueryJobStateChangeEvent", 
+     "event": { 
+        "topologyQueryJob" :  
+            {-- SEE TopologyQueryJob RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 56 of 108 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Complete Update of an Entity 
+PUT Resource 
+PUT must be used to 
+completely update a resource 
+identified by its resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be 
+used to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Graph 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 57 of 108 
+List graphs 
+  GET /graph?fields=...&{filtering} 
+Description 
+This operation list graph entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+The following is an example of a request to get the Graph collection: 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/graph 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "description": "5G Core Subnet", 
+        "@type": "Graph", 
+        "vertex": { 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex" 
+        }, 
+        "edge": { 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/edge" 
+        } 
+    } 
+] 
+ 
+Retrieve graph 
+  GET /graph/{id}?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 58 of 108 
+This operation retrieves a graph entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a Graph resource. 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/graph/b965a5b8 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "b965a5b8", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+    "name": "5GC", 
+    "description": "5G Core Subnet", 
+    "@type": "Graph", 
+    "vertex": { 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex" 
+    }, 
+    "edge": { 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8/edge" 
+    } 
+} 
+ 
+Create graph 
+  POST /graph 
+Description 
+This operation creates a graph entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a Graph, including 
+any possible rule conditions and applicable default values. Notice that it is up to an implementer to add additional 
+mandatory attributes. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 59 of 108 
+Mandatory Attributes 
+Rule 
+name 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+description 
+ 
+edge 
+ 
+graphRelationship 
+ 
+vertex 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a Graph resource. In this example the request only passes mandatory 
+attributes. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/graph 
+Content-Type: application/json 
+ 
+{ 
+    "name": "5GC" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "b965a5b8", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+    "name": "5GC" 
+} 
+ 
+Patch graph 
+  PATCH /graph/{id} 
+Description 
+This operation allows partial updates of a graph entity. Support of json/merge (https://tools.ietf.org/html/rfc7386) 
+is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is optional. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 60 of 108 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+description 
+ 
+edge 
+ 
+graphRelationship 
+ 
+name 
+ 
+vertex 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a Graph resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/graph/b965a5b8 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "b965a5b8", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+    "name": "new name", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 61 of 108 
+    "description": "5G Core Subnet", 
+    "@type": "Graph", 
+    "vertex": { 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex" 
+    }, 
+    "edge": { 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8/edge" 
+    } 
+} 
+ 
+Delete graph 
+  DELETE /graph/{id} 
+Description 
+This operation deletes a graph entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a Graph resource. 
+ 
+Request 
+ 
+DELETE /tmf-api/topologyDiscovery/v4/graph/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Vertex 
+List vertexs 
+  GET graph/{graphId}/vertex?fields=...&{filtering} 
+Description 
+This operation list vertex entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 62 of 108 
+Usage Samples 
+Here's an example of a request for retrieving Vertex resources. 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/vertex 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "8e516fb0", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+    "name": "AMF", 
+    "description": "5G Core AMF", 
+    "@type": "Vertex", 
+    "vertexSpecification": { 
+        "id": "6106de14", 
+        "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+        "name": "VNF", 
+        "@referredType": "VertexSpecification" 
+    }, 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edge": [ 
+        { 
+            "id": "446d7249", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+            "name": "N8", 
+            "@referredType": "Edge" 
+        } 
+    ], 
+    "vertexCharacteristic": [ 
+        { 
+            "name": "datacenter", 
+            "value": "DC005" 
+        } 
+    ], 
+    "entity": { 
+        "id": "5e86ec0a", 
+        "href": "/resourceInventory/v4/resource/5e86ec0a", 
+        "name": "NetworkSliceSubnet=1,ManagedElement=1,AMFFunction=1", 
+        "@referredType": "ResourceFunction" 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 63 of 108 
+    } 
+} 
+] 
+ 
+Retrieve vertex 
+  GET graph/{graphId}/vertex/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a vertex entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+The following is an example of a request to get a Vertex: 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4graph/b965a5b8/vertex/8e516fb0 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "8e516fb0", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+    "name": "AMF", 
+    "description": "5G Core AMF", 
+    "@type": "Vertex", 
+    "vertexSpecification": { 
+        "id": "6106de14", 
+        "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+        "name": "VNF", 
+        "@referredType": "VertexSpecification" 
+    }, 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edge": [ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 64 of 108 
+        { 
+            "id": "446d7249", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+            "name": "N8", 
+            "@referredType": "Edge" 
+        } 
+    ], 
+    "vertexCharacteristic": [ 
+        { 
+            "name": "datacenter", 
+            "value": "DC005" 
+        } 
+    ], 
+    "entity": { 
+        "id": "5e86ec0a", 
+        "href": "/resourceInventory/v4/resource/5e86ec0a", 
+        "name": "NetworkSliceSubnet=1,ManagedElement=1,AMFFunction=1", 
+        "@referredType": "ResourceFunction" 
+    } 
+} 
+ 
+Create vertex 
+  POST graph/{graphId}/vertex 
+Description 
+This operation creates a vertex entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a Vertex, including 
+any possible rule conditions and applicable default values. Notice that it is up to an implementer to add additional 
+mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+graph 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+description 
+ 
+edge 
+ 
+entity 
+ 
+subGraph 
+ 
+vertexCharacteristic 
+ 
+vertexSpecification 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 65 of 108 
+ 
+Usage Samples 
+Here's an example of a request for creating a Vertex resource. In this example the request only passes mandatory 
+attributes. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/vertex 
+Content-Type: application/json 
+ 
+{ 
+    "name": "AMF", 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "8e516fb0", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+    "name": "AMF", 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    } 
+} 
+ 
+Patch vertex 
+  PATCH graph/{graphId}/vertex/{id} 
+Description 
+This operation allows partial updates of a vertex entity. Support of json/merge (https://tools.ietf.org/html/rfc7386) 
+is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is optional. 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 66 of 108 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+description 
+ 
+edge 
+ 
+entity 
+ 
+graph 
+ 
+name 
+ 
+subGraph 
+ 
+vertexCharacteristic 
+ 
+vertexSpecification 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a Vertex resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/vertex/8e516fb0 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "8e516fb0", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 67 of 108 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+    "name": "new name", 
+    "description": "5G Core AMF", 
+    "@type": "Vertex", 
+    "vertexSpecification": { 
+        "id": "6106de14", 
+        "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+        "name": "VNF", 
+        "@referredType": "VertexSpecification" 
+    }, 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edge": [ 
+        { 
+            "id": "446d7249", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+            "name": "N8", 
+            "@referredType": "Edge" 
+        } 
+    ], 
+    "vertexCharacteristic": [ 
+        { 
+            "name": "datacenter", 
+            "value": "DC005" 
+        } 
+    ], 
+    "entity": { 
+        "id": "5e86ec0a", 
+        "href": "/resourceInventory/v4/resource/5e86ec0a", 
+        "name": "NetworkSliceSubnet=1,ManagedElement=1,AMFFunction=1", 
+        "@referredType": "ResourceFunction" 
+    } 
+} 
+ 
+Delete vertex 
+  DELETE graph/{graphId}/vertex/{id} 
+Description 
+This operation deletes a vertex entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a Vertex resource. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 68 of 108 
+ 
+Request 
+ 
+DELETE /tmf-api/topologyDiscovery/v4/vertex/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Edge 
+List edges 
+  GET graph/{graphId}/edge?fields=...&{filtering} 
+Description 
+This operation list edge entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving Edge resources. 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/edge 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "446d7249", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+    "name": "N8", 
+    "description": "5G Core N8 Reference Interface", 
+    "@type": "Edge", 
+    "edgeSpecification": { 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 69 of 108 
+        "id": "95e66eb7", 
+        "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+        "name": "Transport", 
+        "@referredType": "EdgeSpecification" 
+    }, 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edgeCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "value": "SDN45" 
+        } 
+    ], 
+    "bidirectional": true, 
+    "vertex": [ 
+        { 
+            "id": "8e516fb0", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+            "name": "AMF", 
+            "@referredType": "Vertex" 
+        }, 
+        { 
+            "id": "9b9f1c66", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/9b9f1c66", 
+            "name": "UDM", 
+            "@referredType": "Vertex" 
+        } 
+    ], 
+    "entity": { 
+        "id": "1fbfac41", 
+        "href": "/resourceInventory/v4/resource/1fbfac41", 
+        "name": "NetworkSlice=1,NetworkSliceSubnet=1,ManagedElement=1,Link_AMF_UDM=1", 
+        "@referredType": "ResourceFunction" 
+    } 
+} 
+] 
+ 
+Retrieve edge 
+  GET graph/{graphId}/edge/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an edge entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 70 of 108 
+Usage Samples 
+The following is an example of a request to get an Edge: 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4graph/b965a5b8/edge/446d7249 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "446d7249", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+    "name": "N8", 
+    "description": "5G Core N8 Reference Interface", 
+    "@type": "Edge", 
+    "edgeSpecification": { 
+        "id": "95e66eb7", 
+        "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+        "name": "Transport", 
+        "@referredType": "EdgeSpecification" 
+    }, 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edgeCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "value": "SDN45" 
+        } 
+    ], 
+    "bidirectional": true, 
+    "vertex": [ 
+        { 
+            "id": "8e516fb0", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+            "name": "AMF", 
+            "@referredType": "Vertex" 
+        }, 
+        { 
+            "id": "9b9f1c66", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/9b9f1c66", 
+            "name": "UDM", 
+            "@referredType": "Vertex" 
+        } 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 71 of 108 
+    ], 
+    "entity": { 
+        "id": "1fbfac41", 
+        "href": "/resourceInventory/v4/resource/1fbfac41", 
+        "name": "NetworkSlice=1,NetworkSliceSubnet=1,ManagedElement=1,Link_AMF_UDM=1", 
+        "@referredType": "ResourceFunction" 
+    } 
+} 
+ 
+Create edge 
+  POST graph/{graphId}/edge 
+Description 
+This operation creates an edge entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a Edge, including 
+any possible rule conditions and applicable default values. Notice that it is up to an implementer to add additional 
+mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+graph 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+bidirectional 
+ 
+description 
+ 
+edgeCharacteristic 
+ 
+edgeSpecification 
+ 
+entity 
+ 
+subGraph 
+ 
+vertex 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a Edge resource. In this example the request only passes mandatory 
+attributes. 
+ 
+Request 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 72 of 108 
+POST /tmf-api/topologyDiscovery/v4/edge 
+Content-Type: application/json 
+ 
+{ 
+    "name": "N8", 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "446d7249", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+    "name": "N8", 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    } 
+} 
+ 
+Patch edge 
+  PATCH graph/{graphId}/edge/{id} 
+Description 
+This operation allows partial updates of an edge entity. Support of json/merge (https://tools.ietf.org/html/rfc7386) 
+is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 73 of 108 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+bidirectional 
+ 
+description 
+ 
+edgeCharacteristic 
+ 
+edgeSpecification 
+ 
+entity 
+ 
+graph 
+ 
+name 
+ 
+subGraph 
+ 
+vertex 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a Edge resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/edge/446d7249 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "446d7249", 
+    "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/446d7249", 
+    "name": "new name", 
+    "description": "5G Core N8 Reference Interface", 
+    "@type": "Edge", 
+    "edgeSpecification": { 
+        "id": "95e66eb7", 
+        "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+        "name": "Transport", 
+        "@referredType": "EdgeSpecification" 
+    }, 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 74 of 108 
+    "graph": { 
+        "id": "b965a5b8", 
+        "href": "/topologyDiscovery/v4/graph/b965a5b8", 
+        "name": "5GC", 
+        "@referredType": "Graph" 
+    }, 
+    "edgeCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "value": "SDN45" 
+        } 
+    ], 
+    "bidirectional": true, 
+    "vertex": [ 
+        { 
+            "id": "8e516fb0", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/8e516fb0", 
+            "name": "AMF", 
+            "@referredType": "Vertex" 
+        }, 
+        { 
+            "id": "9b9f1c66", 
+            "href": "/topologyDiscovery/v4/graph/b965a5b8/vertex/9b9f1c66", 
+            "name": "UDM", 
+            "@referredType": "Vertex" 
+        } 
+    ], 
+    "entity": { 
+        "id": "1fbfac41", 
+        "href": "/resourceInventory/v4/resource/1fbfac41", 
+        "name": "NetworkSlice=1,NetworkSliceSubnet=1,ManagedElement=1,Link_AMF_UDM=1", 
+        "@referredType": "ResourceFunction" 
+    } 
+} 
+ 
+Delete edge 
+  DELETE graph/{graphId}/edge/{id} 
+Description 
+This operation deletes an edge entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a Edge resource. 
+ 
+Request 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 75 of 108 
+DELETE /tmf-api/topologyDiscovery/v4/edge/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Vertex Specification 
+List vertex specifications 
+  GET /vertexSpecification?fields=...&{filtering} 
+Description 
+This operation list vertex specification entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving VertexSpecification resources. 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/vertexSpecification 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "6106de14", 
+    "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+    "@type": "VertexSpecification", 
+    "name": "VNF", 
+    "description": "Virtual Network Function (VNF)", 
+    "lastUpdate": "2021-04-08T12:22:08Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "vertexSpecCharacteristic": [ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 76 of 108 
+        { 
+            "name": "datacenter", 
+            "description": "Identifies the datacenter where the VNF is located", 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+    ] 
+} 
+] 
+ 
+Retrieve vertex specification 
+  GET /vertexSpecification/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a vertex specification entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+The following is an example of a request to get a VertexSpecification: 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/vertexSpecification/6106de14 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "6106de14", 
+    "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+    "@type": "VertexSpecification", 
+    "name": "VNF", 
+    "description": "Virtual Network Function (VNF)", 
+    "lastUpdate": "2021-04-08T12:22:08Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "vertexSpecCharacteristic": [ 
+        { 
+            "name": "datacenter", 
+            "description": "Identifies the datacenter where the VNF is located", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 77 of 108 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+    ] 
+} 
+ 
+Create vertex specification 
+  POST /vertexSpecification 
+Description 
+This operation creates a vertex specification entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+VertexSpecification, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+description 
+ 
+lastUpdate 
+ 
+lifecycleStatus 
+ 
+relatedParty 
+ 
+validFor 
+ 
+version 
+ 
+vertexSpecCharacteristic 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a VertexSpecification resource. In this example the request only passes 
+mandatory attributes. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/vertexSpecification 
+Content-Type: application/json 
+ 
+{ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 78 of 108 
+    "name": "VNF" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "6106de14", 
+    "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+    "name": "VNF" 
+} 
+ 
+Patch vertex specification 
+  PATCH /vertexSpecification/{id} 
+Description 
+This operation allows partial updates of a vertex specification entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+href 
+ 
+id 
+ 
+description 
+ 
+lastUpdate 
+ 
+lifecycleStatus 
+ 
+name 
+ 
+relatedParty 
+ 
+validFor 
+ 
+version 
+ 
+vertexSpecCharacteristic 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 79 of 108 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a VertexSpecification resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/vertexSpecification/6106de14 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "6106de14", 
+    "href": "/topologyDiscovery/v4/vertexSpecification/6106de14", 
+    "@type": "VertexSpecification", 
+    "name": "new name", 
+    "description": "Virtual Network Function (VNF)", 
+    "lastUpdate": "2021-04-08T12:22:08Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "vertexSpecCharacteristic": [ 
+        { 
+            "name": "datacenter", 
+            "description": "Identifies the datacenter where the VNF is located", 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+    ] 
+} 
+ 
+Delete vertex specification 
+  DELETE /vertexSpecification/{id} 
+Description 
+This operation deletes a vertex specification entity. 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 80 of 108 
+ 
+Usage Samples 
+Here's an example of a request for deleting a VertexSpecification resource. 
+ 
+Request 
+ 
+DELETE /tmf-api/topologyDiscovery/v4/vertexSpecification/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Edge Specification 
+List edge specifications 
+  GET /edgeSpecification?fields=...&{filtering} 
+Description 
+This operation list edge specification entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving EdgeSpecification resources. 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/edgeSpecification 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 81 of 108 
+{ 
+    "id": "95e66eb7", 
+    "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+    "@type": "EdgeSpecification", 
+    "name": "Transport", 
+    "description": "Link transport domain", 
+    "lastUpdate": "2021-04-08T13:54:32Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "edgeSpecCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "description": "Identifies the transport provider of the link", 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+    ] 
+} 
+] 
+ 
+Retrieve edge specification 
+  GET /edgeSpecification/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an edge specification entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+The following is an example of a request to get an EdgeSpecification: 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/edgeSpecification/95e66eb7 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "95e66eb7", 
+    "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 82 of 108 
+    "@type": "EdgeSpecification", 
+    "name": "Transport", 
+    "description": "Link transport domain", 
+    "lastUpdate": "2021-04-08T13:54:32Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "edgeSpecCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "description": "Identifies the transport provider of the link", 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+    ] 
+} 
+ 
+Create edge specification 
+  POST /edgeSpecification 
+Description 
+This operation creates an edge specification entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+EdgeSpecification, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+description 
+ 
+edgeSpecCharacteristic 
+ 
+lastUpdate 
+ 
+lifecycleStatus 
+ 
+relatedParty 
+ 
+validFor 
+ 
+version 
+ 
+ 
+Usage Samples 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 83 of 108 
+Here's an example of a request for creating a EdgeSpecification resource. In this example the request only passes 
+mandatory attributes. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/edgeSpecification 
+Content-Type: application/json 
+ 
+{ 
+    "name": "Transport" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "95e66eb7", 
+    "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+    "name": "Transport" 
+} 
+ 
+Patch edge specification 
+  PATCH /edgeSpecification/{id} 
+Description 
+This operation allows partial updates of an edge specification entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+href 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 84 of 108 
+id 
+ 
+description 
+ 
+edgeSpecCharacteristic 
+ 
+lastUpdate 
+ 
+lifecycleStatus 
+ 
+name 
+ 
+relatedParty 
+ 
+validFor 
+ 
+version 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a EdgeSpecification resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/edgeSpecification/95e66eb7 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "95e66eb7", 
+    "href": "/topologyDiscovery/v4/edgeSpecification/95e66eb7", 
+    "@type": "EdgeSpecification", 
+    "name": "new name", 
+    "description": "Link transport domain", 
+    "lastUpdate": "2021-04-08T13:54:32Z", 
+    "lifecycleStatus": "Active", 
+    "version": "1", 
+    "edgeSpecCharacteristic": [ 
+        { 
+            "name": "provider", 
+            "description": "Identifies the transport provider of the link", 
+            "valueType": "String", 
+            "configurable": true 
+        } 
+    ] 
+} 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 85 of 108 
+ 
+Delete edge specification 
+  DELETE /edgeSpecification/{id} 
+Description 
+This operation deletes an edge specification entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a EdgeSpecification resource. 
+ 
+Request 
+ 
+DELETE /tmf-api/topologyDiscovery/v4/edgeSpecification/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Topology Discovery Job 
+List topology discovery jobs 
+  GET /topologyDiscoveryJob?fields=...&{filtering} 
+Description 
+This operation list topology discovery job entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving TopologyDiscoveryJob resources. 
+ 
+Request 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 86 of 108 
+GET /tmf-api/topologyDiscovery/v4/topologyDiscoveryJob 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "b32a6d3b", 
+    "href": "/topologyDiscovery/v4/topologyDiscoveryJob/b32a6d3b", 
+    "@type": "TopologyDiscoveryJob", 
+    "creationDate": "2021-04-15T14:17:04.908Z", 
+    "completionDate": "2021-04-15T14:17:11.845Z", 
+    "status": "done", 
+    "topologyProvider": [ 
+        { 
+            "url": "/resourceInventoryManagement/v4/resource?category=5GC" 
+        } 
+    ], 
+    "graphTemplate": { 
+        "name": "5GC", 
+        "description": "5G Core Subnet", 
+        "contained": true 
+    }, 
+    "graphResult": { 
+        "id": "41fbbd95", 
+        "href": "/topologyDiscovery/v4/graph/41fbbd95", 
+        "@referredType": "Graph" 
+    } 
+} 
+] 
+ 
+Retrieve topology discovery job 
+  GET /topologyDiscoveryJob/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a topology discovery job entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+The following is an example of a request to get a TopologyDiscoveryJob: 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 87 of 108 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/topologyDiscoveryJob/b32a6d3b 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "8917e8d0", 
+    "href": "/topologyDiscovery/v4/topologyDiscoveryJob/8917e8d0", 
+    "@type": "TopologyDiscoveryJob", 
+    "creationDate": "2021-04-15T14:17:04.908Z", 
+    "completionDate": "2021-04-15T14:17:11.845Z", 
+    "status": "done", 
+    "topologyProvider": [ 
+        { 
+            "url": "/resourceInventoryManagement/v4/resource?category=5GC" 
+        } 
+    ], 
+    "graphResult": { 
+        "id": "aadd6dee", 
+        "href": "/topologyDiscovery/v4/graph/aadd6dee", 
+        "@type": "Graph" 
+    } 
+} 
+ 
+Create topology discovery job 
+  POST /topologyDiscoveryJob 
+Description 
+This operation creates a topology discovery job entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TopologyDiscoveryJob, including any possible rule conditions and applicable default values. Notice that it is up to 
+an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+topologyProvider 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 88 of 108 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+completionDate 
+ 
+creationDate 
+ 
+status 
+ 
+ 
+Usage Samples 
+The following is an example of an asynchronous request to start a TopologyDiscoveryJob. The topology provider is a 
+resource inventory (TMF639) and the query filters for just the inventory items with category 5GC. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/topologyDiscoveryJob 
+Content-Type: application/json 
+ 
+{ 
+    "@type": "TopologyDiscoveryJob", 
+    "topologyProvider": [ 
+        { 
+            "url": "/resourceInventoryManagement/v4/resource?category=5GC" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "8917e8d0", 
+    "href": "/topologyDiscovery/v4/topologyDiscoveryJob/8917e8d0", 
+    "@type": "TopologyDiscoveryJob", 
+    "creationDate": "2021-04-15T14:17:04.908Z", 
+    "status": "accepted", 
+    "topologyProvider": [ 
+        { 
+            "url": "/resourceInventoryManagement/v4/resource?category=5GC" 
+        } 
+    ] 
+} 
+ 
+ 
+The following is an example of a synchronous request for a TopologyDiscoveryJob. The topology provider is a 
+product catalog (TMF620) and a single product offering is requested.  The response is a graph created with the 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 89 of 108 
+default discovery rules which respresents the relationships as edges and the referenced items as vertices. Edges 
+take a name value of the attribute of the relationship and vertex names mirror the name of the entity. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/topologyDiscoveryJob 
+Content-Type: application/json 
+ 
+{ 
+    "@type": "TopologyDiscoveryJob", 
+    "topologyProvider": [ 
+        { 
+            "url": "/productCatalogManagement/v4/productOffering/7655" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "83016664", 
+    "href": "/topologyDiscovery/v4/topologyDiscoveryJob/83016664", 
+    "@type": "TopologyDiscoveryJob", 
+    "creationDate": "2021-04-15T17:03:46.234Z", 
+    "completionDate": "2021-04-15T17:03:47.807Z", 
+    "status": "done", 
+    "topologyProvider": [ 
+        { 
+            "url": "/resourceInventoryManagement/v4/resource?category=5GC" 
+        } 
+    ], 
+    "graphResult": { 
+        "id": "fcf09cb3", 
+        "href": "/topologyDiscovery/v4/graph/fcf09cb3", 
+        "@type": "Graph" 
+    } 
+} 
+ 
+Patch topology discovery job 
+  PATCH /topologyDiscoveryJob/{id} 
+Description 
+This operation allows partial updates of a topology discovery job entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 90 of 108 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+completionDate 
+ 
+creationDate 
+ 
+status 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a TopologyDiscoveryJob resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/topologyDiscoveryJob/b32a6d3b 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "b32a6d3b", 
+    "href": "/topologyDiscovery/v4/topologyDiscoveryJob/b32a6d3b", 
+    "@type": "TopologyDiscoveryJob", 
+    "creationDate": "2021-04-15T14:17:04.908Z", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 91 of 108 
+    "completionDate": "2021-04-15T14:17:11.845Z", 
+    "status": "done", 
+    "topologyProvider": [ 
+        { 
+            "url": "/resourceInventoryManagement/v4/resource?category=5GC" 
+        } 
+    ], 
+    "graphTemplate": { 
+        "name": "5GC", 
+        "description": "5G Core Subnet", 
+        "contained": true 
+    }, 
+    "graphResult": { 
+        "id": "41fbbd95", 
+        "href": "/topologyDiscovery/v4/graph/41fbbd95", 
+        "@referredType": "Graph" 
+    }, 
+    "name": "new name" 
+} 
+ 
+Operations on Merge Topology Graph Job 
+List merge topology graph jobs 
+  GET /mergeTopologyGraphJob?fields=...&{filtering} 
+Description 
+This operation list merge topology graph job entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving MergeTopologyGraphJob resources. 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/mergeTopologyGraphJob 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 92 of 108 
+{ 
+    "id": "333c231a", 
+    "href": "/topologyDiscovery/v4/MergeTopologyGraphJob/333c231a", 
+    "@type": "MergeTopologyGraphJob", 
+    "creationDate": "2021-04-15T14:37:18.762Z", 
+    "completionDate": "2021-04-15T14:37:19.114Z", 
+    "status": "done", 
+    "mergeTopologyGraph": [ 
+        { 
+            "id": "91f9e74a", 
+            "href": "/topologyDiscovery/v4/graph/91f9e74a", 
+            "@referredType": "Graph" 
+        }, 
+        { 
+            "id": "0319108c", 
+            "href": "/topologyDiscovery/v4/graph/0319108c", 
+            "@referredType": "Graph" 
+        } 
+    ], 
+    "graph": { 
+        "id": "ded3c8be", 
+        "href": "/topologyDiscovery/v4/graph/ded3c8be", 
+        "@referredType": "Graph" 
+    } 
+} 
+] 
+ 
+Retrieve merge topology graph job 
+  GET /mergeTopologyGraphJob/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a merge topology graph job entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+The following is an example of a request to get a MergeTopologyGraphJob: 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/mergeTopologyGraphJob/84ed0779 
+Accept: application/json 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 93 of 108 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "84ed0779", 
+    "href": "/topologyDiscovery/v4/MergeTopologyGraphJob/84ed0779", 
+    "@type": "MergeTopologyGraphJob", 
+    "creationDate": "2021-04-15T14:17:04.908Z", 
+    "status": "inProgress", 
+    "mergeTopologyGraph": [ 
+        { 
+            "id": "2ffe2827", 
+            "href": "/topologyDiscovery/v4/graph/2ffe2827", 
+            "@referredType": "Graph" 
+        }, 
+        { 
+            "id": "0a790d6c", 
+            "href": "/topologyDiscovery/v4/graph/0a790d6c", 
+            "@referredType": "Graph" 
+        } 
+    ] 
+} 
+ 
+Create merge topology graph job 
+  POST /mergeTopologyGraphJob 
+Description 
+This operation creates a merge topology graph job entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+MergeTopologyGraphJob, including any possible rule conditions and applicable default values. Notice that it is up 
+to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+mergeTopologyGraph 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+completionDate 
+ 
+creationDate 
+ 
+graphResult 
+ 
+status 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 94 of 108 
+ 
+Usage Samples 
+The following is an example of an asynchronous request to start a MergeTopologyGraphJob: 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/mergeTopologyGraphJob 
+Content-Type: application/json 
+ 
+{ 
+    "@type": "MergeTopologyGraphJob", 
+    "mergeTopologyGraph": [ 
+        { 
+            "id": "2ffe2827", 
+            "href": "/topologyDiscovery/v4/graph/2ffe2827", 
+            "@referredType": "Graph" 
+        }, 
+        { 
+            "id": "0a790d6c", 
+            "href": "/topologyDiscovery/v4/graph/0a790d6c", 
+            "@referredType": "Graph" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "84ed0779", 
+    "href": "/topologyDiscovery/v4/MergeTopologyGraphJob/84ed0779", 
+    "@type": "MergeTopologyGraphJob", 
+    "creationDate": "2021-04-15T14:17:04.908Z", 
+    "completionDate": "2021-04-15T14:17:11.845Z", 
+    "status": "done", 
+    "mergeTopologyGraph": [ 
+        { 
+            "id": "2ffe2827", 
+            "href": "/topologyDiscovery/v4/graph/2ffe2827", 
+            "@referredType": "Graph" 
+        }, 
+        { 
+            "id": "0a790d6c", 
+            "href": "/topologyDiscovery/v4/graph/0a790d6c", 
+            "@referredType": "Graph" 
+        } 
+    ], 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 95 of 108 
+    "graphResult": { 
+        "id": "39c6230e", 
+        "href": "/topologyDiscovery/v4/graph/39c6230e", 
+        "@referredType": "Graph" 
+    } 
+} 
+ 
+Patch merge topology graph job 
+  PATCH /mergeTopologyGraphJob/{id} 
+Description 
+This operation allows partial updates of a merge topology graph job entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+completionDate 
+ 
+creationDate 
+ 
+graphResult 
+ 
+mergeTopologyGraph 
+ 
+status 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a MergeTopologyGraphJob resource. 
+ 
+Request 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 96 of 108 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/mergeTopologyGraphJob/333c231a 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "333c231a", 
+    "href": "/topologyDiscovery/v4/MergeTopologyGraphJob/333c231a", 
+    "@type": "MergeTopologyGraphJob", 
+    "creationDate": "2021-04-15T14:37:18.762Z", 
+    "completionDate": "2021-04-15T14:37:19.114Z", 
+    "status": "done", 
+    "mergeTopologyGraph": [ 
+        { 
+            "id": "91f9e74a", 
+            "href": "/topologyDiscovery/v4/graph/91f9e74a", 
+            "@referredType": "Graph" 
+        }, 
+        { 
+            "id": "0319108c", 
+            "href": "/topologyDiscovery/v4/graph/0319108c", 
+            "@referredType": "Graph" 
+        } 
+    ], 
+    "graph": { 
+        "id": "ded3c8be", 
+        "href": "/topologyDiscovery/v4/graph/ded3c8be", 
+        "@referredType": "Graph" 
+    }, 
+    "name": "new name" 
+} 
+ 
+Operations on Topology Query Job 
+List topology query jobs 
+  GET /topologyQueryJob?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 97 of 108 
+This operation list topology query job entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving TopologyQueryJob resources. 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/topologyQueryJob 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "714733ce", 
+    "href": "/topologyDiscovery/v4/topologyQueryJob/714733ce", 
+    "@type": "TopologyQueryJob", 
+    "creationDate": "2021-04-16T33:21:54.776Z", 
+    "completionDate": "2021-04-16T33:21:55.245Z", 
+    "status": "done", 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu", 
+    "graphTemplate": { 
+        "description": "Query result subgraph", 
+        "contained": false 
+    }, 
+    "graphResult": { 
+        "id": "c765bfa9", 
+        "href": "/topologyDiscovery/v4/graph/c765bfa9", 
+        "@referredType": "Graph" 
+    } 
+} 
+] 
+ 
+Retrieve topology query job 
+  GET /topologyQueryJob/{id}?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 98 of 108 
+This operation retrieves a topology query job entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+The following is an example of a request to get a TopologyQueryJob: 
+ 
+Request 
+ 
+GET /tmf-api/topologyDiscovery/v4/topologyQueryJob/c765bfa9 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "c765bfa9", 
+    "href": "/topologyDiscovery/v4/topologyQueryJob/c765bfa9", 
+    "@type": "TopologyQueryJob", 
+    "creationDate": "2021-04-16T47:45:15.023Z", 
+    "completionDate": "2021-04-16T47:45:16.144Z", 
+    "status": "done", 
+    "graphSource": { 
+        "id": "451f36cc", 
+        "href": "/topologyDiscovery/v4/graph/451f36cc", 
+        "@type": "Graph" 
+    }, 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu", 
+    "graphResult": { 
+        "id": "ede7e125", 
+        "href": "/topologyDiscovery/v4/graph/ede7e125", 
+        "@type": "Graph" 
+    } 
+} 
+ 
+Create topology query job 
+  POST /topologyQueryJob 
+Description 
+This operation creates a topology query job entity. 
+Mandatory and Non Mandatory Attributes 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 99 of 108 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+TopologyQueryJob, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+graphSource 
+ 
+query 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+completionDate 
+ 
+creationDate 
+ 
+graphResult 
+ 
+graphTemplate 
+ 
+queryMatch 
+ 
+status 
+ 
+vertexResult 
+ 
+ 
+Usage Samples 
+The following is an example of an asynchronous request to start a TopologyQueryJob. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/topologyQueryJob 
+Content-Type: application/json 
+ 
+{ 
+    "@type": "TopologyQueryJob", 
+    "graphSource": { 
+        "id": "451f36cc", 
+        "href": "/topologyDiscovery/v4/graph/451f36cc", 
+        "@type": "Graph" 
+    }, 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "c765bfa9", 
+    "href": "/topologyDiscovery/v4/topologyQueryJob/c765bfa9", 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 100 of 108 
+    "@type": "TopologyQueryJob", 
+    "creationDate": "2021-04-16T47:45:15.023Z", 
+    "status": "accepted", 
+    "graphSource": { 
+        "id": "451f36cc", 
+        "href": "/topologyDiscovery/v4/graph/451f36cc", 
+        "@type": "Graph" 
+    }, 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu" 
+} 
+ 
+ 
+The following is an example of a synchronous request for a TopologyQueryJob. 
+ 
+Request 
+ 
+POST /tmf-api/topologyDiscovery/v4/topologyQueryJob 
+Content-Type: application/json 
+ 
+{ 
+    "@type": "TopologyQueryJob", 
+    "graphSource": { 
+        "id": "37e9754d", 
+        "href": "/topologyDiscovery/v4/graph/37e9754d", 
+        "@type": "Graph" 
+    }, 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "83016664", 
+    "href": "/topologyDiscovery/v4/topologyDiscoveryJob/83016664", 
+    "@type": "TopologyDiscoveryJob", 
+    "creationDate": "2021-04-15T18:12:59.203Z", 
+    "status": "done", 
+    "graphSource": { 
+        "id": "37e9754d", 
+        "href": "/topologyDiscovery/v4/graph/37e9754d", 
+        "@type": "Graph" 
+    }, 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu", 
+    "graphResult": { 
+        "id": "34608ba9", 
+        "href": "/topologyDiscovery/v4/graph/34608ba9", 
+        "@type": "Graph" 
+    } 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 101 of 108 
+} 
+ 
+Patch topology query job 
+  PATCH /topologyQueryJob/{id} 
+Description 
+This operation allows partial updates of a topology query job entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+completionDate 
+ 
+creationDate 
+ 
+graphResult 
+ 
+graphSource 
+ 
+graphTemplate 
+ 
+queryMatch 
+ 
+status 
+ 
+vertexResult 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+ 
+Usage Samples 
+Here's an example of a request for patching a TopologyQueryJob resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/topologyDiscovery/v4/topologyQueryJob/714733ce 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 102 of 108 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "714733ce", 
+    "href": "/topologyDiscovery/v4/topologyQueryJob/714733ce", 
+    "@type": "TopologyQueryJob", 
+    "creationDate": "2021-04-16T33:21:54.776Z", 
+    "completionDate": "2021-04-16T33:21:55.245Z", 
+    "status": "done", 
+    "query": "TUFUQ0ggKG4pClJFVFVSTiBu", 
+    "graphTemplate": { 
+        "description": "Query result subgraph", 
+        "contained": false 
+    }, 
+    "graphResult": { 
+        "id": "c765bfa9", 
+        "href": "/topologyDiscovery/v4/graph/c765bfa9", 
+        "@referredType": "Graph" 
+    }, 
+    "name": "new name" 
+} 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 103 of 108 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 104 of 108 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 105 of 108 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 106 of 108 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 107 of 
+108 
+Acknowledgements 
+ 
+Release History 
+ 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+Contributors to Document 
+ 
+Vance Shipley <vances@sigscale.com> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved.                                                                                                                                Page 108 of 
+108 
+ 
+ 
+
+

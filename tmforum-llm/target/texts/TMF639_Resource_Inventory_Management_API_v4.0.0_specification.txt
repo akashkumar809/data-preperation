@@ -1,0 +1,1325 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Resource Inventory Management 
+API User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF639 
+Team Approved Date:  28-May-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.1 
+IPR Mode: RAND 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 34 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 34 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 34 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 5 
+Introduction .............................................................................................................................................................. 6 
+SAMPLE USE CASES ......................................................................................................................................................... 7 
+Support of polymorphism and extension patterns ........................................................................................................ 8 
+RESOURCE MODEL .......................................................................................................................................................... 9 
+Managed Entity and Task Resource Models ....................................................................................................... 9 
+Resource resource ................................................................................................................................................... 9 
+Notification Resource Models .............................................................................................................................. 17 
+Resource Create Event .......................................................................................................................................... 18 
+Resource Attribute Value Change Event ............................................................................................................... 19 
+Resource State Change Event ................................................................................................................................ 19 
+Resource Delete Event .......................................................................................................................................... 19 
+API OPERATIONS ........................................................................................................................................................... 21 
+Operations on Resource ........................................................................................................................................... 21 
+List resources ......................................................................................................................................................... 21 
+Retrieve resource .................................................................................................................................................. 22 
+Create resource ..................................................................................................................................................... 25 
+Patch resource ....................................................................................................................................................... 27 
+Delete resource ..................................................................................................................................................... 30 
+API NOTIFICATIONS....................................................................................................................................................... 31 
+Register listener ........................................................................................................................................................ 31 
+Unregister listener .................................................................................................................................................... 32 
+Publish Event to listener ........................................................................................................................................... 32 
+Acknowledgements ...................................................................................................................................................... 34 
+Release History ......................................................................................................................................................... 34 
+Contributors to Document ........................................................................................................................................ 34 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 34 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 34 
+Introduction 
+ 
+The following document is intended to provide details of the REST API interface for the Resource Inventory. The 
+intent of this API is to provide a consistent/standardized mechanism to query and manipulate the resources of the 
+inventory. 
+ 
+It includes the model definition as well as all available operations. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 34 
+SAMPLE USE CASES 
+Resource inventory query for a party (Use Case 1) 
+  
+The Resource Inventory API can be used to query the resource instances for a party playing the role of customer via 
+Self Service Portal or the Call Centre operator can query the resource instances on behalf of the customer while a 
+customer may have a complaint or a query.  
+ 
+Resource inventory create/update as part of resource provisioning (Use Case 2) 
+ 
+The Resource Inventory API can be called by the Resource Order Management to create a new resource instance/ 
+update an existing resource instance in the Resource Inventory. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 34 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities, for instance a LogicalResource and PhysicalResource inheriting properties from the abstract Resource 
+entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Resource instances some may be instances of LogicalResource where other could be instances of PhysicalResource. 
+The @type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance a ResourceRef object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as LogicalResourceRef or PhysicalResourceRef, and not the class type of 
+the referred object. However, since reference classes are rarely sub-classed, @type is generally not useful in 
+reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 34 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Resource resource 
+Resource is an abstract entity that describes the common set of attributes shared by all concrete resources (e.g. 
+TPE, EQUIPMENT) in the inventory. 
+Resource model 
+ 
+Field descriptions 
+Resource fields 
+activationFeature 
+A list of features (Feature [*]). Applicable configuration features of a resource for 
+activation. 
+administrativeState 
+A resource administrative state type (ResourceAdministrativeStateType). Tracks the 
+administrative state of the resource, such as locked, unlocked, shutdown and so on. 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). the attribute 
+type,schemaLocation and referredType are related to the contained entity and not to 
+AttchmentRefOrValue itself. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 34 
+category 
+A string. Category of the concrete resource. e.g Gold, Silver for MSISDN concrete 
+resource. 
+description 
+A string. free-text description of the resource. 
+endOperatingDate 
+A date time (DateTime). A date time( DateTime). The date till the resource is 
+operating. 
+href 
+A string. The URI for the object itself. 
+id 
+A string. Identifier of an instance of the resource. Required to be unique within the 
+resource type.  Used in URIs as the identifier for specific instances of a type. 
+name 
+A string. A string used to give a name to the resource. 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+operationalState 
+A resource operational state type (ResourceOperationalStateType). Tracks the 
+operational state of the resource, such as enable, disable and so on. 
+place 
+A related place ref or value (RelatedPlaceRefOrValue). Related Entity reference. A 
+related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are 
+related to the place entity and not the RelatedPlaceRefOrValue class itself. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+resourceCharacteristic 
+A list of characteristics (Characteristic [*]). Describes a given characteristic of an 
+object or entity through a name/value pair. 
+resourceRelationship 
+A list of resource relationships (ResourceRelationship [*]). Linked resources to the one 
+instantiate, such as [bundled] if the resource is a bundle and you want to describe the 
+bundled resources inside this bundle; [reliesOn] if the resource needs another already 
+owned resource to rely on (e.g. an option on an already owned mobile access 
+resource) [targets] or [isTargeted] (depending on the way of expressing the link) for 
+any other kind of links that may be useful. 
+resourceSpecification 
+A resource specification reference (ResourceSpecificationRef). The 
+ResourceSpecification is required to realize a ProductSpecification. 
+resourceStatus 
+A resource status type (ResourceStatusType). Tracks the resource status of the 
+resource, such as standby, alarm, available, reserved, suspended and so on. 
+resourceVersion 
+A string. A field that identifies the specific version of an instance of a resource. 
+startOperatingDate 
+A date time (DateTime). A date time( DateTime). The date from which the resource is 
+operating. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 34 
+usageState 
+A resource usage state type (ResourceUsageStateType). Tracks the usage state of the 
+resource, such as idle, active, busy and so on. 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. For AttachmentRefOrValue, the attribute type,schemaLocation and 
+referredType are related to the contained entity and not to AttchmentRefOrValue itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+A string. URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+url 
+A string. Uniform Resource Locator, is a web page address (a subset of URI). 
+name 
+A string. The name of the attachment. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 34 
+id 
+A string. Unique identifier of the characteristic. 
+relationshipType 
+A string. The type of relationship. 
+Feature sub-resource 
+Applicable configuration features for a resource specification. 
+constraint 
+A list of constraint references (ConstraintRef [*]). This is a list of feature constraints. 
+featureCharacteristic 
+A list of characteristics (Characteristic [1..*]). This is a list of Characteristics for a 
+particular applicable feature of a resource. 
+featureRelationship 
+A list of feature relationships (FeatureRelationship [*]). Configuration feature. 
+id 
+A string. Unique identifier of the feature. 
+isBundle 
+A boolean. True if this is a feature group. Default is false. 
+isEnabled 
+A boolean. True if this feature is enabled. Default is true. 
+name 
+A string. This is the name for the feature. 
+FeatureRelationship sub-resource 
+Configuration feature. 
+id 
+A string. Unique identifier of the target feature. 
+name 
+A string. This is the name of the target feature. 
+relationshipType 
+A string. This is the type of the feature relationship. 
+validFor 
+A time period. The period for which this feature relationship is valid. 
+Note sub-resource 
+Extra information about a given entity. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be globally 
+unique, depending on provider implementation). 
+text 
+A string. Text of the note. 
+Quantity sub-resource 
+An amount in a given unit. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 34 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. Role played by the related party. 
+RelatedPlaceRefOrValue sub-resource 
+Related Entity reference. A related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are related to the place entity and 
+not the RelatedPlaceRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as "Paris Store", "London Store", 
+"Main Home". 
+role 
+A string. 
+ResourceRefOrValue sub-resource 
+A resource to be created defined by value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the product entity and not the RelatedProductRefOrValue class 
+itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. The URI for the object itself. 
+id 
+A string. Identifier of an instance of the resource. Required to be unique within the 
+resource type.  Used in URIs as the identifier for specific instances of a type. 
+name 
+A string. A string used to give a name to the resource. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 34 
+category 
+A string. Category of the concrete resource. e.g Gold, Silver for MSISDN concrete 
+resource. 
+description 
+A string. free-text description of the resource. 
+endOperatingDate 
+A date time (DateTime). A date time( DateTime). The date till the resource is 
+operating. 
+resourceVersion 
+A string. A field that identifies the specific version of an instance of a resource. 
+startOperatingDate 
+A date time (DateTime). A date time( DateTime). The date from which the resource is 
+operating. 
+activationFeature 
+A list of features (Feature [*]). Applicable configuration features of a resource for 
+activation. 
+administrativeState 
+A resource administrative state type (ResourceAdministrativeStateType). Tracks the 
+administrative state of the resource, such as locked, unlocked, shutdown and so on. 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). the attribute 
+type,schemaLocation and referredType are related to the contained entity and not to 
+AttchmentRefOrValue itself. 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+operationalState 
+A resource operational state type (ResourceOperationalStateType). Tracks the 
+operational state of the resource, such as enable, disable and so on. 
+place 
+A related place ref or value (RelatedPlaceRefOrValue). Related Entity reference. A 
+related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are 
+related to the place entity and not the RelatedPlaceRefOrValue class itself. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+resourceCharacteristic 
+A list of characteristics (Characteristic [*]). Describes a given characteristic of an 
+object or entity through a name/value pair. 
+resourceRelationship 
+A list of resource relationships (ResourceRelationship [*]). Linked resources to the one 
+instantiate, such as [bundled] if the resource is a bundle and you want to describe the 
+bundled resources inside this bundle; [reliesOn] if the resource needs another already 
+owned resource to rely on (e.g. an option on an already owned mobile access 
+resource) [targets] or [isTargeted] (depending on the way of expressing the link) for 
+any other kind of links that may be useful. 
+resourceSpecification 
+A resource specification reference (ResourceSpecificationRef). The 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 34 
+ResourceSpecification is required to realize a ProductSpecification. 
+resourceStatus 
+A resource status type (ResourceStatusType). Tracks the resource status of the 
+resource, such as standby, alarm, available, reserved, suspended and so on. 
+usageState 
+A resource usage state type (ResourceUsageStateType). Tracks the usage state of the 
+resource, such as idle, active, busy and so on. 
+ResourceRelationship sub-resource 
+Linked resources to the one instantiate, such as [bundled] if the resource is a bundle and you want to describe the 
+bundled resources inside this bundle; [reliesOn] if the resource needs another already owned resource to rely on 
+(e.g. an option on an already owned mobile access resource) [targets] or [isTargeted] (depending on the way of 
+expressing the link) for any other kind of links that may be useful. 
+relationshipType 
+A string. Type of the resource relationship, such as [bundled] if the resource is a 
+bundle and you want to describe the bundled resources inside this bundle; [reliesOn] 
+if the resource needs another already owned resource to rely on (e.g. an option on an 
+already owned mobile access resource) [targets] or [isTargeted] (depending on the 
+way of expressing the link) for any other kind of links that may be useful. 
+resource 
+A resource ref or value (ResourceRefOrValue). A resource to be created defined by 
+value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the product entity and not the 
+RelatedProductRefOrValue class itself. 
+ConstraintRef relationship 
+Constraint reference. The Constraint resource represents a policy/rule applied to an entity or entity spec. 
+@referredType 
+A string. The (class) type of the referred constraint. 
+href 
+A string. Hyperlink reference to the target constraint. 
+id 
+A string. reference id to the target constraint. 
+name 
+A string. Name given to the constraint. 
+version 
+A string. constraint version. 
+ResourceSpecificationRef relationship 
+Resource Specification reference: The ResourceSpecification is required to realize a ProductSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the resource specification. 
+id 
+A string. Unique identifier of the resource specification. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 34 
+name 
+A string. Name of the requiredResourceSpecification. 
+version 
+A string. Resource specification version. 
+Json representation sample 
+We provide below the json representation of an example of a 'Resource' resource object 
+{ 
+    "id": "8044", 
+    "href": "http://server:port/resourceInventoryManagement/resource/8044", 
+    "description": "This is a MSISDN resource with the category Premium and with a reserved resourceStatus for 
+organisations.", 
+    "category": "Premium", 
+    "value": "0170112231", 
+    "endOperatingDate": "2022-07-04T08:00.000Z", 
+    "name": "MobileNumber xx", 
+    "administrativeState": "locked", 
+    "operationalState": "enable", 
+    "usageState": "active", 
+    "resourceStatus": "reserved", 
+    "relatedParty": [ 
+        { 
+            "href": "https://server:port/tmf-api/partyManagement/v4/individual/456", 
+            "id": "456", 
+            "name": "John Doe", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "text": "something about this resource" 
+        } 
+    ], 
+    "place": { 
+        "id": "9912", 
+        "href": "https://host:port/geographicAddressManagement/v4/geographicAddress/9912", 
+        "@type": "PlaceRef", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "resourceRelationship": [ 
+        { 
+            "relationshipType": "contains", 
+            "resource": { 
+                "id": "44", 
+                "href": "http://server:port/resourceInventoryManagement/resource/44" 
+            } 
+        } 
+    ], 
+    "resourceSpecification": { 
+        "id": "4", 
+        "href": " http://server:port/resourceCatalogManagement/resourceSpecification/4", 
+        "@referredType": "LogicalResourceSpecification" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 34 
+    }, 
+    "startOperatingDate": "2020-03-04T00:00.000Z", 
+    "version": "business v2", 
+    "@type": "MSISDN", 
+    "@schemaLocation": "http://server:port/MSISDN_Resource.schema.json", 
+    "@baseType": "Resource" 
+} 
+ 
+Notification Resource Models 
+ 
+4 notifications are defined for this API 
+Notifications related to Resource: 
+    - ResourceCreateEvent 
+    - ResourceAttributeValueChangeEvent 
+    - ResourceStateChangeEvent 
+    - ResourceDeleteEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 34 
+ 
+Resource Create Event 
+Notification ResourceCreateEvent case for resource Resource 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceCreateEvent", 
+     "event": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 34 
+        "resource" :  
+            {-- SEE Resource RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Attribute Value Change Event 
+Notification ResourceAttributeValueChangeEvent case for resource Resource 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceAttributeValueChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceAttributeValueChangeEvent", 
+     "event": { 
+        "resource" :  
+            {-- SEE Resource RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource State Change Event 
+Notification ResourceStateChangeEvent case for resource Resource 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceStateChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceStateChangeEvent", 
+     "event": { 
+        "resource" :  
+            {-- SEE Resource RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Delete Event 
+Notification ResourceDeleteEvent case for resource Resource 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceDeleteEvent' notification event object 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 34 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceDeleteEvent", 
+     "event": { 
+        "resource" :  
+            {-- SEE Resource RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 34 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Resource 
+List resources 
+  GET /resource?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 34 
+This operation list resource entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of Resource(s). The given criteria is the category (Premium), 
+@type (MSISDN) and state (idle). 
+ 
+Request 
+ 
+GET /tmf-
+api/resourceInventoryManagement/v4/resource?fields=id,href,value,@type,category,usageState&category=Premium&usa
+geState=idle&@type=MSISDN 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "444", 
+    "href": "http://server:port/resourceInventoryManagement/logicalResource/444", 
+    "category": "Premium", 
+    "value": "0170123456", 
+    "usageState": "idle", 
+    "@type": "MSISDN" 
+} 
+ 
+Retrieve resource 
+  GET /resource/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a resource entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a LogicalResource for use case 1. The given criteria is the Resource id 
+444. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 34 
+ 
+Request 
+ 
+GET /tmf-api/resourceInventoryManagement/v4/resource/444 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "444", 
+    "href": "http://server:port/resourceInventoryManagement/logicalResource/444", 
+    "description": "This is a MSISDN resource with the category Premium and with an unlocked administrativeState.", 
+    "category": "Premium", 
+    "value": "0170123456", 
+    "administrativeState": "unlocked", 
+    "operationalState": "disable", 
+    "usageState": "idle", 
+    "resourceStatus": "available", 
+    "resourceSpecification": { 
+        "id": "4", 
+        "href": " http://server:port/resourceCatalogManagement/resourceSpecification/4", 
+        "@referredType": "LogicalResourceSpecification" 
+    }, 
+    "resourceCharacteristic": [ 
+        { 
+            "name": "premiumValue", 
+            "valueType": "string", 
+            "value": "gold" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "href": "https://server:port/tmf-api/partyManagement/v4/individual/456", 
+            "id": "456", 
+            "name": "John Doe", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "MSISDN", 
+    "@schemaLocation": "http://server:port/MSISDN.schema.json", 
+    "@baseType": "Resource" 
+} 
+ 
+ 
+Here's an example of a request for retrieving a PhysicalResource for use case 1. The given criteria is the Resource id 
+42. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 34 
+Request 
+ 
+GET /tmf-api/resourceInventoryManagement/v4/resource/42 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "42", 
+    "href": "http://server:port/resourceInventoryManagement/resource/42", 
+    "publicIdentifier": "07455559833", 
+    "name": "RouterXX", 
+    "administrativeState": "unlocked", 
+    "operationalState": "enable", 
+    "usageState": "idle", 
+    "resourceStatus": "available", 
+    "serialNumber": "12444545544", 
+    "versionNumber": "1.22", 
+    "manufactureDate": "05-04-2017T00:00.000Z", 
+    "resourceSpecification": { 
+        "id": "4", 
+        "href": " http://server:port/resourceCatalogManagement/resourceSpecification/4", 
+        "@referredType": "PhysicalResourceSpecification" 
+    }, 
+    "resourceRelationship": [ 
+        { 
+            "relationshipType": "contains", 
+            "resource": { 
+                "id": "44", 
+                "href": " http://server:port/resourceInventoryManagement/resource/44" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "href": "https://server:port/tmf-api/partyManagement/v4/individual/456", 
+            "id": "456", 
+            "name": "John Doe", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "resourceAttachment": [ 
+        { 
+            "id": "123", 
+            "href": "http://server:port/documentManagement/document/123" 
+        } 
+    ], 
+    "note": [ 
+        { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 34 
+            "text": "something about this resource" 
+        } 
+    ], 
+    "place": { 
+        "id": "9912", 
+        "href": "https://host:port/geographicAddressManagement/v4/geographicAddress/9912", 
+        "@type": "PlaceRef", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "@type": "Equipment ", 
+    "@schemaLocation": "http: //server:port/partyManagement/schema/Equipment.schema.json", 
+    "@baseType": "Resource" 
+} 
+ 
+Create resource 
+  POST /resource 
+Description 
+This operation creates a resource entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a Resource, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+href 
+ 
+id 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+activationFeature 
+ 
+administrativeState 
+ 
+attachment 
+ 
+category 
+ 
+description 
+ 
+endOperatingDate 
+ 
+note 
+ 
+operationalState 
+ 
+place 
+ 
+relatedParty 
+ 
+resourceCharacteristic 
+ 
+resourceRelationship 
+ 
+resourceSpecification 
+ 
+resourceStatus 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 34 
+Non Mandatory Attributes 
+Rule 
+resourceVersion 
+ 
+startOperatingDate 
+ 
+usageState 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a LogicalResource for use case 2 - the resulting resource ID is 444. 
+ 
+Request 
+ 
+POST /tmf-api/resourceInventoryManagement/v4/resource 
+Content-Type: application/json 
+ 
+{ 
+    "category": "Premium", 
+    "value": "0170123456", 
+    "administrativeState": "unlocked", 
+    "operationalState": "disable", 
+    "usageState": "idle", 
+    "resourceStatus": "available", 
+    "resourceSpecification": { 
+        "id": "4", 
+        "href": " http://server:port/resourceCatalogManagement/resourceSpecification/4", 
+        "@referredType": "LogicalResourceSpecification" 
+    }, 
+    "resourceCharacteristic": [ 
+        { 
+            "name": "premiumValue", 
+            "valueType": "string", 
+            "value": "gold" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "href": "https://server:port/tmf-api/partyManagement/v4/individual/456", 
+            "id": "456", 
+            "name": "John Doe", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "MSISDN", 
+    "@schemaLocation": "http://server:port/MSISDN.schema.json", 
+    "@baseType": "Resource" 
+} 
+ 
+ 
+ 
+Response 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 34 
+201 
+ 
+{ 
+    "id": "444", 
+    "href": "http://server:port/resourceInventoryManagement/logicalResource/444", 
+    "category": "Premium", 
+    "value": "0170123456", 
+    "administrativeState": "unlocked", 
+    "operationalState": "disable", 
+    "usageState": "idle", 
+    "resourceStatus": "available", 
+    "resourceSpecification": { 
+        "id": "4", 
+        "href": "http://server:port/resourceCatalogManagement/resourceSpecification/4", 
+        "@referredType": "LogicalResourceSpecification" 
+    }, 
+    "resourceCharacteristic": [ 
+        { 
+            "name": "premiumValue", 
+            "valueType": "string", 
+            "value": "gold" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "href": "https://server:port/tmf-api/partyManagement/v4/individual/456", 
+            "id": "456", 
+            "name": "John Doe", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "MSISDN", 
+    "@schemaLocation": "http://server:port/MSISDN.schema.json", 
+    "@baseType": "Resource" 
+} 
+ 
+Patch resource 
+  PATCH /resource/{id} 
+Description 
+This operation allows partial updates of a resource entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 34 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+activationFeature 
+ 
+administrativeState 
+ 
+attachment 
+ 
+category 
+ 
+description 
+ 
+endOperatingDate 
+ 
+name 
+ 
+note 
+ 
+operationalState 
+ 
+place 
+ 
+relatedParty 
+ 
+resourceCharacteristic 
+ 
+resourceRelationship 
+ 
+resourceSpecification 
+ 
+resourceStatus 
+ 
+resourceVersion 
+ 
+startOperatingDate 
+ 
+usageState 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating a PhysicalResource for use case 2 - Change value of the resourceStatus 
+for resource id 42. 
+ 
+Request 
+ 
+PATCH /tmf-api/resourceInventoryManagement/v4/resource/42 
+Content-Type: merge-patch/json 
+ 
+{ 
+    "resourceStatus": "reserved" 
+} 
+ 
+ 
+ 
+Response 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 34 
+ 
+200 
+ 
+{ 
+    "id": "42", 
+    "href": "http://server:port/resourceInventoryManagement/resource/42", 
+    "publicIdentifier": "07455559833", 
+    "name": "RouterXX", 
+    "administrativeState": "unlocked", 
+    "operationalState": "enable", 
+    "usageState": "idle", 
+    "resourceStatus": "reserved", 
+    "serialNumber": "12444545544", 
+    "versionNumber": "1.22", 
+    "manufactureDate": "05-04-2017T08:00.000Z", 
+    "resourceSpecification": { 
+        "id": "4", 
+        "href": " http://server:port/resourceCatalogManagement/resourceSpecification/4", 
+        "@referredType": "PhysicalResourceSpecification" 
+    }, 
+    "resourceRelationship": [ 
+        { 
+            "type": "contains", 
+            "resource": { 
+                "id": "44", 
+                "href": " http://server:port/resourceInventoryManagement/resource/44" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "href": "https://server:port/tmf-api/partyManagement/v4/individual/456", 
+            "id": "456", 
+            "name": "John Doe", 
+            "role": "user", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "resourceAttachment": [ 
+        { 
+            "id": "123", 
+            "href": "http://server:port/documentManagement/document/123" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "text": "something about this resource" 
+        } 
+    ], 
+    "place": { 
+        "id": "9912", 
+        "href": "https://host:port/geographicAddressManagement/v4/geographicAddress/9912", 
+        "@type": "PlaceRef", 
+        "@referredType": "GeographicAddress" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 34 
+    }, 
+    "@type": "Equipment", 
+    "@schemaLocation": "http://server:port/partyManagement/schema/Equipment.schema.json", 
+    "@baseType": "Resource" 
+} 
+ 
+Delete resource 
+  DELETE /resource/{id} 
+Description 
+This operation deletes a resource entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a resource. 
+ 
+Request 
+ 
+DELETE /tmf-api/resourceInventoryManagement/v4/resource/444 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 34 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 34 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 34 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 34 
+Acknowledgements 
+ 
+Version History 
+Version 
+Number 
+Date  
+Release led by: 
+Description  
+1.0 
+14-Apr-2017 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Mariano Belaunde 
+Orange Labs 
+First Release of the Document.  
+2.0 
+06-Nov-2018 
+Mariano Belaunde  
+Orange Labs 
+Alignment with Guidelines 3.0 
+4.0.0 
+28-May-2020 
+Thomas Braun 
+Telekom IT 
+Based on the TMF Open API 
+Common Data Model 
+4.0.1 
+20-Jul-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Pre-production 
+28-May-2020 
+Thomas Braun 
+Telekom IT  
+Based on the TMF Open API 
+Common Data Model 
+Production 
+20-Jul-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Contributors to Document 
+Thomas Braun, Deutsche Telekom  
+Pierre Gauthier, TM Forum 
+ 
+
+

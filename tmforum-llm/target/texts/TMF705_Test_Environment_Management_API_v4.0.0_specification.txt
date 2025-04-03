@@ -1,0 +1,3296 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Test Environment Management API 
+User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF705 
+Team Approved Date: 13-Sep-2020 
+ 
+ 
+Release Status: Pre-production 
+Approval Status: Team Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 80 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 80 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 3 
+List of Tables ............................................................................................................................................................. 6 
+Introduction .............................................................................................................................................................. 7 
+SAMPLE USE CASES ......................................................................................................................................................... 8 
+Support of polymorphism and extension patterns ........................................................................................................ 9 
+RESOURCE MODEL ........................................................................................................................................................ 10 
+Managed Entity and Task Resource Models ..................................................................................................... 10 
+Abstract Environment resource ............................................................................................................................ 10 
+Concrete Environment Meta Model resource ...................................................................................................... 17 
+Test Resource A P I resource ................................................................................................................................. 23 
+Provisioning Artifact resource ............................................................................................................................... 30 
+Notification Resource Models .............................................................................................................................. 36 
+Abstract Environment Create Event ...................................................................................................................... 37 
+Abstract Environment Change Event .................................................................................................................... 38 
+Abstract Environment Delete Event ...................................................................................................................... 38 
+Abstract Environment Attribute Value Change Event ........................................................................................... 38 
+Abstract Environment State Change Event ........................................................................................................... 39 
+Concrete Environment Meta Model Create Event ................................................................................................ 39 
+Concrete Environment Meta Model Change Event .............................................................................................. 40 
+Concrete Environment Meta Model Delete Event ................................................................................................ 40 
+Concrete Environment Meta Model Attribute Value Change Event ..................................................................... 40 
+Concrete Environment Meta Model State Change Event ..................................................................................... 41 
+Test Resource A P I Create Event .......................................................................................................................... 41 
+Test Resource A P I Change Event ......................................................................................................................... 42 
+Test Resource A P I Delete Event........................................................................................................................... 42 
+Test Resource A P I Attribute Value Change Event ............................................................................................... 42 
+Test Resource A P I State Change Event ................................................................................................................ 43 
+Provisioning Artifact Create Event ........................................................................................................................ 43 
+Provisioning Artifact Change Event ....................................................................................................................... 44 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 80 
+Provisioning Artifact Delete Event......................................................................................................................... 44 
+Provisioning Artifact Attribute Value Change Event ............................................................................................. 44 
+Provisioning Artifact State Change Event .............................................................................................................. 45 
+API OPERATIONS ........................................................................................................................................................... 46 
+Operations on Abstract Environment ....................................................................................................................... 46 
+List abstract environments .................................................................................................................................... 46 
+Retrieve abstract environment ............................................................................................................................. 47 
+Create abstract environment ................................................................................................................................ 49 
+Patch abstract environment .................................................................................................................................. 51 
+Delete abstract environment ................................................................................................................................ 52 
+Operations on Concrete Environment Meta Model ................................................................................................. 53 
+List concrete environment meta models .............................................................................................................. 53 
+Retrieve concrete environment meta model ........................................................................................................ 54 
+Create concrete environment meta model ........................................................................................................... 55 
+Patch concrete environment meta model ............................................................................................................ 57 
+Delete concrete environment meta model ........................................................................................................... 59 
+Operations on Test Resource A P I............................................................................................................................ 60 
+List test resource a p is .......................................................................................................................................... 60 
+Retrieve test resource a p i.................................................................................................................................... 61 
+Create test resource a p i ...................................................................................................................................... 62 
+Patch test resource a p i ........................................................................................................................................ 64 
+Delete test resource a p i ...................................................................................................................................... 66 
+Operations on Provisioning Artifact ......................................................................................................................... 66 
+List provisioning artifacts....................................................................................................................................... 66 
+Retrieve provisioning artifact ................................................................................................................................ 67 
+Create provisioning artifact ................................................................................................................................... 69 
+Patch provisioning artifact .................................................................................................................................... 71 
+Delete provisioning artifact ................................................................................................................................... 72 
+API NOTIFICATIONS....................................................................................................................................................... 74 
+Register listener ........................................................................................................................................................ 74 
+Unregister listener .................................................................................................................................................... 75 
+Publish Event to listener ........................................................................................................................................... 75 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 80 
+Appendix 1 .................................................................................................................................................................... 77 
+Examples of base64-encoded Attachment content ................................................................................................. 77 
+Example 1. Abstract environment representation example ................................................................................. 77 
+Example 2. Concrete environment metamodel representation example ............................................................ 77 
+Example 3. Provisioning artifact representation example .................................................................................... 78 
+Example 4. Test resource API representation example ........................................................................................ 79 
+Acknowledgements ...................................................................................................................................................... 80 
+Release History ............................................................................................................ Error! Bookmark not defined. 
+Contributors to Document ........................................................................................... Error! Bookmark not defined. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 80 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 80 
+Introduction 
+ 
+The following document is the specification of the REST API for test environment management. It includes the 
+model definition as well as all available operations.  
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 80 
+SAMPLE USE CASES 
+The reader will find examples of use cases in TMF913 “Test API Component Suite” document. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 80 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance AbstractEnvironment and ConcreteEnvironmentMetaModel inheriting properties from the abstract 
+ManagedArtifact entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+ManagedArtifact instances some may be instances of AbstractEnvironment where other could be instances of 
+ConcreteEnvironmentMetaModel. The @type gives this information. All resources and sub-resources of this API have 
+a @type attributes that can be provided when this is useful. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 80 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Abstract Environment resource 
+A managed abstract environment resource. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 80 
+ 
+Field descriptions 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 80 
+AbstractEnvironment fields 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+versionDescription 
+A string. The artifact version description. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+abstractEnvironmentDefinition An abstract environment definition (AbstractEnvironmentDefinition). Abstract 
+environment definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos (RelatedPartyWithContactInfo [*]). 
+Related party specialization that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). Possible values for 
+the state of a managed artifact: 'incomplete', 'beta', 'stable', 'deprecated'. 
+AbstractEnvironmentDefinition sub-resource 
+Abstract environment definition. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 80 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 80 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 80 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 80 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+Json representation sample 
+We provide below the json representation of an example of an 'AbstractEnvironment' resource object 
+{ 
+    "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+    "description": "Sample abstract test environment", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "incomplete", 
+    "abstractEnvironmentDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded abstract environment>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 80 
+Concrete Environment Meta Model resource 
+A managed concrete environment resource metamodel resource. 
+Resource model 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 80 
+Field descriptions 
+ConcreteEnvironmentMetaModel fields 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+versionDescription 
+A string. The artifact version description. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional 
+attributes and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible 
+name. 
+concreteEnvironmentMetaModelDefinition A concrete environment meta model definition 
+(ConcreteEnvironmentMetaModelDefinition). Test environment 
+metamodel definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos 
+(RelatedPartyWithContactInfo [*]). Related party specialization 
+that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). 
+Possible values for the state of a managed artifact: 'incomplete', 
+'beta', 'stable', 'deprecated'. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 80 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ConcreteEnvironmentMetaModelDefinition sub-resource 
+Test environment metamodel definition. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 80 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 80 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 80 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+Json representation sample 
+We provide below the json representation of an example of a 'ConcreteEnvironmentMetaModel' resource object 
+{ 
+    "id": "962ce846-4afa-48fb-91cf-9ab7104a8e18", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-91cf-
+9ab7104a8e18", 
+    "description": "Sample concrete environment metamodel", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 80 
+        } 
+    ], 
+    "state": "stable", 
+    "concreteEnvironmentMetaModelDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded concrete environment metamodel>", 
+        "mimeType": "base64" 
+    } 
+} 
+Test Resource A P I resource 
+A managed test resource API resource. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 80 
+ 
+Field descriptions 
+TestResourceAPI fields 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 80 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+versionDescription 
+A string. The artifact version description. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+testResourceAPIDefinition A test resource a p i definition (TestResourceAPIDefinition). Test resource API 
+definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos (RelatedPartyWithContactInfo [*]). Related 
+party specialization that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). Possible values for the 
+state of a managed artifact: 'incomplete', 'beta', 'stable', 'deprecated'. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 80 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 80 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+Quantity sub-resource 
+An amount in a given unit. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 80 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+TestResourceAPIDefinition sub-resource 
+Test resource API definition. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). Hyperlink reference. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 80 
+id 
+A string. unique identifier. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Json representation sample 
+We provide below the json representation of an example of a 'TestResourceAPI' resource object 
+{ 
+    "id": "894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/testResourceApi/894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "description": "Sample test resource API", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testResourceAPIDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded test resource API>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 80 
+Provisioning Artifact resource 
+A managed provisioning artifact resource. 
+Resource model 
+ 
+Field descriptions 
+ProvisioningArtifact fields 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 80 
+description 
+A string. The description for the artifact. 
+version 
+A string. The artifact version. 
+versionDescription 
+A string. The artifact version description. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+provisioningArtifactDefinition A provisioning artifact definition (ProvisioningArtifactDefinition). Provisioning 
+artifact definition. 
+agreement 
+A test agreement (TestAgreement). 
+attribute 
+A list of attributes (Attribute [*]). 
+relatedParty 
+A list of related party with contact infos (RelatedPartyWithContactInfo [*]). 
+Related party specialization that includes contact information. 
+state 
+A managed artifact state type (ManagedArtifactStateType). Possible values for 
+the state of a managed artifact: 'incomplete', 'beta', 'stable', 'deprecated'. 
+Attribute sub-resource 
+ 
+characteristic 
+A characteristic (Characteristic). Describes a given characteristic of an object or entity 
+through a name/value pair. 
+description 
+A string. The attribute description. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 80 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional characteristic(s) of 
+this contact medium. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 80 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone number, 
+postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+city 
+A string. The city. 
+contactType 
+A string. The type of contact, for example: phone number such as mobile, fixed home, 
+fixed office. postal address such as shipping installation…. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+ProvisioningArtifactDefinition sub-resource 
+Provisioning artifact definition. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 80 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+name 
+A string. The name of the attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedPartyWithContactInfo sub-resource 
+Related party specialization that includes contact information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+role 
+A string. Role played by the related party. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 80 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contact 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium that 
+could be used to contact the party. 
+TestAgreement sub-resource 
+ 
+name 
+A string. The agreement name. 
+terms 
+A string. The terms of the agreement. 
+url 
+An uri (Uri). The agreement URL. 
+Json representation sample 
+We provide below the json representation of an example of a 'ProvisioningArtifact' resource object 
+{ 
+    "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+    "description": "Sample provisioning artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "provisioningArtifactDefinition": { 
+        "attachmentType": "script", 
+        "content": "<base64-encoded provisioning artifact>", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 80 
+Notification Resource Models 
+ 
+20 notifications are defined for this API 
+Notifications related to AbstractEnvironment: 
+    - AbstractEnvironmentCreateEvent 
+    - AbstractEnvironmentChangeEvent 
+    - AbstractEnvironmentDeleteEvent 
+    - AbstractEnvironmentAttributeValueChangeEvent 
+    - AbstractEnvironmentStateChangeEvent 
+Notifications related to ConcreteEnvironmentMetaModel: 
+    - ConcreteEnvironmentMetaModelCreateEvent 
+    - ConcreteEnvironmentMetaModelChangeEvent 
+    - ConcreteEnvironmentMetaModelDeleteEvent 
+    - ConcreteEnvironmentMetaModelAttributeValueChangeEvent 
+    - ConcreteEnvironmentMetaModelStateChangeEvent 
+Notifications related to TestResourceAPI: 
+    - TestResourceAPICreateEvent 
+    - TestResourceAPIChangeEvent 
+    - TestResourceAPIDeleteEvent 
+    - TestResourceAPIAttributeValueChangeEvent 
+    - TestResourceAPIStateChangeEvent 
+Notifications related to ProvisioningArtifact: 
+    - ProvisioningArtifactCreateEvent 
+    - ProvisioningArtifactChangeEvent 
+    - ProvisioningArtifactDeleteEvent 
+    - ProvisioningArtifactAttributeValueChangeEvent 
+    - ProvisioningArtifactStateChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 80 
+ 
+Abstract Environment Create Event 
+Notification AbstractEnvironmentCreateEvent case for resource AbstractEnvironment 
+Json representation sample 
+We provide below the json representation of an example of an 'AbstractEnvironmentCreateEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 80 
+    "eventType":"AbstractEnvironmentCreateEvent", 
+     "event": { 
+        "abstractEnvironment" :  
+            {-- SEE AbstractEnvironment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Abstract Environment Change Event 
+Notification AbstractEnvironmentChangeEvent case for resource AbstractEnvironment 
+Json representation sample 
+We provide below the json representation of an example of an 'AbstractEnvironmentChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AbstractEnvironmentChangeEvent", 
+     "event": { 
+        "abstractEnvironment" :  
+            {-- SEE AbstractEnvironment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Abstract Environment Delete Event 
+Notification AbstractEnvironmentDeleteEvent case for resource AbstractEnvironment 
+Json representation sample 
+We provide below the json representation of an example of an 'AbstractEnvironmentDeleteEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AbstractEnvironmentDeleteEvent", 
+     "event": { 
+        "abstractEnvironment" :  
+            {-- SEE AbstractEnvironment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Abstract Environment Attribute Value Change Event 
+Notification AbstractEnvironmentAttributeValueChangeEvent case for resource AbstractEnvironment 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 80 
+Json representation sample 
+We provide below the json representation of an example of an 'AbstractEnvironmentAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AbstractEnvironmentAttributeValueChangeEvent", 
+     "event": { 
+        "abstractEnvironment" :  
+            {-- SEE AbstractEnvironment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Abstract Environment State Change Event 
+Notification AbstractEnvironmentStateChangeEvent case for resource AbstractEnvironment 
+Json representation sample 
+We provide below the json representation of an example of an 'AbstractEnvironmentStateChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AbstractEnvironmentStateChangeEvent", 
+     "event": { 
+        "abstractEnvironment" :  
+            {-- SEE AbstractEnvironment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Concrete Environment Meta Model Create Event 
+Notification ConcreteEnvironmentMetaModelCreateEvent case for resource ConcreteEnvironmentMetaModel 
+Json representation sample 
+We provide below the json representation of an example of a 'ConcreteEnvironmentMetaModelCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ConcreteEnvironmentMetaModelCreateEvent", 
+     "event": { 
+        "concreteEnvironmentMetaModel" :  
+            {-- SEE ConcreteEnvironmentMetaModel RESOURCE SAMPLE --} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 40 of 80 
+    } 
+} 
+ 
+Concrete Environment Meta Model Change Event 
+Notification ConcreteEnvironmentMetaModelChangeEvent case for resource ConcreteEnvironmentMetaModel 
+Json representation sample 
+We provide below the json representation of an example of a 'ConcreteEnvironmentMetaModelChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ConcreteEnvironmentMetaModelChangeEvent", 
+     "event": { 
+        "concreteEnvironmentMetaModel" :  
+            {-- SEE ConcreteEnvironmentMetaModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Concrete Environment Meta Model Delete Event 
+Notification ConcreteEnvironmentMetaModelDeleteEvent case for resource ConcreteEnvironmentMetaModel 
+Json representation sample 
+We provide below the json representation of an example of a 'ConcreteEnvironmentMetaModelDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ConcreteEnvironmentMetaModelDeleteEvent", 
+     "event": { 
+        "concreteEnvironmentMetaModel" :  
+            {-- SEE ConcreteEnvironmentMetaModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Concrete Environment Meta Model Attribute Value Change Event 
+Notification ConcreteEnvironmentMetaModelAttributeValueChangeEvent case for resource 
+ConcreteEnvironmentMetaModel 
+Json representation sample 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 41 of 80 
+We provide below the json representation of an example of a 
+'ConcreteEnvironmentMetaModelAttributeValueChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ConcreteEnvironmentMetaModelAttributeValueChangeEvent", 
+     "event": { 
+        "concreteEnvironmentMetaModel" :  
+            {-- SEE ConcreteEnvironmentMetaModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Concrete Environment Meta Model State Change Event 
+Notification ConcreteEnvironmentMetaModelStateChangeEvent case for resource 
+ConcreteEnvironmentMetaModel 
+Json representation sample 
+We provide below the json representation of an example of a 'ConcreteEnvironmentMetaModelStateChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ConcreteEnvironmentMetaModelStateChangeEvent", 
+     "event": { 
+        "concreteEnvironmentMetaModel" :  
+            {-- SEE ConcreteEnvironmentMetaModel RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Resource A P I Create Event 
+Notification TestResourceAPICreateEvent case for resource TestResourceAPI 
+Json representation sample 
+We provide below the json representation of an example of a 'TestResourceAPICreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestResourceAPICreateEvent", 
+     "event": { 
+        "testResourceAPI" :  
+            {-- SEE TestResourceAPI RESOURCE SAMPLE --} 
+    } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 42 of 80 
+} 
+ 
+Test Resource A P I Change Event 
+Notification TestResourceAPIChangeEvent case for resource TestResourceAPI 
+Json representation sample 
+We provide below the json representation of an example of a 'TestResourceAPIChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestResourceAPIChangeEvent", 
+     "event": { 
+        "testResourceAPI" :  
+            {-- SEE TestResourceAPI RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Resource A P I Delete Event 
+Notification TestResourceAPIDeleteEvent case for resource TestResourceAPI 
+Json representation sample 
+We provide below the json representation of an example of a 'TestResourceAPIDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestResourceAPIDeleteEvent", 
+     "event": { 
+        "testResourceAPI" :  
+            {-- SEE TestResourceAPI RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Resource A P I Attribute Value Change Event 
+Notification TestResourceAPIAttributeValueChangeEvent case for resource TestResourceAPI 
+Json representation sample 
+We provide below the json representation of an example of a 'TestResourceAPIAttributeValueChangeEvent' 
+notification event object 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 43 of 80 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestResourceAPIAttributeValueChangeEvent", 
+     "event": { 
+        "testResourceAPI" :  
+            {-- SEE TestResourceAPI RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Test Resource A P I State Change Event 
+Notification TestResourceAPIStateChangeEvent case for resource TestResourceAPI 
+Json representation sample 
+We provide below the json representation of an example of a 'TestResourceAPIStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"TestResourceAPIStateChangeEvent", 
+     "event": { 
+        "testResourceAPI" :  
+            {-- SEE TestResourceAPI RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Provisioning Artifact Create Event 
+Notification ProvisioningArtifactCreateEvent case for resource ProvisioningArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'ProvisioningArtifactCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProvisioningArtifactCreateEvent", 
+     "event": { 
+        "provisioningArtifact" :  
+            {-- SEE ProvisioningArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 44 of 80 
+Provisioning Artifact Change Event 
+Notification ProvisioningArtifactChangeEvent case for resource ProvisioningArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'ProvisioningArtifactChangeEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProvisioningArtifactChangeEvent", 
+     "event": { 
+        "provisioningArtifact" :  
+            {-- SEE ProvisioningArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Provisioning Artifact Delete Event 
+Notification ProvisioningArtifactDeleteEvent case for resource ProvisioningArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'ProvisioningArtifactDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProvisioningArtifactDeleteEvent", 
+     "event": { 
+        "provisioningArtifact" :  
+            {-- SEE ProvisioningArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Provisioning Artifact Attribute Value Change Event 
+Notification ProvisioningArtifactAttributeValueChangeEvent case for resource ProvisioningArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'ProvisioningArtifactAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 45 of 80 
+    "eventType":"ProvisioningArtifactAttributeValueChangeEvent", 
+     "event": { 
+        "provisioningArtifact" :  
+            {-- SEE ProvisioningArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Provisioning Artifact State Change Event 
+Notification ProvisioningArtifactStateChangeEvent case for resource ProvisioningArtifact 
+Json representation sample 
+We provide below the json representation of an example of a 'ProvisioningArtifactStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProvisioningArtifactStateChangeEvent", 
+     "event": { 
+        "provisioningArtifact" :  
+            {-- SEE ProvisioningArtifact RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 46 of 80 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Abstract Environment 
+List abstract environments 
+  GET /abstractEnvironment?fields=...&{filtering} 
+Description 
+This operation list abstract environment entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 47 of 80 
+Here's an example of a request for retrieving a list of abstract test environment(s). 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/abstractEnvironment 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+        "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+        "description": "Sample abstract test environment", 
+        "version": "1.2.3", 
+        "relatedParty": [ 
+            { 
+                "name": "testUser", 
+                "role": "Owner", 
+                "@referredType": "Individual", 
+                "contact": [ 
+                    { 
+                        "mediumType": "email", 
+                        "characteristic": { 
+                            "emailAddress": "testUser@abc.com" 
+                        } 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "incomplete", 
+        "abstractEnvironmentDefinition": { 
+            "content": "<base64-encoded abstract environment> - please see Example 1 in Appendix 1", 
+            "mimeType": "base64", 
+            "url": "http://myservice.com/abstractEnvironment/1234" 
+        } 
+    } 
+] 
+ 
+Retrieve abstract environment 
+  GET /abstractEnvironment/{id}?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 48 of 80 
+This operation retrieves an abstract environment entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific abstract test environment. 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-11ba6059c0dd 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+    "description": "Sample abstract test environment", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "incomplete", 
+    "abstractEnvironmentDefinition": { 
+        "content": "<base64-encoded abstract environment> - please see Example 1 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/abstractEnvironment/1234" 
+    } 
+} 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 49 of 80 
+Create abstract environment 
+  POST /abstractEnvironment 
+Description 
+This operation creates an abstract environment entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+AbstractEnvironment, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+abstractEnvironmentDefinition 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating an abstract test environment. 
+ 
+Request 
+ 
+POST /tmf-api/testEnvironment/v4/abstractEnvironment 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample abstract test environment", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 50 of 80 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "incomplete", 
+    "abstractEnvironmentDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded abstract environment> - please see Example 1 in Appendix 1", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+    "description": "Sample abstract test environment", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "abstractEnvironmentDefinition": { 
+        "content": "<base64-encoded abstract environment> - please see Example 1 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/abstractEnvironment/1234" 
+    } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 51 of 80 
+} 
+ 
+Patch abstract environment 
+  PATCH /abstractEnvironment/{id} 
+Description 
+This operation allows partial updates of an abstract environment entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+abstractEnvironmentDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a AbstractEnvironment resource. 
+ 
+Request 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 52 of 80 
+PATCH /tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-11ba6059c0dd 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "f4cfa280-f0d7-45e5-99f8-11ba6059c0dd", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-
+11ba6059c0dd", 
+    "description": "Sample abstract test environment", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "incomplete", 
+    "abstractEnvironmentDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded abstract environment>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+} 
+ 
+Delete abstract environment 
+  DELETE /abstractEnvironment/{id} 
+Description 
+This operation deletes an abstract environment entity. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 53 of 80 
+Usage Samples 
+Here's an example of a request for deleting an abstract test environment. 
+ 
+Request 
+ 
+DELETE /tmf-api/testEnvironment/v4/abstractEnvironment/f4cfa280-f0d7-45e5-99f8-11ba6059c0dd 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Concrete Environment Meta Model 
+List concrete environment meta models 
+  GET /concreteEnvironmentMetaModel?fields=...&{filtering} 
+Description 
+This operation list concrete environment meta model entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of concrete environment metamodel(s). 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "962ce846-4afa-48fb-91cf-9ab7104a8e18", 
+        "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 54 of 80 
+91cf-9ab7104a8e18", 
+        "description": "Sample concrete environment metamodel", 
+        "version": "1.2.3", 
+        "relatedParty": [ 
+            { 
+                "name": "testUser", 
+                "role": "Owner", 
+                "@referredType": "Individual", 
+                "contact": [ 
+                    { 
+                        "mediumType": "email", 
+                        "characteristic": { 
+                            "emailAddress": "testUser@abc.com" 
+                        } 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "stable", 
+        "concreteEnvironmentMetaModelDefinition": { 
+            "content": "<base64-encoded concrete environment metamodel> - please see Example 2 in Appendix 1", 
+            "mimeType": "base64", 
+            "url": "http://myservice.com/concreteEnvironmentMetaModel/1234" 
+        } 
+    } 
+] 
+ 
+Retrieve concrete environment meta model 
+  GET 
+/concreteEnvironmentMetaModel/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a concrete environment meta model entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific concrete environment metamodel. 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-91cf-9ab7104a8e18 
+Accept: application/json 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 55 of 80 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "962ce846-4afa-48fb-91cf-9ab7104a8e18", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-91cf-
+9ab7104a8e18", 
+    "description": "Sample concrete environment metamodel", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "concreteEnvironmentMetaModelDefinition": { 
+        "content": "<base64-encoded concrete environment metamodel> - please see Example 2 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/concreteEnvironmentMetaModel/1234" 
+    } 
+} 
+ 
+Create concrete environment meta model 
+  POST /concreteEnvironmentMetaModel 
+Description 
+This operation creates a concrete environment meta model entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ConcreteEnvironmentMetaModel, including any possible rule conditions and applicable default values. Notice that 
+it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 56 of 80 
+Mandatory Attributes 
+Rule 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+concreteEnvironmentMetaModelDefinition  
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a concrete environment metamodel. 
+ 
+Request 
+ 
+POST /tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample concrete environment metamodel", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "incomplete", 
+    "concreteEnvironmentMetaModelDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded concrete environment metamodel> - please see Example 2 in Appendix 1", 
+        "mimeType": "base64" 
+    } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 57 of 80 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "962ce846-4afa-48fb-91cf-9ab7104a8e18", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-91cf-
+9ab7104a8e18", 
+    "description": "Sample concrete environment metamodel", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "concreteEnvironmentMetaModelDefinition": { 
+        "content": "<base64-encoded concrete environment metamodel> - please see Example 2 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/concreteEnvironmentMetaModel/1234" 
+    } 
+} 
+ 
+Patch concrete environment meta model 
+  PATCH /concreteEnvironmentMetaModel/{id} 
+Description 
+This operation allows partial updates of a concrete environment meta model entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 58 of 80 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+concreteEnvironmentMetaModelDefinition  
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a ConcreteEnvironmentMetaModel resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-91cf-9ab7104a8e18 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "962ce846-4afa-48fb-91cf-9ab7104a8e18", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-91cf-
+9ab7104a8e18", 
+    "description": "Sample concrete environment metamodel", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 59 of 80 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "concreteEnvironmentMetaModelDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded concrete environment metamodel>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+} 
+ 
+Delete concrete environment meta model 
+  DELETE /concreteEnvironmentMetaModel/{id} 
+Description 
+This operation deletes a concrete environment meta model entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a concrete environment metamodel. 
+ 
+Request 
+ 
+DELETE /tmf-api/testEnvironment/v4/concreteEnvironmentMetaModel/962ce846-4afa-48fb-91cf-9ab7104a8e18 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 60 of 80 
+Operations on Test Resource A P I 
+List test resource a p is 
+  GET /testResourceAPI?fields=...&{filtering} 
+Description 
+This operation list test resource a p i entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of provisioning artifact(s). 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/testResourceAPI 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+        "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/testResourceApi/894f2eef-e8f9-4cad-bfb2-
+5ae534717086", 
+        "description": "Sample test resource API", 
+        "version": "1.2.3", 
+        "relatedParty": [ 
+            { 
+                "name": "testUser", 
+                "role": "Owner", 
+                "@referredType": "Individual", 
+                "contact": [ 
+                    { 
+                        "mediumType": "email", 
+                        "characteristic": { 
+                            "emailAddress": "testUser@abc.com" 
+                        } 
+                    } 
+                ] 
+            } 
+        ], 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 61 of 80 
+        "state": "stable", 
+        "testResourceAPIDefinition": { 
+            "content": "<base64-encoded test resource API> - please see Example 4 in Appendix 1", 
+            "mimeType": "base64", 
+            "url": "http://myservice.com/testResourceApi/1234" 
+        } 
+    } 
+] 
+ 
+Retrieve test resource a p i 
+  GET /testResourceAPI/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a test resource a p i entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific provisioning artifact. 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/testResourceAPI/894f2eef-e8f9-4cad-bfb2-5ae534717086 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/testResourceApi/894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "description": "Sample test resource API", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 62 of 80 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testResourceAPIDefinition": { 
+        "content": "<base64-encoded test resource API> - please see Example 4 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/testResourceApi/1234" 
+    } 
+} 
+ 
+Create test resource a p i 
+  POST /testResourceAPI 
+Description 
+This operation creates a test resource a p i entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a TestResourceAPI, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+testResourceAPIDefinition 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 63 of 80 
+Usage Samples 
+Here's an example of a request for creating a provisioning artifact. 
+ 
+Request 
+ 
+POST /tmf-api/testEnvironment/v4/testResourceAPI 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample abstract test resource API", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testResourceAPIDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded test resource API> - please see Example 4 in Appendix 1", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/testResourceApi/894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "description": "Sample test resource API", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 64 of 80 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testResourceAPIDefinition": { 
+        "content": "<base64-encoded test resource API> - please see Example 4 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/testResourceApi/1234" 
+    } 
+} 
+ 
+Patch test resource a p i 
+  PATCH /testResourceAPI/{id} 
+Description 
+This operation allows partial updates of a test resource a p i entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+testResourceAPIDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 65 of 80 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a TestResourceAPI resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/testEnvironment/v4/testResourceAPI/894f2eef-e8f9-4cad-bfb2-5ae534717086 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/testResourceApi/894f2eef-e8f9-4cad-bfb2-5ae534717086", 
+    "description": "Sample test resource API", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "testResourceAPIDefinition": { 
+        "attachmentType": "json", 
+        "content": "<base64-encoded test resource API>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 66 of 80 
+} 
+ 
+Delete test resource a p i 
+  DELETE /testResourceAPI/{id} 
+Description 
+This operation deletes a test resource a p i entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a provisioning artifact. 
+ 
+Request 
+ 
+DELETE /tmf-api/testEnvironment/v4/testResourceAPI/894f2eef-e8f9-4cad-bfb2-5ae534717086 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Provisioning Artifact 
+List provisioning artifacts 
+  GET /provisioningArtifact?fields=...&{filtering} 
+Description 
+This operation list provisioning artifact entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a list of provisioning artifact(s). 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 67 of 80 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/provisioningArtifact 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+        "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+        "description": "Sample provisioning artifact", 
+        "version": "1.2.3", 
+        "relatedParty": [ 
+            { 
+                "name": "testUser", 
+                "role": "Owner", 
+                "@referredType": "Individual", 
+                "contact": [ 
+                    { 
+                        "mediumType": "email", 
+                        "characteristic": { 
+                            "emailAddress": "testUser@abc.com" 
+                        } 
+                    } 
+                ] 
+            } 
+        ], 
+        "state": "stable", 
+        "provisioningArtifactDefinition": { 
+            "content": "<base64-encoded provisioning artifact> - please see Example 3 in Appendix 1", 
+            "mimeType": "base64", 
+            "url": "http://myservice.com/provisioningArtifact/1234" 
+        } 
+    } 
+] 
+ 
+Retrieve provisioning artifact 
+  GET /provisioningArtifact/{id}?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 68 of 80 
+This operation retrieves a provisioning artifact entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific provisioning artifact. 
+ 
+Request 
+ 
+GET /tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-835242ee505a 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+    "description": "Sample provisioning artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "provisioningArtifactDefinition": { 
+        "content": "<base64-encoded provisioning artifact> - please see Example 3 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/provisioningArtifact/1234" 
+    } 
+} 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 69 of 80 
+Create provisioning artifact 
+  POST /provisioningArtifact 
+Description 
+This operation creates a provisioning artifact entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ProvisioningArtifact, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+description 
+ 
+version 
+ 
+termsOfService 
+ 
+contact 
+ 
+license 
+ 
+provisioningArtifactDefinition 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a provisioning artifact. 
+ 
+Request 
+ 
+POST /tmf-api/testEnvironment/v4/provisioningArtifact 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Sample Sample provisioning artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 70 of 80 
+            "@referredType": "Individual", 
+            "role": "Owner", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "provisioningArtifactDefinition": { 
+        "attachmentType": "script", 
+        "content": "<base64-encoded provisioning artifact> - please see Example 3 in Appendix 1", 
+        "mimeType": "base64" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+    "description": "Sample provisioning artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "provisioningArtifactDefinition": { 
+        "content": "<base64-encoded provisioning artifact> - please see Example 3 in Appendix 1", 
+        "mimeType": "base64", 
+        "url": "http://myservice.com/provisioningArtifact/1234" 
+    } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 71 of 80 
+} 
+ 
+Patch provisioning artifact 
+  PATCH /provisioningArtifact/{id} 
+Description 
+This operation allows partial updates of a provisioning artifact entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+versionDescription 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+provisioningArtifactDefinition 
+ 
+agreement 
+ 
+attribute 
+ 
+relatedParty 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+version 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a ProvisioningArtifact resource. 
+ 
+Request 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 72 of 80 
+PATCH /tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-835242ee505a 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "bd73ed1f-05fa-4a08-a461-835242ee505a", 
+    "href": "https://mycsp:8080/tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-
+835242ee505a", 
+    "description": "Sample provisioning artifact", 
+    "version": "1.2.3", 
+    "relatedParty": [ 
+        { 
+            "name": "testUser", 
+            "role": "Owner", 
+            "@referredType": "Individual", 
+            "contact": [ 
+                { 
+                    "mediumType": "email", 
+                    "characteristic": { 
+                        "emailAddress": "testUser@abc.com" 
+                    } 
+                } 
+            ] 
+        } 
+    ], 
+    "state": "stable", 
+    "provisioningArtifactDefinition": { 
+        "attachmentType": "script", 
+        "content": "<base64-encoded provisioning artifact>", 
+        "mimeType": "base64" 
+    }, 
+    "name": "new name" 
+} 
+ 
+Delete provisioning artifact 
+  DELETE /provisioningArtifact/{id} 
+Description 
+This operation deletes a provisioning artifact entity. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 73 of 80 
+Usage Samples 
+Here's an example of a request for deleting a provisioning artifact. 
+ 
+Request 
+ 
+DELETE /tmf-api/testEnvironment/v4/provisioningArtifact/bd73ed1f-05fa-4a08-a461-835242ee505a 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 74 of 80 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 75 of 80 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 76 of 80 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 77 of 80 
+Appendix 1 
+Examples of base64-encoded Attachment content 
+Examples below are hypothetical and do not represent any publicly available implementation. 
+Example 1. Abstract environment representation example 
+ 
+Encoded value 
+ 
+ewogICAgImFic3RyYWN0RW52aXJvbm1lbnROYW1lIjogIkVudjEiLAogICAgImFic3RyYWN0UmVzb3VyY2UiO
+iBbCiAgICAgICAgewogICAgICAgICAgICAibmFtZSI6ICJwaG9uZTEiLAogICAgICAgICAgICAicHJvdmlzaW9uaW5
+nQXJ0aWZhY3QiOiAiIGlQaG9uZVByb2ZpbGUxIgogICAgICAgIH0KICAgIF0KfQo= 
+ 
+Original /decoded JSON object 
+ 
+{ 
+    "abstractEnvironmentName": "abstractEnv1", 
+    "abstractResource": [ 
+        { 
+            "name": "phone1", 
+            "provisioningArtifact": " iPhoneProfile1" 
+        } 
+    ] 
+} 
+ 
+ 
+Example 2. Concrete environment metamodel representation example 
+ 
+Encoded value 
+ 
+ewogICAgIm5hbWUiOiAiZW52TWV0YU1vZGVsMSIsCiAgICAicG9vbCI6IFsKICAgICAgICB7CiAgICAgICAgICAg
+ICJuYW1lIjogInBob25lIiwKICAgICAgICAgICAgInR5cGUiOiAiZHluYW1pYyIsCiAgICAgICAgICAgICJjb25kaXRpb
+24iOiB7CiAgICAgICAgICAgICAgICAidHlwZSI6ICJzaW5nbGVDb25kaXRpb24iLAogICAgICAgICAgICAgICAgImF
+0dHJpYnV0ZSI6ICJ0eXBlIiwKICAgICAgICAgICAgICAgICJvcGVyYXRvciI6ICJlcXVhbHMiLAogICAgICAgICAgICAgI
+CAgInZhbHVlIjogImlQaG9uZSIKICAgICAgICAgICAgfSwKICAgICAgICAgICAgImFwaSI6IFsKICAgICAgICAgICAgI
+CAgIHsKICAgICAgICAgICAgICAgICAgICAiaWQiOiAiODk0ZjJlZWYtZThmOS00Y2FkLWJmYjItNWFlNTM0NzE3
+MDg2IgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICBdCiAgICAgICAgfQogICAgXQp9Cg== 
+ 
+Original /decoded JSON object 
+ 
+{ 
+    "name": "envMetaModel1", 
+    "pool": [ 
+        { 
+            "name": "phone", 
+            "type": "dynamic", 
+            "condition": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 78 of 80 
+                "type": "singleCondition", 
+                "attribute": "type", 
+                "operator": "equals", 
+                "value": "iPhone" 
+            }, 
+            "api": [ 
+                { 
+                    "id": "894f2eef-e8f9-4cad-bfb2-5ae534717086" 
+                } 
+            ] 
+        } 
+    ] 
+} 
+ 
+ 
+Example 3. Provisioning artifact representation example 
+ 
+Encoded value 
+ 
+ewogICAgInByb3Zpc2lvbmluZ0FydGlmYWN0TmFtZSI6ICJpUGhvbmVQcm9maWxlMSIsCiAgICAicHJvdmlza
+W9uaW5nQXJ0aWZhY3RUeXBlIjogImFwcGxlUHJvZmlsZSIKICAgICJwcm9maWxlIjogIjw/eG1sIHZlcnNpb249
+4oCZMS4w4oCZIGVuY29kaW5nPeKAmVVURi044oCZPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyDigJgtLy9
+BcHBsZS8vRFREIFBMSVNUIDEuMC8vRU7igJkg4oCYaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ
+0eUxpc3QtMS4wLmR0ZOKAmT4KPHBsaXN0IHZlcnNpb2494oCZMS4w4oCZPgo8ZGljdD4KICAgIDxrZXk+Q2
+9tbWFuZDwva2V5PgogICAgPGRpY3Q+CiAgICAgICAgPGtleT5Qcm92aXNpb25pbmdQcm9maWxlPC9rZXk+
+CiAgICAgICAgPGRhdGE+CiAgICAgICAgICAgIDwhLS1iYXNlLTY0IGVuY29kZWQgaVBob25lIHByb2ZpbGUuIFNl
+ZSBBcHBsZSBkZXZlbG9wZXIgZG9jdW1lbnRhdGlvbiBmb3IgZXhhbXBsZXMgLS0+CiAgICAgICAgPC9kYXRhPgo
+gICAgICAgIDxrZXk+UmVxdWVzdFR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPkluc3RhbGxQcm92aXNpb25p
+bmdQcm9maWxlPC9zdHJpbmc+CiAgICA8L2RpY3Q+CiAgICA8a2V5PkNvbW1hbmRVVUlEPC9rZXk+CiAgICA
+8c3RyaW5nPjAwMDFfSW5zdGFsbFByb3Zpc2lvbmluZ1Byb2ZpbGU8L3N0cmluZz4KPC9kaWN0Pgo8L3BsaX
+N0PiIKfQo= 
+ 
+Original /decoded JSON object 
+ 
+{ 
+    "provisioningArtifactName": "iPhoneProfile1", 
+    "provisioningArtifactType": "appleProfile" 
+    "profile": "<?xml version=’1.0’ encoding=’UTF-8’?> 
+<!DOCTYPE plist PUBLIC ‘-//Apple//DTD PLIST 1.0//EN’ ‘http://www.apple.com/DTDs/PropertyList-
+1.0.dtd’> 
+<plist version=’1.0’> 
+<dict> 
+    <key>Command</key> 
+    <dict> 
+        <key>ProvisioningProfile</key> 
+        <data> 
+            <!--base-64 encoded iPhone profile. See Apple developer documentation for relevant examples --> 
+        </data> 
+        <key>RequestType</key> 
+        <string>InstallProvisioningProfile</string> 
+    </dict> 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 79 of 80 
+    <key>CommandUUID</key> 
+    <string>0001_InstallProvisioningProfile</string> 
+</dict> 
+</plist>" 
+} 
+ 
+ 
+Example 4. Test resource API representation example 
+ 
+Encoded value 
+ 
+ewogICAgImFwaU5hbWUiOiAicGhvbmVBcGkiLAogICAgIm1ldGhvZCI6ICI6IFsKICAgICAgICB7CiAgICAgICAgI
+CAgICJuYW1lIjogImRpYWwiLAogICAgICAgICAgICAicGFyYW1ldGVyIjogWwogICAgICAgICAgICAgICAgewogIC
+AgICAgICAgICAgICAgICAgICJuYW1lIjogImRpZ2l0cyIsCiAgICAgICAgICAgICAgICAgICAgInR5cGUiOiAic3RyaW
+5nIiwKICAgICAgICAgICAgICAgICAgICAib3B0aW9uYWwiOiBmYWxzZQogICAgICAgICAgICAgICAgfQogICAgIC
+AgICAgICBdCiAgICAgICAgfQogICAgXQp9Cg== 
+ 
+Original /decoded JSON object 
+ 
+{ 
+    "apiName": "phoneApi", 
+    "method": ": [ 
+        { 
+            "name": "dial", 
+            "parameter": [ 
+                { 
+                    "name": "digits", 
+                    "type": "string", 
+                    "optional": false 
+                } 
+            ] 
+        } 
+    ] 
+} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 80 of 80 
+Acknowledgements 
+Document History 
+Version History 
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+4.0.0 
+21-Sep-2020 Alan Pope 
+Final edits for initial release 
+ 
+Release History 
+Release Status 
+Date  
+Release led by: 
+Description  
+Pre-production 
+21-Sep-2020 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Edward Pershwitz 
+ITEA Technologies 
+edward.pershwitz@iteatechnologie
+s.com  
+First Release of the Document.  
+ 
+Contributors to Document 
+Kanagaraj Manickam 
+Huawei Technologies Co., Ltd 
+ 
+ 
+ 
+ 
+
+

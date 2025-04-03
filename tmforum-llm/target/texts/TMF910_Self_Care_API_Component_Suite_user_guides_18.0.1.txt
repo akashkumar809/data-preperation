@@ -1,0 +1,924 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Self-Care Component Suite API 
+Specification 
+ 
+ 
+ 
+ 
+ 
+TMF910 
+Release 18.0.1 
+September 2018 
+ 
+Latest Update: TM Forum Release 18.0.1 
+TM Forum Approved 
+Version 1.0.2 
+IPR Mode: RAND 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 2 of 27
+NOTICE 
+Copyright © TM Forum 2018. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works 
+that comment on or otherwise explain it or assist in its implementation may be prepared, copied, 
+published, and distributed, in whole or in part, without restriction of any kind, provided that the 
+above copyright notice and this section are included on all such copies and derivative works. 
+However, this document itself may not be modified in any way, including by removing the copyright 
+notice or references to TM FORUM, except as needed for the purpose of developing any document 
+or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules 
+applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its 
+successors or assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM 
+DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP 
+RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that 
+would necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to 
+notify the TM FORUM Team Administrator and provide an indication of its willingness to grant patent 
+licenses to such patent claims in a manner consistent with the IPR Mode of the TM FORUM 
+Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a 
+claim of ownership of any patent claims that would necessarily be infringed by implementations of 
+this TM FORUM Standards Final Deliverable by a patent holder that is not willing to provide a license 
+to such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration 
+Project Team that produced this TM FORUM Standards Final Deliverable. TM FORUM may include 
+such claims on its website but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other 
+rights that might be claimed to pertain to the implementation or use of the technology described in 
+this TM FORUM Standards Final Deliverable or the extent to which any license under such rights 
+might or might not be available; neither does it represent that it has made any effort to identify any 
+such rights. Information on TM FORUM's procedures with respect to rights in any document or 
+deliverable produced by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances of licenses to be 
+made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final 
+Deliverable, can be obtained from the TM FORUM Team Administrator. TM FORUM makes no 
+representation that any information or list of intellectual property rights will at any time be 
+complete, or that any claims in such list are, in fact, Essential Claims. 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 3 of 27
+ 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 4 of 27
+TABLE OF CONTENTS 
+NOTICE ..................................................................................................................................................... 2 
+TABLE OF CONTENTS ............................................................................................................................... 4 
+LIST OF TABLES ........................................................................................................................................ 5 
+EXECUTIVE SUMMARY ............................................................................................................................. 6 
+INTRODUCTION ....................................................................................................................................... 7 
+1. 
+REQUIREMENTS AND USE CASES ..................................................................................................... 8 
+1.1. 
+Requirements ............................................................................................................................ 8 
+1.2. 
+Use Cases .................................................................................................................................. 9 
+1.2.1. 
+User manages his account ................................................................................................. 9 
+1.2.2. 
+User updates his offer ....................................................................................................... 9 
+1.2.3. 
+User raises an issue ............................................................................................................ 9 
+2. 
+FUNCTIONS ..................................................................................................................................... 11 
+3. 
+COMPONENT CAPABILITIES, FLOWS AND SEQUENCE DIAGRAM .................................................. 17 
+3.3. 
+Sequence Diagrams ................................................................................................................. 17 
+3.3.1. 
+Account management ..................................................................................................... 18 
+3.3.1. 
+Issue management ........................................................................................................... 19 
+3.3.1. 
+Product subscription management ................................................................................. 20 
+4. 
+FUNCTIONS AND API MAPPINGS ................................................................................................... 21 
+5. 
+COMPONENT API SPECIFICATION .................................................................................................. 25 
+6. 
+ACKNOWLEDGEMENTS .................................................................................................................. 26 
+6.4. 
+References .............................................................................................................................. 26 
+6.5. 
+Document History ................................................................................................................... 26 
+6.5.1. 
+Version History ................................................................................................................ 26 
+6.5.1. 
+Release History ................................................................................................................ 26 
+6.6. 
+Contributors to this document ............................................................................................... 27 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 5 of 27
+LIST OF TABLES 
+ 
+N/A 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 6 of 27
+EXECUTIVE SUMMARY 
+The following document deals with the API Component Suite for a SelfCare app, defining the set of 
+operations that should be offered in order to enable a selfCare app of a Service Provider.  
+ 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 7 of 27
+INTRODUCTION 
+This component suite covers the operations required to be exposed in order to provide the 
+functionality required by a SelfCare application used by a Service Provider to allow its customers to 
+manage the services it has subscribed to. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 8 of 27
+1. REQUIREMENTS AND USE CASES 
+1.1. 
+REQUIREMENTS 
+The following functionalities are expected to be provided by a SelfCare component requirements are 
+expected to be covered in the. 
+ 
+• 
+Identification 
+ 
+To provide identity information and the list of entities/assets that are manageable by an 
+individual 
+ 
+• 
+Account management 
+ 
+To manage the accounts associated to a customer. To request information (e.g.: balance 
+or cycle specification) about accounts of a customer 
+ 
+ 
+To provide information about the bills associated to customer accounts. To request details 
+(e.g.: amount and applied charges) of the bills of a customer account. 
+ 
+• 
+Consumption management 
+ 
+To retrieve information about the consumption of a customer over a given product (e.g.: 
+number of sms sent, number of MB used, …) 
+ 
+ 
+To retrieve list of billing events (e.g.: details of each call or each sms sent) 
+ 
+• 
+eCommerce 
+ 
+To retrieve products instantiated to a customer and/or associated to a customer account 
+and list characteristics of each product instantiated 
+ 
+ 
+Provide the list of product offers (and related products) available in CSP catalog 
+ 
+ 
+Subscribe a customer to a product offer 
+ 
+ 
+Pay online for subscription to a product offer (e.g.: using credit card) 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 9 of 27
+• 
+Ticketing 
+ 
+To allow a customer raise a ticket/complain and review the tickets previously raised 
+1.2. 
+USE CASES 
+1.2.1. 
+USER MANAGES HIS ACCOUNT 
+The user opens the application and identifies the elements that he can manage (customer 
+entities, billing accounts and subscribed products). 
+ 
+The user selects one of the subscribed products, for instance a mobile line, and checks the 
+usage consumption tab in order to understand how many messages can still send or data 
+consume till the end of the period. 
+ 
+The user selects one of the subscribed products, for instance a mobile line, and checks the 
+latest calls performed and received as well as the data transferred in the last days. 
+ 
+The user selects one of his billing accounts (probably identified as the one where a given 
+product is billed) and downloads the latest bill as well as compare with previous bills. 
+ 
+1.2.2. 
+USER UPDATES HIS OFFER 
+The user checks the “special offers” area in the application and looks for an offer that is 
+better than his current plan. 
+ 
+The user finds a new offer that is appealing and requests the change of plan to subscribe to 
+the new offer. 
+ 
+The new offer is added to the list of subscribed products.  
+ 
+1.2.3. 
+USER RAISES AN ISSUE 
+The user checks his last bill and is not convinced that the charged amount is appropriate. 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 10 of 27
+The user wants to dispute the bill and opens an issue (a commercial ticket) to initiate the 
+claim. 
+ 
+The new issue is added to the list of issues already open by the user. 
+ 
+After some time, the user checks the status of the complaint in the app to understand if it 
+has been resolved and the resolution details. 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 11 of 27
+2. FUNCTIONS 
+getIdentity 
+ 
+precondition: The application makes use of an Open ID Connect operation to authenticate 
+and obtain a ticket to request identity information for the individual (user) making use of the 
+application  
+ 
+postCondition: The identity information related to the individual using the application that 
+has logged in 
+ 
+error: Token is invalid 
+ 
+ 
+getAssets 
+ 
+precondition: The application makes use of an Open ID Connect operation to authenticate 
+and obtain a ticket to request identity information for the individual (user) making use of the 
+application  
+ 
+postCondition: The list of assets, or manageable entities (e.g.: customer, account or 
+telephone line number) that the individual using the application can manage 
+ 
+error: Token is invalid 
+ 
+ 
+getAccountInfo 
+ 
+precondition: The application is aware of the customer and account entities that can be 
+managed by the individual using the application 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 12 of 27
+postCondition: The details of the account (the one selected to review by the user) is 
+provided. The balance, the cycle information, …. The request could include a query to filter 
+the information that must be included in the response depending on the needs of the 
+application (for instance, depending on the data to be presented to the user) 
+ 
+error: None identified. The identifier of the account (accountId) should be valid because it is 
+known before hand by the application as defined in the precondition  
+ 
+ 
+getBills 
+ 
+precondition: The application is aware of the account entities that can be managed by the 
+individual using the application 
+ 
+postCondition: The list of the last bills issued for the account. The request could include a 
+query to filter the number of bills expected and the information expected in the response 
+(for instance, typically only the date and href is required) 
+ 
+error: None identified. The identifier of the account (accountId) should be valid because it is 
+known before hand by the application as defined in the precondition  
+ 
+ 
+getBillInfo 
+ 
+precondition: The application is aware of the bill resources whose information can be 
+requested via function getBills being previously invoked 
+ 
+postCondition: The details of the bill (amount, issue date, …) is provided 
+ 
+error: None identified. The identifier of the bill (billId) should be valid because it is known 
+before hand by the application as defined in the precondition  
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 13 of 27
+ 
+ 
+getBillCharges 
+ 
+precondition: The application is aware of the bill resources whose information can be 
+requested 
+ 
+postCondition: The details of the applied charges for the bill is provided 
+ 
+error: None identified. The identifier of the bill (billId) should be valid because it is known 
+before hand by the application as defined in the precondition  
+ 
+ 
+getUsageReport 
+ 
+precondition: The application is aware of the product entities that can be managed to 
+request consumption by the individual using the application 
+ 
+postCondition: The usage consumption for specific product is provided. The report includes 
+the units consumed and units still available for consumption from each of the counters 
+created for the product under review during the latest billing cycle 
+ 
+error: None identified. The identifier of the product and the user should be valid because it is 
+known before hand by the application as defined in the precondition 
+ 
+ 
+getBillingEvents 
+ 
+precondition: The application is aware of the individual (user) requesting the list of billing 
+events (usage events) over products of a customer 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 14 of 27
+ 
+postCondition: The billing events (for instance, calls originated, text messages sent, data 
+transferred, …) over the product used (for instance over a mobile line) are provided 
+ 
+error: None identified. The identifier of the user should be valid because it is known before 
+hand by the application as defined in the precondition.  
+ 
+ 
+getUserProducts 
+ 
+precondition: The application is aware of the customer and account entities that can be 
+managed by the individual using the application 
+ 
+postCondition: The details of the products acquired by each customer entity (and/or 
+associated to each account entity) managed by the individual using the application is 
+provided 
+ 
+error: None identified. If the individual using the application is not entitled to manage any 
+customer or account entity (i.e.: is an authorized user but cannot check any commercial 
+information) then the request will not be triggered by the application 
+ 
+ 
+getOffers 
+ 
+precondition: The application is aware of the criteria required to filter the product catalog  
+ 
+postCondition: The details of the offerings that are appropriate for the specific criteria are 
+provided 
+ 
+error: None identified.  
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 15 of 27
+ 
+ 
+susbcribeToOffer 
+ 
+precondition: The application is aware of the offerings available via function getOffers 
+ 
+postCondition: The customer is registered to a given offer 
+ 
+error: If the subscription operation is not accepted (e.g.: due to some criteria not met by the 
+customer) then the request will be rejected 
+ 
+ 
+raiseIssue 
+ 
+precondition: The application is aware of the individual (user) opening a new issue 
+ 
+postCondition: A new issue is recorded in the commercial system associated to the user 
+raising it (and the corresponding customer entity) 
+ 
+error: None identified 
+ 
+ 
+getIssues 
+ 
+precondition: The application is aware of the individual (user) requesting information about 
+issues previously opened 
+ 
+postCondition: The details of the issues previously open by the user are provided 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 16 of 27
+ 
+error: None identified 
+ 
+getIssueInfo 
+ 
+precondition: The application is aware of the ticket resources whose information can be 
+requested via function getIssues being previously invoked 
+ 
+postCondition: The details of the ticket (amount, issue date, …) is provided 
+ 
+error: None identified. The identifier of the ticket (ticketId) should be valid because it is 
+known before hand by the application as defined in the precondition  
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 17 of 27
+3. COMPONENT CAPABILITIES, FLOWS AND SEQUENCE DIAGRAM 
+ 
+Mapping to requirements. 
+ 
+Requirement 
+Function 
+Identification 
+ 
+getIdentity 
+getAssets 
+ 
+Account management 
+getAccountInfo 
+getBills 
+getBillInfo 
+getBillCharges 
+Consumption management 
+getUsageReport 
+getBillingEvents 
+eCommerce 
+getUserProducts 
+getOffers 
+susbcribeToOffer 
+Ticketing 
+ 
+raiseIssue 
+getIssues 
+getIssueInfo 
+ 
+3.3. 
+SEQUENCE DIAGRAMS 
+Sequence Diagram for main Function Interactions supported. In the context of a specific flow 
+(mini E2E interaction).  
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 18 of 27
+3.3.1. 
+ACCOUNT MANAGEMENT 
+ 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 19 of 27
+3.3.1. 
+ISSUE MANAGEMENT 
+ 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 20 of 27
+3.3.1. 
+PRODUCT SUBSCRIPTION MANAGEMENT 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 21 of 27
+4. FUNCTIONS AND API MAPPINGS 
+ 
+In this section we should describe if the function can be exposed via an existing API operation. 
+ 
+Table Mappings:  
+ 
+The links in the table below correspond to those APIs published as part of the TM Forum 
+Open APIs (https://projects.tmforum.org/wiki/display/API/Open+API+Table).  
+ 
+Those marked as “Planned to be released” refer to the TM Forum Confluence page were the 
+document under review is available 
+ 
+Function Name 
+Already 
+Defined 
+ 
+Cand
+idate 
+for 
+Com
+mon 
+API 
+API Operation and Notification Mapping 
+Comment and 
+Constraints 
+getIdentity 
+Y 
+ 
+NA 
+Federated Identity API (TMF691) 
+https://projects.tmforum.org/wiki/display/AP/TMF691+Federated+ID+
+API+Release+Candidate+for+R18.0+Team+Review 
+GET /userinfo 
+Released in R18.0 
+getAssets 
+Y 
+NA 
+Federated Identity API (TMF691) 
+https://projects.tmforum.org/wiki/display/AP/TMF691+Federated+ID+
+API+Release+Candidate+for+R18.0+Team+Review  
+GET /userinfo?fields=userAssets 
+Released in R18.0 
+ 
+getAccountInfo 
+ 
+Y 
+NA 
+Account Management API (TMF666) 
+https://projects.tmforum.org/wiki/display/API/TMF666+Account+Man
+agement+API+REST+Specification+R17.0.1 
+GET /billingAccount/{id}?fields=… 
+“{id}” is obtained 
+from response to 
+getAssets 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 22 of 27
+Function Name 
+Already 
+Defined 
+ 
+Cand
+idate 
+for 
+Com
+mon 
+API 
+API Operation and Notification Mapping 
+Comment and 
+Constraints 
+getBills 
+Y 
+NA 
+Customer Bill Management API (TMF678) 
+https://projects.tmforum.org/wiki/display/API/TMF678+Customer+Bill
++Management+API+REST+Specification+R17.5.0 
+GET 
+/customerBill/?&billingAccount.id=<accountId>&fi
+elds=id,href,billDate,remainingAmount,paymentD
+ueDate 
+ 
+getBillInfo 
+Y 
+NA 
+Customer Bill Management API (TMF678) 
+https://projects.tmforum.org/wiki/display/API/TMF678+Customer+Bill
++Management+API+REST+Specification+R17.5.0 
+GET / customerBill/{id} 
+“{id}” is obtained 
+from response to 
+getBills 
+getBillCharges 
+Y 
+NA 
+Customer Bill Management API (TMF678) 
+https://projects.tmforum.org/wiki/display/API/TMF678+Customer+Bill
++Management+API+REST+Specification+R17.5.0 
+GET /appliedCustomerBillingRate?bill.id=<billId> 
+“bill.id” is 
+obtained from 
+response to 
+getBills 
+getUsageReport 
+Y 
+NA 
+Usage Consumption Management API (TMF677) 
+https://projects.tmforum.org/wiki/display/API/TMF677+Usage+Consu
+mption+API+REST+Specification+R17.5.0  
+GET 
+/usageConsumptionReport?product.publicIdentifi
+er=<product number> 
+“<product 
+number>”, for 
+instance the 
+msisdn for a 
+mobile product is 
+obtained from 
+response to 
+getAssets 
+getBillingEvents 
+Y 
+NA 
+Usage Management API (TMF635) 
+https://projects.tmforum.org/wiki/display/API/Usage+Management+A
+PI+REST+Specification+(TMF635)+R14.5.1  
+GET 
+/usage?relatedParty.role=customer&relatedParty.
+id=<customerId> 
+“<customerId>” 
+and/or “<userId>” 
+are obtained from 
+response to 
+getIdentity and 
+getAssets 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 23 of 27
+Function Name 
+Already 
+Defined 
+ 
+Cand
+idate 
+for 
+Com
+mon 
+API 
+API Operation and Notification Mapping 
+Comment and 
+Constraints 
+or 
+GET 
+/usage?relatedParty.role=user&relatedParty.id=<c
+ontactId> 
+TMF635 should be 
+updated to add a 
+query parameter 
+to request billing 
+events for an 
+specific product 
+(e.g.: an specific 
+mobile line) 
+getUserProducts 
+Y 
+NA 
+Product Inventory Management API (TMF637) 
+https://projects.tmforum.org/wiki/display/API/TMF637+Product+Inve
+ntory+Management+API+REST+Specification+R16.5.1  
+GET / product?billingAccount.id=<accountId> 
+or 
+GET / 
+product?relatedparty.role=customer&relatedPart
+y.id =<customerId> 
+“<product 
+number>”, for 
+instance the 
+msisdn for a 
+mobile product is 
+obtained from 
+response to 
+getAssets 
+getOffers 
+Y 
+NA 
+Product Catalog API (TMF620) 
+https://projects.tmforum.org/wiki/display/API/TMF620+Product+Catal
+og+Management+API+REST+Specification+R17.5.0  
+GET /productOffering?{filtering} 
+“filtering” criteria 
+(for instance 
+category.name) 
+used by catalog 
+system is known 
+by application 
+susbcribeToOffer 
+Y 
+NA 
+Product Order Management API (TMF622) 
+https://projects.tmforum.org/wiki/display/API/TMF622+Product+Orde
+ring+API+REST+Specification+R17.5.0  
+POST /productOrder 
+  { 
+      Structure ProductOrder 
+  } 
+Identifier of the 
+offering as well as 
+parameters 
+required to be 
+filled in order to 
+complete a 
+subscription to an 
+offering is known 
+by application via  
+response to 
+getOffers function 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 24 of 27
+Function Name 
+Already 
+Defined 
+ 
+Cand
+idate 
+for 
+Com
+mon 
+API 
+API Operation and Notification Mapping 
+Comment and 
+Constraints 
+raiseIssue 
+Y 
+NA 
+Trouble Ticket API (TMF621) 
+https://projects.tmforum.org/wiki/display/API/Trouble+Ticket+API+RE
+ST+Specification+(TMF621)+R14.5.1  
+POST /troubleTicket 
+  { 
+      Structure Ticket including relatedParty 
+referring to <userId> 
+  } 
+“<userId>” is 
+obtained from 
+response to 
+getIdentity and 
+getAssets 
+ 
+getIssues 
+Y 
+NA 
+Trouble Ticket API (TMF621) 
+https://projects.tmforum.org/wiki/display/API/Trouble+Ticket+API+RE
+ST+Specification+(TMF621)+R14.5.1  
+GET /troubleTicket? 
+relatedParty.role=user&relatedParty.id=<userId> 
+“<userId>” is 
+obtained from 
+response to 
+getIdentity and 
+getAssets 
+ 
+getIssueInfo 
+Y 
+NA 
+Trouble Ticket API (TMF621) 
+https://projects.tmforum.org/wiki/display/API/Trouble+Ticket+API+RE
+ST+Specification+(TMF621)+R14.5.1  
+GET /troubleTicket/id 
+“{id}” is obtained 
+from response to 
+getBills 
+ 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 25 of 27
+5. COMPONENT API SPECIFICATION 
+ 
+No need to define any new API for this version of the API Component  
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 26 of 27
+6. ACKNOWLEDGEMENTS 
+6.4. 
+REFERENCES 
+Reference 
+Description 
+Source 
+Brief Use Summary 
+0 
+ 
+ 
+ 
+1 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+6.5. 
+DOCUMENT HISTORY 
+6.5.1. 
+VERSION HISTORY 
+ 
+Version Number 
+Date Modified 
+Modified by: 
+Description of changes 
+0.1 
+07-Mar-2018 
+Luis Velarde 
+first issue of document 
+1.0 
+25-Jun-2018 
+Luis Velarde 
+Update reflecting R18 review 
+comments 
+1.0.1 
+29-Jun-2018 
+Adrienne Walcott 
+Formatting/style edits prior to 
+R18 publishing 
+1.0.2 
+10-Sep-2018 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+6.5.1. 
+RELEASE HISTORY 
+ 
+Version Number 
+Date Modified 
+Modified by: 
+Description of changes 
+18.0.0 
+June 2018 
+Luis Velarde 
+Initial Release 
+18.0.1 
+10-Sep-2018 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+ 
+ 
+
+
+ 
+© TM Forum 2018. All Rights Reserved
+Page 27 of 27
+6.6. 
+CONTRIBUTORS TO THIS 
+DOCUMENT 
+This document was prepared by the members of the TM Forum Open API team: 
+• 
+Luis Velarde, Telefónica 
+• 
+Axel Pieuchot, Neural Technologies  
+• 
+Pierre Gauthier, TM Forum 
+Additional input was provided by the following people: 
+• 
+API Governance Group, TM Forum (review, comments, explanations) 
+ 
+
+

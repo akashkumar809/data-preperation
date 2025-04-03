@@ -1,0 +1,1839 @@
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Service Quality Management 
+API User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF657 
+Team Approved Date: 03-Apr-2020 
+ 
+ 
+Release Status: Pre-production 
+Approval Status: Team Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 47 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that 
+comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, 
+and distributed, in whole or in part, without restriction of any kind, provided that the above copyright 
+notice and this section are included on all such copies and derivative works. However, this document 
+itself may not be modified in any way, including by removing the copyright notice or references to TM 
+FORUM, except as needed for the purpose of developing any document or deliverable produced by a 
+TM FORUM Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in 
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages other than 
+English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its 
+successors or assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM 
+DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY 
+THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 47 
+Table of Contents 
+ 
+NOTICE ...................................................................................................................................................... 2 
+Table of Contents ................................................................................................................................... 3 
+List of Tables ........................................................................................................................................... 5 
+Introduction ............................................................................................................................................. 6 
+SAMPLE USE CASES ....................................................................................................................................... 7 
+Sample Use Cases ...................................................................................................................................... 7 
+Support of polymorphism and extension patterns ..................................................................................... 11 
+RESOURCE MODEL ...................................................................................................................................... 12 
+Managed Entity and Task Resource Models ................................................................................... 12 
+Service Level Objective resource ......................................................................................................... 12 
+Service Level Specification resource .................................................................................................... 16 
+Notification Resource Models ............................................................................................................. 18 
+Service Level Objective Create Event .................................................................................................. 20 
+Service Level Objective Attribute Value Change Event ....................................................................... 20 
+Service Level Objective Delete Event .................................................................................................. 20 
+Service Level Specification Create Event ............................................................................................. 21 
+Service Level Specification Attribute Value Change Event .................................................................. 21 
+Service Level Specification Delete Event ............................................................................................. 22 
+API OPERATIONS ......................................................................................................................................... 23 
+Operations on Service Level Objective ................................................................................................... 23 
+List service level objectives .................................................................................................................. 23 
+Retrieve service level objective ........................................................................................................... 26 
+Create service level objective .............................................................................................................. 28 
+Patch service level objective ................................................................................................................ 34 
+Delete service level objective .............................................................................................................. 36 
+Operations on Service Level Specification .............................................................................................. 37 
+List service level specifications ............................................................................................................ 37 
+Retrieve service level specification ...................................................................................................... 38 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 47 
+Create service level specification ........................................................................................................ 39 
+Patch service level specification .......................................................................................................... 41 
+Delete service level specification ........................................................................................................ 42 
+API NOTIFICATIONS ..................................................................................................................................... 44 
+Register listener ...................................................................................................................................... 44 
+Unregister listener .................................................................................................................................. 45 
+Publish Event to listener ......................................................................................................................... 45 
+Acknowledgements ..................................................................................................................................... 47 
+Version History ........................................................................................................................................ 47 
+Release History........................................................................................................................................ 47 
+Contributors to Document ...................................................................................................................... 47 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 47 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 47 
+Introduction 
+The following document is the Service Quality Management REST API Specification.  
+ 
+As the Digital Economy emerges, the Digital Service Providers, Consumers and Developers are striving to 
+take advantage of Open Digital Eco-system to create, manage and support new Digital Services. 
+In this context, the ability to deliver consistent digital services experience across the Eco-system 
+between different enterprises is considered table-stakes. This focus on digital service delivery and 
+quality has positioned Service Quality Management at the center of Digital Operations.  
+ 
+Gathering data from multiple and heterogeneous data sources across the eco-system, combining them 
+into meaningful service quality metrics is the core activity of a Service Quality Management application 
+to assess the quality as perceived by the consumer.  
+ 
+Once the measurements are available, they must be watched against contracted service level to ensure 
+consistent delivery as committed to in Service Level Agreements (SLA). The Service Quality Management 
+API defines a standard interface designed to simplify the integration task of an SQM application with 
+different partners and respective Digital Operations Centers. This API follows the RESTful design 
+principles. 
+ 
+Through this API, any Enterprise is able to access a Service Quality Management application and extract 
+Service Level Specifications and associated Service Level Objectives (SLO) and their thresholds. They can 
+monitor violation of these thresholds and generate trending reports over a period of time and send 
+threshold crossing alarms so that when service quality degrades and a contracted Service Level 
+Agreement (or one of its constituents) is at risk, appropriate actions can be performed. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 47 
+SAMPLE USE CASES 
+Examples of use cases using Service Quality Management API is as following  
+The Use Case Id, UC_TMF_ServiceQualityManagement_0001 is for the Service Quality Monitoring function. The next use 
+case is UC_TMF_ServiceQualityManagement_0002 for Service Quality Reporting function. 
+ 
+Sample Use Cases  
+Use Case Id 
+UC_TMF_ServiceQualityManagement_0001 
+Use Case Name 
+Service Quality Monitoring 
+Summary 
+The SQM API enables Clients within external or internal systems to 
+access the Service Quality Management Application and monitor 
+the quality of specified services against their SLOs 
+Actor(s) 
+Clients’ resident external and internal to the Enterprise as 
+described in figure 3 are acting as the Consumer. SQM Application 
+is the actor acting as the Producer. 
+Pre-Conditions 
+a) SLAs between Enterprise and Service Provider have been 
+agreed and defined, which represents contractual agreement 
+between parties for quality of specific services 
+b) OLAs (Operations Level Agreements) between Customer Care 
+Operations and Service Management Center of the Service 
+Provider should be agreed and defined, which represents 
+agreement between Departments for quality of specific 
+services 
+c) SLOs representing actual thresholds to be monitored have 
+been defined 
+d) SLOs have been mapped to Key Quality Indicators for the 
+services monitored by the Service Quality Management 
+application 
+Begins When 
+When all pre-conditions have been met and agreed period of 
+monitoring between the Client and Service Quality Management 
+Application starts 
+Description 
+This functionality enables the Client of Service Quality 
+Management Application to Create/Query/Delete Service Level 
+Agreements, its items, Service Level Specifications and Service 
+Level Objectives 
+AND 
+Register for notifications when defined Service Level Objectives 
+are at breach and the contracted SLA or OLA is at risk.  
+These notifications trigger appropriate actions for resolution. 
+Ends When 
+In case of termination of contract or agreement and there is no 
+need for monitoring or the agreed period for monitoring has come 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 47 
+to an end 
+Post-Conditions 
+In case of no breach of Service Level Objectives: 
+1. The Client continues to monitor in an ongoing basis 
+2. Occasionally the client may update and modify the SLAs/SLOs 
+or introduce new services. 
+ 
+In case of breach of Service Level Objectives: 
+1. Notifications are sent to the Client system to ensure 
+preventive measures can be taken and ensure there is no 
+impact to Business and if there is any loss then it can be 
+minimized. 
+2. Notifications are sent to the Service Provider systems so Root 
+Cause Analysis can be performed, and corrective action 
+triggered for resolution. 
+Exceptions 
+1. In case of regular maintenance or system upgrades there may 
+be planned outages that are part of agreed breach of SLOs and 
+generated notifications should be ignored. There should be 
+exception raised with the Client and suggest the notification is 
+misleading ‘Ignore Notifications for this period, due to Routine 
+Maintenance’ 
+3. In case the mandatory details are invalid then an ‘Invalid input’ 
+exception shall be raised along with the details of validation 
+failure and thus the operation is not fulfilled 
+4. In case the authentication of the Requesting Client is not 
+validated by the Service Quality Management application then 
+an ‘Access Denied’ exception shall be raised, and the 
+operation is not fulfilled 
+5. If the SQM Application is unable to accomplish the operation, 
+due to a lack of internal resources then an ‘Unable To Execute’ 
+exception shall be raised, and the operation is not fulfilled.  
+6. 
+If the SQM Application is unable to accomplish the operation, due to any 
+other internal error, then an ‘Internal Error’ exception shall be raised, and 
+the operation is not fulfilled. 
+ 
+ 
+ 
+Use Case Id 
+UC_TMF_ServiceQualityManagement_0002 
+Use Case Name 
+Service Quality Reporting 
+Summary 
+The SQM API enables Clients to define and schedule the delivery 
+of Service Quality Reports.  
+Actor(s) 
+Clients’ resident external and internal to the Enterprise as 
+described in figure 3 are acting as the Consumer. SQM Application 
+is the actor acting as the Producer. 
+Pre-Conditions 
+a) SLAs between Enterprise and Service Provider have been 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 47 
+agreed and defined, which represents contractual agreement 
+between parties for quality of specific services 
+b) OLAs (Operations Level Agreements) between Customer Care 
+Operations and Service Management Center of the Service 
+Provider should be agreed and defined, which represents 
+agreement between Departments for quality of specific 
+services 
+c) SLOs representing actual thresholds to be monitored have 
+been defined 
+d) SLOs have been mapped to Key Quality Indicators for the 
+services monitored by the Service Quality Management 
+application 
+e) Data must have been collected and stored for Service Quality 
+and easily accessible to generate the reports 
+Begins When 
+When all pre-conditions have been met and the Client desires to 
+build different types of reports for a specific period 
+Description 
+SQM API allows a client of the API to trigger the generation of 
+Service Quality Reports, containing information to track how the 
+various Service Level Agreement Items as well as the Service Level 
+Objectives have been delivered over time and there are any 
+observable trends. 
+The reports can be scheduled defining the sample period and the 
+reporting period, as well as other attributes such as the format of 
+the report, how it should be delivered, etc.  
+Ends When 
+In case of success: 
+The Client has received the Reports for the specified period 
+In case of failure: 
+The Client has not received the Reports for the specified period  
+Post-Conditions 
+ 
+Exceptions 
+1. In case of regular maintenance or system upgrades there may 
+be planned outages that are part of agreed breach of SLOs and 
+generated reports for that period should be ignored. There 
+should be exception raised with the Client and suggest the 
+data is misleading ‘Ignore Reports during this period, due to 
+Routine Maintenance’ 
+2. In case the mandatory details are invalid then an ‘Invalid input’ 
+exception shall be raised along with the details of validation 
+failure and thus the operation is not fulfilled 
+3. In case the authentication of the Requesting Client is not 
+validated by the Service Quality Management application then 
+an ‘Access Denied’ exception shall be raised, and the 
+operation is not fulfilled 
+4. If the SQM Application is unable to accomplish the operation, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 47 
+due to a lack of internal resources then an ‘Unable To Execute’ 
+exception shall be raised, and the operation is not fulfilled.  
+5. If the SQM Application is unable to accomplish the operation, 
+due to any other internal error, then an ‘Internal Error’ 
+exception shall be raised, and the operation is not fulfilled. 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 47 
+Support of polymorphism and extension 
+patterns 
+Support of polymorphic collections and types and schema based extension is provided by means of a list 
+of generic meta-attributes that we describe below. Polymorphism in collections occurs when entities 
+inherit from base entities, for instance a VPNServiceLevelSpecification inheriting properties from the 
+ServiceLevelSpecification entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Design Guidelines. 
+The @type attribute provides a way to represent the actual class type of an entity. All resources and 
+sub-resources of this API have a @type attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities to explicitly denote the actual entity type of 
+the referred class. Notice that in reference entities the @type, when used, denotes the class type of the 
+reference itself, and not the class type of the referred object. However, since reference classes are 
+rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of 
+an Entity or to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has 
+been extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 47 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Service Level Objective resource 
+Service level objectives are defined in terms of parameters and metrics, thresholds, and tolerances  
+associated with the parameters. 
+Resource model 
+ 
+Field descriptions 
+ServiceLevelObjective fields 
+conformanceComparator 
+A string. An operator that specifies whether a Service Level 
+Objective is  
+violated above or below the conformanceTarget. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 47 
+conformancePeriod 
+A time period. An interval of time during which the Conformance 
+Target must be measured. 
+conformanceTarget 
+A string. A value used to determine if Service Level Objective is 
+met.  
+The data type should be adjusted case by case. 
+graceTimes 
+A string. The number of times an objective can remain un-updated 
+without  
+a violation of a Service Level Agreement in reference to a 
+measurement period and/or Service Level Agreement reporting 
+period. 
+href 
+A string. The hyperlink to access a service level objective. 
+id 
+A string. The identifier of a service level objectives. 
+name 
+A string. The name of the service level objectives. 
+serviceLevelObjectiveConsequence A list of service level spec consequences 
+(ServiceLevelSpecConsequence [*]). A list of consequences for this 
+objective. 
+serviceLevelObjectiveParameter 
+A service level spec parameter (ServiceLevelSpecParameter). A 
+parameter for this objective. 
+thresholdTarget 
+A string. A value that used to specify when a warning should be 
+used  
+that indicates an objective is danger of not being met. Notice, the 
+data type should be adjusted case by case. 
+tolerancePeriod 
+A time period. A value that specifies the allowable time variation 
+of a conformance. 
+toleranceTarget 
+A string. A value that specifies the allowable variation of a 
+conformance  
+Target. The data type should be adjusted case by case. 
+validFor 
+A time period. A valid duration of a thing. 
+RelatedEntity sub-resource 
+A reference to an entity, where the type of the entity is not known in advance. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 47 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+A string. Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. The role of an entity. 
+ServiceLevelSpecConsequence sub-resource 
+Some consequences for the provider of the Service are resulted when the service level objective 
+does not meet. 
+prescribedAction 
+A string. Recommended remedy for a violated Service Level Objective.  
+This could be a hyperlink to the recommended action. 
+validFor 
+A time period. A valid duration of a thing. 
+ServiceLevelSpecParameter sub-resource 
+Service Level Specification parameters can be one of two types. A Key Quality Indicator (KQI)  
+provides a measurement of a specific aspect of the performance of a Product (i.e., Product  
+Specification, Product Offering, or Product) or a Service (i.e., Service Specification or Service). 
+name 
+A string. The name of the parameter. 
+parameterType 
+A string. Types of Service Level Specification parameters are KQI or KPI. 
+relatedEntity 
+A list of related entities (RelatedEntity [*]). A list of entities related to 
+this parameter. 
+serviceParmCategory 
+A string. A string that specifies whether the Service Level Specification 
+Parameter is technology specific, service specific, or 
+technology/service independent. 
+serviceParmPerspective 
+A string. A string that specifies whether the Service Level Specification 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 47 
+Parameter represents a single user instance parameter or a parameter 
+that represents an aggregation. 
+transformationAlgorithmOfKQI A string. The description of a logical step-by-step procedure used to 
+calculate the value of a KQI. 
+validFor 
+A time period. A valid duration of a thing. 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceLevelObjective' resource object 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+    "id": "3112", 
+    "conformanceCompartor": ">", 
+    "conformanceTargarget": "32", 
+    "conformancePeriod": { 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Upload bandwidth", 
+    "thresholdTarget": "28", 
+    "toleranceTarget": "5", 
+    "tolerancePeriod": { 
+        "endDateTime": "20:00:00", 
+        "startDateTime": "06:00:00" 
+    }, 
+    "serviceLevelObjectiveParameter": { 
+        "name": "bandwidth", 
+        "serviceParmCategory": "service specific", 
+        "serviceParmPerspective": "aggregation", 
+        "transformationAlgorithmOfKQI": "KeepTheSame", 
+        "type": "KPI", 
+        "validFor": { 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "relatedEntity": [ 
+            { 
+                "id": "1988", 
+                "href": "https://host:port/ServiceInventory/service/1988", 
+                "name": "vCPE", 
+                "role": "CPE", 
+                "@referredType": "CPE" 
+            }, 
+            { 
+                "id": "2988", 
+                "href": "https://host:port/ServiceInventory/service/2988", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 47 
+                "name": "GPON", 
+                "role": "access", 
+                "@referredType": "AccessService" 
+            } 
+        ] 
+    }, 
+    "serviceLevelObjectiveConsquence": [ 
+        { 
+            "prescribedAction": "https://service.com/vCPEBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        }, 
+        { 
+            "prescribedAction": "https://service.com/AccessBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+Service Level Specification resource 
+A Service Level Specification represents a pre-defined or negotiated set of Service Level  
+Objectives. In addition, certain consequences are associated with not meeting the Service Level  
+Objectives. Service Level Agreements are expressed in terms of Service Level Specifications. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 47 
+ 
+Field descriptions 
+ServiceLevelSpecification fields 
+description 
+A string. A brief introduction of a service level specification. 
+href 
+A string. The hyperlink to access a service level specification. 
+id 
+A string. The identifier to a service level specification. 
+name 
+A string. The name of Service Level Specification. 
+relatedServiceLevelObjective A list of service level objective references (ServiceLevelObjectiveRef [*]). 
+A list of objectives related to this service level specification. 
+validFor 
+A time period. A valid duration of a thing. 
+ServiceLevelObjectiveRef relationship 
+A set of Service Level Objectives that are contained in the Service Level Specification. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 47 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. The hyperlink to access a service level object. 
+id 
+A string. The identifier of a service level object. 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceLevelSpecification' resource object 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/1112", 
+    "id": "1112", 
+    "description": "Maximum download/upload speed service level", 
+    "name": "Access bandwidth", 
+    "validFor": { 
+        "endDateTime": "2021-05-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "relatedServiceLevelObjective": [ 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+            "id": "3112" 
+        }, 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3113", 
+            "id": "3113" 
+        } 
+    ] 
+} 
+ 
+Notification Resource Models 
+ 
+6 notifications are defined for this API 
+Notifications related to ServiceLevelObjective: 
+    - ServiceLevelObjectiveCreateEvent 
+    - ServiceLevelObjectiveAttributeValueChangeEvent 
+    - ServiceLevelObjectiveDeleteEvent 
+Notifications related to ServiceLevelSpecification: 
+    - ServiceLevelSpecificationCreateEvent 
+    - ServiceLevelSpecificationAttributeValueChangeEvent 
+    - ServiceLevelSpecificationDeleteEvent 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 47 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event 
+structure containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), 
+and the name of the resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked 
+to the resource concerned by the notification using the resource name as access field ("resourceName" 
+placeholder). 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 47 
+Service Level Objective Create Event 
+Notification ServiceLevelObjectiveCreateEvent case for resource ServiceLevelObjective 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceLevelObjectiveCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceLevelObjectiveCreateEvent", 
+     "event": { 
+        "serviceLevelObjective" :  
+            {-- SEE ServiceLevelObjective RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Level Objective Attribute Value Change Event 
+Notification ServiceLevelObjectiveAttributeValueChangeEvent case for resource ServiceLevelObjective 
+Json representation sample 
+We provide below the json representation of an example of a 
+'ServiceLevelObjectiveAttributeValueChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceLevelObjectiveAttributeValueChangeEvent", 
+     "event": { 
+        "serviceLevelObjective" :  
+            {-- SEE ServiceLevelObjective RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Level Objective Delete Event 
+Notification ServiceLevelObjectiveDeleteEvent case for resource ServiceLevelObjective 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceLevelObjectiveDeleteEvent' 
+notification event object 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 47 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceLevelObjectiveDeleteEvent", 
+     "event": { 
+        "serviceLevelObjective" :  
+            {-- SEE ServiceLevelObjective RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Level Specification Create Event 
+Notification ServiceLevelSpecificationCreateEvent case for resource ServiceLevelSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceLevelSpecificationCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceLevelSpecificationCreateEvent", 
+     "event": { 
+        "serviceLevelSpecification" :  
+            {-- SEE ServiceLevelSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Level Specification Attribute Value Change Event 
+Notification ServiceLevelSpecificationAttributeValueChangeEvent case for resource 
+ServiceLevelSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 
+'ServiceLevelSpecificationAttributeValueChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceLevelSpecificationAttributeValueChangeEvent", 
+     "event": { 
+        "serviceLevelSpecification" :  
+            {-- SEE ServiceLevelSpecification RESOURCE SAMPLE --} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 47 
+    } 
+} 
+ 
+Service Level Specification Delete Event 
+Notification ServiceLevelSpecificationDeleteEvent case for resource ServiceLevelSpecification 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceLevelSpecificationDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceLevelSpecificationDeleteEvent", 
+     "event": { 
+        "serviceLevelSpecification" :  
+            {-- SEE ServiceLevelSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 47 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to 
+retrieve a representation 
+of a resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to 
+create a new resource 
+Partial Update of an Entity PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be 
+used to tunnel other 
+request methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+Operations on Service Level Objective 
+List service level objectives 
+  GET /serviceLevelObjective?fields=...&{filtering} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 47 
+Description 
+This operation list service level objective entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving multiple service level objectives. 
+ 
+Request 
+ 
+GET /tmf-api/serviceQualityManagement/v4/serviceLevelObjective?status=inprogress 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+        "id": "3112", 
+        "conformanceComparator": ">", 
+        "conformanceTarget": "32", 
+        "conformancePeriod": { 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "graceTimes": "3", 
+        "name": "Upload bandwidth", 
+        "thresholdTarget": "28", 
+        "toleranceTarget": "5", 
+        "tolerancePeriod": { 
+            "endDateTime": "20:00:00", 
+            "startDateTime": "06:00:00" 
+        }, 
+        "serviceLevelObjectiveParameter": { 
+            "name": "speed", 
+            "serviceParmCategory": "technology specific", 
+            "serviceParmPerspective": " single user instance parameter", 
+            "transformationAlgorithmOfKQI": "KeepTheSame", 
+            "type": "KPI", 
+            "validFor": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 47 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            }, 
+            "relatedEntity": [ 
+                { 
+                    "id": "1988", 
+                    "href": "https://host:port/ServiceInventory/service/1988", 
+                    "name": "vCPE", 
+                    "role": "CPE", 
+                    "@referredType": "CPE" 
+                }, 
+                { 
+                    "id": "2988", 
+                    "href": "https://host:port/ServiceInventory/service/2988", 
+                    "name": "GPON", 
+                    "role": "access", 
+                    "@referredType": "AccessService" 
+                } 
+            ] 
+        }, 
+        "serviceLevelObjectiveConsequence": [ 
+            { 
+                "prescribedAction": "https://service.com/vCPEBandwithAction", 
+                "validFor": { 
+                    "endDateTime": "2021-03-00T00:00:00+01:00", 
+                    "startDateTime": "2020-03-00T00:00:00+01:00" 
+                } 
+            }, 
+            { 
+                "prescribedAction": "https://service.com/AccessBandwithAction", 
+                "validFor": { 
+                    "endDateTime": "2021-03-00T00:00:00+01:00", 
+                    "startDateTime": "2020-03-00T00:00:00+01:00" 
+                } 
+            } 
+        ] 
+    }, 
+    { 
+        "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/4112", 
+        "id": "4112", 
+        "conformanceComparator": "<", 
+        "conformanceTarget": "20", 
+        "conformancePeriod": { 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "graceTimes": "3", 
+        "name": "Jitter", 
+        "thresholdTarget": "18", 
+        "toleranceTarget": "15", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 47 
+        "tolerancePeriod": { 
+            "endDateTime": "20:00:00", 
+            "startDateTime": "06:00:00" 
+        }, 
+        "serviceLevelObjectiveParameter": { 
+            "name": "speed", 
+            "serviceParmCategory": "technology specific", 
+            "serviceParmPerspective": " single user instance parameter", 
+            "transformationAlgorithmOfKQI": "KeepTheSame", 
+            "type": "KPI", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            }, 
+            "relatedEntity": [ 
+                { 
+                    "id": "2988", 
+                    "href": "https://host:port/ServiceInventory/service/2988", 
+                    "name": "GPON", 
+                    "role": "access", 
+                    "@referredType": "AccessService" 
+                } 
+            ] 
+        }, 
+        "serviceLevelObjectiveConsequence": [ 
+            { 
+                "prescribedAction": "https://service.com/jitterAction", 
+                "validFor": { 
+                    "endDateTime": "2021-03-00T00:00:00+01:00", 
+                    "startDateTime": "2020-03-00T00:00:00+01:00" 
+                } 
+            } 
+        ] 
+    } 
+] 
+ 
+Retrieve service level objective 
+  GET 
+/serviceLevelObjective/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a service level objective entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 47 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific service level objective. 
+ 
+Request 
+ 
+GET /tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3830 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+    "id": "3112", 
+    "conformanceComparator": ">", 
+    "conformanceTarget": "32", 
+    "conformancePeriod": { 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Upload bandwidth", 
+    "thresholdTarget": "28", 
+    "toleranceTarget": "5", 
+    "tolerancePeriod": { 
+        "endDateTime": "20:00:00", 
+        "startDateTime": "06:00:00" 
+    }, 
+    "serviceLevelObjectiveParameter": { 
+        "name": "bandwidth", 
+        "serviceParmCategory": "service specific", 
+        "serviceParmPerspective": "aggregation", 
+        "transformationAlgorithmOfKQI": "KeepTheSame", 
+        "type": "KPI", 
+        "validFor": { 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "relatedEntity": [ 
+            { 
+                "id": "1988", 
+                "href": "https://host:port/ServiceInventory/service/1988", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 47 
+                "name": "vCPE", 
+                "role": "CPE", 
+                "@referredType": "CPE" 
+            }, 
+            { 
+                "id": "2988", 
+                "href": "https://host:port/ServiceInventory/service/2988", 
+                "name": "GPON", 
+                "role": "access", 
+                "@referredType": "AccessService" 
+            } 
+        ] 
+    }, 
+    "serviceLevelObjectiveConsequence": [ 
+        { 
+            "prescribedAction": "https://service.com/vCPEBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        }, 
+        { 
+            "prescribedAction": "https://service.com/AccessBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+ 
+Create service level objective 
+  POST /serviceLevelObjective 
+Description 
+This operation creates a service level objective entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ServiceLevelObjective, including any possible rule conditions and applicable default values. Notice that it 
+is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+conformanceComparator 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 47 
+Mandatory Attributes 
+Rule 
+conformanceTarget 
+ 
+serviceLevelObjectiveParameter 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+conformancePeriod 
+ 
+graceTimes 
+ 
+name 
+ 
+serviceLevelObjectiveConsequence 
+ 
+thresholdTarget 
+ 
+tolerancePeriod 
+ 
+toleranceTarget 
+ 
+validFor 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a service level objectve. 
+ 
+Request 
+ 
+POST /tmf-api/serviceQualityManagement/v4/serviceLevelObjective 
+Content-Type: application/json 
+ 
+{ 
+    "conformanceComparator": ">", 
+    "conformanceTarget": "32", 
+    "conformancePeriod": { 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Upload bandwidth", 
+    "thresholdTarget": "28", 
+    "toleranceTarget": "5", 
+    "tolerancePeriod": { 
+        "endDateTime": "20:00:00", 
+        "startDateTime": "06:00:00" 
+    }, 
+    "serviceLevelObjectiveParameter": { 
+        "name": "speed", 
+        "serviceParmCategory": "technology specific", 
+        "serviceParmPerspective": " single user instance parameter", 
+        "transformationAlgorithmOfKQI": "KeepTheSame", 
+        "type": "KPI", 
+        "validFor": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 47 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "relatedEntity": [ 
+            { 
+                "id": "1988", 
+                "href": "https://host:port/ServiceInventory/service/1988", 
+                "name": "vCPE", 
+                "role": "CPE", 
+                "@referredType": "CPE" 
+            }, 
+            { 
+                "id": "2988", 
+                "href": "https://host:port/ServiceInventory/service/2988", 
+                "name": "GPON", 
+                "role": "access", 
+                "@referredType": "AccessService" 
+            } 
+        ] 
+    }, 
+    "serviceLevelObjectiveConsequence": [ 
+        { 
+            "prescribedAction": "https://service.com/vCPEBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        }, 
+        { 
+            "prescribedAction": "https://service.com/AccessBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+    "id": "3112", 
+    "conformanceComparator": ">", 
+    "conformanceTarget": "32", 
+    "conformancePeriod": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 47 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Upload bandwidth", 
+    "thresholdTarget": "28", 
+    "toleranceTarget": "5", 
+    "tolerancePeriod": { 
+        "endDateTime": "20:00:00", 
+        "startDateTime": "06:00:00" 
+    }, 
+    "serviceLevelObjectiveParameter": { 
+        "name": "speed", 
+        "serviceParmCategory": "technology specific", 
+        "serviceParmPerspective": " single user instance parameter", 
+        "transformationAlgorithmOfKQI": "KeepTheSame", 
+        "type": "KPI", 
+        "validFor": { 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "relatedEntity": [ 
+            { 
+                "id": "1988", 
+                "href": "https://host:port/ServiceInventory/service/1988", 
+                "name": "vCPE", 
+                "role": "CPE", 
+                "@referredType": "CPE" 
+            }, 
+            { 
+                "id": "2988", 
+                "href": "https://host:port/ServiceInventory/service/2988", 
+                "name": "GPON", 
+                "role": "access", 
+                "@referredType": "AccessService" 
+            } 
+        ] 
+    }, 
+    "serviceLevelObjectiveConsequence": [ 
+        { 
+            "prescribedAction": "https://service.com/vCPEBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        }, 
+        { 
+            "prescribedAction": "https://service.com/AccessBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 47 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+Here's an example of a request for creating a servive level objective. 
+ 
+Request 
+ 
+POST /tmf-api/serviceQualityManagement/v4/serviceLevelObjective 
+Content-Type: application/json 
+ 
+{ 
+    "conformanceComparator": "<", 
+    "conformanceTarget": "20", 
+    "conformancePeriod": { 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Jitter", 
+    "thresholdTarget": "18", 
+    "toleranceTarget": "15", 
+    "tolerancePeriod": { 
+        "endDateTime": "20:00:00", 
+        "startDateTime": "06:00:00" 
+    }, 
+    "serviceLevelObjectiveParameter": { 
+        "name": "speed", 
+        "serviceParmCategory": "technology specific", 
+        "serviceParmPerspective": " single user instance parameter", 
+        "transformationAlgorithmOfKQI": "KeepTheSame", 
+        "type": "KPI", 
+        "validFor": { 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "relatedEntity": [ 
+            { 
+                "id": "2988", 
+                "href": "https://host:port/ServiceInventory/service/2988", 
+                "name": "GPON", 
+                "role": "access", 
+                "@referredType": "AccessService" 
+            } 
+        ] 
+    }, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 47 
+    "serviceLevelObjectiveConsequence": [ 
+        { 
+            "prescribedAction": "https://service.com/jitterAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/4112", 
+    "id": "4112", 
+    "conformanceComparator": "<", 
+    "conformanceTarget": "20", 
+    "conformancePeriod": { 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Jitter", 
+    "thresholdTarget": "18", 
+    "toleranceTarget": "15", 
+    "tolerancePeriod": { 
+        "endDateTime": "20:00:00", 
+        "startDateTime": "06:00:00" 
+    }, 
+    "serviceLevelObjectiveParameter": { 
+        "name": "speed", 
+        "serviceParmCategory": "technology specific", 
+        "serviceParmPerspective": " single user instance parameter", 
+        "transformationAlgorithmOfKQI": "KeepTheSame", 
+        "type": "KPI", 
+        "validFor": { 
+            "endDateTime": "2021-03-00T00:00:00+01:00", 
+            "startDateTime": "2020-03-00T00:00:00+01:00" 
+        }, 
+        "relatedEntity": [ 
+            { 
+                "id": "2988", 
+                "href": "https://host:port/ServiceInventory/service/2988", 
+                "name": "GPON", 
+                "role": "access", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 47 
+                "@referredType": "AccessService" 
+            } 
+        ] 
+    }, 
+    "serviceLevelObjectiveConsequence": [ 
+        { 
+            "prescribedAction": "https://service.com/jitterAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+ 
+Patch service level objective 
+  PATCH /serviceLevelObjective/{id} 
+Description 
+This operation allows partial updates of a service level objective entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch 
+(http://tools.ietf.org/html/rfc5789) is optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies 
+to the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules 
+on their usage. 
+Patchable Attributes 
+Rule 
+conformanceComparator 
+ 
+conformancePeriod 
+ 
+conformanceTarget 
+ 
+graceTimes 
+ 
+name 
+ 
+serviceLevelObjectiveConsequence 
+ 
+serviceLevelObjectiveParameter 
+ 
+thresholdTarget 
+ 
+tolerancePeriod 
+ 
+toleranceTarget 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 47 
+ 
+Non Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+validFor 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating a service level objective. 
+ 
+Request 
+ 
+PATCH /tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3830 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "conformanceComparator": ">", 
+    "conformanceTarget": "32", 
+    "conformancePeriod": { 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Upload bandwidth", 
+    "thresholdTarget": "28", 
+    "toleranceTarget": "5", 
+    "serviceLevelObjectiveConsequence": [ 
+        { 
+            "prescribedAction": "https://service.com/vCPEBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        }, 
+        { 
+            "prescribedAction": "https://service.com/AccessBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 47 
+Response 
+ 
+200 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+    "id": "3112", 
+    "conformanceComparator": ">", 
+    "conformanceTarget": "32", 
+    "conformancePeriod": { 
+        "endDateTime": "2021-03-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "graceTimes": "3", 
+    "name": "Upload bandwidth", 
+    "thresholdTarget": "28", 
+    "toleranceTarget": "5", 
+    "serviceLevelObjectiveConsequence": [ 
+        { 
+            "prescribedAction": "https://service.com/vCPEBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        }, 
+        { 
+            "prescribedAction": "https://service.com/AccessBandwithAction", 
+            "validFor": { 
+                "endDateTime": "2021-03-00T00:00:00+01:00", 
+                "startDateTime": "2020-03-00T00:00:00+01:00" 
+            } 
+        } 
+    ] 
+} 
+ 
+Delete service level objective 
+  DELETE /serviceLevelObjective/{id} 
+Description 
+This operation deletes a service level objective entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a service level objective. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 47 
+ 
+Request 
+ 
+DELETE /tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3830 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Service Level Specification 
+List service level specifications 
+  GET /serviceLevelSpecification?fields=...&{filtering} 
+Description 
+This operation list service level specification entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving multiple service level specifications. 
+ 
+Request 
+ 
+GET /tmf-api/serviceQualityManagement/v4/serviceLevelSpecification?status=inprogress 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/1112", 
+    "id": "1112", 
+    "description": "Maximum download/upload speed service level", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 47 
+    "name": "Access bandwidth", 
+    "validFor": { 
+        "endDateTime": "2021-05-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "relatedServiceLevelObjective": [ 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+            "id": "3112" 
+        }, 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3113", 
+            "id": "3113" 
+        } 
+    ] 
+} 
+ 
+Retrieve service level specification 
+  GET 
+/serviceLevelSpecification/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a service level specification entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific service level specification. 
+ 
+Request 
+ 
+GET /tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/3830 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 47 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/1112", 
+    "id": "1112", 
+    "description": "Maximum download/upload speed service level", 
+    "name": "Access bandwidth", 
+    "validFor": { 
+        "endDateTime": "2021-05-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "relatedServiceLevelObjective": [ 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+            "id": "3112" 
+        }, 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3113", 
+            "id": "3113" 
+        } 
+    ] 
+} 
+ 
+Create service level specification 
+  POST /serviceLevelSpecification 
+Description 
+This operation creates a service level specification entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ServiceLevelSpecification, including any possible rule conditions and applicable default values. Notice 
+that it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+ 
+relatedServiceLevelObjective 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+description 
+ 
+validFor 
+ 
+ 
+Usage Samples 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 40 of 47 
+Here's an example of a request for creating a service level objectve. 
+ 
+Request 
+ 
+POST /tmf-api/serviceQualityManagement/v4/serviceLevelSpecification 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Maximum download/upload speed service level", 
+    "name": "Access bandwidth", 
+    "validFor": { 
+        "endDateTime": "2021-05-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "relatedServiceLevelObjective": [ 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+            "id": "3112" 
+        }, 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3113", 
+            "id": "3113" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/1112", 
+    "id": "1112", 
+    "description": "Maximum download/upload speed service level", 
+    "name": "Access bandwidth", 
+    "validFor": { 
+        "endDateTime": "2021-05-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "relatedServiceLevelObjective": [ 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+            "id": "3112" 
+        }, 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3113", 
+            "id": "3113" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 41 of 47 
+        } 
+    ] 
+} 
+ 
+Patch service level specification 
+  PATCH /serviceLevelSpecification/{id} 
+Description 
+This operation allows partial updates of a service level specification entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch 
+(http://tools.ietf.org/html/rfc5789) is optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies 
+to the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules 
+on their usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+name 
+ 
+relatedServiceLevelObjective 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+validFor 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating a service level specification. 
+ 
+Request 
+ 
+PATCH /tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/3830 
+Content-Type: application/merge-patch+json 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 42 of 47 
+{ 
+    "name": "SpeedRequirement", 
+    "relatedServiceLevelObjective": [ 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+            "id": "3112" 
+        }, 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3113", 
+            "id": "3113" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/1112", 
+    "id": "1112", 
+    "description": "Maximum download/upload speed service level", 
+    "name": "SpeedRequirement", 
+    "validFor": { 
+        "endDateTime": "2021-05-00T00:00:00+01:00", 
+        "startDateTime": "2020-03-00T00:00:00+01:00" 
+    }, 
+    "relatedServiceLevelObjective": [ 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3112", 
+            "id": "3112" 
+        }, 
+        { 
+            "href": "https://host:port/tmf-api/serviceQualityManagement/v4/serviceLevelObjective/3113", 
+            "id": "3113" 
+        } 
+    ] 
+} 
+ 
+Delete service level specification 
+  DELETE /serviceLevelSpecification/{id} 
+Description 
+This operation deletes a service level specification entity. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 43 of 47 
+ 
+Usage Samples 
+Here's an example of a request for deleting a service level specification. 
+ 
+Request 
+ 
+DELETE /tmf-api/serviceQualityManagement/v4/serviceLevelSpecification/3830 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 44 of 47 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample 
+REST notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the 
+REST Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its 
+health state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service 
+if it does not support multiple listeners. In this case DELETE /api/hub/{id} must be called before an 
+endpoint can be created again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 45 of 47 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The 
+/client/listener url is the callback url passed when registering the listener. 
+Behavior 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 46 of 47 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be 
+replaced by one of the notification types supported by this API (see Notification resources Models 
+section) and EVENT BODY refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST 
+Design Guidelines. 
+ 
+ 
+ 
+
+
+Acknowledgements 
+ 
+Version History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 1.0 
+04/15/2017 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Mariano Belaunde 
+Orange Labs 
+First Release of the Document.  
+Release 2.0 
+11/06/2018 
+Mariano Belaunde  
+Orange Labs 
+Alignment with Guidelines 3.0 
+Version 4.0.0 
+03-Apr-2020 
+Knut Johannessen  
+Telenor 
+New version based on new schema 
+aligned with V4 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Pre-production 
+03-Apr-2020 
+Knut Johannessen  
+Telenor 
+New version based on new schema 
+aligned with V4 
+ 
+Contributors to Document 
+ 
+ 
+ 
+ 
+
+

@@ -1,0 +1,1345 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Resource Reservation API User 
+Guide 
+ 
+ 
+ 
+ 
+ 
+TMF716 
+Release 20.0.0 
+February 2020 
+ 
+ 
+Latest Update: TM Forum Release 20.0.0 Member Evaluation 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 37 
+NOTICE 
+Copyright © TM Forum 2019. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 37 
+Table of Contents 
+ 
+NOTICE ............................................................................................................................. Error! Bookmark not defined. 
+Table of Contents ............................................................................................................................................................ 2 
+List of Tables .................................................................................................................... Error! Bookmark not defined. 
+Introduction .................................................................................................................................................................... 4 
+SAMPLE USE CASES ......................................................................................................................................................... 6 
+Support of polymorphism and extension patterns ........................................................................................................ 7 
+RESOURCE MODEL .......................................................................................................................................................... 8 
+Managed Entity and Task Resource Models ............................................................................................................... 8 
+FIRST resource .......................................................................................................... Error! Bookmark not defined. 
+Notification Resource Models .................................................................................................................................. 16 
+First Notification ....................................................................................................... Error! Bookmark not defined. 
+API OPERATIONS ........................................................................................................................................................... 22 
+VERB  url ....................................................................................................................... Error! Bookmark not defined. 
+API NOTIFICATIONS....................................................................................................................................................... 33 
+Register listener ........................................................................................................................................................ 33 
+Unregister listener .................................................................................................................................................... 35 
+Publish Event to listener ........................................................................................................................................... 35 
+Acknowledgements ...................................................................................................................................................... 37 
+Release History ......................................................................................................................................................... 37 
+Contributors to Document ........................................................................................................................................ 37 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 37 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 37 
+Introduction 
+ 
+The following document is the user guide of the REST API for Any management. It includes the model definition as 
+well as all available operations. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 37 
+SAMPLE USE CASES 
+Reader will find example of use cases using Usage API in “Open Digital Business Scenarios and Use Cases” 
+document. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 37 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities, for instance a BillingAccount and SettlementAccount inheriting properties from the abstract Account 
+entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Account instances some may be instances of BillingAccount where other could be instances of SettlementAccount. 
+The @type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance an AccountRef object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as BillingAccountRef or SettlementAccountRef, and not the class type of 
+the referred object. However since reference classes are rarely sub-classed, @type is generally not useful in 
+reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 37 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Resource Reservation resource 
+ 
+Resource model 
+ 
+Field descriptions 
+ResourceReservation fields 
+cancellationDate 
+A string. Date when the reservation is cancelled. 
+cancellationReason 
+A string. Reason why the reservation is cancelled. 
+completionDate 
+A string. Date when the reservation was completed. 
+creationDate 
+A date time (DateTime). Date when the reservation was created. 
+description 
+A string. free-text description of the reservation. 
+expectedCompletionDate 
+A string. Expected completion date amended by the provider. 
+requestedCompletionDate A string. Requested completion date from the requestor perspective. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 37 
+requestedStartDate 
+A string. Reservation fulfillment start date wished by the requestor. This is used when, 
+for any reason, requestor cannot allow the reservation to begin before a specific date. 
+stateChangeDate 
+A date time (DateTime). The date and time the state changed. 
+stateChangeReason 
+A string. The reason for changing the state. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+reservationItem 
+A list of reservation items (ReservationItem [*]). 
+channel 
+A channel reference (ChannelRef). The channel to which the resource reference to. 
+e.g. channel for selling product offerings, channel for opening a trouble ticket etc.. 
+relatedEntity 
+A list of related entities (RelatedEntity [*]). A reference to an entity, where the type of 
+the entity is not known in advance. 
+relatedParty 
+A list of related party references (RelatedPartyRef [*]). A related party defines party or 
+party role linked to a specific entity. 
+reservationItem 
+A list of reservation items (ReservationItem [*]). 
+reservationPeriod 
+A time period. Period of time for which the target entity is to be in a reserved state. 
+state 
+A reservation state type (ReservationStateType). 
+validFor 
+A time period. A period of time, either as a deadline (endDateTime only) a 
+startDateTime only, or both. 
+ApplicableTimePeriod sub-resource 
+The period of time for which Capacity or CapacityDemand applies. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+dayOfWeek 
+A string. A day or days representing when the schedule is applicable. For example 2, 3 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 37 
+represent Monday and Tuesday. 
+fromToDateTime 
+A time period. The period of time for which the schedule is applicable.  
+ 
+Instance values are mutually exclusive with daysOfWeek values. 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the from and to 
+DateTime attributes.  
+ 
+Possible values are "open", "closed", "closedBottom" and "closedTop". 
+validFor 
+A time period. A period of time, either as a deadline (endDateTime only) a 
+startDateTime only, or both. 
+Capacity sub-resource 
+Specific ability of an entity measured in quantity and units of quantity over an extended period. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+applicableTimePeriod 
+A list of applicable time periods (ApplicableTimePeriod [*]). The period of time for 
+which Capacity or CapacityDemand applies. 
+capacityAmount 
+A capacity amount (CapacityAmount). quantity that defines the Capacity. 
+capacitySpec 
+A capacity spec reference (CapacitySpecRef). capacity specification. 
+place 
+A place ref or value (PlaceRefOrValue). Used to define a place useful for the resource.  
+ 
+Used to indicate reserved resources. 
+plannedOrActualCapacity A string. An indicator that specifies whether the capacity is planned or actual. 
+relatedCapacity 
+A list of capacity references (CapacityRef [*]). related capacity. 
+CapacityAmount sub-resource 
+Quantity that defines the Capacity. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 37 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+capacityAmount 
+A string. A value and units that define the CapacityAmount, such as 10000 ea, 10B 
+Mb. Instance values are mutually exclusive with From and To capacityAmounts and 
+range interval. 
+capacityAmountFrom 
+A string. The low range value that a Capacity Amount can take on. 
+capacityAmountTo 
+A string. The upper range value that CapacityAmount can take on. 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the capacityAmount 
+From and capacityAmountTo attributes.  
+ 
+Possible values are "open", "closed", "closedBottom" and "closedTop". 
+PlaceRefOrValue sub-resource 
+A place defines a place described by reference or by value linked to a specific entity. The polymorphic attributes 
+@type, @schemaLocation & @referredType are related to the place entity and not the RelatedPlaceRefOrValue 
+class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+RelatedEntity sub-resource 
+A reference to an entity, where the type of the entity is not known in advance. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 37 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. The role of an entity. 
+ReservationItem sub-resource 
+An identified part of the reservation. A reservation is decomposed into one or more reservation items. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+action 
+A reservation item action type (ReservationItemActionType). action to be performed 
+on the entity. 
+appliedCapacity 
+A capacity (Capacity). Specific ability of an entity measured in quantity and units of 
+quantity over an extended period. 
+capacityDemand 
+A capacity (Capacity). Specific ability of an entity measured in quantity and units of 
+quantity over an extended period. 
+id 
+A string. Identifier of the item. 
+quantity 
+An integer. 
+relatedEntity 
+A list of related entities (RelatedEntity [*]). A reference to an entity, where the type of 
+the entity is not known in advance. 
+relatedParty 
+A list of related party references (RelatedPartyRef [*]). A related party defines party or 
+party role linked to a specific entity. 
+reservationPeriod 
+A time period. Period of time for which the target entity is to be in a reserved state. 
+state 
+A reservation item state type (ReservationItemStateType). 
+stateChangeDate 
+A date time (DateTime). The date and time the state changed. 
+stateChangeReason 
+A string. The reason for changing the state. 
+validFor 
+A time period. A period of time, either as a deadline (endDateTime only) a 
+startDateTime only, or both. 
+CapacityRef relationship 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 37 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+CapacitySpecRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ChannelRef relationship 
+The channel to which the resource reference to. e.g. channel for selling product offerings, channel for opening a 
+trouble ticket etc.. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the channel. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 37 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+RelatedPartyRef relationship 
+RelatedParty reference. A related party defines party or party role linked to a specific entity. 
+href 
+A string. Reference of the related party, could be a party reference or a party role 
+reference. 
+id 
+A string. Unique identifier of a related party. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related party. 
+role 
+A string. Role of the related party. 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceReservation' resource object 
+{ 
+    "cancellationDate": "a string ...", 
+    "cancellationReason": "a string ...", 
+    "completionDate": "a string ...", 
+    "creationDate": "2023-06-02T00:00", 
+    "description": "This  resource reservation ...", 
+    "expectedCompletionDate": "a string ...", 
+    "requestedCompletionDate": "a string ...", 
+    "requestedStartDate": "a string ...", 
+    "stateChangeDate": "2023-06-02T00:00", 
+    "stateChangeReason": "a string ...", 
+    "href": "a Uri ...", 
+    "id": "a Uri ...", 
+    "reservationItem": [ 
+        {} 
+    ], 
+    "channel": {}, 
+    "relatedEntity": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 37 
+    ], 
+    "reservationPeriod": {}, 
+    "state": {}, 
+    "validFor": {} 
+} 
+Cancel Resource Reservation resource 
+ 
+Resource model 
+ 
+Field descriptions 
+CancelResourceReservation fields 
+cancellationReason 
+A string. Reason why the reservation is cancelled. 
+effectiveCancellationDate 
+A string. Date when the reservation is cancelled. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 37 
+requestedCancellationDate A string. Date when the submitter wants the reservation to be cancelled. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+resourceReservation 
+A resource reservation reference (ResourceReservationRef). 
+state 
+A task state type (TaskStateType). Possible values for the state of a task. 
+ResourceReservationRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelResourceReservation' resource object 
+{ 
+    "cancellationReason": "a string ...", 
+    "effectiveCancellationDate": "a string ...", 
+    "requestedCancellationDate": "a string ...", 
+    "href": "a Uri ...", 
+    "id": "a Uri ...", 
+    "resourceReservation": {}, 
+    "state": {} 
+} 
+ 
+Notification Resource Models 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 37 
+ 
+8 notifications are defined for this API 
+Notifications related to ResourceReservation: 
+    - ResourceReservationCreateEvent 
+    - ResourceReservationAttributeValueChangeEvent 
+    - ResourceReservationDeleteEvent 
+    - ResourceReservationStateChangeEvent 
+    - ResourceReservationInformationRequiredEvent 
+Notifications related to CancelResourceReservation: 
+    - CancelResourceReservationCreateEvent 
+    - CancelResourceReservationStateChangeEvent 
+    - CancelResourceReservationInformationRequiredEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 37 
+ 
+Resource Reservation Create Event 
+Notification ResourceReservationCreateEvent case for resource ResourceReservation 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceReservationCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 37 
+    "eventType":"ResourceReservationCreateEvent", 
+     "event": { 
+        "resourceReservation" :  
+            {-- SEE ResourceReservation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Reservation Attribute Value Change Event 
+Notification ResourceReservationAttributeValueChangeEvent case for resource ResourceReservation 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceReservationAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceReservationAttributeValueChangeEvent", 
+     "event": { 
+        "resourceReservation" :  
+            {-- SEE ResourceReservation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Reservation Delete Event 
+Notification ResourceReservationDeleteEvent case for resource ResourceReservation 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceReservationDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceReservationDeleteEvent", 
+     "event": { 
+        "resourceReservation" :  
+            {-- SEE ResourceReservation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Reservation State Change Event 
+Notification ResourceReservationStateChangeEvent case for resource ResourceReservation 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 37 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceReservationStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceReservationStateChangeEvent", 
+     "event": { 
+        "resourceReservation" :  
+            {-- SEE ResourceReservation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Resource Reservation Information Required Event 
+Notification ResourceReservationInformationRequiredEvent case for resource ResourceReservation 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceReservationInformationRequiredEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ResourceReservationInformationRequiredEvent", 
+     "event": { 
+        "resourceReservation" :  
+            {-- SEE ResourceReservation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Cancel Resource Reservation Create Event 
+Notification CancelResourceReservationCreateEvent case for resource CancelResourceReservation 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelResourceReservationCreateEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelResourceReservationCreateEvent", 
+     "event": { 
+        "cancelResourceReservation" :  
+            {-- SEE CancelResourceReservation RESOURCE SAMPLE --} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 37 
+    } 
+} 
+ 
+Cancel Resource Reservation State Change Event 
+Notification CancelResourceReservationStateChangeEvent case for resource CancelResourceReservation 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelResourceReservationStateChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelResourceReservationStateChangeEvent", 
+     "event": { 
+        "cancelResourceReservation" :  
+            {-- SEE CancelResourceReservation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Cancel Resource Reservation Information Required Event 
+Notification CancelResourceReservationInformationRequiredEvent case for resource CancelResourceReservation 
+Json representation sample 
+We provide below the json representation of an example of a 
+'CancelResourceReservationInformationRequiredEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelResourceReservationInformationRequiredEvent", 
+     "event": { 
+        "cancelResourceReservation" :  
+            {-- SEE CancelResourceReservation RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 37 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Complete Update of an Entity 
+PUT Resource 
+PUT must be used to 
+completely update a resource 
+identified by its resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be 
+used to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Resource Reservation 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 37 
+List resource reservations 
+  GET /resourceReservation?fields=...&{filtering} 
+Description 
+This operation list resource reservation entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving ResourceReservation resources. 
+ 
+Request 
+ 
+GET /tmf-api/resourceReservation/v4/resourceReservation 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "cancellationDate": "a string ...", 
+    "cancellationReason": "a string ...", 
+    "completionDate": "a string ...", 
+    "creationDate": "2023-06-02T00:00", 
+    "description": "This  resource reservation ...", 
+    "expectedCompletionDate": "a string ...", 
+    "requestedCompletionDate": "a string ...", 
+    "requestedStartDate": "a string ...", 
+    "stateChangeDate": "2023-06-02T00:00", 
+    "stateChangeReason": "a string ...", 
+    "href": "a Uri ...", 
+    "id": "a Uri ...", 
+    "reservationItem": [ 
+        {} 
+    ], 
+    "channel": {}, 
+    "relatedEntity": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+    ], 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 37 
+    "reservationPeriod": {}, 
+    "state": {}, 
+    "validFor": {} 
+} 
+] 
+ 
+Retrieve resource reservation 
+  GET /resourceReservation/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a resource reservation entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a ResourceReservation resource. 
+ 
+Request 
+ 
+GET /tmf-api/resourceReservation/v4/resourceReservation/a Uri ... 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "cancellationDate": "a string ...", 
+    "cancellationReason": "a string ...", 
+    "completionDate": "a string ...", 
+    "creationDate": "2023-06-02T00:00", 
+    "description": "This  resource reservation ...", 
+    "expectedCompletionDate": "a string ...", 
+    "requestedCompletionDate": "a string ...", 
+    "requestedStartDate": "a string ...", 
+    "stateChangeDate": "2023-06-02T00:00", 
+    "stateChangeReason": "a string ...", 
+    "href": "a Uri ...", 
+    "id": "a Uri ...", 
+    "reservationItem": [ 
+        {} 
+    ], 
+    "channel": {}, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 37 
+    "relatedEntity": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+    ], 
+    "reservationPeriod": {}, 
+    "state": {}, 
+    "validFor": {} 
+} 
+ 
+Create resource reservation 
+  POST /resourceReservation 
+Description 
+This operation creates a resource reservation entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ResourceReservation, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+ 
+Non Mandatory Attributes 
+Rule 
+cancellationDate 
+ 
+cancellationReason 
+ 
+completionDate 
+ 
+creationDate 
+ 
+description 
+ 
+expectedCompletionDate 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+stateChangeDate 
+ 
+stateChangeReason 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+reservationItem 
+ 
+channel 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+reservationItem 
+ 
+reservationPeriod 
+ 
+state 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 37 
+validFor 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a ResourceReservation resource. In this example the request only 
+passes mandatory attributes. 
+ 
+Request 
+ 
+POST /tmf-api/resourceReservation/v4/resourceReservation 
+Content-Type: application/json 
+ 
+{} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "href": "a Uri ...", 
+    "id": "a Uri ..." 
+} 
+ 
+Patch resource reservation 
+  PATCH /resourceReservation/{id} 
+Description 
+This operation allows partial updates of a resource reservation entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+cancellationDate 
+ 
+cancellationReason 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 37 
+completionDate 
+ 
+creationDate 
+ 
+description 
+ 
+expectedCompletionDate 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+stateChangeDate 
+ 
+stateChangeReason 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+reservationItem 
+ 
+channel 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+reservationItem 
+ 
+reservationPeriod 
+ 
+state 
+ 
+validFor 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a ResourceReservation resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/resourceReservation/v4/resourceReservation/a Uri ... 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "cancellationDate": "a string ...", 
+    "cancellationReason": "a string ...", 
+    "completionDate": "a string ...", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 37 
+    "creationDate": "2023-06-02T00:00", 
+    "description": "This  resource reservation ...", 
+    "expectedCompletionDate": "a string ...", 
+    "requestedCompletionDate": "a string ...", 
+    "requestedStartDate": "a string ...", 
+    "stateChangeDate": "2023-06-02T00:00", 
+    "stateChangeReason": "a string ...", 
+    "href": "a Uri ...", 
+    "id": "a Uri ...", 
+    "reservationItem": [ 
+        {} 
+    ], 
+    "channel": {}, 
+    "relatedEntity": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+    ], 
+    "reservationPeriod": {}, 
+    "state": {}, 
+    "validFor": {}, 
+    "name": "new name" 
+} 
+ 
+Delete resource reservation 
+  DELETE /resourceReservation/{id} 
+Description 
+This operation deletes a resource reservation entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a ResourceReservation resource. 
+ 
+Request 
+ 
+DELETE /tmf-api/resourceReservation/v4/resourceReservation/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 37 
+Operations on Cancel Resource Reservation 
+List cancel resource reservations 
+  GET /cancelResourceReservation?fields=...&{filtering} 
+Description 
+This operation list cancel resource reservation entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving CancelResourceReservation resources. 
+ 
+Request 
+ 
+GET /tmf-api/resourceReservation/v4/cancelResourceReservation 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "cancellationReason": "a string ...", 
+    "effectiveCancellationDate": "a string ...", 
+    "requestedCancellationDate": "a string ...", 
+    "href": "a Uri ...", 
+    "id": "a Uri ...", 
+    "resourceReservation": {}, 
+    "state": {} 
+} 
+] 
+ 
+Retrieve cancel resource reservation 
+  GET /cancelResourceReservation/{id}?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 37 
+This operation retrieves a cancel resource reservation entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a CancelResourceReservation resource. 
+ 
+Request 
+ 
+GET /tmf-api/resourceReservation/v4/cancelResourceReservation/a Uri ... 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "cancellationReason": "a string ...", 
+    "effectiveCancellationDate": "a string ...", 
+    "requestedCancellationDate": "a string ...", 
+    "href": "a Uri ...", 
+    "id": "a Uri ...", 
+    "resourceReservation": {}, 
+    "state": {} 
+} 
+ 
+Create cancel resource reservation 
+  POST /cancelResourceReservation 
+Description 
+This operation creates a cancel resource reservation entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+CancelResourceReservation, including any possible rule conditions and applicable default values. Notice that it is up 
+to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+ResourceReservation 
+ 
+resourceReservation 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 37 
+Non Mandatory Attributes 
+Rule 
+cancellationReason 
+ 
+effectiveCancellationDate 
+ 
+requestedCancellationDate 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+state 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships when 
+creating a CancelResourceReservation resource. 
+Context 
+Mandatory Sub-Attributes 
+ResourceReservation 
+id 
+ 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+resource reservation id must exist 
+When creating a cancel resource reservation (post) the id, href, effectiveCancellationDate and state fields must 
+not be valued in the request 
+ 
+Usage Samples 
+Here's an example of a request for creating a CancelResourceReservation resource. In this example the request 
+only passes mandatory attributes. 
+ 
+Request 
+ 
+POST /tmf-api/resourceReservation/v4/cancelResourceReservation 
+Content-Type: application/json 
+ 
+{ 
+    "resourceReservation": {} 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "href": "a Uri ...", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 37 
+    "id": "a Uri ...", 
+    "resourceReservation": {} 
+} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 37 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 37 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 37 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 37 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 37 
+Acknowledgements 
+ 
+Release History 
+ 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 1.0 
+04/15/2017 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Mariano Belaunde 
+Orange Labs 
+First Release of the Document.  
+Release 2.0 
+11/06/2018 
+Mariano Belaunde  
+Orange Labs 
+Alignment with Guidelines 3.0 
+ 
+Contributors to Document 
+ 
+ 
+ 
+ 
+ 
+ 
+
+

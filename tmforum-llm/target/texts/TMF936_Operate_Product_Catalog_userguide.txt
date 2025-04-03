@@ -1,0 +1,2399 @@
+TM Forum Specification 
+Open Gateway Operate API - 
+Product Catalog User Guide
+Maturity Level: TBD
+Team Approved Date: TBD
+Approval Status: TBD
+IPR Mode: RAND
+Release Status: TBD
+Version TBD
+TMF936
+
+
+ NOTICE
+Copyright © TM Forum 2025. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+
+
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Channel Partner model overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Operate APIs. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+Scope . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+Limitations of this specification version . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+Catalog example . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
+Language . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+Push mode . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+Pull mode . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
+Use-Cases. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
+UC 1: Full offerings Syncronization. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
+UC 2: New Product Offering Syncronization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
+UC 3: Deactivating or Suspending an existing Product Offering. . . . . . . . . . . . . . . . . .  10
+UC 4: Updating an existing Product Offering. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+UC 5: Deleting an existing Product Offering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+API Versioning. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+Schemas lifecycleStatus . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  13
+ProductOffering lifecycleStatus . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  13
+ProductSpecification and ProductOfferingPrice lifecycleStatus . . . . . . . . . . . . . . . . . .  14
+ProductSpecification lifecycleStatus . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  14
+ProductOfferingPrice lifecycleStatus. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  14
+ProductOffering and ProductSpecification version . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  15
+Version Based Filtering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  15
+Strongly typed schemas . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  17
+String property limits . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  17
+Support of polymorphism and extension patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  18
+RESOURCE MODEL . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+OpenGatewayProductOffering resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+OpenGatewayProductSpecification resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  31
+ApiProductSpecification resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  36
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  42
+OpenGatewayProductOffering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  43
+API OPERATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  50
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  51
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  51
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  52
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  52
+
+
+ 
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  54
+Release History. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  54
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  54
+
+
+ Introduction
+The following document is intended to guide developers and implementation on catalog
+definition and syncronization in the context of the GSMA Open Gateway initiative.
+Additional use cases related to Channel Partner integration will come in future versions,
+including more functionalities like service assurance/operations or consumption reporting.
+Channel Partner model overview
+Open Gateway Channel Partner model is composed of different actors:
+• End Users who are both subscribers to Operators and users of the application published
+by the Developer
+• App Developer (ApplicationOwner) create applications that are acquired and utilized by
+end users
+• Channel Partners aggregate Operator’s CAMARA standardised APIs to build Open
+Services and implement Operator end-point routing based on final user identification on
+the networks.
+• Operators expose telco capabilities through CAMARA standardised APIs and could
+partner with Channel Partners to enable the Services that they offer to Developers.
+The following is an example of interaction between the actors on the model:
+"Funtastic Games" is a company developing and publishing videogames (the Developer)
+
+
+ 
+and hosts its servers on the cloud services from the cloud provider "Aero Cloud" which
+commercialises Services as well (the Channel Partner). Funtastic Games wants to publish a
+game (the application) called "EvolveQuest" which features the network capability to assign
+custom quality when used in cloud gaming mode on mobile devices (Open Gateway
+QualityOnDemand product). Two different gamers playing EvolveQuest in Brazil are
+subscribers to different Operator’s mobile network access services, resulting in the following
+relational diagram:
+Operate APIs
+As indicated, the Channel Partner indirect model enables a single channel for tenant
+applications to gain access to capabilities from multiple Operators, without the need for the
+customer to set up a contractual relationship with each of them. It is clear the need to
+provide certain additional functionalities from the Operators to the Channel Partner to enable
+the commercial model.
+Therefore, in addition to the CAMARA APIs, the Operate APIs are proposed for offering
+programmable access to Operation, Administration and Management (OAM) capabilities to
+facilitate the integration of the Open Gateway NaaS Platform with Channel Partner. These
+APIs provide all the transversal/non-service specific functionalities that are required to make
+a commercial offering out of the Service APIs and Service Management APIs, making them
+operable and monetizable. Examples of functions provided by the Operate APIs include
+ordering, monitoring, trouble ticketing, accounting, billing, payment, etc. and also API
+discovery, user registration and consent management, etc.
+
+
+ 
+Scope
+The proposal for this Operate API is focused on defining the specific functionality in the
+Operate APIs that enables the management of the catalog of Offerings (APIs) between
+Channel Partners and Operators. This functionality is focused on enabling automation when
+managing a common interface to the catalog between the different Operators (producers of
+the catalog offerings) and the channel partner (consumer of the offerings), so a
+synchronization is always ensured when new offerings are created, or when an existing
+offering is updated or deprecated.
+Operators provide Channel Partners with offerings, each of them is defined as the
+combination of:
+• A CAMARA standardized API available on the Operator’s API exposure platform.
+• A concrete CAMARA standardized API scope endpoint/functionality, defined as a specific
+API technical endpoint scope of a CAMARA API. For example. "check-sim-swap", " A
+usage purpose, based on a set of standardized W3C purposes (https://w3c.github.io/dpv/
+dpv/#vocab-purpose) that the offering can be used for. Charging models and a pricing list
+(oneShot, recurring, usage based, …). Different characteristics associated to each APIs,
+that can be used to configure offerings during the ordering. Different services associated
+to the offering APIs such customer support.
+• A description of the offering and its value proposition. The minimum and maximum
+versions of the CAMARA API supported by the Operator. Specific terms & conditions of
+use, including SLAs and privacy requirements associated to the purpose.
+Additionally, Channel Partners, as Open Gateway offerings Customer/Distributor, will also
+host and manage their own catalog beyond the offerings from the different Operators that
+are exposed by the Channel Partner.
+The purpose of this TM Forum API specification is to propose a data model to define API
+offerings (includes TMF entities ProductOffering and ProductSpecification) that will enable
+synchronization between the catalog of a Operator and a Channel Partner’s catalog, and the
+catalog of the Channel partner
+
+
+ 
+The Channel partner will require two different set of offerings as part of its internal catalog:
+• One set of offerings that include the offerings from each Operator.
+• One set of offerings that include the proper offering that the Channel Partner is exposing
+to its own customers. Depending on the aggregation model, Channel Partner will create
+this catalog with:
+• Marketplace Aggregator: Directly a replica of the Operator’s offerings, aligning the
+characteristics for being able to provide an aggregated offering. e.g. Sim Swap OGW
+API.
+• Wholesale Reseller: A Channel Partner own offering, which is composed by (at least) the
+aligned OGW offering of all the integrated Operators. e.g. Antifraud scoring API,
+composed by OGW Sim Swap and others.
+
+
+ Sample Use Cases
+This Operate API takes into account both models defined in GSMA Playbook :
+In the Wholesale Reseller model, the service is fully managed by the Channel Partner. In the
+Aggregated Marketplace model, the Channel Partner leverages its Marketplace to
+individually expose the APIs. To ensure a coherent user experience, a UX layer is applied,
+creating a unified interface for the Developer.
+For both cases, the Catalog API supports two mechanisms for synchronization:
+• Push mode: Channel Partner subscribes to Operator’s catalog events. Notifications are
+send by Operator and received by Channel Partner in case any modification is
+implemented, so Channel partner is informed about any change in the Operator’s offers.
+• Pull mode: Channel Parner proactively query for offers, either for all offers, or possibly
+with filters on: creation date (e.g. all new offer since last month), name (e.g. all offers on
+qod) or other fields.
+Limitations of this specification version
+This first version of this Operate API exposes only GET Operations on atomic and simple
+bundles 
+of 
+ProductOffering 
+(using 
+BundledProductOffering 
+schema 
+instead 
+of
+BundledGroupProductOffering schema) and ProductSpecification. ProductOfferingPrices are
+atomic, there are not yet bundles of ProductOfferingPrice. There are for now 3 types of
+ProductOfferingPrice possible : usage, oneTime and recurring. Prices alterations are not yet
+implemented (discount, tax…). For now prices values are not linked to productSpecification
+characteristic values (example on Usage Volume offering : if volume = 1000 API calls then
+price value is x EUR, if volume = 500 API calls, price value is y EUR).
+ProductSpecification and ProductOfferingUsagePriceCharge don’t contain yet the reference
+of the productUsageSpecification because this resource will be available in the DCS Product
+Usage API, not yet specified.
+Categories are not needed for now.
+Agreement between Channel Partner and Operator for Open Gateway is not yet represented
+in the API. It would be useful to permit a Channel Partner that have 2 aggreements with
+same Operator to filter the catalog based on the Agreement id.
+For now the need for a qualification to help Channel Partner to retrieve the offer it is eligible
+to is not confirmed. This specification is simple, giving an access for Channel Partner to the
+Operator catalog. Channel Partner is supposed to be identified in the API call so that the
+Operator answer is only a restrictive view of what the Channel Partner is allowed to view.
+A need to be confirmed for qualification would be this one : a Customer wants to know which
+ProductOffering is eligible for order based on a context, for instance, for a specific
+Application, the result could be the whole Catalog of offers except the ProductOffering that
+where already order by the Customer for this Application, or any restriction on the response
+guided by another rule (like if Customer owns this product, it can’t order this one again). For
+now, in the absence of such a qualification process, the product order will respond with an
+error is the order is made for a non eligible offer.
+
+
+ 
+This version of the specification proposes only notifications for ProductOffering. As
+ProductOffering contains reference to all other subresources passed by reference (at least
+ProductSpecification) with their version, each change on these referred resources that is
+changing the value of one of its attributes, imply the change of the version of this resource.
+So this change of version of the referred resource (for instance the ProductSpecification) is
+visible 
+into 
+the 
+ProductOffering 
+payload, 
+so 
+may 
+generate 
+a 
+notification
+ProductOfferingAttributeValueChangeEvent.
+Requirement for cascading of Channel Partner (a Channel Partner exposing TMF936 to
+another Channel Partner) is not taken into account yet.
+There are at least 2 kinds of ProductSpecification that are identified :
+• ApiProductSpecification : this is based on a Customer Facing Service providing a service
+accessible by API. Typically a single Camara API.
+• UsageVolumeProductSpecification : this allows to manage balance (or bucket) of usage
+that apply to one or several ApiProductSpecification on a set of specific
+ProductUsageSpecification. At this time this API specification doesn’t propose a specific
+schema for this type of ProductSpecification.
+Documentation of ProductSpecification is using the standard Attachment schema, that could
+be specialized for best interoperability.
+Further versions of this API specification may take into account these above limitations if the
+requirements are confirmed.
+Catalog example
+The examples in the OAS and User Guide are based on this ficticious catalog model. For
+now, only the standalone product offering from this schema is reflected in the OAS and User
+Guide examples. Future versions may include more complete examples to reflect the bundle
+offer and also to reflect migration of ProductOffering or of ProductSpecification.
+Disclaimer: All prices examples appearing in this specification are fictitious. Any
+resemblance to real offers is purely coincidental.
+Bundle offer:
+
+
+ 
+Standalone offer:
+Having the 2 levels of ProductSpecificaiton and ProductOffering permits Channel Partner to
+know which are the offerings made upon a same unique ProductSpecification.
+Language
+Multi language is supported using the optional standard Accept-Language header. Each API
+call will return payload for only 1 language as provided by the client. Default language is
+English.
+Push mode
+Operator provides a notification (hub) resource to permit API client (Channel Partner) to
+subscribe and receive events sent by the Catalog component. The following events are
+covered in the API
+• ProductOffering create event When an Operator creates a new ProductOffering.
+
+
+ • ProductOffering 
+attribute 
+(property) 
+value 
+change 
+event: 
+When 
+an 
+existing
+ProductOffering is updated in the Operator.
+• ProductOffering deletion event: When an existing ProductOffering is deleted in the
+Operator.
+• ProductOffering state change event: When an existing ProductOffering lifecycleStatus is
+updated in the Operator.
+Pull mode
+These steps are to be considered when a Channel Partner wants to retrieve the list of
+offer(s) of an Operator, or wants the details of an specific offer.
+• Retrieve complete offer list.
+• Retrieve specific offer details.
+Use-Cases
+Utilizing the above mentioned Capabilities the following use-cases can be realized
+UC 1: Full offerings Syncronization
+On Initial onboarding (or upon need) Channel partners will inquire the CSPs for full offering
+details. This use-case expects both consumers and providers to be able to handle full
+payload of all available offerings
+Operation :
+• GET /productOffering
+UC 2: New Product Offering Syncronization
+On Creation of a new product offering CSPs would notify the subscribed Channel Partners of
+the creation of new offering. The Channel Partner can then inquire the CSP for the details of
+the created offering using the ID recieved upon notification
+
+
+ 
+Operation :
+• ProductOfferingCreateEvent
+• GET /productOffering/{id}
+UC 3: Deactivating or Suspending an existing Product Offering
+CSP modifies product offering status would notify the subscribed Channel Partners of the
+status change action. The channel partners can optionaly inquire for more details of the
+offering using the ID recieved upon notification
+Operation :
+
+
+ • ProductOfferingStateChangeEvent
+• GET /productOffering/{id}
+UC 4: Updating an existing Product Offering
+CSP modifies product offering attributes or associated entities (Product Offering Price,
+TermsOrConditions, Product Specification) updates
+[UpdatingAnExistingProductOffering] | UpdatingAnExistingProductOffering.png
+Operation :
+• ProductOfferingAttributeValueChangeEvent
+• GET /productOffering/{id}
+UC 5: Deleting an existing Product Offering
+CSP deletes product offering (removing it from the catalog) would notify the subscribed
+Channel Partners of the status change action.
+Operation :
+• ProductOfferingDeleteEvent
+API Versioning
+• Support to different API versions at ApiProductSpecification
+
+
+ 
+ApiProductSpecification model SHALL support the typical lifecycle of API specifications:
+• ApiProductSpecifications MAY evolve organically by adding or removing supported API
+versions in time. Organical evolution may be applied if new API versions do not add
+significant 
+privacy 
+requirements 
+or 
+feature 
+changes, 
+otherwise 
+new
+ApiProductSpecification 
+and 
+OpenGatewayProductOffering 
+creation 
+should 
+be
+considered by product managers.
+• Each API version may have specific characteristics (path, scopes, purpose, authorization
+grant types, etc.).
+• The catalog model SHALL support at API version level the concept of API lifecycle: An
+API version MAY be declared active (it can be provisioned in TMF931 Onboarding API)
+or retired (it can be used by Applications already provisioned but cannot be provisioned
+for new Applications).
+• OpenGatewayProductOffering, ApiProductSpecification and API version definitions
+SHALL be able to use the resouce versioning model (See TMF763 REST Design
+Guidelines).
+◦Resource version identifiers MAY use the semantic versioning X.Y.Z version format
+where X identifies a major version, Y is the minor version and Z a fix.
+◦OpenGatewayProductOffering resource SHALL be able to be versioned in the
+catalog.
+◦OpenGatewayProductOffering 
+resource 
+SHALL 
+be 
+able 
+to 
+reference 
+an
+ApiProductSpecification by id and version.
+◦An API Version addition or deletion, or status update to an ApiProductSpecification
+MAY imply the definition of a new version of that specification.
+◦A new ApiProductSpecification MAY imply the definition of a new version of
+OpenGatewayProductOffering referencing it by id and version.
+• Therefore, the TMF931 Onboarding Operate API MAY use this TMF936 catalog API to:
+
+
+ 
+◦Provision OpenGatewayProductOfferings based on its ApiProductSpecification,
+including the available API versions for each ApiProduct.
+◦Manage the configuration of available ApiProducts to Applications and updating the
+availability of a set of API versions when the ApiProductSpecification is updated.
+◦Inventory ApiProduct SHALL be able to reference its OpenGatewayProductOffering
+and ApiProductSpecificaiton by id and version.
+Schemas lifecycleStatus
+The lifecycleStatus proposal comes from TMF620 Product Catalog v5 API User Guide.
+This context restriction is that lifecycleStatus "launched" is proposed only for
+ProductOffering. "launched" attribute is not needed for other schemas as only the
+ProductOffering is really launched by marketing team.
+For same ProductOffering : only 1 version should have lifecycleStatus at "launched". For
+other schemas : only 1 version should have lifecycleStatus at "active". The response on the
+GET /entity MUST answer with the latest version of the entity.
+For a productOffering with "launched" lifecycleStatus, all the other sub resource
+ProductSpecification, ProductOfferingPrice and ProductOfferingTermOrCondition should
+have at least 1 instance with "active" lifecycleStatus (if sub resource presence is relevant).
+ProductOffering lifecycleStatus
+When the macro conception of a catalog element is started the first status of the later is “In
+Study”.
+When the conception of the catalog element is accepted, its status is changed to “In Design”.
+
+
+ 
+If the design is approved its status is changed to “In Test”.
+When the test is OK then its status is changed to “Active”.When a catalog element is in a
+“Active” status it means, it has been validated and tested, but it is still not available for
+customers.
+When the beginning of marketing is reached, its status is changed to “Launched”. At this
+moment, customers can buy it.
+If the catalog element is not launched, its status is changed to “Retired”.
+The same status is achieved when a catalog element reaches the end of marketing.
+The “Retired” status means it cannot be sold to any new customers, but previous customers
+can still have it.
+When no more customer holds the catalog element, its status is changed to “Obsolete”
+meaning it can be removed from the catalog.
+ProductSpecification and ProductOfferingPrice lifecycleStatus
+ProductSpecification lifecycleStatus
+ProductOfferingPrice lifecycleStatus
+
+
+ 
+ProductOffering and ProductSpecification version
+These schemas MAY use the semantic versioning X.Y.Z version format where X identifies a
+major version, Y is the minor version and Z a fix. Catalogue entity versioning follows the
+Versioned Entity Model Pattern from TMF763 REST Design Guidelines.
+ProductOffering and ProductSpecification may be referenced by id and version. For
+example, an ApiProductOffering may be ordered at TMF931 Open Gateway Onboarding and
+Ordering API by requesting a particular version of the offering provided for its catalogue.
+Indeed, an ApiProductOffering may also reference an ApiProductSpecification by id and
+version.
+{
+    "@type": "ProductOfferingRef",
+    "@referredType": "ApiProductOffering",
+    "id": "233434444434353",
+    "version": "1.2.0"
+}
+Version Based Filtering
+For Query entities Operation, The version selector keyword can be used in the query string,
+where the value of the keyword is the semantic version, version=major.minor.patch.
+For example: version=1.1.0. Only the equals operator = is supported for the version selector.
+Other operators are not supported.
+• If version selector is set to a specific version, the operation applies to that version of the
+entity.
+• If version selector is not present, the operation applies to the current version of the entity.
+
+
+ • If version selector is set to the reserved value all (valid only for GET on the entity
+collection), the GET operation applies to all versions of the entity.
+This applies only when version is specified directly in the query string. If version is specified
+within a filter or json-path parameter, it will be treated like any other expression and will be
+applied to the version property of the entity.
+Entity versions can be retrieved using the version query param with the equal = operator
+and will return an ApiProductOffering if it matches with the version property of the stored
+entity version.
+For example, an ApiProductOffering version may be retrieved with next operation
+GET /apiProductOffering/233434444434353?version=1.2.0
+{
+    "id": "233434444434353",
+    "href":
+"/productcatalogManagement/apiProductOffering/233434444434353?version=1.2.0",
+    "@type": "apiProductOffering",
+    "version": "1.2.0",
+    "versionMetadata": {
+        "id": "1123347354",
+        "href":
+"/productCatalogManagement/apiProductOffering/233434444434353/version/1123347354",
+        "@type": "Version",
+        "version": "1.0",
+        "isCurrent": false,
+        "creationDate": "2013-04-19T16:42:23-04:00",
+        "@versionedEntityType": "apiProductOffering",
+        "versionedBy": {
+            "role": "catalogAdmin",
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "partyOrPartyRole": {
+                "id": "EMP44346235734235125456252",
+                "href": "/partyRoleManagement/partyRole/EMP44346235734235125456252",
+                "name": "Joan Doe",
+                "partyID": "PTY354623346253346344562452",
+                "partyName": "Joan Doe",
+                "@type": "PartyRoleRef",
+                "@referredType": "Employee"
+            }
+        }
+    },
+    "lastUpdate": "2013-04-19T16:42:23-04:00",
+    "name": "Virtual Storage Medium",
+    "description": "Virtual Storage Medium",
+    "isBundle": "true",
+    "lifecycleStatus": "Inactive"
+}
+Retrieve a specific version of a versioned entity
+When the regular GET retrieve endpoint is invoked on a versioned entity, the current version
+is returned.
+
+
+ 
+Querying versioned entities
+When the GET list/search endpoint (on the entity collection) is invoked on a versioned entity,
+and the version selector is not specified as part of the filter expression, the result set will
+return only current versions of entities that match the filter
+Query all version metadata for an entity
+If there is no version number mentioned, it returns the meta data for all the versions of
+specific product offering. The query looks like this:
+GET <basepath>/<api>/<entity>/<id>/version
+Strongly typed schemas
+A complete description on how to use strongly typed json schemas may be done for a future
+version.
+String property limits
+As most of the string properties in Operate APIs have no limit and it may cause
+interoperability issues, here are some guidelines depending on the property type:
+Property Type
+Max. Length (chars)
+Format
+URL / URI
+2048 (common
+browsers' max length)
+URI/URL format as
+defined in
+[RFC3986](https://datatr
+acker.ietf.org/doc/html/
+rfc3986)
+id
+200
+description
+1000
+other
+200
+NOTE: Default JSON string encoding UTF-8 is assumed. UUID format is
+recommended 
+for 
+ids: 
+32 
+char 
+String 
+format 
+defined 
+in
+[RFC4122](https://datatracker.ietf.org/doc/html/rfc4122). 
+For 
+example:
+f81d4fae-7dec-11d0-a765-00a0c91e6bf6
+
+
+ Support of polymorphism and extension
+patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below. Polymorphism in
+collections 
+occurs 
+when 
+entities 
+inherit 
+from 
+base 
+entities, 
+for 
+instance 
+a
+ApiProductSpecification 
+inheriting 
+properties 
+from 
+the 
+abstract
+OpenGatewayProductSpecification entity.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines, Part 2 (TMF630).
+The @type attribute provides a way to represent the actual class type of an entity. For
+example, within a list of OpenGatewayProductSpecification instances some may be
+instances 
+of 
+ApiProductSpecification 
+where 
+other 
+could 
+be 
+instances 
+of
+UsageVolumeProductSpecification (not present in this specification version). The @type
+gives this information. All resources and sub-resources of this API have a @type attributes
+that can be provided when this is useful.
+The @referredType can be used within reference entities (like for instance a
+ProductSpecificationRef object) to explicitly denote the actual entity type of the referred
+class. Notice that in reference entities the @type, when used, denotes the class type of the
+reference itself, such as ApiProductSpecificationRef, and not the class type of the referred
+object. However since reference classes are rarely sub-classed, @type is generally not
+useful in reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+
+
+ RESOURCE MODEL
+Managed Entity and Task Resource Models
+OpenGatewayProductOffering resource
+The specialized ProductOffering for GSMA Open Gateway Operate API.
+Resource model
+Figure 1 - OpenGatewayProductOffering
+Figure 2 - DCSProductOffering
+
+
+ 
+Field descriptions
+OpenGatewayProductOffering fields
+allowedAction
+An OpenGatewayAllowedProductAction. Defines an action that
+can be taken on a product in the inventory as part of a product
+order. It is expected that this entity will be attached to product
+catalog items such as specifications and offerings. This DCS
+schema is a subset of the standard ProductOffering schema, that
+can be extended for specific contexts. This must be done reusing
+existing attributes in the standard AllowedProductAction schema
+or adding specific attributes.
+bundledProductOffering
+A BundledProductOffering. Represents a containment of a
+product offering within another product offering, including
+specification of cardinality (e.g. is the bundled offering
+mandatory, how many times can it be instantiated in the parent
+product, etc.).
+category
+A DCSCategoryRef. Reference to a category in the catalog. This
+DCS schema is a subset of the standard CategoryRef schema,
+that can be extended for specific contexts. This must be done
+reusing existing attributes in the standard CategoryRef schema
+or adding specific attributes.
+description
+A String. Description of the productOffering.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+lastUpdate
+A DateTime. Date and time of the last update.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status with limited
+enum values for Open Gateway context. ENUMERATED with
+values:
+* inTest
+* active
+* launched
+* retired
+* obsolete
+name
+A String. Name of the productOffering.
+productOfferingPrice
+An OpenGatewayProductOfferingPrice. ProductOfferingPrice
+applied to the ProductOffering.
+OpenGatewayProductOfferingPrice can be instanciated as
+* OpenGatewayProductOfferingOneTimePriceCharge
+* OpenGatewayProductOfferingRecurringPriceCharge
+* OpenGatewayProductOfferingUsagePriceCharge
+productOfferingTermOrConditionS
+pecification
+An OpenGatewayProductOfferingTermOrConditionSpecification.
+Specification of Terms or Conditions of the ProductOffering.
+productSpecification
+A ProductSpecificationRef. ProductSpecification reference. A
+product Specification represents entities that are orderable from
+the provider of the catalog.
+
+
+ 
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. Version of the ProductOffering. Version MAY use the
+semantic versioning X.Y.Z version format where X identifies a
+major version, Y is the minor version and Z a fix.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+BundledProductOffering sub-resource fields
+bundledProductOfferingOption
+A BundledProductOfferingOption. A set of numbers that specifies
+the lower and upper limits for a ProductOffering that can be
+procured as part of the related BundledProductOffering. Values
+can range from 0 to unbounded.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+version
+A String. Version of the product offering.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ProductOfferingRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+version
+A String. Version of the product offering.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+
+
+ 
+ProductOfferingRef can be instanciated as
+* BundledProductOffering
+bundledProductOfferingOption
+This property is present in subclasses
+OpenGatewayProductOfferingPrice sub-resource fields
+description
+A String. Description of the productOfferingPrice.
+id
+A String. Unique identifier of the ProductOfferingPrice within the
+array.
+lastUpdate
+A DateTime. The last update time of this ProductOfferingPrice.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status with limited
+enum values for Open Gateway context. ENUMERATED with
+values:
+* inTest
+* active
+* retired
+* obsolete
+name
+A String. Name of the productOfferingPrice.
+priceType
+A String. Used to indicate the priceType with limited enum values
+for Open Gateway context. Kept for base schema
+ProductOfferingPrice backward compatibility reason.
+ENUMERATED with values:
+* usage
+* oneTime
+* recurring
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayProductOfferingPrice can be instanciated as
+* OpenGatewayProductOfferingOneTimePriceCharge
+* OpenGatewayProductOfferingRecurringPriceCharge
+* OpenGatewayProductOfferingUsagePriceCharge
+price
+This property is present in subclasses
+recurringChargePeriodLength
+This property is present in subclasses
+recurringChargePeriodType
+This property is present in subclasses
+OpenGatewayProductOfferingRecurringPriceCharge sub-resource fields
+description
+A String. Description of the productOfferingPrice.
+id
+A String. Unique identifier of the ProductOfferingPrice within the
+array.
+
+
+ 
+lastUpdate
+A DateTime. The last update time of this ProductOfferingPrice.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status with limited
+enum values for Open Gateway context. ENUMERATED with
+values:
+* inTest
+* active
+* retired
+* obsolete
+name
+A String. Name of the productOfferingPrice.
+price
+A Money. A base / value business entity used to represent
+money.
+priceType
+A String. Used to indicate the priceType with limited enum values
+for Open Gateway context. Kept for base schema
+ProductOfferingPrice backward compatibility reason.
+ENUMERATED with values:
+* usage
+* oneTime
+* recurring
+recurringChargePeriodLength
+An Integer. The period of the recurring charge: 1, 2, …
+recurringChargePeriodType
+A String. The period to repeat the application of the price Could
+be month, week… ENUMERATED with values:
+* day
+* week
+* month
+* year
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayProductOfferingUsagePriceCharge sub-resource fields
+description
+A String. Description of the productOfferingPrice.
+id
+A String. Unique identifier of the ProductOfferingPrice within the
+array.
+lastUpdate
+A DateTime. The last update time of this ProductOfferingPrice.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status with limited
+enum values for Open Gateway context. ENUMERATED with
+values:
+* inTest
+* active
+* retired
+* obsolete
+
+
+ 
+name
+A String. Name of the productOfferingPrice.
+price
+A Money. A base / value business entity used to represent
+money.
+priceType
+A String. Used to indicate the priceType with limited enum values
+for Open Gateway context. Kept for base schema
+ProductOfferingPrice backward compatibility reason.
+ENUMERATED with values:
+* usage
+* oneTime
+* recurring
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayProductOfferingOneTimePriceCharge sub-resource fields
+description
+A String. Description of the productOfferingPrice.
+id
+A String. Unique identifier of the ProductOfferingPrice within the
+array.
+lastUpdate
+A DateTime. The last update time of this ProductOfferingPrice.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status with limited
+enum values for Open Gateway context. ENUMERATED with
+values:
+* inTest
+* active
+* retired
+* obsolete
+name
+A String. Name of the productOfferingPrice.
+price
+A Money. A base / value business entity used to represent
+money.
+priceType
+A String. Used to indicate the priceType with limited enum values
+for Open Gateway context. Kept for base schema
+ProductOfferingPrice backward compatibility reason.
+ENUMERATED with values:
+* usage
+* oneTime
+* recurring
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+
+
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSProductOfferingPrice sub-resource fields
+description
+A String. Description of the productOfferingPrice.
+id
+A String. Unique identifier of the ProductOfferingPrice within the
+array.
+lastUpdate
+A DateTime. The last update time of this ProductOfferingPrice.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status. Values
+must be taken from this list (or extented it adding more values for
+a specific context) : inStudy, inDesign, inTest, active, launched,
+retired, obsolete, rejected.
+name
+A String. Name of the productOfferingPrice.
+priceType
+A String. Used to indicate the current lifecycle status. Values
+must be taken from this list (or extented it adding more values for
+a specific context) : usage, oneTime, recurring, discountFee,
+discountPercentage, taxFee, taxPercentage, taxRule,
+replacementUsage, remplacementOneTime,
+replacementRecurring.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSProductOfferingPrice can be instanciated as
+* OpenGatewayProductOfferingPrice
+ProductSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+targetProductSchema
+A TargetProductSchema. The reference object to the schema
+and type of target product which is described by product
+specification.
+version
+A String. Version of the product specification.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+
+
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayProductOfferingTermOrConditionSpecification sub-resource fields
+attachment
+An OpenGatewayFileAttachment. Binary file attachment.
+description
+A String. A narrative that explains in detail what the
+productOfferingTermOrConditionSpecification is.
+name
+A String. Name of the
+productOfferingTermOrConditionSpecification.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSProductOfferingTermOrConditionSpecification sub-resource fields
+description
+A String. A narrative that explains in detail what the
+productOfferingTermOrConditionSpecification is.
+name
+A String. Name of the
+productOfferingTermOrConditionSpecification.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSProductOfferingTermOrConditionSpecification can be
+instanciated as
+* OpenGatewayProductOfferingTermOrConditionSpecification
+attachment
+This property is present in subclasses
+OpenGatewayAllowedProductAction sub-resource fields
+action
+A String. ENUMERATED with values:
+* add
+* modify
+* delete
+id
+A String. Unique identifier of the AllowedProductAction within the
+array.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+
+
+ 
+@targetProductOrderItemSchema A String. Url of schema of the specialized ProductOrderItem that
+has to be used for the order. Example : http://mycsp.com:8080/
+DCSProductOrderItemAddProductSpecificationXXX.schema.json
+or http://mycsp.com:8080/
+DCSProductOrderItemAddProductOfferingXXX.schema.json.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSAllowedProductAction sub-resource fields
+action
+A String. The name of the action. Values must be taken from this
+list (or extented it adding more values) : add, modify, delete.
+id
+A String. Unique identifier of the AllowedProductAction within the
+array.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@targetProductOrderItemSchema A String. Url of schema of the specialized ProductOrderItem that
+has to be used for the order. Example : http://mycsp.com:8080/
+DCSProductOrderItemAddProductSpecificationXXX.schema.json
+or http://mycsp.com:8080/
+DCSProductOrderItemAddProductOfferingXXX.schema.json.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSAllowedProductAction can be instanciated as
+* OpenGatewayAllowedProductAction
+BundledProductOfferingOption sub-resource fields
+numberRelOfferDefault
+An Integer. Default number of produc offereings that should be
+procured as part of the related BundledProductOffering.
+numberRelOfferLowerLimit
+An Integer. Lower limit for a product offering that can be procured
+as part of the related BundledProductOffering.
+numberRelOfferUpperLimit
+An Integer. Upper limit for a product offering that can be procured
+as part of the related BundledProductOffering.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+TargetProductSchema sub-resource fields
+@schemaLocation
+A Uri. This field provides a link to the schema describing the
+target product.
+@type
+A String. Class type of the target product.
+
+
+ 
+OpenGatewayFileAttachment sub-resource fields
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+ENUMERATED with values:
+* termsAndConditions
+* developerDocumentation
+content
+A Base64. The actual contents of the attachment object, if
+embedded, encoded as base64.
+mimeType
+A String. ENUMERATED with values:
+* application/pdf
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayAttachment sub-resource fields
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+ENUMERATED with values:
+* termsAndConditions
+* developerDocumentation
+mimeType
+A String. A technical characterization of the attachment content
+format using IETF Mime Types.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayAttachment can be instanciated as
+* OpenGatewayFileAttachment
+* OpenGatewayURLAttachment
+content
+This property is present in subclasses
+url
+This property is present in subclasses
+OpenGatewayURLAttachment sub-resource fields
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+ENUMERATED with values:
+* termsAndConditions
+* developerDocumentation
+mimeType
+A String. ENUMERATED with values:
+* text/html
+
+
+ 
+url
+A String. Uniform Resource Locator, is a web page address (a
+subset of URI).
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'OpenGatewayProductOffering'
+resource object.
+{
+  "id": "2d4ef4d3-08ce-441d-ac76-133b6dad0ccb",
+  "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productOffering/2d4ef4d3-08ce-441d-ac76-
+133b6dad0ccb",
+  "@type": "OpenGatewayProductOffering",
+  "@baseType": "DCSProductOffering",
+  "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayProductOffering.schema.json",
+  "lifecycleStatus": "launched",
+  "version": "1.0.0",
+  "name": "device-location-verification-antifraud-offering-standalone",
+  "description": "Device Location Verification product offering standalone, for
+antifraud purpose, accessible with Camara API.",
+  "lastUpdate": "2023-07-01T00:00:00Z",
+  "validFor": {
+    "startDateTime": "2023-07-01T00:00:00Z",
+    "endDateTime": "2025-09-01T00:00:00Z"
+  },
+  "allowedAction": [
+    {
+      "@type": "OpenGatewayAllowedProductAction",
+      "@baseType": "DCSAllowedProductAction",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+      "id": "1",
+      "action": "add",
+      "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemAddDeviceLocationVerifica
+tionAntifraudStandaloneProductOffering.schema.json"
+    },
+    {
+      "@type": "OpenGatewayAllowedProductAction",
+      "@baseType": "DCSAllowedProductAction",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+      "id": "2",
+      "action": "delete",
+      "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemDeleteDeviceLocationVerif
+icationAntifraudStandaloneProductOffering.schema.json"
+    }
+
+
+   ],
+  "productSpecification": {
+    "id": "4b6591ef-5ede-4885-9543-0c5e9070ade9",
+    "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productSpecification/4b6591ef-5ede-4885-
+9543-0c5e9070ade9",
+    "name": "device-location-verification-antifraud",
+    "version": "1.0.0",
+    "targetProductSchema": {
+      "@type": "ApiProductDeviceLocationVerificationAntifraud",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiProductDeviceLocationVerificationAntif
+raud_v1.0.0.schema.json"
+    },
+    "@referredType": "ApiProductSpecification",
+    "@type": "ProductSpecificationRef",
+    "@baseType": "ProductSpecificationRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/ProductSpecificationRef.schema.json"
+  },
+  "productOfferingTermOrConditionSpecification": {
+    "@type": "OpenGatewayProductOfferingTermOrConditionSpecification",
+    "@baseType": "DCSProductOfferingTermOrConditionSpecification",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayProductOfferingTermOrCondition
+Specification.schema.json",
+    "name": "device-location-antifraud-standalone-offering-term-or-condition-for-
+ApplicationOwner",
+    "description": "Terms and conditions to be approved by Application Owner at the
+order.",
+    "attachment": {
+      "@type": "OpenGatewayFileAttachment",
+      "@baseType": "OpenGatewayAttachment",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayFileAttachment.schema.json",
+      "content": "...binaryFile...",
+      "mimeType": "application/pdf",
+      "attachmentType": "termsAndConditions"
+    }
+  },
+  "productOfferingPrice": [
+    {
+      "id": "1",
+      "@type": "OpenGatewayProductOfferingUsagePriceCharge",
+      "@baseType": "OpenGatewayProductOfferingPrice",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayProductOfferingUsagePriceCharg
+e.schema.json",
+      "lifecycleStatus": "active",
+      "name": "device-location-antifraud-standalone-usage-price-1",
+      "description": "Device Location Verification for Antifraud standalone product
+offering price, usage price. 8 ? per API call for usage verify.",
+      "lastUpdate": "2023-09-01T00:00:00Z",
+      "validFor": {
+        "startDateTime": "2023-07-01T00:00:00Z",
+        "endDateTime": "2025-09-01T00:00:00Z"
+      },
+      "priceType": "usage",
+      "price": {
+        "value": 8,
+        "unit": "EUR"
+      }
+    }
+
+
+   ]
+}
+OpenGatewayProductSpecification resource
+The specialized ProductSpecification for GSMA Open Gateway Operate API.
+Resource model
+Figure 3 - OpenGatewayProductSpecification
+Field descriptions
+OpenGatewayProductSpecification fields
+allowedAction
+An OpenGatewayAllowedProductAction. Defines an action that
+can be taken on a product in the inventory as part of a product
+order. It is expected that this entity will be attached to product
+catalog items such as specifications and offerings. This DCS
+schema is a subset of the standard ProductOffering schema, that
+can be extended for specific contexts. This must be done reusing
+existing attributes in the standard AllowedProductAction schema
+or adding specific attributes.
+attachment
+An OpenGatewayAttachment. Generic schema for attachment in
+Open Gateway context.
+OpenGatewayAttachment can be instanciated as
+* OpenGatewayFileAttachment
+* OpenGatewayURLAttachment
+category
+A DCSCategoryRef. Reference to a category in the catalog. This
+DCS schema is a subset of the standard CategoryRef schema,
+that can be extended for specific contexts. This must be done
+reusing existing attributes in the standard CategoryRef schema
+or adding specific attributes.
+description
+A String. A narrative that explains in detail what the product
+specification is.
+
+
+ 
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+lastUpdate
+A DateTime. Date and time of the last update.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status with limited
+enum values for Open Gateway context. ENUMERATED with
+values:
+* inTest
+* active
+* retired
+* obsolete
+name
+A String. Name of the product specification.
+productSpecificationRelationship
+A DCSProductSpecificationRelationship. A migration,
+substitution, dependency or exclusivity relationship
+between/among product specifications. This DCS schema is a
+subset of the standard ProductSpecificationRelationship schema,
+that can be extended for specific contexts. This must be done
+reusing existing attributes in the standard
+ProductSpecificationRelationship schema or adding specific
+attributes.
+targetProductSchema
+A TargetProductSchema. The reference object to the schema
+and type of target product which is described by product
+specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. Version of the ProductSpecification. Version MAY use
+the semantic versioning X.Y.Z version format where X identifies a
+major version, Y is the minor version and Z a fix.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayProductSpecification can be instanciated as
+* ApiProductSpecification
+apiStandardName
+This property is present in subclasses
+apiVersionInformation
+This property is present in subclasses
+OpenGatewayAttachment sub-resource fields
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+ENUMERATED with values:
+* termsAndConditions
+* developerDocumentation
+mimeType
+A String. A technical characterization of the attachment content
+format using IETF Mime Types.
+
+
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayAttachment can be instanciated as
+* OpenGatewayFileAttachment
+* OpenGatewayURLAttachment
+content
+This property is present in subclasses
+url
+This property is present in subclasses
+OpenGatewayURLAttachment sub-resource fields
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+ENUMERATED with values:
+* termsAndConditions
+* developerDocumentation
+mimeType
+A String. ENUMERATED with values:
+* text/html
+url
+A String. Uniform Resource Locator, is a web page address (a
+subset of URI).
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OpenGatewayFileAttachment sub-resource fields
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+ENUMERATED with values:
+* termsAndConditions
+* developerDocumentation
+content
+A Base64. The actual contents of the attachment object, if
+embedded, encoded as base64.
+mimeType
+A String. ENUMERATED with values:
+* application/pdf
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+
+
+ 
+OpenGatewayAllowedProductAction sub-resource fields
+action
+A String. ENUMERATED with values:
+* add
+* modify
+* delete
+id
+A String. Unique identifier of the AllowedProductAction within the
+array.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@targetProductOrderItemSchema A String. Url of schema of the specialized ProductOrderItem that
+has to be used for the order. Example : http://mycsp.com:8080/
+DCSProductOrderItemAddProductSpecificationXXX.schema.json
+or http://mycsp.com:8080/
+DCSProductOrderItemAddProductOfferingXXX.schema.json.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSAllowedProductAction sub-resource fields
+action
+A String. The name of the action. Values must be taken from this
+list (or extented it adding more values) : add, modify, delete.
+id
+A String. Unique identifier of the AllowedProductAction within the
+array.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@targetProductOrderItemSchema A String. Url of schema of the specialized ProductOrderItem that
+has to be used for the order. Example : http://mycsp.com:8080/
+DCSProductOrderItemAddProductSpecificationXXX.schema.json
+or http://mycsp.com:8080/
+DCSProductOrderItemAddProductOfferingXXX.schema.json.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+DCSAllowedProductAction can be instanciated as
+* OpenGatewayAllowedProductAction
+Json representation sample(s)
+We 
+provide 
+below 
+a 
+JSON 
+representation 
+as 
+example 
+of 
+the
+'OpenGatewayProductSpecification' resource object.
+{
+  "id": "4b6591ef-5ede-4885-9543-0c5e9070ade9",
+  "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productSpecification/4b6591ef-5ede-4885-
+9543-0c5e9070ade9",
+
+
+   "name": "device-location-verification-antifraud",
+  "version": "1.0.0",
+  "@type": "ApiProductSpecification",
+  "@baseType": "OpenGatewayProductSpecification",
+  "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiProductSpecification.schema.json",
+  "lifecycleStatus": "active",
+  "description": "Device Location Verification product specification, for antifraud
+purpose, accessible with Camara API.",
+  "lastUpdate": "2023-09-23T16:42:23Z",
+  "validFor": {
+    "startDateTime": "2023-07-01T00:00:00Z",
+    "endDateTime": "2025-09-01T00:00:00Z"
+  },
+  "allowedAction": [
+    {
+      "@type": "OpenGatewayAllowedProductAction",
+      "@baseType": "DCSAllowedProductAction",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+        "id": "1",
+      "action": "add",
+      "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemAddDeviceLocationVerifica
+tionAntifraudProductSpecification.schema.json"
+    },
+    {
+      "@type": "OpenGatewayAllowedProductAction",
+      "@baseType": "DCSAllowedProductAction",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+        "id": "2",
+      "action": "delete",
+      "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemDeleteDeviceLocationVerif
+icationAntifraudProductSpecification.schema.json"
+    }
+  ],
+  "targetProductSchema": {
+    "@type": "ApiProductDeviceLocationVerificationAntifraud",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiProductDeviceLocationVerificationAntif
+raud_v1.0.0.schema.json"
+  },
+  "apiStandardName": "CAMARA",
+  "apiVersionInformation": [
+    {
+      "@type":"ApiVersionInformation",
+      "@baseType":"ApiVersionInformation",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiVersionInformation.schema.json",
+      "apiName": "location-verification",
+      "apiVersion": "1.0.0",
+      "apiBasePath": "/location-verification/v1",
+      "apiStatus": "active",
+      "apiGrantInformation": [
+        {
+          "@type": "ApiGrantInformation",
+          "@baseType": "ApiGrantInformation",
+          "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiGrantInformation.schema.json",
+
+
+           "id": "1",
+          "purpose": "dpv:FraudPreventionAndDetection",
+          "legalBasis": "dpv:Consent",
+          "scope": [
+            "location-verification:verify"
+          ],
+          "grantType": [
+            "authorization_code",
+            "urn:openid:params:grant-type:ciba"
+          ]
+        }
+      ]
+    }
+  ],
+  "attachment": [
+    {
+      "@type": "OpenGatewayURLAttachment",
+      "@baseType": "OpenGatewayAttachment",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayURLAttachment.schema.json",
+      "url":
+"https://mycsp.com:8080/OpenGateway/documentation/DeviceLocationVerificationDevelope
+rGuide.html",
+      "attachmentType": "developerDocumentation",
+      "mimeType": "text/html"
+    }
+  ]
+}
+ApiProductSpecification resource
+Specification for the API Product with the supported API versions.
+Resource model
+
+
+ 
+Figure 4 - ApiProductSpecification
+
+
+ 
+Field descriptions
+ApiProductSpecification fields
+allowedAction
+A DCSAllowedProductAction. Defines an action that can be
+taken on a product in the inventory as part of a product order. It
+is expected that this entity will be attached to product catalog
+items such as specifications and offerings. This DCS schema is
+a subset of the standard AllowedProductAction schema, that can
+be extended for specific contexts. This must be done reusing
+existing attributes in the standard AllowedProductAction schema
+or adding specific attributes.
+DCSAllowedProductAction can be instanciated as
+* OpenGatewayAllowedProductAction
+apiStandardName
+An ApiStandardNameType. Valid values for the name of
+standard organization of project that is responsible of the API
+specification. ENUMERATED with values:
+* CAMARA
+* nonStandard
+apiVersionInformation
+An ApiVersionInformation. Technical information of an API
+version, including base path, and OAuth 2.0 supported
+authorization methods and scopes which can be used to request
+access tokens.
+attachment
+An OpenGatewayAttachment. Generic schema for attachment in
+Open Gateway context.
+OpenGatewayAttachment can be instanciated as
+* OpenGatewayFileAttachment
+* OpenGatewayURLAttachment
+category
+A DCSCategoryRef. Reference to a category in the catalog. This
+DCS schema is a subset of the standard CategoryRef schema,
+that can be extended for specific contexts. This must be done
+reusing existing attributes in the standard CategoryRef schema
+or adding specific attributes.
+description
+A String. A narrative that explains in detail what the product
+specification is.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+lastUpdate
+A DateTime. Date and time of the last update.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status. Values
+must be taken from this list (or extented it adding more values for
+a specific context) : inStudy, inDesign, inTest, active, launched,
+retired, obsolete, rejected.
+name
+A String. Name of the product specification.
+
+
+ 
+productSpecificationRelationship
+A DCSProductSpecificationRelationship. A migration,
+substitution, dependency or exclusivity relationship
+between/among product specifications. This DCS schema is a
+subset of the standard ProductSpecificationRelationship schema,
+that can be extended for specific contexts. This must be done
+reusing existing attributes in the standard
+ProductSpecificationRelationship schema or adding specific
+attributes.
+targetProductSchema
+A TargetProductSchema. The reference object to the schema
+and type of target product which is described by product
+specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. Version of the ProductSpecification. Version MAY use
+the semantic versioning X.Y.Z version format where X identifies a
+major version, Y is the minor version and Z a fix.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ApiVersionInformation sub-resource fields
+apiBasePath
+A String. Base path of the API. CAMARA project recommends to
+set the base path as /<apiName>/v<major> or
+/apiName/v0.<minor> (minor version only allowed for
+unstable APIs in 0 major version).
+apiGrantInformation
+An ApiGrantInformation. A set of ApiProductCharacteristics
+grouped together for usage grant.
+apiName
+A String. Name of API.
+apiStatus
+A String. Is the lifecycle status of the API. Active means the
+Application can consume this API on this version after a future
+order. Retired means that the Application can consume this API
+on this version only if the order has already been done, no new
+order on this Product Specification can give the right to consume
+this API on this version. ENUMERATED with values:
+* active
+* retired
+apiVersion
+A String. Version of the API. CAMARA project recommends
+[Semantic Versioning 2.0.0](https://semver.org/) where versions
+are definied as x.y.z version number which corresponds to a
+major, minor and fix.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+
+
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ApiGrantInformation sub-resource fields
+grantType
+A String. One or several grantType of the API, as stated in the
+API ProductSpecification. Examples: "authorization_code"
+"client_credentials" "urn:ietf:params:oauth:grant-type:token-
+exchange" "urn:ietf:params:oauth:grant-type:jwt-bearer"
+"urn:ietf:params:oauth:grant-type:saml2-bearer"
+"urn:ietf:params:oauth:grant-type:device_code"
+"urn:openid:params:grant-type:ciba".
+legalBasis
+A String. One or several legal basis for the API use. Examples as
+given by W3C: "dpv:Consent" "dpv:LegitimateInterest"
+"dpv:DataTransferLegalBasis"
+"dpv:LegitimateInterestOfDataSubject" "dpv:LegalObligation"
+"dpv:PublicInterest" "dpv:VitalInterest"
+"dpv:OfficialAuthorityOfController".
+purpose
+A String. Purpose of the API. Value must be one of the W3C list :
+https://w3c.github.io/dpv/dpv/#vocab-purpose, as stated in the
+API ProductSpecification. All the possibilities are defined on
+ApiPurposeType schema. Examples: "AcademicResearch"
+"AccountManagement" "Advertising" "AntiTerrorismOperations"
+"CommercialResearch" "CommunicationForCustomerCare"
+"CommunicationManagement" "CounterMoneyLaundering"
+"CreditChecking" "CustomerCare".
+scope
+A String. One or several scopes of the API, as stated in the API
+ProductSpecification. Examples: "sim-swap:retrieve-date".
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'ApiProductSpecification'
+resource object.
+{
+    "id": "4b6591ef-5ede-4885-9543-0c5e9070ade9",
+    "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productSpecification/4b6591ef-5ede-4885-
+9543-0c5e9070ade9",
+    "name": "device-location-verification-antifraud",
+    "version": "1.0.0",
+    "@type": "ApiProductSpecification",
+    "@baseType": "OpenGatewayProductSpecification",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiProductSpecification.schema.json",
+    "lifecycleStatus": "active",
+    "description": "Device Location Verification product specification, for
+
+
+ antifraud purpose, accessible with Camara API.",
+    "lastUpdate": "2023-09-23T16:42:23Z",
+    "validFor": {
+      "startDateTime": "2023-07-01T00:00:00Z",
+      "endDateTime": "2025-09-01T00:00:00Z"
+    },
+    "allowedAction": [
+      {
+        "@type": "OpenGatewayAllowedProductAction",
+        "@baseType": "DCSAllowedProductAction",
+        "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+          "id": "1",
+        "action": "add",
+        "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemAddDeviceLocationVerifica
+tionAntifraudProductSpecification.schema.json"
+      },
+      {
+        "@type": "OpenGatewayAllowedProductAction",
+        "@baseType": "DCSAllowedProductAction",
+        "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+          "id": "2",
+        "action": "delete",
+        "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemDeleteDeviceLocationVerif
+icationAntifraudProductSpecification.schema.json"
+      }
+    ],
+    "targetProductSchema": {
+      "@type": "ApiProductDeviceLocationVerificationAntifraud",
+      "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiProductDeviceLocationVerificationAntif
+raud_v1.0.0.schema.json"
+    },
+    "apiStandardName": "CAMARA",
+    "apiVersionInformation": [
+      {
+        "@type":"ApiVersionInformation",
+        "@baseType":"ApiVersionInformation",
+        "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiVersionInformation.schema.json",
+        "apiName": "location-verification",
+        "apiVersion": "1.0.0",
+        "apiBasePath": "/location-verification/v1",
+        "apiStatus": "active",
+        "apiGrantInformation": [
+          {
+            "@type": "ApiGrantInformation",
+            "@baseType": "ApiGrantInformation",
+            "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiGrantInformation.schema.json",
+            "id": "1",
+            "purpose": "dpv:FraudPreventionAndDetection",
+            "legalBasis": "dpv:Consent",
+            "scope": [
+              "location-verification:verify"
+            ],
+            "grantType": [
+              "authorization_code",
+
+
+               "urn:openid:params:grant-type:ciba"
+            ]
+          }
+        ]
+      }
+    ],
+    "attachment": [
+      {
+        "@type": "OpenGatewayURLAttachment",
+        "@baseType": "OpenGatewayAttachment",
+        "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayURLAttachment.schema.json",
+        "url":
+"https://mycsp.com:8080/OpenGateway/documentation/DeviceLocationVerificationDevelope
+rGuide.html",
+        "attachmentType": "developerDocumentation",
+        "mimeType": "text/html"
+      }
+    ]
+  }
+Notification Resource Models
+4 notifications are defined for this API.
+Notifications related to OpenGatewayProductOffering:
+• Create Event
+• Delete Event
+• Attribute Value Change Event
+• State Change Event
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+
+
+ 
+Figure 5 Notification Pattern
+OpenGatewayProductOffering
+Create Event
+Notification for creation of a ProductOffering
+Content-Type: application/json
+{
+  "@type": "OpenGatewayProductOfferingCreateEvent",
+  "@baseType": "Event",
+  "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/Event/OpenGatewayProductOfferingCreateEve
+nt.schema.json",
+  "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productOfferingCreateEvent/23",
+  "id": "23",
+  "correlationId": "13654384718",
+  "domain": "Open Gateway Catalog",
+  "title": "ProductOfferingCreateEvent",
+  "description": "Event for a ProductOffering creation.",
+  "priority": "1",
+  "timeOccurred": "2024-11-25T14:04:27Z",
+  "source": {
+
+
+     "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/ResourceRef.schema.json",
+    "href": "https://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "reportingSystem": {
+    "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/ResourceRef.schema.json",
+    "href": "hhttps://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "relatedParty": [],
+  "analyticCharacteristic": [],
+  "eventId": "23",
+  "eventTime": "2024-11-25T14:04:27Z",
+  "eventType": "ProductOfferingCreateEvent",
+  "event": {
+    "productOffering": {
+        "id": "2d4ef4d3-08ce-441d-ac76-133b6dad0ccb",
+        "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productOffering/2d4ef4d3-08ce-441d-ac76-
+133b6dad0ccb",
+        "@type": "OpenGatewayProductOffering",
+        "@baseType": "DCSProductOffering",
+        "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayProductOffering.schema.json",
+        "lifecycleStatus": "launched",
+        "version": "1.0.0",
+        "name": "device-location-verification-antifraud-offering-standalone",
+        "description": "Device Location Verification product offering standalone,
+for antifraud purpose, accessible with Camara API.",
+        "lastUpdate": "2023-07-01T00:00:00Z",
+        "validFor": {
+          "startDateTime": "2023-07-01T00:00:00Z",
+          "endDateTime": "2025-09-01T00:00:00Z"
+        },
+        "allowedAction": [
+          {
+            "@type": "OpenGatewayAllowedProductAction",
+            "@baseType": "DCSAllowedProductAction",
+            "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+            "id": "1",
+            "action": "add",
+            "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemAddDeviceLocationVerifica
+tionAntifraudStandaloneProductOffering.schema.json"
+          },
+          {
+            "@type": "OpenGatewayAllowedProductAction",
+            "@baseType": "DCSAllowedProductAction",
+            "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayAllowedProductAction.schema.js
+on",
+
+
+             "id": "2",
+            "action": "delete",
+            "@targetProductOrderItemSchema": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ProductOrderItemDeleteDeviceLocationVerif
+icationAntifraudStandaloneProductOffering.schema.json"
+          }
+        ],
+        "productSpecification": {
+          "id": "4b6591ef-5ede-4885-9543-0c5e9070ade9",
+          "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productSpecification/4b6591ef-5ede-4885-
+9543-0c5e9070ade9",
+          "name": "device-location-verification-antifraud",
+          "version": "1.0.0",
+          "targetProductSchema": {
+            "@type": "ApiProductDeviceLocationVerificationAntifraud",
+            "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/ApiProductDeviceLocationVerificationAntif
+raud_v1.0.0.schema.json"
+          },
+          "@referredType": "ApiProductSpecification",
+          "@type": "ProductSpecificationRef",
+          "@baseType": "ProductSpecificationRef",
+          "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/ProductSpecificationRef.schema.json"
+        },
+        "productOfferingTermOrConditionSpecification": {
+          "@type": "OpenGatewayProductOfferingTermOrConditionSpecification",
+          "@baseType": "DCSProductOfferingTermOrConditionSpecification",
+          "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayProductOfferingTermOrCondition
+Specification.schema.json",
+          "name": "device-location-antifraud-standalone-offering-term-or-condition-
+for-ApplicationOwner",
+          "description": "Terms and conditions to be approved by Application Owner
+at the order.",
+          "attachment": {
+            "@type": "OpenGatewayFileAttachment",
+            "@baseType": "OpenGatewayAttachment",
+            "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayFileAttachment.schema.json",
+            "content": "...binaryFile...",
+            "mimeType": "application/pdf",
+            "attachmentType": "termsAndConditions"
+          }
+        },
+        "productOfferingPrice": [
+          {
+            "id": "1",
+            "@type": "OpenGatewayProductOfferingUsagePriceCharge",
+            "@baseType": "OpenGatewayProductOfferingPrice",
+            "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/OpenGatewayProductOfferingUsagePriceCharg
+e.schema.json",
+            "lifecycleStatus": "active",
+            "name": "device-location-antifraud-standalone-usage-price-1",
+            "description": "Device Location Verification for Antifraud standalone
+product offering price, usage price. 8 ? per API call for usage verify.",
+            "lastUpdate": "2023-09-01T00:00:00Z",
+            "validFor": {
+              "startDateTime": "2023-07-01T00:00:00Z",
+              "endDateTime": "2025-09-01T00:00:00Z"
+            },
+
+
+             "priceType": "usage",
+            "price": {
+              "value": 8,
+              "unit": "EUR"
+            }
+          }
+        ]
+    }
+  }
+}
+Delete Event
+Notification for a deletion of a ProductOffering
+Content-Type: application/json
+{
+  "@type": "OpenGatewayProductOfferingDeleteEvent",
+  "@baseType": "Event",
+  "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/Event/OpenGatewayProductOfferingDeleteEve
+nt.schema.json",
+  "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productOfferingDeleteEvent/24",
+  "id": "24",
+  "correlationId": "13654384719",
+  "domain": "Open Gateway Catalog",
+  "title": "ProductOfferingDeleteEvent",
+  "description": "Event for a ProductOffering delete.",
+  "priority": "1",
+  "timeOccurred": "2024-11-25T14:04:27Z",
+  "source": {
+    "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/ResourceRef.schema.json",
+    "href": "https://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "reportingSystem": {
+    "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/ResourceRef.schema.json",
+    "href": "https://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "relatedParty": [
+    ],
+  "analyticCharacteristic": [
+  ],
+  "eventId": "24",
+  "eventTime": "2024-11-25T14:04:27Z",
+  "eventType": "ProductOfferingDeleteEvent",
+  "event": {
+
+
+     "productOffering": {
+        "@type": "OpenGatewayProductOffering",
+        "id": "2d4ef4d3-08ce-441d-ac76-133b6dad0ccb"
+    }
+  }
+}
+Attribute Value Change Event
+Notification for an attribute value change of a ProductOffering
+Content-Type: application/json
+{
+  "@type": "OpenGatewayProductOfferingAttributeValueChangeEvent",
+  "@baseType": "Event",
+  "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/Event/OpenGatewayProductOfferingCreateEve
+nt.schema.json",
+  "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productOfferingAttributeValueChangeEvent/
+22",
+  "id": "22",
+  "correlationId": "13654384715",
+  "domain": "Open Gateway Catalog",
+  "title": "ProductOfferingAttributeValueChangeEvent",
+  "description": "Event for a ProductOffering attribute value change.",
+  "priority": "1",
+  "timeOccurred": "2024-11-25T14:04:27Z",
+  "source": {
+    "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/resourceRef.schema.json",
+    "href": "https://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "reportingSystem": {
+    "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/ResourceRef.schema.json",
+    "href": "https://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "relatedParty": [],
+  "analyticCharacteristic": [],
+  "eventId": "22",
+  "eventTime": "2024-11-25T14:04:27Z",
+  "eventType": "ProductOfferingAttributeValueChangeEvent",
+  "event": {
+    "productOffering": {
+      "id": "2d4ef4d3-08ce-441d-ac76-133b6dad0ccb",
+      "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productOffering/2d4ef4d3-08ce-441d-ac76-
+133b6dad0ccb",
+
+
+       "@type": "OpenGatewayProductOffering",
+      "version": "1.1.0",
+      "productOfferingPrice": [
+        {
+          "id": "1",
+          "@type": "OpenGatewayProductOfferingUsagePriceCharge",
+          "price": {
+            "value": 7,
+            "unit": "EUR"
+          }
+        }
+      ]
+    }
+  }
+}
+State Change Event
+Notification for lifecycleStatus change of a ProductOffering
+Content-Type: application/json
+{
+  "@type": "OpenGatewayProductOfferingStateChangeEvent",
+  "@baseType": "Event",
+  "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Product/DCS/GSMAOperateAPI/Event/OpenGatewayProductOfferingStateChan
+geEvent.schema.json",
+  "href": "https://mycsp.com:8080/tmf-
+api/openGatewayOperateAPIProductCatalog/v5/productOfferingStateChangeEvent/25",
+  "id": "25",
+  "correlationId": "13654384711",
+  "domain": "Open Gateway Catalog",
+  "title": "ProductOfferingStateChangeEvent",
+  "description": "Event for a ProductOffering state change.",
+  "priority": "1",
+  "timeOccurred": "2024-11-25T14:04:27Z",
+  "source": {
+    "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/ResourceRef.schema.json",
+    "href": "https://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "reportingSystem": {
+    "@type": "ResourceRef",
+    "@baseType": "EntityRef",
+    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schemas/Tmf/Resource/ResourceRef.schema.json",
+    "href": "https://mycsp.com:8080/tmf-api/resourceInventory/v5/resource/456",
+    "id": "456",
+    "name": "Product Catalog Component",
+    "@referredType": "Resource"
+  },
+  "relatedParty": [
+    ],
+  "analyticCharacteristic": [
+
+
+   ],
+  "eventId": "25",
+  "eventTime": "2024-11-25T14:04:27Z",
+  "eventType": "ProductOfferingStateChangeEvent",
+  "event": {
+    "productOffering": {
+        "id": "2d4ef4d3-08ce-441d-ac76-133b6dad0ccb",
+        "href": "https://mycsp.com:8080/tmf-
+api/resourceInventory/v5/productOffering/2d4ef4d3-08ce-441d-ac76-133b6dad0ccb",
+        "@type": "DCSProductOffering",
+        "lifecycleStatus": "retired"
+      }
+    }
+  }
+
+
+ API OPERATIONS
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Execute an Action on an Entity
+POST on TASK Resource
+POST must be used to execute
+Task Resources
+Other Request Methods
+POST on TASK Resource
+GET and POST must not be
+used to tunnel other request
+methods.
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines.
+Notifications are also described in a subsequent section.
+
+
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+
+
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+
+
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+
+
+ Acknowledgements
+Release History
+Release
+Number
+Date
+Release led by:
+Description
+Version 5.0.0-
+beta1
+(preview)
+March 2025
+Olivier Arnaud (Orange)
+olivier.arnaud@orange.com
+Contributors to Document
+Pierre Gauthier
+TM Forum
+Jonathan Goldberg
+TM Forum
+Akos Hunyadi
+T-Systems
+Olivier Arnaud
+Orange
+Christophe Closset
+ATT
+Gervais-Martial Ngueko
+ATT
+Pierre Close
+ATT
+Jesús Iglesias Maqueda
+Telefónica
+Rubén Barrado González
+Telefónica
+Jordi Sesmero Molina
+Telefónica
+Jorge García Hospital
+Telefónica
+Juan Antonio Cáceres Expósito
+Telefónica
+Steve Harrop
+Vodafone
+Rakesh Ranjan Tiwari
+NTT Data
+Mohamed El Gamal
+Ericsson
+Joel Burgess
+Oracle
+Shubham Saraswat
+Hansen
+Tanja De Groot
+Nokia
+Vaibhav Shintre
+Indracompany
+Rahul Zamre
+Indracompany
+Andres Zoque
+Netcracker
+
+

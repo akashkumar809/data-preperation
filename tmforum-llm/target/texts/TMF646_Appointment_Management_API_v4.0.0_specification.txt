@@ -1,0 +1,2192 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Appointment API REST Specification 
+ 
+ 
+ 
+ 
+ 
+TMF646 
+Release 19.0.1 
+November 2019 
+ 
+ 
+Latest Update: TM Forum Release 19.0.1 
+TM Forum Approved 
+Version 4.0.1 
+IPR Mode: RAND 
+
+
+NOTICE 
+Copyright © TM Forum 2018. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054 USA 
+Tel No.  +1 973 944 5100 
+Fax No.  +1 973 998 7916 
+TM Forum Web Page: www.TM Forum.org 
+ 
+
+
+TABLE OF CONTENTS 
+NOTICE ............................................................................................................................................................................ 2 
+Table of Contents ............................................................................................................................................................ 4 
+List of Tables ................................................................................................................................................................... 6 
+Introduction .................................................................................................................................................................... 7 
+SAMPLE USE CASES ......................................................................................................................................................... 8 
+Support of polymorphism and extension patterns ...................................................................................................... 10 
+RESOURCE MODEL ........................................................................................................................................................ 11 
+Managed Entity and Task Resource Models ..................................................................................................... 11 
+Appointment resource .......................................................................................................................................... 11 
+Search Time Slot resource ..................................................................................................................................... 19 
+Notification Resource Models .............................................................................................................................. 23 
+Appointment Create Event .................................................................................................................................... 24 
+Appointment Attribute Value Change Event ......................................................................................................... 25 
+Appointment State Change Event ......................................................................................................................... 25 
+Appointment Delete Event .................................................................................................................................... 25 
+Search Time Slot Create Event .............................................................................................................................. 26 
+Search Time Slot Attribute Value Change Event ................................................................................................... 26 
+Search Time Slot State Change Event .................................................................................................................... 26 
+Search Time Slot Delete Event Notification .......................................................................................................... 27 
+API OPERATIONS ........................................................................................................................................................... 28 
+Operations on Appointment ..................................................................................................................................... 29 
+List appointments .................................................................................................................................................. 29 
+Retrieve appointment ........................................................................................................................................... 30 
+Create appointment .............................................................................................................................................. 32 
+Patch appointment ................................................................................................................................................ 35 
+Delete appointment .............................................................................................................................................. 38 
+
+
+Operations on Search Time Slot ............................................................................................................................... 39 
+List search time slots ............................................................................................................................................. 39 
+Retrieve search time slot ....................................................................................................................................... 40 
+Create search time slot .......................................................................................................................................... 42 
+Patch search time slot ........................................................................................................................................... 45 
+Delete search time slot .......................................................................................................................................... 47 
+API NOTIFICATIONS....................................................................................................................................................... 49 
+Register listener ........................................................................................................................................................ 50 
+Unregister listener .................................................................................................................................................... 51 
+Publish Event to listener ........................................................................................................................................... 52 
+Acknowledgements ...................................................................................................................................................... 53 
+Version History ......................................................................................................................................................... 53 
+Release History ......................................................................................................................................................... 53 
+
+
+LIST OF TABLES 
+ 
+N/A 
+ 
+
+
+INTRODUCTION 
+ 
+The following document is the specification of the REST API for Any management. It includes the model definition as 
+well as all available operations. 
+ 
+
+
+SAMPLE USE CASES 
+The use cases are:  
+ 
+• Create a new appointment,  
+• Update an existing appointment because its status has changed (cancel an appointment for example) or 
+party availabilities have changed (reschedule an appointment for example)  
+• Retrieve a specific appointment or a collection of appointments  
+ 
+Before creating or rescheduling an appointment, the available time slots could be checked according to 
+criteria (like the reference of a specific technician for example…).  
+To illustrate the JSON representation of resource concerned by this API, we use the two uses cases detailed 
+below:  
+ 
+Use case 1 (UC1): an appointment at a place  
+ 
+ 
+Kate wishes that the appointment will be booked between the 13 and 16 of February.  
+ 
+ 
+
+
+Use case 2 (UC2): an appointment by phone 
+ 
+ 
+
+
+SUPPORT OF POLYMORPHISM AND 
+EXTENSION PATTERNS 
+ 
+Support of polymorphic collections and types and schema-based extension is provided by means of a list 
+of generic meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit 
+from base entities, for instance a BillingAccount and SettlementAccount inheriting properties from the 
+abstract Account entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 
+2 document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list 
+of Account instances some may be instances of BillingAccount where other could be instances of 
+SettlementAccount. The @type gives this information. All resources and sub-resources of this API have a 
+@type attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities (like for instance an AccountRef object) to 
+explicitly denote the actual entity type of the referred class. Notice that in reference entities the @type, when 
+used, denotes the class type of the reference itself, such as BillingAccountRef or SettlementAccountRef, 
+and not the class type of the referred object. However, since reference classes are rarely sub-classed, 
+@type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an 
+Entity or to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has 
+been extended. 
+ 
+ 
+
+
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Appointment resource 
+An Appointment is an arrangement to do something or meet someone at a particular time, at a place (for 
+face to face appointment) or in a contact medium (for phone appointment). 
+Resource model 
+ 
+ 
+ 
+
+
+Lifecycle 
+ 
+Field descriptions 
+Appointment fields 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). An attachment by 
+value or by reference. 
+calendarEvent 
+A calendar event reference (CalendarEventRef). A calendar event reference 
+(CalendarEventRef). The appointment is associated with a calendar event (an 
+happening at a point of time) associated to a calendar entry. 
+category 
+A string. Business category: intervention for example or to be more precise 
+after SalesIntervention, orderDeliveryIntervention,... 
+contactMedium 
+A list of contact mediums (ContactMedium [*]). Indicates the contact medium 
+that could be used to contact the party. 
+creationDate 
+A date time (DateTime). Appointment creation date. 
+
+
+description 
+A string. Short free text describing the appointment. 
+externalId 
+A string. External reference known by the customer. 
+href 
+A string. Unique URI used to access to the appointment resource. 
+id 
+A string. Unique identifier of the appointment. 
+lastUpdate 
+A date time (DateTime). Date of last appointment update. 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+relatedEntity 
+A list of related entities (RelatedEntity [*]). A reference to an entity, where the 
+type of the entity is not known in advance. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related 
+party defines party or party role linked to a specific entity. 
+relatedPlace 
+A related place ref or value (RelatedPlaceRefOrValue). Related place defines 
+(by reference or value) the place where the appointment will take place. 
+status 
+An appointment state type (AppointmentStateType). Valid values for the 
+lifecycle state of the appointment. 
+validFor 
+A time period. A period of time, either as a deadline (endDateTime only) a 
+startDateTime only, or both. 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. 
+id 
+A string. Unique identifier for this particular attachment. 
+href 
+A string. URI for this Attachment. 
+description 
+A string. A narrative text describing the content of the attachment. 
+url 
+A string. Uniform Resource Locator, is a web page address (a subset of URI). 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. The name of the attachment. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+isRef 
+A boolean. 
+size 
+A quantity (Quantity). The size of the attachment. 
+
+
+validFor 
+A time period. The period of time for which the attachment is valid. 
+ContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+characteristic 
+A medium characteristic (MediumCharacteristic). Any additional 
+characteristic(s) of this contact medium. 
+mediumType 
+A string. Type of the contact medium, such as: email address, telephone 
+number, postal address. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+MediumCharacteristic sub-resource 
+Describes the contact medium characteristics that could be used to contact a party (an individual or an 
+organization). 
+city 
+A string. The city. 
+country 
+A string. The country. 
+emailAddress 
+A string. Full email address in standard format. 
+faxNumber 
+A string. The fax number of the contact. 
+phoneNumber 
+A string. The primary phone number of the contact. 
+postCode 
+A string. Postcode. 
+socialNetworkId 
+A string. Identifier as a member of a social network. 
+stateOrProvince 
+A string. State or province. 
+street1 
+A string. Describes the street. 
+street2 
+A string. Complementary street description. 
+type 
+A string. The type of phone number such as mobile, fixed home, fixed office,…. 
+Note sub-resource 
+Extra information about a given entity. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be 
+globally unique, depending on provider implementation). 
+
+
+text 
+A string. Text of the note. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedEntity sub-resource 
+A reference to an entity, where the type of the entity is not known in advance. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. The role of an entity. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. Role played by the related party. 
+RelatedPlaceRefOrValue sub-resource 
+Related Entity reference. A related place defines a place described by reference or by value linked to a 
+specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+
+
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London 
+Store], [Main Home]. 
+role 
+A string. 
+CalendarEventRef relationship 
+Reference of a CalendarEvent. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+Json representation sample 
+We provide below the json representation of an example of an 'Appointment' resource object for UC1:  
+{ 
+    "id": "21", 
+    "href": "https://host:port/appointment/appointment/21", 
+    "category": "intervention", 
+    "creationDate": "2018-02-01T14:40:43.000Z", 
+    "description": "Fix an internet connexion problem for a customer", 
+    "externalId": "432113", 
+    "lastUpdate": "2018-02-04T14:40:43.000Z", 
+    "validFor": { 
+        "startDateTime": "2018-02-15T14:00:00.000Z", 
+        "endDateTime": "2018-02-15T16:00:00.000Z" 
+    }, 
+    "attachment": [ 
+        { 
+            "id": "4444", 
+            "href": "https://host:port/documentManagement/customerContract/4444", 
+            "isRef": true, 
+            "@referredType": "CustomerContract", 
+            "@baseType": "attachment" 
+        } 
+    ], 
+    "calendarEvent": { 
+        "id": "33", 
+        "href": "https://host:port/timeManagement/calendarEvent/33", 
+        "name": "Outlook calendar event" 
+    }, 
+    "contactMedium": [ 
+        { 
+            "mediumType": "phoneNumber", 
+            "preferred": true, 
+            "characteristic": { 
+                "phoneNumber": "+33650981065", 
+                "type": "mobile" 
+
+
+            }, 
+            "validFor": { 
+                "startDateTime": "2018-02-01T14:40:43.000Z", 
+                "endDateTime": "" 
+            } 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "date": "2018-02-04T11:00:18.000Z", 
+            "author": "Ludovic Robert", 
+            "text": "Problem explained to the technician" 
+        }, 
+        { 
+            "date": "2018-02-04T14:40:43.000Z", 
+            "author": "Ludovic Robert", 
+            "text": "Work order generated" 
+        } 
+    ], 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "role": "Problem description", 
+            "name": "Internet connexion problem to solve", 
+            "@referredType": "TroubleTicket" 
+        }, 
+        { 
+            "id": "465", 
+            "href": "https://host:port/workForceManagement/workOrder/465", 
+            "role": "work order description", 
+            "name": "Work order generated for technician intervention", 
+            "@referredType": "WorkOrder" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "32", 
+            "href": "https://host:port/partyManagement/individual/32", 
+            "role": "customer", 
+            "name": "Kate Smith", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "56", 
+            "href": "https://host:port/partyManagement/individual/56", 
+            "role": "technician", 
+            "name": "John Doe", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+
+
+        "@referredType": "GeographicAddress" 
+    }, 
+    "status": "confirmed" 
+} 
+ 
+We provide below the json representation of an example of an 'Appointment' resource object for UC2: 
+{ 
+    "id": "22", 
+    "href": "https://host:port/appointment/appointment/22", 
+    "externalId": "432114", 
+    "category": "customerProblem", 
+    "description": "Customer bill problem explanation", 
+    "status": "accepted", 
+    "creationDate": "2018-02-01T14:40:43.071Z", 
+    "lastUpdate": "2018-02-04T14:40:43.071Z", 
+    "validFor": { 
+        "startDateTime": "2018-02-15T14:00:00.071Z", 
+        "endDateTime": "2018-02-15T15:00:00.071Z" 
+    }, 
+    "attachment": [ 
+        { 
+            "id": "123456", 
+            "href": "https://host:port/customerBillManagement/customerBill/123456", 
+            "isRef": true, 
+            "@referredType": "CustomerBill", 
+            "@baseType": "attachment" 
+        } 
+    ], 
+    "calendarEvent": { 
+        "id": "33", 
+        "href": " https://host:port/timeManagement/calendarEvent/33", 
+        "name": "Outlook calendar event" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "32", 
+            "href": "https://host:port/partyManagement/individual/32", 
+            "name": "Kate Smith", 
+            "role": "customer", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "62", 
+            "href": "https://host:port/partyManagement/individual/62", 
+            "name": "Adam Smith", 
+            "role": "customerRepresentative", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "mediumType": "phoneNumber", 
+            "preferred": true, 
+            "characteristic": { 
+
+
+                "phoneNumber": "+33650981065", 
+                "type": "mobile" 
+            } 
+        } 
+    ], 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "name": "Customer bill amount disputed by the customer", 
+            "role": "Problem description", 
+            "@referredType": "TroubleTicket" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "date": "2018-02-04T11:00:18.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Customer bill amount analyzed – reason found" 
+        } 
+    ] 
+} 
+ 
+Search Time Slot resource 
+This task resource is used to retrieve available time slots. One of this available time slot is after used to 
+create or reschedule an appointment. 
+Resource model 
+ 
+ 
+ 
+
+
+Field descriptions 
+SearchTimeSlot fields 
+availableTimeSlot 
+A list of time slots (TimeSlot [*]). 
+href 
+A string. Reference to access the search time slot resource. 
+id 
+A string. Unique identifier of the search time slot request. 
+relatedEntity 
+A list of related entities (RelatedEntity [*]). A reference to an entity, where the 
+type of the entity is not known in advance. 
+relatedParty 
+A related party (RelatedParty). RelatedParty reference. A related party defines 
+party or party role linked to a specific entity. 
+relatedPlace 
+A related place ref or value (RelatedPlaceRefOrValue). Related place defines 
+(by reference or value) the place where the appointment will take place. 
+requestedTimeSlot 
+A list of time slots (TimeSlot [*]). 
+searchDate 
+A date time (DateTime). Date when the search time slot is performed. 
+searchResult 
+A string. Result of the search time slot (success or fail for example). 
+status 
+A string. Status of the search time slot (rejected, inProgress, done or 
+terminatedWithError). 
+RelatedEntity sub-resource 
+A reference to an entity, where the type of the entity is not known in advance. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. The role of an entity. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+
+
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+role 
+A string. Role played by the related party. 
+RelatedPlaceRefOrValue sub-resource 
+Related Entity reference. A related place defines a place described by reference or by value linked to a 
+specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London 
+Store], [Main Home]. 
+isRef 
+A boolean. 
+role 
+A string. 
+TimeSlot sub-resource 
+ 
+href 
+A string. Reference of the TimeSlot. 
+id 
+A string. Unique identifier of the TimeSlot. 
+relatedParty 
+A related party (RelatedParty). RelatedParty reference. A related party defines 
+party or party role linked to a specific entity. 
+validFor 
+A time period. Start date and end date of the timeSlot. 
+Json representation sample 
+We provide below the json representation of an example of a 'SearchTimeSlot' resource object 
+{ 
+    "id": "99", 
+    "href": "https://host:port/appointment/searchTimeSlot/99", 
+    "searchDate": "2018-02-01T14:40:43.000Z", 
+    "searchResult": "success", 
+    "status": "done", 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+
+
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "name": "Internet connexion problem to solve", 
+            "role": "Problem description", 
+            "@referredType": "TroubleTicket" 
+        } 
+    ], 
+    "requestedTimeSlot": [ 
+        { 
+            "validFor": { 
+                "startDateTime": "2018-02-15T00:00:00.000Z", 
+                "endDateTime": "2018-02-18T00:00:00.000Z" 
+            } 
+        } 
+    ], 
+    "availableTimeSlot": [ 
+        { 
+            "id": "365", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/365", 
+            "validFor": { 
+                "startDateTime": "2018-02-15T14:00:00.000Z", 
+                "endDateTime": "2018-02-15T16:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+        { 
+            "id": "921", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/921", 
+            "validFor": { 
+                "startDateTime": "2018-02-16T16:30:00.000Z", 
+                "endDateTime": "2018-02-16T18:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+        { 
+            "id": "325", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/325", 
+            "validFor": { 
+                "startDateTime": "2018-02-15T16:00:00.000Z", 
+                "endDateTime": "2018-02-15T17:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "58", 
+
+
+                "href": "https://host:port/partyManagement/individual/58", 
+                "name": "Adam Smith", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        } 
+    ] 
+} 
+ 
+Notification Resource Models 
+ 
+8 notifications are defined for this API 
+Notifications related to Appointment: 
+    - AppointmentCreateEventNotification 
+    - AppointmentAttributeValueChangeEventNotification 
+    - AppointmentStateChangeEventNotification 
+    - AppointmentDeleteEventNotification 
+Notifications related to SearchTimeSlot: 
+    - SearchTimeSlotCreateEventNotification 
+    - SearchTimeSlotAttributeValueChangeEventNotification 
+    - SearchTimeSlotStateChangeEventNotification 
+    - SearchTimeSlotDeleteEventNotification 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification resource (depicted by "SpecificNotification" placeholder) is a sub class of a generic 
+Notification structure containing an id of the event occurrence (eventId), an event timestamp (eventTime), 
+and the name of the notification resource (eventType).  
+This notification structure owns an event structure ("SpecificEvent" placeholder) linked to the resource 
+concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+ 
+Appointment Create Event  
+Notification AppointmentCreateEvent case for resource Appointment 
+Json representation sample 
+We provide below the json representation of an example of an 'AppointmentCreateEvent' notification 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AppointmentCreateEvent", 
+     "event": { 
+        "appointment" :  
+            {-- SEE Appointment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+ 
+
+
+Appointment Attribute Value Change Event  
+Notification AppointmentAttributeValueChangeEvent case for resource Appointment 
+Json representation sample 
+We provide below the json representation of an example of an 'AppointmentAttributeValueChangeEvent' 
+notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AppointmentAttributeValueChangeEvent", 
+     "event": { 
+        "appointment" :  
+            {-- SEE Appointment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Appointment State Change Event 
+Notification AppointmentStateChangeEvent case for resource Appointment 
+Json representation sample 
+We provide below the json representation of an example of an 'AppointmentStateChangeEvent' 
+notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AppointmentStateChangeEvent", 
+     "event": { 
+        "appointment" :  
+            {-- SEE Appointment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Appointment Delete Event 
+Notification AppointmentDeleteEvent case for resource Appointment 
+Json representation sample 
+We provide below the json representation of an example of an 'AppointmentDeleteEvent' notification 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AppointmentDeleteEvent", 
+     "event": { 
+
+
+        "appointment" :  
+            {-- SEE Appointment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Search Time Slot Create Event 
+Notification SearchTimeSlotCreateEvent case for resource SearchTimeSlot 
+Json representation sample 
+We provide below the json representation of an example of a 'SearchTimeSlotCreateEvent' notification 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SearchTimeSlotCreateEvent", 
+     "event": { 
+        "searchTimeSlot" :  
+            {-- SEE SearchTimeSlot RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Search Time Slot Attribute Value Change Event 
+Notification SearchTimeSlotAttributeValueChangeEvent case for resource SearchTimeSlot 
+Json representation sample 
+We provide below the json representation of an example of a 'SearchTimeSlotAttributeValueChangeEvent' 
+notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SearchTimeSlotAttributeValueChangeEvent", 
+     "event": { 
+        "searchTimeSlot" :  
+            {-- SEE SearchTimeSlot RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Search Time Slot State Change Event 
+Notification SearchTimeSlotStateChangeEvent case for resource SearchTimeSlot 
+Json representation sample 
+
+
+We provide below the json representation of an example of a 'SearchTimeSlotStateChangeEvent' 
+notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SearchTimeSlotStateChangeEvent", 
+     "event": { 
+        "searchTimeSlot" :  
+            {-- SEE SearchTimeSlot RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Search Time Slot Delete Event Notification 
+Notification SearchTimeSlotDeleteEvent case for resource SearchTimeSlot 
+Json representation sample 
+We provide below the json representation of an example of a 'SearchTimeSlotDeleteEvent' notification 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"SearchTimeSlotDeleteEvent", 
+     "event": { 
+        "searchTimeSlot" :  
+            {-- SEE SearchTimeSlot RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to 
+retrieve a representation of 
+a resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to 
+create a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Complete Update of an 
+Entity 
+PUT Resource 
+PUT must be used to 
+completely update a 
+resource identified by its 
+resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not 
+be used to tunnel other 
+request methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+ 
+ 
+
+
+Operations on Appointment 
+List appointments 
+  GET /appointment?fields=...&{filtering} 
+Description 
+This operation list appointment entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+This operation list appointment entities. Attribute selection is enabled for all first level attributes. Filtering 
+may be available depending on the compliance level supported by an implementation. 
+ 
+Request 
+ 
+GET {apiRoot}/appointment?fields=id,category,status,validFor&relatedParty.id=32&relatedParty.role=customer 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "21", 
+        "category": "intervention", 
+        "status": "accepted", 
+        "validFor": { 
+            "startDateTime": "2018-02-15T14:00:00.071Z", 
+            "endDateTime": "2018-02-15T16:00:00.071Z" 
+        } 
+    }, 
+    { 
+        "id": "22", 
+        "category": "customerProblem", 
+        "status": "accepted", 
+        "validFor": { 
+            "startDateTime": "2018-02-15T14:00:00.071Z", 
+            "endDateTime": "2018-02-15T15:00:00.071Z" 
+        } 
+    } 
+] 
+ 
+
+
+Retrieve appointment 
+  GET /appointment/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an appointment entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific appointment. 
+ 
+Request 
+ 
+GET {apiRoot}/appointment/21 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "21", 
+    "href": "https://host:port/appointment/appointment/21", 
+    "externalId": "432113", 
+    "category": "intervention", 
+    "description": "Fix an internet connexion problem for a customer", 
+    "status": "accepted", 
+    "creationDate": "2018-02-01T14:40:43.071Z", 
+    "lastUpdate": "2018-02-04T14:40:43.071Z", 
+    "validFor": { 
+        "startDateTime": "2018-02-15T14:00:00.071Z", 
+        "endDateTime": "2018-02-15T16:00:00.071Z" 
+    }, 
+    "attachment": [ 
+        { 
+            "id": "4444", 
+            "href": "https://host:port/documentManagement/customerContract/4444", 
+            "isRef": true, 
+            "@referredType": "CustomerContract", 
+            "@baseType": "attachment" 
+        } 
+    ], 
+    "calendarEvent": { 
+        "id": "33", 
+        "href": " https://host:port/timeManagement/calendarEvent/33", 
+
+
+        "name": "Outlook calendar event" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "32", 
+            "href": "https://host:port/partyManagement/individual/32", 
+            "name": "Kate Smith", 
+            "role": "customer", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "56", 
+            "href": "https://host:port/partyManagement/individual/56", 
+            "name": "John Doe", 
+            "role": "technician", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "role": "Problem description", 
+            "name": "Internet connexion problem to solve", 
+            "@referredType": "TroubleTicket" 
+        }, 
+        { 
+            "id": "465", 
+            "href": "https://host:port/workForceManagement/workOrder/465", 
+            "role": "work order description", 
+            "name": "Work order generated for technician intervention", 
+            "@referredType": "WorkOrder" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "date": "2018-02-04T11:00:18.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Problem explained to the technician" 
+        }, 
+        { 
+            "date": "2018-02-04T14:40:43.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Work order generated" 
+        } 
+    ] 
+} 
+ 
+
+
+Create appointment 
+  POST /appointment 
+Description 
+This operation creates an appointment entity. 
+Mandatory and Non-Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating an 
+Appointment, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+validFor 
+ 
+ 
+Non-Mandatory Attributes 
+Rule 
+attachment 
+ 
+calendarEvent 
+ 
+category 
+ 
+contactMedium 
+ 
+creationDate 
+ 
+description 
+ 
+externalId 
+ 
+lastUpdate 
+ 
+note 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+relatedPlace 
+ 
+status 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a specific appointment. 
+ 
+Request 
+ 
+POST {apiRoot}/appointment 
+Content-Type: application/json 
+ 
+{ 
+    "externalId": "432113", 
+    "category": "intervention", 
+    "description": "Fix an internet connexion problem for a customer", 
+    "validFor": { 
+        "startDateTime": "2018-02-15T14:00:00.071Z", 
+        "endDateTime": "2018-02-15T16:00:00.071Z" 
+    }, 
+    "attachment": [ 
+
+
+        { 
+            "id": "4444", 
+            "href": "https://host:port/documentManagement/customerContract/4444", 
+            "isRef": true, 
+            "@referredType": "CustomerContract", 
+            "@baseType": "Attachment" 
+        } 
+    ], 
+    "calendarEvent": { 
+        "id": "33", 
+        "href": " https://host:port/timeManagement/calendarEvent/33", 
+        "name": "Outlook calendar event" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "32", 
+            "href": "https://host:port/partyManagement/individual/32", 
+            "name": "Kate Smith", 
+            "role": "customer", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "56", 
+            "href": "https://host:port/partyManagement/individual/56", 
+            "name": "John Doe", 
+            "role": "technician", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "role": "Problem description", 
+            "name": "Internet connexion problem to solve", 
+            "@referredType": "TroubleTicket" 
+        }, 
+        { 
+            "id": "465", 
+            "href": "https://host:port/workForceManagement/workOrder/465", 
+            "role": "work order description", 
+            "name": "Work order generated for technician intervention", 
+            "@referredType": "WorkOrder" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "date": "2018-02-04T11:00:18.071Z", 
+            "author": "Ludovic Robert", 
+
+
+            "text": "Problem explained to the technician" 
+        }, 
+        { 
+            "date": "2018-02-04T14:40:43.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Work order generated" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "21", 
+    "href": "https://host:port/appointment/appointment/21", 
+    "externalId": "432113", 
+    "category": "intervention", 
+    "description": "Fix an internet connexion problem for a customer", 
+    "status": "accepted", 
+    "creationDate": "2018-02-01T14:40:43.071Z", 
+    "lastUpdate": "2018-02-04T14:40:43.071Z", 
+    "validFor": { 
+        "startDateTime": "2018-02-15T14:00:00.071Z", 
+        "endDateTime": "2018-02-15T16:00:00.071Z" 
+    }, 
+    "attachment": [ 
+        { 
+            "id": "4444", 
+            "href": "https://host:port/documentManagement/customerContract/4444", 
+            "isRef": true, 
+            "@referredType": "CustomerContract", 
+            "@baseType": "Attachment" 
+        } 
+    ], 
+    "calendarEvent": { 
+        "id": "33", 
+        "href": " https://host:port/timeManagement/calendarEvent/33", 
+        "name": "Outlook calendar event" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "32", 
+            "href": "https://host:port/partyManagement/individual/32", 
+            "name": "Kate Smith", 
+            "role": "customer", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "56", 
+            "href": "https://host:port/partyManagement/individual/56", 
+            "name": "John Doe", 
+
+
+            "role": "technician", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "role": "Problem description", 
+            "name": "Internet connexion problem to solve", 
+            "@referredType": "TroubleTicket" 
+        }, 
+        { 
+            "id": "465", 
+            "href": "https://host:port/workForceManagement/workOrder/465", 
+            "role": "work order description", 
+            "name": "Work order generated for technician intervention", 
+            "@referredType": "WorkOrder" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "date": "2018-02-04T11:00:18.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Problem explained to the technician" 
+        }, 
+        { 
+            "date": "2018-02-04T14:40:43.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Work order generated" 
+        } 
+    ] 
+} 
+ 
+Patch appointment 
+  PATCH /appointment/{id} 
+Description 
+This operation allows partial updates of an appointment entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+
+
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies to 
+the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non-Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on 
+their usage. 
+Patchable Attributes 
+Rule 
+attachment 
+ 
+calendarEvent 
+ 
+category 
+ 
+contactMedium 
+ 
+description 
+ 
+externalId 
+ 
+lastUpdate 
+ 
+note 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+relatedPlace 
+ 
+status 
+ 
+validFor 
+ 
+ 
+Non-Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+creationDate 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching an appointment. 
+ 
+Request 
+ 
+PATCH {apiRoot}/appointment/21 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "status": "cancelled" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "21", 
+    "href": "https://host:port/appointment/appointment/21", 
+
+
+    "externalId": "432113", 
+    "category": "intervention", 
+    "description": "Fix an internet connexion problem for a customer", 
+    "status": "cancelled", 
+    "creationDate": "2018-02-01T14:40:43.071Z", 
+    "lastUpdate": "2018-02-04T14:40:43.071Z", 
+    "validFor": { 
+        "startDateTime": "2018-02-15T14:00:00.071Z", 
+        "endDateTime": "2018-02-15T16:00:00.071Z" 
+    }, 
+    "attachment": [ 
+        { 
+            "id": "4444", 
+            "href": "https://host:port/documentManagement/customerContract/4444", 
+            "isRef": true, 
+            "@referredType": "CustomerContract", 
+            "@baseType": "Attachment" 
+        } 
+    ], 
+    "calendarEvent": { 
+        "id": "33", 
+        "href": " https://host:port/timeManagement/calendarEvent/33", 
+        "name": "Outlook calendar event" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "id": "32", 
+            "href": "https://host:port/partyManagement/individual/32", 
+            "name": "Kate Smith", 
+            "role": "customer", 
+            "@referredType": "Individual" 
+        }, 
+        { 
+            "id": "56", 
+            "href": "https://host:port/partyManagement/individual/56", 
+            "name": "John Doe", 
+            "role": "technician", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "role": "Problem description", 
+            "name": "Internet connexion problem to solve", 
+            "@referredType": "TroubleTicket" 
+        }, 
+        { 
+
+
+            "id": "465", 
+            "href": "https://host:port/workForceManagement/workOrder/465", 
+            "role": "work order description", 
+            "name": "Work order generated for technician intervention", 
+            "@referredType": "WorkOrder" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "date": "2018-02-04T11:00:18.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Problem explained to the technician" 
+        }, 
+        { 
+            "date": "2018-02-04T14:40:43.071Z", 
+            "author": "Ludovic Robert", 
+            "text": "Work order generated" 
+        } 
+    ] 
+} 
+ 
+Delete appointment 
+  DELETE /appointment/{id} 
+Description 
+This operation deletes an appointment entity. 
+ 
+Usage Samples 
+This operation deletes an appointment entity. 
+ 
+Request 
+ 
+DELETE {apiRoot}/appointment/21 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+ 
+ 
+
+
+Operations on Search Time Slot 
+List search time slots 
+  GET /searchTimeSlot?fields=...&{filtering} 
+Description 
+This operation list search time slot entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving SearchTimeSlot resources. 
+ 
+Request 
+ 
+GET 
+{apiRoot}/searchTimeSlot?fields=id,status,searchResult,avalaibleTimeSlot&relatedParty.id=56&relatedParty.role=technic
+ian 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "99", 
+        "status": "created", 
+        "searchResult": "success", 
+        "availableTimeSlot": [ 
+            { 
+                "id": "365", 
+                "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/365", 
+                "validFor": { 
+                    "startDateTime": "2018-02-15T14:00:00.000Z", 
+                    "endDateTime": "2018-02-15T16:00:00.000Z" 
+                }, 
+                "relatedParty": { 
+                    "id": "56", 
+                    "href": "https://host:port/partyManagement/individual/56", 
+                    "name": "John Doe", 
+                    "role": "technician", 
+                    "@referredType": "Individual" 
+                } 
+            }, 
+
+
+            { 
+                "validFor": { 
+                    "id": "921", 
+                    "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/921", 
+                    "startDateTime": "2018-02-16T16:30:00.000Z", 
+                    "endDateTime": "2018-02-16T18:00:00.000Z" 
+                }, 
+                "relatedParty": { 
+                    "id": "56", 
+                    "href": "https://host:port/partyManagement/individual/56", 
+                    "name": "John Doe", 
+                    "role": "technician", 
+                    "@referredType": "Individual" 
+                } 
+            } 
+        ] 
+    } 
+] 
+ 
+Retrieve search time slot 
+  GET /searchTimeSlot/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a search time slot entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a SearchTimeSlot resource. 
+ 
+Request 
+ 
+GET {apiRoot}/searchTimeSlot/99 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "99", 
+    "href": "https://host:port/appointment/searchTimeSlot/99", 
+    "searchDate": "2018-02-01T14:40:43.071Z", 
+
+
+    "searchResult": "success", 
+    "status": "done", 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "name": "Internet connexion problem to solve", 
+            "@referredType": "TroubleTicket" 
+        } 
+    ], 
+    "requestedTimeSlot": [ 
+        { 
+            "validFor": { 
+                "startDateTime": "2018-02-15T00:00:00.000Z", 
+                "endDateTime": "2018-02-18T00:00:00.000Z" 
+            } 
+        } 
+    ], 
+    "availableTimeSlot": [ 
+        { 
+            "id": "365", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/365", 
+            "validFor": { 
+                "startDateTime": "2018-02-15T14:00:00.000Z", 
+                "endDateTime": "2018-02-15T16:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+        { 
+            "id": "921", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/921", 
+            "validFor": { 
+                "startDateTime": "2018-02-16T16:30:00.000Z", 
+                "endDateTime": "2018-02-16T18:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+
+
+        { 
+            "id": "325", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/325", 
+            "validFor": { 
+                "startDateTime": "2018-02-15T16:00:00.000Z", 
+                "endDateTime": "2018-02-15T17:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "58", 
+                "href": "https://host:port/partyManagement/individual/58", 
+                "name": "Adam Smith", 
+                "role": "technician" 
+            } 
+        } 
+    ] 
+} 
+ 
+Create search time slot 
+  POST /searchTimeSlot 
+Description 
+This operation creates a search time slot entity. 
+Mandatory and Non-Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+SearchTimeSlot, including any possible rule conditions and applicable default values. Notice that it is up to 
+an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+ 
+Non-Mandatory Attributes 
+Rule 
+availableTimeSlot 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+relatedPlace 
+ 
+requestedTimeSlot 
+ 
+searchDate 
+ 
+searchResult 
+ 
+status 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships 
+when creating a SearchTimeSlot resource. 
+Context 
+Mandatory Sub-Attributes 
+requestedTimeSlot 
+validFor 
+
+
+ 
+Usage Samples 
+This operation creates a search time slot entity. It is used to retrieve, according to a set of criteria, 
+available time slots used after to book or reschedule an appointment on. 
+ 
+Request 
+ 
+POST {apiRoot}/searchTimeSlot 
+Content-Type: application/json 
+ 
+{ 
+    "requestedTimeSlot": [ 
+        { 
+            "validFor": { 
+                "startDateTime": "2018-02-15T00:00:00.000Z", 
+                "endDateTime": "2018-02-18T00:00:00.000Z" 
+            } 
+        } 
+    ], 
+    "relatedParty": { 
+        "id": "56", 
+        "href": "https://host:port/partyManagement/individual/56", 
+        "name": "John Doe", 
+        "role": "technician", 
+        "@referredType": "Individual" 
+    }, 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "name": "Internet connexion problem to solve", 
+            "role": "Problem description", 
+            "@referredType": "TroubleTicket" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "99", 
+
+
+    "href": "https://host:port/appointment/searchTimeSlot/99", 
+    "status": "created", 
+    "searchDate": "2018-02-01T14:40:43.071Z", 
+    "searchResult": "success", 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "requestedTimeSlot": [ 
+        { 
+            "validFor": { 
+                "startDateTime": "2018-02-15T00:00:00.000Z", 
+                "endDateTime": "2018-02-18T00:00:00.000Z" 
+            } 
+        } 
+    ], 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "name": "Internet connexion problem to solve", 
+            "role": "Problem description", 
+            "@referredType": "TroubleTicket" 
+        } 
+    ], 
+    "availableTimeSlot": [ 
+        { 
+            "validFor": { 
+                "startDateTime": "2018-02-15T14:00:00.000Z", 
+                "endDateTime": "2018-02-15T16:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+        { 
+            "validFor": { 
+                "startDateTime": "2018-02-16T16:30:00.000Z", 
+                "endDateTime": "2018-02-16T18:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+        { 
+
+
+            "validFor": { 
+                "startDateTime": "2018-02-15T16:00:00.000Z", 
+                "endDateTime": "2018-02-15T17:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "58", 
+                "href": "https://host:port/partyManagement/individual/58", 
+                "name": "Adam Smith", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        } 
+    ] 
+} 
+ 
+Patch search time slot 
+  PATCH /searchTimeSlot/{id} 
+Description 
+This operation allows partial updates of a search time slot entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies to 
+the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non-Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on 
+their usage. 
+Patchable Attributes 
+Rule 
+availableTimeSlot 
+ 
+relatedEntity 
+ 
+relatedParty 
+ 
+relatedPlace 
+ 
+requestedTimeSlot 
+ 
+status 
+ 
+ 
+Non-Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+searchDate 
+ 
+searchResult 
+ 
+ 
+ 
+ 
+
+
+Usage Samples 
+This operation allows partial updates of a search time slot entity. Support of json/merge (https: 
+//tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Request 
+ 
+PATCH {apiRoot}/searchTimeSlot/99 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "status": "done" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "99", 
+    "href": "https://host:port/appointment/searchTimeSlot/99", 
+    "searchDate": "2018-02-01T14:40:43.000Z", 
+    "searchResult": "success", 
+    "status": "done", 
+    "RelatedPlace": { 
+        "id": "888", 
+        "href": "https://host:port/addressManagement /geographicAddress /888",         
+        "name": "Main Home", 
+        "role": "interventionAddress", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "relatedEntity": [ 
+        { 
+            "id": "789", 
+            "href": "https://host:port/troubleTicket/troubleTicket/789", 
+            "name": "Internet connexion problem to solve", 
+            "@referredType": "TroubleTicket" 
+        } 
+    ], 
+    "requestedTimeSlot": [ 
+        { 
+            "validFor": { 
+                "startDateTime": "2018-02-15T00:00:00.000Z", 
+                "endDateTime": "2018-02-18T00:00:00.000Z" 
+            } 
+        } 
+    ], 
+    "availableTimeSlot": [ 
+        { 
+            "id": "365", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/365", 
+
+
+            "validFor": { 
+                "startDateTime": "2018-02-15T14:00:00.000Z", 
+                "endDateTime": "2018-02-15T16:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+        { 
+            "id": "921", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/921", 
+            "validFor": { 
+                "startDateTime": "2018-02-16T16:30:00.000Z", 
+                "endDateTime": "2018-02-16T18:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "56", 
+                "href": "https://host:port/partyManagement/individual/56", 
+                "name": "John Doe", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        }, 
+        { 
+            "id": "325", 
+            "href": "https://host:port/appointment/searchtimeslot/99/availableTimeSlot/325", 
+            "validFor": { 
+                "startDateTime": "2018-02-15T16:00:00.000Z", 
+                "endDateTime": "2018-02-15T17:00:00.000Z" 
+            }, 
+            "relatedParty": { 
+                "id": "58", 
+                "href": "https://host:port/partyManagement/individual/58", 
+                "name": "Adam Smith", 
+                "role": "technician", 
+                "@referredType": "Individual" 
+            } 
+        } 
+    ] 
+} 
+ 
+Delete search time slot 
+  DELETE /searchTimeSlot/{id} 
+Description 
+This operation deletes a search time slot entity. 
+ 
+
+
+Usage Samples 
+This operation deletes a search time slot entity. 
+ 
+Request 
+ 
+DELETE {apiRoot}/searchTimeSlot/99 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample 
+REST notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the 
+REST Guidelines reproduced below. 
+ 
+ 
+
+
+ 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its 
+health state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if 
+it does not support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint 
+can be created again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener 
+url is the callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be 
+replaced by one of the notification types supported by this API (see Notification resources Models section) 
+and EVENT BODY refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST 
+Design Guidelines. 
+ 
+ 
+ 
+
+
+ACKNOWLEDGEMENTS 
+Version History 
+Version 
+Number  
+Date  
+Release led by:  
+Description  
+Release 
+1.0  
+04/15/2013  
+Pierre Gauthier TM Forum 
+pgauthier@tmforum.org  
+Orange Team  
+First Release of Draft Version of 
+the Document.  
+2.0  
+10/07/2016  
+Orange Team  
+Second release taking into 
+account remarks  
+2.1  
+14/12/2016  
+Orange Team  
+Update taking into account 
+validation and approbation 
+remarks from TM Forum 
+members for 16.5 release  
+3.0  
+10/04/2018  
+Orange with contribution from 
+Amdocs  
+Update for release 18.0: new 
+features from guidelines 3.0, 
+remarks from SID mapping, 
+remarks from NTS Retail API 
+implementation  
+3.0.1  
+27-Jun-2018  
+Adrienne Walcott  
+Formatting/style edits prior to 
+R18 publishing  
+4.0.0 
+11-Aug-2019 
+Grégoire Laurent 
+gregoire.laurent@orange.com 
+ 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Schema-driven API with 
+polymorphism pattern 
+ 
+searchTimeSlots : Add 
+requestedTimeSlot to the 
+response 
+4.0.1 
+04-Nov-2019 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Release History 
+ 
+Release 
+Number  
+Date  
+Release led by:  
+Description  
+18.0.0  
+24-Jun-2018  
+Pierre Gauthier  
+Initial Release  
+ 
+19.0.0 
+11-Aug-2019 
+Grégoire Laurent - Orange 
+gregoire.laurent@orange.com 
+ 
+Pierre Gauthier - TM Forum 
+pgauthier@tmforum.org 
+Version 4.0 of the API 
+REST 
+Note: the version 4.0 is 
+assigned to all the APIs 
+delivered in the release 19.0 
+
+
+19.0.1 
+04-Nov-2019 
+Adrienne Walcott 
+Updated to reflect TM 
+Forum Approved Status 
+ 
+ 
+
+

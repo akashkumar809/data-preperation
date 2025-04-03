@@ -1,0 +1,2571 @@
+TM Forum Specification 
+Resource Usage 
+Management User Guide
+Maturity Level: General Availability (GA)
+Team Approved Date: 05-Jul-2024
+Approval Status: Team Approved
+IPR Mode: RAND
+Release Status: Stable
+Version 5.0.0
+TMF771
+
+
+ NOTICE
+Copyright © TM Forum 2024. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+
+
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  1
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Support of polymorphism and extension patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+RESOURCE MODEL . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+ResourceUsage resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+ResourceUsageSpecification resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+ResourceUsage. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  20
+ResourceUsageSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  24
+API OPERATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  29
+Operations on ResourceUsage. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  29
+List or find ResourceUsage objects. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  29
+Retrieves a ResourceUsage by ID . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  31
+Creates a ResourceUsage . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  32
+Updates partially a ResourceUsage . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  35
+Deletes a ResourceUsage . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  40
+Operations on ResourceUsageSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  40
+Retrieves a ResourceUsageSpecification by ID . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  40
+List or find ResourceUsageSpecification objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  41
+Creates a ResourceUsageSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  42
+Updates partially a ResourceUsageSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  44
+Deletes a ResourceUsageSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  48
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  49
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  49
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  50
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  50
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  52
+Release History. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  52
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  52
+
+
+ Introduction
+This document is the user-guide of the REST API for Resource Usage Management. It
+includes the data model definition as well as all available operations for the Usage and
+UsageSpecification resources.
+The Resource Usage Management API provides a standardized mechanism for resource
+usage management such as the creation, update, retrieval, import and export of a collection
+of usages. A resource usage is an occurrence of employing a Resource, Resource Usage
+can influence of Service Usage and/or Product Usage.
+The Resource Usage API manages measurement usages. For example, it allows a service
+provider to count usage of Antenna for 5G slice:
+• To retrieve usage
+• Collect Usage and update usage of Service and Product
+The Resource Usage API manages the Resource Usage resource:
+• A Resource Usage represents an event of usage. It is comprised of characteristics which
+define all the attributes known for that particular type of usage.
+• The main attributes are its id, usageDate, usageType, it’s usageType related
+UsageSpecification, characteristics (name/value pairs), status, related Parties
+• A Resource Usage follows a simple lifecycle which is presented later for illustrative
+purposes, defining such aspects as whether it is rated, rerated or billed.
+The Resource Usage API performs the following operations on the Usage resource:
+• Retrieval of a Resource Usage or a collection of Resource Usage, depending on filter
+criteria
+• Partial update of a Resource Usage or of a collection of Resource Usage
+• Creation of a Resource usage
+
+
+ Sample Use Cases
+A few simple use-cases are presented:
+• Creation of a simple ResourceUsageSpecification, defining the characteristics a data
+usage in Antenna for 5G slice; listing ResourceUsageSpecification’s at version 2.5;
+retrieving a single ResourceUsageSpecification based on it’s id and ultimately its deletion
+based on the same id.
+• Creation of a simple ResourceUsage relating to a voice call retrieval; listing Resource
+Usage of usageType “DATA”; retrieving a specific Resource Usage based on it’s id;
+updating a Resource Usage and ultimately deleting this Usage based on the same id.
+
+
+ Support of polymorphism and extension
+patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below. Polymorphism in
+collections occurs when entities inherit from base entities, for instance a BillingAccount and
+SettlementAccount inheriting properties from the abstract Account entity.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines, Part 2 (TMF630).
+The @type attribute provides a way to represent the actual class type of an entity. For
+example, within a list of Account instances some may be instances of BillingAccount where
+other could be instances of SettlementAccount. The @type gives this information. All
+resources and sub-resources of this API have a @type attributes that can be provided when
+this is useful.
+The @referredType can be used within reference entities (like for instance an AccountRef
+object) to explicitly denote the actual entity type of the referred class. Notice that in reference
+entities the @type, when used, denotes the class type of the reference itself, such as
+BillingAccountRef or SettlementAccountRef, and not the class type of the referred object.
+However since reference classes are rarely sub-classed, @type is generally not useful in
+reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+
+
+ RESOURCE MODEL
+Managed Entity and Task Resource Models
+ResourceUsage resource
+An occurrence of usage on a Resource,derived from various Service usages. It is comprised
+of characteristics, which represent attributes of service usage.
+Resource model
+
+
+ 
+Figure 1 - ResourceUsage
+Field descriptions
+ResourceUsage fields
+
+
+ 
+bundledResourceUsage
+A ResourceUsageRef. ResourceUsage reference.
+ResourceUsage is usage event for Resource.
+description
+A String. Description of resource usage.
+externalIdentifier
+An ExternalIdentifier. An identification of an entity that is owned
+by or originates in a software system different from the current
+system, for example a ProductOrder handed off from a
+commerce platform into an order handling system. The structure
+identifies the system itself, the nature of the entity within the
+system (e.g. class name) and the unique ID of the entity within
+the system. It is anticipated that multiple external IDs can be held
+for a single entity, e.g. if the entity passed through multiple
+systems on the way to the current system. In this case the
+consumer is expected to sequence the IDs in the array in reverse
+order of provenance, i.e. most recent system first in the list.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+isBundle
+A Boolean. IsBundle determines whether usage represents a
+single usage (false), or a bundle of usages specifications (true).
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+resource
+A ResourceRef. Resource reference, for when Resource is used
+by other entities.
+usageCharacteristic
+A Characteristic. Describes a given characteristic of an object or
+entity through a name/value pair. This is an abstract base class,
+the actual value is in one of the strongly-typed subclasses :
+StringCharacteristic, ObjectCharacteristic, FloatCharacteristic,
+BooleanCharacteristic, NumberCharacteristic,
+IntegerCharacteristic, StringArrayCharacteristic,
+ObjectArrayCharacteristic, BooleanArrayCharacteristic,
+NumberArrayCharacteristic, IntegerArrayCharacteristic…
+Characteristic can be instanciated as
+* StringCharacteristic
+usageDate
+A DateTime. Date of usage.
+usageSpecification
+A ResourceUsageSpecificationRef. ResourceUsageSpecification
+reference. ResourceUsageSpecification is a detailed description
+of a usage event that are of interest to the business and can
+have charges applied to it. It is comprised of characteristics,
+which define all attributes known for a particular type of usage.
+usageType
+A String. Type of usage.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+
+
+ 
+ExternalIdentifier sub-resource fields
+externalIdentifierType
+A String. Type of the identification, typically would be the type of
+the entity within the external system.
+id
+A String. Identification of the entity within the external system.
+owner
+A String. Name of the external system that owns the entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceUsageSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Characteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Characteristic can be instanciated as
+* StringCharacteristic
+value
+This property is present in subclasses
+StringCharacteristic sub-resource fields
+
+
+ 
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A String. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedPartyRefOrPartyRoleRef sub-resource fields
+partyOrPartyRole
+A PartyRefOrPartyRoleRef.
+role
+A String. Role played by the related party or party role in the
+context of the specific entity it is linked to. Such as 'initiator',
+'customer', 'salesAgent', 'user'.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceUsageRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+
+
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CharacteristicRelationship sub-resource fields
+id
+A String. Unique identifier of the characteristic.
+relationshipType
+A String. The type of relationship.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRoleRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+partyId
+A String. The identifier of the engaged party that is linked to the
+PartyRole object.
+partyName
+A String. The name of the engaged party that is linked to the
+PartyRole object.
+@baseType
+A String. When sub-classing, this defines the super-class.
+
+
+ 
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'ResourceUsage' resource
+object.
+{
+    "@type": "ResourceUsage",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+    "id": "5130d5131a23",
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "VOICE",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "originatingCountryCode",
+            "valueType": "string",
+            "value": "43"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "destinationCountryCode",
+            "valueType": "string",
+            "value": "49"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "destinationNumber",
+            "valueType": "string",
+            "value": "170123456789"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "duration",
+            "valueType": "string",
+            "value": "20"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "startDateTime",
+            "valueType": "datetime",
+            "value": "2024-08-25T12:19:14Z"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "endDateTime",
+            "valueType": "datetime",
+            "value": "2024-08-25T12:19:34Z"
+        }
+    ],
+    "relatedParty": [
+
+
+         {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Individual",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-api/partyManagement/individual/8a41-
+d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        },
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/a396-5c90a41a23ea",
+                "id": "a396-5c90a41a23ea"
+            }
+        }
+    ],
+    "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+        "id": "qerr-475",
+        "name": "Voice resource"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+        "name": "VoiceCall"
+    }
+}
+ResourceUsageSpecification resource
+A detailed description of a Resource usage event that are of interest to the business and can
+have charges applied to it. It is comprised of characteristics, which define all attributes
+known for a particular type of usage.
+Resource model
+
+
+ 
+Figure 2 - ResourceUsageSpecification
+Field descriptions
+ResourceUsageSpecification fields
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+bundledResourceUsageSpecificati
+on
+A ResourceUsageSpecificationRef. ResourceUsageSpecification
+reference. ResourceUsageSpecification is a detailed description
+of a usage event that are of interest to the business and can
+have charges applied to it. It is comprised of characteristics,
+which define all attributes known for a particular type of usage.
+
+
+ 
+description
+A String. Description of the specification.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+isBundle
+A Boolean. IsBundle determines whether specification
+represents a single specification (false), or a bundle of
+specifications (true).
+lastUpdate
+A DateTime. Date and time of the last update of the specification.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status of this
+catalog item.
+name
+A String. Name given to the specification.
+resourceSpecification
+A ResourceSpecificationRef. Resources are physical or non-
+physical components (or some combination of these) within an
+enterprise’s infrastructure or inventory. They are typically
+consumed or used by services (for example a physical port
+assigned to a service) or contribute to the realization of a Product
+(for example, a SIM card). They can be drawn from the
+Application, Computing and Network domains, and include, for
+example, Network Elements, software, IT systems, content and
+information, and technology components. A
+ResourceSpecification is an abstract base class for representing
+a generic means for implementing a particular type of Resource.
+In essence, a ResourceSpecification defines the common
+attributes and relationships of a set of related Resources, while
+Resource defines a specific instance that is based on a particular
+ResourceSpecification.
+resourceUsageSpecRelationship
+A ResourceUsageSpecRelationship. A dependency, substitution
+or exclusivity relationship between/among resource usage
+specifications.
+specCharacteristic
+A CharacteristicSpecification. This class defines a characteristic
+specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. Specification version.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceUsageSpecRelationship sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+
+
+ 
+relationshipType
+A String. Type of relationship such as dependency, substitution
+or exclusivity.
+role
+A String. The association role for this service specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceUsageSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ResourceSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+version
+A String. Resource Specification version.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Attachment sub-resource fields
+
+
+ 
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+content
+A Base64. The actual contents of the attachment object, if
+embedded, encoded as base64.
+description
+A String. A narrative text describing the content of the
+attachment.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+mimeType
+A String. A technical characterization of the attachment content
+format using IETF Mime Types.
+name
+A String. The name of the attachment.
+size
+A Quantity. An amount in a given unit.
+url
+A String. Uniform Resource Locator, is a web page address (a
+subset of URI).
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+AttachmentRef sub-resource fields
+description
+A String. A narrative text describing the content of the
+attachment.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+url
+A String. Link to the attachment media/content.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CharacteristicSpecification sub-resource fields
+
+
+ 
+charSpecRelationship
+A CharacteristicSpecificationRelationship. An aggregation,
+migration, substitution, dependency or exclusivity relationship
+between/among Characteristic specifications. The specification
+characteristic is embedded within the specification whose ID and
+href are in this entity, and identified by its ID.
+characteristicValueSpecification
+A CharacteristicValueSpecification. Specification of a value
+(number or text or an object) that can be assigned to a
+Characteristic. This is an abstract base class, the actual value is
+in one of the strongly-typed subclasses :
+BooleanArrayCharacteristicValueSpecification,
+BooleanCharacteristicValueSpecification,
+FloatArrayCharacteristicValueSpecification,
+FloatCharacteristicValueSpecification,
+IntegerArrayCharacteristicValueSpecification,
+IntegerCharacteristicValueSpecification,
+MapArrayCharacteristicValueSpecification,
+MapCharacteristicValueSpecification,
+NumberArrayCharacteristicValueSpecification,
+NumberCharacteristicValueSpecification,
+ObjectArrayCharacteristicValueSpecification,
+ObjectCharacteristicValueSpecification,
+StringArrayCharacteristicValueSpecification,
+StringCharacteristicValueSpecification…
+configurable
+A Boolean. If true, the Boolean indicates that the target
+Characteristic is configurable.
+description
+A String. A narrative that explains the CharacteristicSpecification.
+extensible
+A Boolean. An indicator that specifies that the values for the
+characteristic can be extended by adding new values when
+instantiating a characteristic for a resource.
+id
+A String. Unique ID for the characteristic.
+isUnique
+A Boolean. Specifies if the value of this characteristic is unique
+across all entities instantiated from the specification that uses
+this characteristic. For example, consider a ProductSpecification
+for a set-top box, with a CharacteristicSpecification cardID. Each
+set-top box must have a different value for cardID, so this
+isUnique attribute would be set to true for the characteristic.
+maxCardinality
+An Integer. The maximum number of instances a
+CharacteristicValue can take on. For example, zero to five phone
+numbers in a group calling plan, where five is the value for the
+maxCardinality.
+minCardinality
+An Integer. The minimum number of instances a
+CharacteristicValue can take on. For example, zero to five phone
+numbers in a group calling plan, where zero is the value for the
+minCardinality.
+name
+A String. A word, term, or phrase by which this characteristic
+specification is known and distinguished from other characteristic
+specifications.
+regex
+A String. A rule or principle represented in regular expression
+used to derive the value of a characteristic value.
+
+
+ 
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+valueType
+A String. A kind of value that the characteristic can take on, such
+as numeric, text and so forth.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+@valueSchemaLocation
+A String. This (optional) field provides a link to the schema
+describing the value type.
+CharacteristicSpecificationRelationship sub-resource fields
+characteristicSpecificationId
+A String. Unique identifier of the characteristic within the
+specification.
+name
+A String. Name of the target characteristic within the
+specification.
+parentSpecificationHref
+A Uri. Hyperlink reference to the parent specification containing
+the target characteristic.
+parentSpecificationId
+A String. Unique identifier of the parent specification containing
+the target characteristic.
+relationshipType
+A String. Type of relationship such as aggregation, migration,
+substitution, dependency, exclusivity.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CharacteristicValueSpecification sub-resource fields
+isDefault
+A Boolean. If true, the Boolean Indicates if the value is the
+default value for a characteristic.
+rangeInterval
+A String. An indicator that specifies the inclusion or exclusion of
+the valueFrom and valueTo attributes. If applicable, possible
+values are "open", "closed", "closedBottom" and "closedTop".
+regex
+A String. A regular expression constraint for given value.
+unitOfMeasure
+A String. A length, surface, volume, dry measure, liquid measure,
+money, weight, time, and the like. In general, a determinate
+quantity or magnitude of the kind designated, taken as a
+standard of comparison for others of the same kind, in assigning
+to them numerical values, as 1 foot, 1 yard, 1 mile, 1 square foot.
+
+
+ 
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+valueFrom
+An Integer. The low range value that a characteristic can take on.
+valueTo
+An Integer. The upper range value that a characteristic can take
+on.
+valueType
+A String. A kind of value that the characteristic value can take on,
+such as numeric, text and so forth.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'ResourceUsageSpecification'
+resource object.
+{
+    "@type": "ResourceUsageSpecification",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/9aa3-3e7737dd5080",
+    "id": "9aa3-3e7737dd5080",
+    "name": "Voice-Call-Specification",
+    "description": "Specification for voice calls usage",
+    "version": "2.5",
+    "specCharacteristic": [
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "originatingCountryCode",
+            "valueType": "string",
+            "description": "country code of the caller",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "originatingNumber",
+            "valueType": "string",
+            "description": "phone number of the caller",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "destinationCountryCode",
+            "valueType": "string",
+            "description": "country code of the called party",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        },
+        {
+
+
+             "@type": "CharacteristicSpecification",
+            "name": "destinationNumber",
+            "valueType": "string",
+            "description": "phone number of the called party",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "duration",
+            "valueType": "string",
+            "description": "duration of the call",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "startDateTime",
+            "valueType": "dateTime",
+            "description": "startdate and starttime of the call",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "endDateTime",
+            "valueType": "dateTime",
+            "description": "enddate and endtime of the call",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+    }
+}
+Notification Resource Models
+6 notifications are defined for this API.
+Notifications related to ResourceUsage:
+• Create Event
+• Delete Event
+• Attribute Value Change Event
+Notifications related to ResourceUsageSpecification:
+• Create Event
+• Delete Event
+
+
+ • Attribute Value Change Event
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+Figure 3 Notification Pattern
+ResourceUsage
+Create Event
+Message example for ResourceUsageCreateEvent event
+Content-Type: application/json
+{
+    "@type": "ResourceUsageCreateEvent",
+    "@baseType": "Event",
+    "correlationId": "fe9b29c9-a31c",
+
+
+     "domain": "Commercial",
+    "title": "ResourceUsageCreateEvent",
+    "description": "ResourceUsageCreateEvent illustration",
+    "priority": "5",
+    "timeOccurred": "2022-08-25T12:19:14Z",
+    "source": {
+        "@type": "ReportingResource",
+        "id": "29",
+        "name": "APP-171",
+        "@referredType": "LogicalResource"
+    },
+    "reportingSystem": {
+        "@type": "ReportingResource",
+        "id": "182",
+        "name": "APP-116",
+        "@referredType": "LogicalResource"
+    },
+    "eventId": "4b9d-b37c-204557d70b97",
+    "eventTime": "2024-08-25T12:19:14Z",
+    "eventType": "ResourceUsageCreateEvent",
+    "event": {
+        "usage": {
+            "@type": "ResourceUsage",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+            "id": "5130d5131a23",
+            "usageDate": "2024-08-25T12:19:14Z",
+            "usageType": "VOICE",
+            "usageCharacteristic": [
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "originatingCountryCode",
+                    "valueType": "string",
+                    "value": "43"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "destinationCountryCode",
+                    "valueType": "string",
+                    "value": "49"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "destinationNumber",
+                    "valueType": "string",
+                    "value": "170123456789"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "duration",
+                    "valueType": "string",
+                    "value": "20"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "startDateTime",
+                    "valueType": "datetime",
+                    "value": "2024-08-25T12:19:14Z"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "endDateTime",
+                    "valueType": "datetime",
+
+
+                     "value": "2024-08-25T12:19:34Z"
+                }
+            ],
+            "relatedParty": [
+                {
+                    "@type": "RelatedPartyRefOrPartyRoleRef",
+                    "role": "Individual",
+                    "partyOrPartyRole": {
+                        "@type": "PartyRef",
+                        "href": "http://api.csp.com/tmf-
+api/partyManagement/individual/8a41-d6451fe98963",
+                        "id": "8a41-d6451fe98963"
+                    }
+                },
+                {
+                    "@type": "RelatedPartyRefOrPartyRoleRef",
+                    "role": "Organization",
+                    "partyOrPartyRole": {
+                        "@type": "PartyRef",
+                        "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/a396-5c90a41a23ea",
+                        "id": "a396-5c90a41a23ea"
+                    }
+                }
+            ],
+            "resource": {
+                "@type": "ResourceRef",
+                "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+                "id": "qerr-475",
+                "name": "Voice resource"
+            },
+            "usageSpecification": {
+                "@type": "ResourceUsageSpecificationRef",
+                "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+                "id": "af59-b504c742900e",
+                "name": "VoiceCall"
+            }
+        }
+    }
+}
+Delete Event
+Message example for ResourceUsageDeleteEvent event
+Content-Type: application/json
+{
+    "@type": "ResourceUsageDeleteEvent",
+    "@baseType": "Event",
+    "correlationId": "fe9b29c9-a31c",
+    "domain": "Commercial",
+    "title": "ResourceUsageDeleteEvent",
+    "description": "ResourceUsageDeleteEvent illustration",
+    "priority": "5",
+    "timeOccurred": "2022-08-25T12:19:14Z",
+    "source": {
+        "@type": "ReportingResource",
+        "id": "29",
+
+
+         "name": "APP-171",
+        "@referredType": "LogicalResource"
+    },
+    "reportingSystem": {
+        "@type": "ReportingResource",
+        "id": "182",
+        "name": "APP-116",
+        "@referredType": "LogicalResource"
+    },
+    "eventId": "4b9d-b37c-204557d70b97",
+    "eventTime": "2024-08-25T12:19:14Z",
+    "eventType": "ResourceUsageDeleteEvent",
+    "event": {
+        "usage": {
+            "@type": "ResourceUsage",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+            "id": "5130d5131a23"
+        }
+    }
+}
+Attribute Value Change Event
+Message example for ResourceUsageAttributeValueChangeEvent event
+Content-Type: application/json
+{
+    "@type": "ResourceUsageAttributeValueChangeEvent",
+    "@baseType": "Event",
+    "correlationId": "fe9b29c9-a31c",
+    "domain": "Commercial",
+    "title": "ResourceUsageAttributeValueChangeEvent",
+    "description": "ResourceUsageAttributeValueChangeEvent illustration",
+    "priority": "5",
+    "timeOccurred": "2022-08-25T12:19:14Z",
+    "source": {
+        "@type": "ReportingResource",
+        "id": "29",
+        "name": "APP-171",
+        "@referredType": "LogicalResource"
+    },
+    "reportingSystem": {
+        "@type": "ReportingResource",
+        "id": "182",
+        "name": "APP-116",
+        "@referredType": "LogicalResource"
+    },
+    "eventId": "4b9d-b37c-204557d70b97",
+    "eventTime": "2024-08-25T12:19:14Z",
+    "eventType": "ResourceUsageAttributeValueChangeEvent",
+    "event": {
+        "usage": {
+            "@type": "ResourceUsage",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+            "id": "5130d5131a23",
+            "usageCharacteristic": [
+                {
+
+
+                     "@type": "StringCharacteristic",
+                    "name": "originatingCountryCode",
+                    "valueType": "string",
+                    "value": "43"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "destinationCountryCode",
+                    "valueType": "string",
+                    "value": "49"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "destinationNumber",
+                    "valueType": "string",
+                    "value": "170123456789"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "duration",
+                    "valueType": "string",
+                    "value": "20"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "startDateTime",
+                    "valueType": "datetime",
+                    "value": "2024-08-25T12:19:14Z"
+                },
+                {
+                    "@type": "StringCharacteristic",
+                    "name": "endDateTime",
+                    "valueType": "datetime",
+                    "value": "2024-08-25T12:19:34Z"
+                }
+            ]
+        }
+    }
+}
+ResourceUsageSpecification
+Create Event
+Message example for ResourceUsageSpecificationCreateEvent event
+Content-Type: application/json
+{
+    "@type": "ResourceUsageSpecificationCreateEvent",
+    "@baseType": "Event",
+    "correlationId": "fe9b29c9-a31c",
+    "domain": "Commercial",
+    "title": "ResourceUsageSpecificationCreateEvent",
+    "description": "ResourceUsageSpecificationCreateEvent illustration",
+    "priority": "5",
+    "timeOccurred": "2022-08-25T12:19:14Z",
+    "source": {
+        "@type": "ReportingResource",
+
+
+         "id": "29",
+        "name": "APP-171",
+        "@referredType": "LogicalResource"
+    },
+    "reportingSystem": {
+        "@type": "ReportingResource",
+        "id": "182",
+        "name": "APP-116",
+        "@referredType": "LogicalResource"
+    },
+    "eventId": "4b9d-b37c-204557d70b97",
+    "eventTime": "2024-08-25T12:19:14Z",
+    "eventType": "ResourceUsageSpecificationCreateEvent",
+    "event": {
+        "usageSpecification": {
+            "@type": "ResourceUsageSpecification",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/9aa3-3e7737dd5080",
+            "id": "9aa3-3e7737dd5080",
+            "name": "Voice-Call-Specification",
+            "description": "Specification for voice calls usage",
+            "version": "2.5",
+            "specCharacteristic": [
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "originatingCountryCode",
+                    "valueType": "string",
+                    "description": "country code of the caller",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "originatingNumber",
+                    "valueType": "string",
+                    "description": "phone number of the caller",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "destinationCountryCode",
+                    "valueType": "string",
+                    "description": "country code of the called party",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "destinationNumber",
+                    "valueType": "string",
+                    "description": "phone number of the called party",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "duration",
+                    "valueType": "string",
+
+
+                     "description": "duration of the call",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "startDateTime",
+                    "valueType": "dateTime",
+                    "description": "startdate and starttime of the call",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "endDateTime",
+                    "valueType": "dateTime",
+                    "description": "enddate and endtime of the call",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                }
+            ],
+            "validFor": {
+                "startDateTime": "2022-02-20T17:00:00Z",
+                "endDateTime": "2099-01-11T00:00:00Z"
+            }
+        }
+    }
+}
+Delete Event
+Message example for ResourceUsageSpecificationDeleteEvent event
+Content-Type: application/json
+{
+    "@type": "ResourceUsageSpecificationDeleteEvent",
+    "@baseType": "Event",
+    "correlationId": "fe9b29c9-a31c",
+    "domain": "Commercial",
+    "title": "ResourceUsageSpecificationDeleteEvent",
+    "description": "ResourceUsageSpecificationDeleteEvent illustration",
+    "priority": "5",
+    "timeOccurred": "2022-08-25T12:19:14Z",
+    "source": {
+        "@type": "ReportingResource",
+        "id": "29",
+        "name": "APP-171",
+        "@referredType": "LogicalResource"
+    },
+    "reportingSystem": {
+        "@type": "ReportingResource",
+        "id": "182",
+        "name": "APP-116",
+        "@referredType": "LogicalResource"
+    },
+    "eventId": "4b9d-b37c-204557d70b97",
+
+
+     "eventTime": "2024-08-25T12:19:14Z",
+    "eventType": "ResourceUsageSpecificationDeleteEvent",
+    "event": {
+        "usageSpecification": {
+            "@type": "ResourceUsageSpecification",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/9aa3-3e7737dd5080",
+            "id": "9aa3-3e7737dd5080",
+            "name": "Voice-Call-Specification"
+        }
+    }
+}
+Attribute Value Change Event
+Message example for ResourceUsageSpecificationAttributeValueChangeEvent event
+Content-Type: application/json
+{
+    "@type": "ResourceUsageSpecificationAttributeValueChangeEvent",
+    "@baseType": "Event",
+    "correlationId": "fe9b29c9-a31c",
+    "domain": "Commercial",
+    "title": "ResourceUsageSpecificationAttributeValueChangeEvent",
+    "description": "ResourceUsageSpecificationAttributeValueChangeEvent
+illustration",
+    "priority": "5",
+    "timeOccurred": "2022-08-25T12:19:14Z",
+    "source": {
+        "@type": "ReportingResource",
+        "id": "29",
+        "name": "APP-171",
+        "@referredType": "LogicalResource"
+    },
+    "reportingSystem": {
+        "@type": "ReportingResource",
+        "id": "182",
+        "name": "APP-116",
+        "@referredType": "LogicalResource"
+    },
+    "eventId": "4b9d-b37c-204557d70b97",
+    "eventTime": "2024-08-25T12:19:14Z",
+    "eventType": "ResourceUsageSpecificationAttributeValueChangeEvent",
+    "event": {
+        "usageSpecification": {
+            "@type": "ResourceUsageSpecification",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/9aa3-3e7737dd5080",
+            "id": "9aa3-3e7737dd5080",
+            "name": "Voice-Call-Specification",
+            "specCharacteristic": [
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "originatingCountryCode",
+                    "valueType": "string",
+                    "description": "country code of the caller",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+
+
+                 },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "originatingNumber",
+                    "valueType": "string",
+                    "description": "phone number of the caller",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "destinationCountryCode",
+                    "valueType": "string",
+                    "description": "country code of the called party",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "destinationNumber",
+                    "valueType": "string",
+                    "description": "phone number of the called party",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "duration",
+                    "valueType": "string",
+                    "description": "duration of the call",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                },
+                {
+                    "@type": "CharacteristicSpecification",
+                    "name": "startDateTime",
+                    "valueType": "dateTime",
+                    "description": "startdate and starttime of the call",
+                    "configurable": true,
+                    "minCardinality": 1,
+                    "maxCardinality": 1
+                }
+            ]
+        }
+    }
+}
+
+
+ API OPERATIONS
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Execute an Action on an Entity
+POST on TASK Resource
+POST must be used to execute
+Task Resources
+Other Request Methods
+POST on TASK Resource
+GET and POST must not be
+used to tunnel other request
+methods.
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines.
+Notifications are also described in a subsequent section.
+Operations on ResourceUsage
+List or find ResourceUsage objects
+GET /resourceUsage?fields=…
+Description
+This operation list ResourceUsage entities. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Retrieving previous Usage details for the usageType of 'Voice'.
+Request
+GET
+/resourceUsage?fields=status,usageType,usageDate,usageSpecification,resource&usageTy
+pe=VOICE
+Content-Type: application/json
+Response
+
+
+ 
+200
+[
+    {
+        "@type": "ResourceUsage",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/8cc2840d-b408-4f43-80c0-11da13d84147",
+        "id": "8cc2840d-b408-4f43-80c0-11da13d84147",
+        "usageDate": "2024-08-26T12:19:14Z",
+        "usageType": "DATA",
+        "usageCharacteristic": [
+            {
+                "@type": "StringCharacteristic",
+                "name": "direction",
+                "valueType": "string",
+                "value": "download"
+            },
+            {
+                "@type": "StringCharacteristic",
+                "name": "dataTransfered",
+                "valueType": "string",
+                "value": "45"
+            }
+        ],
+        "relatedParty": [
+            {
+                "@type": "RelatedPartyRefOrPartyRoleRef",
+                "role": "Organization",
+                "partyOrPartyRole": {
+                    "@type": "PartyRef",
+                    "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                    "id": "8a41-d6451fe98963"
+                }
+            }
+        ],
+        "resource": {
+            "@type": "ResourceRef",
+            "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+            "id": "qerr-475",
+            "name": "Antenna"
+        },
+        "usageSpecification": {
+            "@type": "ResourceUsageSpecificationRef",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+            "id": "af59-b504c742900e",
+            "name": "Antenna for 5G slice"
+        }
+    },
+    {
+        "@type": "ResourceUsage",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+        "id": "5130d5131a23",
+        "usageDate": "2024-08-25T12:19:14Z",
+        "usageType": "DATA",
+        "relatedParty": [
+            {
+                "@type": "RelatedPartyRefOrPartyRoleRef",
+                "role": "Organization",
+                "partyOrPartyRole": {
+
+
+                     "@type": "PartyRef",
+                    "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                    "id": "8a41-d6451fe98963"
+                }
+            }
+        ],
+        "usageCharacteristic": [
+            {
+                "@type": "StringCharacteristic",
+                "name": "direction",
+                "valueType": "string",
+                "value": "download"
+            },
+            {
+                "@type": "StringCharacteristic",
+                "name": "dataTransfered",
+                "valueType": "string",
+                "value": "20"
+            }
+        ],
+        "resource": {
+            "@type": "ResourceRef",
+            "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+            "id": "qerr-475",
+            "name": "Antenna"
+        },
+        "usageSpecification": {
+            "@type": "ResourceUsageSpecificationRef",
+            "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+            "id": "af59-b504c742900e",
+            "name": "Antenna for 5G slice"
+        }
+    }
+]
+Retrieves a ResourceUsage by ID
+GET /resourceUsage/{id}?fields=…
+Description
+This operation retrieves a ResourceUsage entity. Attribute selection is enabled for all first
+level attributes. Filtering may be available depending on the compliance level supported by
+an implementation.
+Usage samples
+A request for a previous Usage event. The criteria is the Resource Usage id 5130d5131a23
+Request
+GET /resourceUsage/5130d5131a23
+Content-Type: application/json
+
+
+ 
+Response
+200
+{
+    "@type": "ResourceUsage",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+    "id": "5130d5131a23",
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "DATA",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "direction",
+            "valueType": "string",
+            "value": "download"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "value": "20"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        }
+    ],
+    "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+        "id": "qerr-475",
+        "name": "Antenna"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+        "name": "Antenna for 5G slice"
+    }
+}
+Creates a ResourceUsage
+POST /resourceUsage?fields=…
+Description
+This operation creates a ResourceUsage entity.
+
+
+ 
+Mandatory Attributes
+Mandatory Attributes
+Rule
+resource
+resource.@type
+resource.id
+usageCharacteristic
+usageCharacteristic.@type
+usageCharacteristic.name
+usageCharacteristic.value
+usageDate
+@type
+Usage samples
+Here is an example of a request for creating a specific Usage resource.
+Request
+POST /resourceUsage
+Content-Type: application/json
+{
+    "@type": "ResourceUsage",
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "DATA",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "direction",
+            "valueType": "string",
+            "value": "download"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "value": "20"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        }
+    ],
+
+
+     "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+        "id": "qerr-475",
+        "name": "Antenna"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+        "name": "Antenna for 5G slice"
+    }
+}
+Response
+201
+{
+    "@type": "ResourceUsage",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+    "id": "5130d5131a23",
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "DATA",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "direction",
+            "valueType": "string",
+            "value": "download"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "value": "20"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        }
+    ],
+    "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+        "id": "qerr-475",
+        "name": "Antenna"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+
+
+         "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+        "name": "Antenna for 5G slice"
+    }
+}
+Updates partially a ResourceUsage
+PATCH /resourceUsage/{id}?fields=…
+Description
+This operation allows partial updates of a ResourceUsage entity. Support of json/merge
+(https://tools.ietf.org/html/rfc7396) is mandatory, support of json/patch (http://tools.ietf.org/
+html/rfc5789) is optional. Note: If the update operation yields to the creation of sub-resources
+or relationships, the same rules concerning mandatory sub-resource attributes and default
+value settings in the POST operation applies to the PATCH operation. Hence these tables
+are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+href
+id
+usageDate
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Patchable Attributes
+Rule
+bundledResourceUsage
+description
+externalIdentifier
+isBundle
+relatedParty
+resource
+usageCharacteristic
+usageSpecification
+usageType
+Usage samples
+Here is an example of a request for patching a usage record.
+
+
+ 
+Request
+PATCH /resourceUsage/5130d5131a23
+Content-Type: application/json
+{
+    "@type": "ResourceUsage",
+    "isBundle": false
+}
+Response
+200
+{
+    "@type": "ResourceUsage",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+    "id": "5130d5131a23",
+    "isBundle":false,
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "DATA",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "direction",
+            "valueType": "string",
+            "value": "download"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "value": "22"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        }
+    ],
+    "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+        "id": "qerr-475",
+        "name": "Antenna"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+
+
+         "name": "Antenna for 5G slice"
+    }
+}
+Here is an example of a request for patching a usage record.
+Request
+PATCH /resourceUsage/5130d5131a23
+Content-Type: application/merge-patch+json
+{
+    "@type": "ResourceUsage",
+    "isBundle": false
+}
+Response
+200
+{
+    "@type": "ResourceUsage",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+    "id": "5130d5131a23",
+    "isBundle":false,
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "DATA",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "direction",
+            "valueType": "string",
+            "value": "download"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "value": "22"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        }
+    ],
+    "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+
+
+         "id": "qerr-475",
+        "name": "Antenna"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+        "name": "Antenna for 5G slice"
+    }
+}
+Here is an example of a request for patching a usage record.
+Request
+PATCH /resourceUsage/5130d5131a23
+Content-Type: application/json-patch+json
+[
+    {
+        "op": "replace",
+        "path": "/isBundle",
+        "value": false
+    }
+]
+Response
+200
+{
+    "@type": "ResourceUsage",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+    "id": "5130d5131a23",
+    "isBundle": false, 
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "DATA",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "direction",
+            "valueType": "string",
+            "value": "download"
+        },
+        {
+            "@type": "StringCharacteristic",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "value": "20"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+
+
+             "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        }
+    ],
+    "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+        "id": "qerr-475",
+        "name": "Antenna"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+        "name": "Antenna for 5G slice"
+    }
+}
+Here is an example of a request for patching a usage record.
+Request
+PATCH /resourceUsage/5130d5131a23
+Content-Type: application/json-patch-query+json
+[
+    {
+        "op": "replace",
+        "path": "/usageCharacteristic/value?name=dataTransfered",
+        "value": "22"
+    }
+]
+Response
+200
+{
+    "@type": "ResourceUsage",
+    "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsage/5130d5131a23",
+    "id": "5130d5131a23",
+    "usageDate": "2024-08-25T12:19:14Z",
+    "usageType": "DATA",
+    "usageCharacteristic": [
+        {
+            "@type": "StringCharacteristic",
+            "name": "direction",
+            "valueType": "string",
+            "value": "download"
+        },
+        {
+
+
+             "@type": "StringCharacteristic",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "value": "22"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "Organization",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "http://api.csp.com/tmf-
+api/partyManagement/organization/8a41-d6451fe98963",
+                "id": "8a41-d6451fe98963"
+            }
+        }
+    ],
+    "resource": {
+        "@type": "ResourceRef",
+        "href": "https://api.csp.com/tmf-api//resource/qerr-475",
+        "id": "qerr-475",
+        "name": "Antenna"
+    },
+    "usageSpecification": {
+        "@type": "ResourceUsageSpecificationRef",
+        "href": "https://api.csp.com/tmf-
+api/resourceUsageManagement/v5/resourceUsageSpecification/af59-b504c742900e",
+        "id": "af59-b504c742900e",
+        "name": "Antenna for 5G slice"
+    }
+}
+Deletes a ResourceUsage
+DELETE /resourceUsage/{id}
+Description
+This operation deletes a ResourceUsage entity.
+Operations on ResourceUsageSpecification
+Retrieves a ResourceUsageSpecification by ID
+GET /resourceUsageSpecification/{id}?fields=…
+Description
+This operation retrieves a ResourceUsageSpecification entity. Attribute selection is enabled
+for all first level attributes. Filtering may be available depending on the compliance level
+supported by an implementation.
+Usage samples
+A request for a specific ResourceUsageSpecification with an id 9aa3-3e7737dd5080
+
+
+ 
+Request
+GET /resourceUsageSpecification/9aa3-3e7737dd5080
+Content-Type: application/json
+Response
+200
+{
+    "@type": "ResourceUsageSpecification",
+    "name": "Antenna for 5G slice",
+    "description": "Specification for onsite antenna for 5G slices",
+    "version": "2.0",
+    "specCharacteristic": [
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "direction",
+            "valueType": "string",
+            "description": "direction of the data transfer on the antenna",
+            "configurable": true,
+            "minCardinality": 0,
+            "maxCardinality": 2
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "description": "volume of the data transfered for the usage.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "lifecycleStatus": "active",
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+    }
+}
+List or find ResourceUsageSpecification objects
+GET /resourceUsageSpecification?fields=…
+Description
+This operation list ResourceUsageSpecification entities. Attribute selection is enabled for all
+first level attributes. Filtering may be available depending on the compliance level supported
+by an implementation.
+Usage samples
+Retrieving previous ResourceUsageSpecifications which are at version 2.5
+
+
+ 
+Request
+GET /resourceUsageSpecification?version=2.5
+Content-Type: application/json
+Response
+200
+[
+    {
+        "@type": "ResourceUsageSpecification",
+        "name": "Antenna for 5G slice",
+        "description": "Specification for onsite antenna for 5G slices",
+        "version": "0.8",
+        "specCharacteristic": [
+            {
+                "@type": "CharacteristicSpecification",
+                "name": "direction",
+                "valueType": "string",
+                "description": "direction of the data transfer on the antenna",
+                "configurable": true,
+                "minCardinality": 0,
+                "maxCardinality": 2
+            },
+            {
+                "@type": "CharacteristicSpecification",
+                "name": "dataTransfered",
+                "valueType": "string",
+                "description": "volume of the data transfered for the usage.",
+                "configurable": true,
+                "minCardinality": 1,
+                "maxCardinality": 1
+            }
+        ],
+        "lifecycleStatus": "inDesign",
+        "validFor": {
+            "startDateTime": "2022-02-20T17:00:00Z",
+            "endDateTime": "2099-01-11T00:00:00Z"
+        }
+    }
+]
+Creates a ResourceUsageSpecification
+POST /resourceUsageSpecification?fields=…
+Description
+This operation creates a ResourceUsageSpecification entity.
+Mandatory Attributes
+
+
+ 
+Mandatory Attributes
+Rule
+name
+@type
+Usage samples
+Here is an example of a request for creating a specific Resource Usage Specification
+resource.
+Request
+POST /resourceUsageSpecification
+Content-Type: application/json
+{
+    "@type": "ResourceUsageSpecification",
+    "name": "Antenna for 5G slice",
+    "description": "Specification for onsite antenna for 5G slices",
+    "version": "0.8",
+    "specCharacteristic": [
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "direction",
+            "valueType": "string",
+            "description": "direction of the data transfer on the antenna",
+            "configurable": true,
+            "minCardinality": 0,
+            "maxCardinality": 2
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "description": "volume of the data transfered for the usage.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+    }
+}
+Response
+201
+{
+    "@type": "ResourceUsageSpecification",
+    "name": "Antenna for 5G slice",
+    "description": "Specification for onsite antenna for 5G slices",
+    "version": "0.8",
+    "specCharacteristic": [
+        {
+
+
+             "@type": "CharacteristicSpecification",
+            "name": "direction",
+            "valueType": "string",
+            "description": "direction of the data transfer on the antenna",
+            "configurable": true,
+            "minCardinality": 0,
+            "maxCardinality": 2
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "description": "volume of the data transfered for the usage.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "lifecycleStatus": "inDesign",
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+    }
+}
+Updates partially a ResourceUsageSpecification
+PATCH /resourceUsageSpecification/{id}?fields=…
+Description
+This operation allows partial updates of a ResourceUsageSpecification entity. Support of
+json/merge 
+(https://tools.ietf.org/html/rfc7396) 
+is 
+mandatory, 
+support 
+of 
+json/patch
+(http://tools.ietf.org/html/rfc5789) is optional. Note: If the update operation yields to the
+creation of sub-resources or relationships, the same rules concerning mandatory sub-
+resource attributes and default value settings in the POST operation applies to the PATCH
+operation. Hence these tables are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+href
+id
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Patchable Attributes
+Rule
+attachment
+bundledResourceUsageSpecificati
+on
+
+
+ 
+Patchable Attributes
+Rule
+description
+isBundle
+lastUpdate
+lifecycleStatus
+name
+resourceSpecification
+resourceUsageSpecRelationship
+specCharacteristic
+validFor
+version
+Usage samples
+Here is an example of a request for patching a ResourceUsageSpecification record.
+Request
+PATCH /resourceUsageSpecification/9aa3-3e7737dd5080
+Content-Type: application/json
+{
+    "@type": "ResourceUsageSpecification",
+    "version": "3.2"
+}
+Response
+200
+{
+    "@type": "ResourceUsageSpecification",
+    "name": "Antenna for 5G slice",
+    "description": "Specification for onsite antenna for 5G slices",
+    "version": "3.2",
+    "specCharacteristic": [
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "direction",
+            "valueType": "string",
+            "description": "Direction of the data transfer on the antenna.",
+            "configurable": true,
+            "minCardinality": 0,
+            "maxCardinality": 2
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "description": "Volume of the data transfered for the usage.",
+
+
+             "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "lifecycleStatus": "active",
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+    }
+}
+Here is an example of a request for patching a ResourceUsageSpecification record.
+Request
+PATCH /resourceUsageSpecification/9aa3-3e7737dd5080
+Content-Type: application/merge-patch+json
+{
+    "@type": "ResourceUsageSpecification",
+    "version": "3.2"
+}
+Response
+200
+{
+    "@type": "ResourceUsageSpecification",
+    "name": "Antenna for 5G slice",
+    "description": "Specification for onsite antenna for 5G slices",
+    "version": "3.2",
+    "specCharacteristic": [
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "direction",
+            "valueType": "string",
+            "description": "Direction of the data transfer on the antenna.",
+            "configurable": true,
+            "minCardinality": 0,
+            "maxCardinality": 2
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "description": "Volume of the data transfered for the usage.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "lifecycleStatus": "active",
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+
+
+     }
+}
+Here is an example of a request for patching a ResourceUsageSpecification record.
+Request
+PATCH /resourceUsageSpecification/9aa3-3e7737dd5080
+Content-Type: application/json-patch+json
+[
+    {
+        "op": "replace",
+        "path": "/version",
+        "value": "3.0"
+    }
+]
+Response
+200
+{
+    "@type": "ResourceUsageSpecification",
+    "name": "Antenna for 5G slice",
+    "description": "Specification for onsite antenna for 5G slices",
+    "version": "3.0",
+    "specCharacteristic": [
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "direction",
+            "valueType": "string",
+            "description": "direction of the data transfer on the antenna",
+            "configurable": true,
+            "minCardinality": 0,
+            "maxCardinality": 2
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "description": "volume of the data transfered for the usage.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "lifecycleStatus": "active",
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+    }
+}
+Here is an example of a request for patching a ResourceUsageSpecification record.
+
+
+ 
+Request
+PATCH /resourceUsageSpecification/9aa3-3e7737dd5080
+Content-Type: application/json-patch-query+json
+[
+    {
+        "op": "replace",
+        "path": "/specCharacteristic/description?name=direction",
+        "value": "Direction of the data transfer on the antenna."
+    }
+]
+Response
+200
+{
+    "@type": "ResourceUsageSpecification",
+    "name": "Antenna for 5G slice",
+    "description": "Specification for onsite antenna for 5G slices",
+    "version": "3.0",
+    "specCharacteristic": [
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "direction",
+            "valueType": "string",
+            "description": "Direction of the data transfer on the antenna.",
+            "configurable": true,
+            "minCardinality": 0,
+            "maxCardinality": 2
+        },
+        {
+            "@type": "CharacteristicSpecification",
+            "name": "dataTransfered",
+            "valueType": "string",
+            "description": "Volume of the data transfered for the usage.",
+            "configurable": true,
+            "minCardinality": 1,
+            "maxCardinality": 1
+        }
+    ],
+    "lifecycleStatus": "active",
+    "validFor": {
+        "startDateTime": "2022-02-20T17:00:00Z",
+        "endDateTime": "2099-01-11T00:00:00Z"
+    }
+}
+Deletes a ResourceUsageSpecification
+DELETE /resourceUsageSpecification/{id}
+Description
+This operation deletes a ResourceUsageSpecification entity.
+
+
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+
+
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+
+
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+
+
+ Acknowledgements
+Release History
+Release
+Number
+Date
+Release led by:
+Description
+V4.0
+July 2021
+Kamal
+Maghsoudlou/Ericsson,
+Kevin McDonnell/Huawei
+1st release of the Usage API
+v5.0
+June 2024
+Sergei Lukin/Deutsche
+Telekom
+migrated to OAS 3.0
+v5.0
+Dec 2024
+Revathi Sivaji/TM Forum,
+Heidi Lobecker/TM Forum
+TM Forum Approved
+Contributors to Document
+Kamal Maghsoudlou
+Ericsson
+Kevin McDonnell
+Huawei
+Pierre Gauthier
+TM Forum
+Sergei Lukin
+Deutsche Telekom
+Uwe Sülter
+Deutsche Telekom
+
+

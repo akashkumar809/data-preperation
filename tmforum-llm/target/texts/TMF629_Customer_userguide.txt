@@ -1,0 +1,1648 @@
+TM Forum Specification 
+Customer Management
+Maturity Level: General availability
+Team Approved Date: 29-09-2023
+Approval Status: Team Approved
+IPR Mode: RAND
+Release Status: Production
+Version 5.0.0
+TMF629
+
+
+ NOTICE
+Copyright © TM Forum 2023. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+
+
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  1
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Support of polymorphism and extension patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+RESOURCE MODEL . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Customer resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  15
+Customer State Change Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  16
+Customer Attribute Value Change Event. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  17
+Customer Delete Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  17
+Customer Create Event. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  17
+API OPERATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+Operations on Customer . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+Retrieves a Customer by ID . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+List or find Customer objects. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  20
+Creates a Customer . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  22
+Updates partially a Customer . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  24
+Deletes a Customer. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  30
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  32
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  32
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  35
+Release History. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  35
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  36
+
+
+ Introduction
+The following document is the specification of the REST API for Customer Management. It
+includes the model definition as well as all available operations.
+It provides a standardized mechanism for customer and customer account management
+such as creation, update, retrieval, deletion and notification of events.
+Customer can be a person, an organization or another service provider who buys products
+from an enterprise. Customer management API allows management of identification and
+financial information about him.
+Customer management API manages the following data resources:
+• Customer
+◦Customer represents a person or organization that buys products and services from
+the enterprise or receives free offers or services. Customers can also be other
+service providers who resell the enterprises products, other service providers that
+lease the enterprise’s resources for utilization by the other service provider’s
+products and services, and so forth.
+◦Customer resource contains information about the customer. Main attributes are its
+identifier, name, status and validity, description, characteristics, contact medium,
+related customer account, related party, customer credit profile information
+The customer management API performs the following operation on customer:
+• Retrieval, creation, full or partial update and deletion of customers.
+API Dependencies
+This API assumes that the information regarding customer accounts and payment means is
+obtained by accessing the Account Management API.
+This API assumes that the information regarding related parties is obtained by accessing the
+Party Management API.
+
+
+ Sample Use Cases
+Reader will find example of use cases using API in “Open Digital Business Scenarios and
+Use Cases” document.
+
+
+ Support of polymorphism and extension
+patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below. Polymorphism in
+collections occurs when entities inherit from base entities, for instance a BillingAccount and
+SettlementAccount inheriting properties from the abstract Account entity.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines, Part 2 (TMF630).
+The @type attribute provides a way to represent the actual class type of an entity. For
+example, within a list of Account instances some may be instances of BillingAccount where
+other could be instances of SettlementAccount. The @type gives this information. All
+resources and sub-resources of this API have a @type attributes that can be provided when
+this is useful.
+The @referredType can be used within reference entities (like for instance an AccountRef
+object) to explicitly denote the actual entity type of the referred class. Notice that in reference
+entities the @type, when used, denotes the class type of the reference itself, such as
+BillingAccountRef or SettlementAccountRef, and not the class type of the referred object.
+However since reference classes are rarely sub-classed, @type is generally not useful in
+reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+
+
+ RESOURCE MODEL
+Managed Entity and Task Resource Models
+Customer resource
+Resource model
+Figure 1 - Customer
+
+
+ 
+Figure 2 - ContactMedium
+
+
+ 
+Figure 3 - PartyRole
+
+
+ 
+Field descriptions
+AccountRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+AgreementRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Characteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CharacteristicRelationship sub-resource fields
+
+
+ 
+id
+A String. Unique identifier of the characteristic.
+relationshipType
+A String. The type of relationship.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ContactMedium sub-resource fields
+contactType
+A String. Type of the contact medium to qualifiy it like pro email /
+personal email. This is not used to define the contact medium
+used.
+id
+A String. Identifier for this contact medium.
+preferred
+A Boolean. If true, indicates that is the preferred contact medium.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CreditProfile sub-resource fields
+creditProfileDate
+A DateTime. The date the profile was established.
+creditRiskRating
+An Integer. This is an integer whose value is used to rate the
+risk.
+creditScore
+An Integer. A measure of a person or organizations
+creditworthiness calculated on the basis of a combination of
+factors such as their income and credit history.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+EmailContactMedium sub-resource fields
+
+
+ 
+contactType
+A String. Type of the contact medium to qualifiy it like pro email /
+personal email. This is not used to define the contact medium
+used.
+emailAddress
+A String. Full email address in standard format.
+id
+A String. Identifier for this contact medium.
+preferred
+A Boolean. If true, indicates that is the preferred contact medium.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+FaxContactMedium sub-resource fields
+contactType
+A String. Type of the contact medium to qualifiy it like pro email /
+personal email. This is not used to define the contact medium
+used.
+faxNumber
+A String. The fax number of the contact.
+id
+A String. Identifier for this contact medium.
+preferred
+A Boolean. If true, indicates that is the preferred contact medium.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicAddressContactMedium sub-resource fields
+city
+A String. The city.
+contactType
+A String. Type of the contact medium to qualifiy it like pro email /
+personal email. This is not used to define the contact medium
+used.
+country
+A String. The country.
+geographicAddress
+A GeographicAddressRef. Reference to a Geographic Address.
+id
+A String. Identifier for this contact medium.
+postCode
+A String. Postcode.
+preferred
+A Boolean. If true, indicates that is the preferred contact medium.
+stateOrProvince
+A String. State or province.
+
+
+ 
+street1
+A String. Describes the street.
+street2
+A String. Complementary street description.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+GeographicAddressRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRole sub-resource fields
+account
+An AccountRef. Account reference. A account may be a party
+account or a financial account.
+
+
+ 
+agreement
+An AgreementRef. Agreement reference. An agreement
+represents a contract or arrangement, either written or verbal
+and sometimes enforceable by law, such as a service level
+agreement or a customer price agreement. An agreement
+involves a number of other business entities, such as products,
+services, and resources and/or their specifications.
+characteristic
+A Characteristic. Describes the characteristic of a party role.
+contactMedium
+A ContactMedium. Indicates the contact medium that could be
+used to contact the party.
+creditProfile
+A CreditProfile. Credit profile for the party (containing credit
+scoring, …). By default only the current credit profile is retrieved.
+It can be used as a list to give the party credit profiles history, the
+first one in the list will be the current one.
+description
+A String. A description of the PartyRole.
+engagedParty
+A PartyRef. A Party reference.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. A word, term, or phrase by which the PartyRole is
+known and distinguished from other PartyRoles. It's the name of
+the PartyRole unique entity.
+partyRoleSpecification
+A PartyRoleSpecificationRef. Party role specification reference.
+A party role specification gives additional details on the part
+played by a party in a given context.
+paymentMethod
+A PaymentMethodRef. PaymentMethod reference. A payment
+method defines a specific mean of payment (e.g direct debit).
+relatedParty
+A RelatedPartyOrPartyRole. RelatedParty reference. A related
+party defines party or party role or its reference, linked to a
+specific entity.
+role
+A String. Role played by the engagedParty in this context. As
+role is defined by partyRoleSpecification, this role attribute can
+be used to precise the role defined by partyRoleSpecification, or
+it can be used to define the role in case there is no
+partyRoleSpecification.
+status
+A String. Used to track the lifecycle status of the party role.
+statusReason
+A String. A string providing an explanation on the value of the
+status lifecycle. For instance if the status is Rejected,
+statusReason will provide the reason for rejection.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+
+
+ 
+PartyRoleSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PaymentMethodRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PhoneContactMedium sub-resource fields
+contactType
+A String. Type of the contact medium to qualifiy it like pro email /
+personal email. This is not used to define the contact medium
+used.
+id
+A String. Identifier for this contact medium.
+phoneNumber
+A String. The phone number of the contact.
+preferred
+A Boolean. If true, indicates that is the preferred contact medium.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedPartyOrPartyRole sub-resource fields
+
+
+ 
+partyOrPartyRole
+A PartyOrPartyRole.
+role
+A String. Role played by the related party or party role in the
+context of the specific entity it is linked to. Such as 'initiator',
+'customer', 'salesAgent', 'user'.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+SocialContactMedium sub-resource fields
+contactType
+A String. Type of the contact medium to qualifiy it like pro email /
+personal email. This is not used to define the contact medium
+used.
+id
+A String. Identifier for this contact medium.
+preferred
+A Boolean. If true, indicates that is the preferred contact medium.
+socialNetworkId
+A String. Identifier as a member of a social network.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'Customer' resource object.
+{
+    "@type": "Customer",
+    "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+    "id": "1140",
+    "name": "Moon Football Club",
+    "status": "Approved",
+    "statusReason": "Account details checked",
+    "validFor": {
+        "startDateTime": "2018-06-12T00:00:00Z",
+        "endDateTime": "2019-01-01T00:00:00Z"
+    },
+    "engagedParty": {
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/500",
+        "id": "500",
+        "name": "Happy Travellers",
+        "@referredType": "Organization"
+    },
+    "account": [
+        {
+
+
+             "@type": "AccountRef",
+            "href": "https://host:port/tmf-
+api/settlementAccount/v5/settlementAccount/99807",
+            "id": "99807",
+            "@referredType": "SettlementAccount"
+        },
+        {
+            "@type": "AccountRef",
+            "href": "https://host:port/tmf-api/accountManagement/v5/account/8251",
+            "id": "8251",
+            "name": "Travel Account",
+            "@referredType": "BillingAccount",
+            "description": "Primary billing account"
+        }
+    ],
+    "paymentMethod": [
+        {
+            "@type": "PaymentMethodRef",
+            "href": "https://host:port/tmf-
+api/paymentMethods/v1/paymentMethod/9562",
+            "id": "9562",
+            "name": "professional payment",
+            "@referredType": "CreditCardPayment"
+        }
+    ],
+    "contactMedium": [
+        {
+            "@type": "PhoneContactMedium",
+            "preferred": true,
+            "contactType": "homePhone",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "phoneNumber": "01 09 75 83 51"
+        },
+        {
+            "@type": "GeographicAddressContactMedium",
+            "preferred": false,
+            "contactType": "homeAddress",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "city": "Paris",
+            "country": "France",
+            "postCode": "75014",
+            "street1": "15 Rue des Canards"
+        }
+    ],
+    "creditProfile": [
+        {
+            "@type": "CreditProfile",
+            "creditProfileDate": "2018-06-15T00:00:00Z",
+            "creditRiskRating": 4,
+            "creditScore": 5,
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            }
+        }
+    ],
+    "agreement": [
+
+
+         {
+            "@type": "AgreementRef",
+            "href": "https://host:port/tmf-
+api/agreementManagement/v5/agreement/4721",
+            "id": "4721",
+            "name": "Summer Contract Agreement"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "bill receiver",
+            "partyOrPartyRole": {
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                "id": "2777",
+                "name": "John Doe (Accounting) Ltd",
+                "@referredType": "Organization"
+            }
+        }
+    ]
+}
+Notification Resource Models
+4 
+notifications 
+are 
+defined 
+for 
+this API 
+Notifications 
+related 
+to 
+Customer: 
+-
+CustomerCreateEvent - CustomerAttributeValueChangeEvent - CustomerStateChangeEvent
+- CustomerDeleteEvent The notification structure for all notifications in this API follow the
+pattern depicted by the figure below. A notification event resource (depicted by
+"SpecificEvent" placeholder) is a sub class of a generic Event structure containing at least
+an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of
+the resource (eventType). This notification structure owns an event payload structure
+("SpecificEventPayload" placeholder) linked to the resource concerned by the notification
+using the resource name as access field ("resourceName" placeholder).
+4 notifications are defined for this API.
+Notifications related to Customer:
+• Customer State Change Event
+• Customer Attribute Value Change Event
+• Customer Delete Event
+• Customer Create Event
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+
+
+ 
+Figure 4 Notification Pattern
+Customer State Change Event
+Message example for CustomerStateChangeEvent Notification
+Content-Type: application/json
+{
+    "@type": "CustomerStateChangeEvent",
+    "priority": "high",
+    "eventId": "b14f7023-e982-4c02-a0c1-9790ee991659",
+    "eventTime": "2023-06-14T12:15:59.969746+02:00",
+    "eventType": "CustomerStateChangeEvent",
+    "event": {
+        "customer": {
+            "@type": "Customer",
+            "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+            "id": "1140",
+            "status": "CreditCheckDone"
+        }
+    }
+}
+
+
+ 
+Customer Attribute Value Change Event
+Message example for CustomerAttributeValueChangeEvent Notification
+Content-Type: application/json
+{
+    "@type": "CustomerAttributeValueChangeEvent",
+    "eventId": "e3dac91d-a035-465f-afc5-d3b603b53ad2",
+    "eventTime": "2018-06-12T00:00:00Z",
+    "eventType": "CustomerAttributeValueChangeEvent",
+    "event": {
+        "customer": {
+            "@type": "Customer",
+            "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+            "id": "1140",
+            "engagedParty": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/236",
+                "id": "236",
+                "name": "Long Distance Travellers",
+                "@referredType": "Organization"
+            }
+        }
+    }
+}
+Customer Delete Event
+Message example for CustomerDeleteEvent Notification
+Content-Type: application/json
+{
+  "@type": "CustomerDeleteEvent",
+  "eventId": "63749ead-f133-4c64-b2ed-3a93a2a56999",
+  "eventTime": "2023-06-14T12:15:59.969117+02:00",
+  "eventType": "CustomerDeleteEvent",
+  "event": {
+    "customer": {
+      "@type": "Customer",
+      "id": "1140",
+      "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140"
+    }
+  }
+}
+Customer Create Event
+Message example for CustomerCreateEvent Notification
+Content-Type: application/json
+{
+
+
+     "@type": "CustomerCreateEvent",
+    "eventId": "3cc17ff9-d674-4b0a-ab50-06841b1fd574",
+    "eventTime": "2023-06-14T12:15:59.96747+02:00",
+    "eventType": "CustomerCreateEvent",
+    "event": {
+        "customer": {
+            "@type": "Customer",
+            "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+            "id": "1140",
+            "name": "Moon Football Club",
+            "status": "Created",
+            "engagedParty": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/500",
+                "id": "500",
+                "name": "Happy Travellers",
+                "@referredType": "Organization"
+            },
+            "contactMedium": [
+                {
+                    "@type": "PhoneContactMedium",
+                    "preferred": true,
+                    "contactType": "homePhone",
+                    "validFor": {
+                        "startDateTime": "2018-06-12T00:00:00Z",
+                        "endDateTime": "2019-01-01T00:00:00Z"
+                    },
+                    "phoneNumber": "01 09 75 83 51"
+                },
+                {
+                    "@type": "GeographicAddressContactMedium",
+                    "preferred": false,
+                    "contactType": "homeAddress",
+                    "validFor": {
+                        "startDateTime": "2018-06-12T00:00:00Z",
+                        "endDateTime": "2019-01-01T00:00:00Z"
+                    },
+                    "city": "Paris",
+                    "country": "France",
+                    "postCode": "75014",
+                    "street1": "15 Rue des Canards"
+                }
+            ],
+            "relatedParty": [
+                {
+                    "@type": "RelatedPartyRefOrPartyRoleRef",
+                    "role": "bill receiver",
+                    "partyOrPartyRole": {
+                        "@type": "PartyRef",
+                        "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                        "id": "2777",
+                        "name": "John Doe (Accounting) Ltd",
+                        "@referredType": "Organization"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+
+ API OPERATIONS
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Execute an Action on an Entity
+POST on TASK Resource
+POST must be used to execute
+Task Resources
+Other Request Methods
+POST on TASK Resource
+GET and POST must not be
+used to tunnel other request
+methods.
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines.
+Notifications are also described in a subsequent section.
+Operations on Customer
+Retrieves a Customer by ID
+GET /customer/{id}?fields=…
+Description
+This operation retrieves a Customer entity. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Here is an example of a request for retrieving a specific Customer.
+Request
+GET /customer/1140
+Content-Type: application/json
+Response
+200
+
+
+ {
+    "@type": "Customer",
+    "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+    "id": "1140",
+    "name": "Moon Football Club",
+    "status": "Created",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/500",
+        "id": "500",
+        "name": "Happy Travellers",
+        "@referredType": "Organization"
+    },
+    "contactMedium": [
+        {
+            "@type": "PhoneContactMedium",
+            "preferred": true,
+            "contactType": "homePhone",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "phoneNumber": "01 09 75 83 51"
+        },
+        {
+            "@type": "GeographicAddressContactMedium",
+            "preferred": false,
+            "contactType": "homeAddress",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "city": "Paris",
+            "country": "France",
+            "postCode": "75014",
+            "street1": "15 Rue des Canards"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "bill receiver",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                "id": "2777",
+                "name": "John Doe (Accounting) Ltd",
+                "@referredType": "Organization"
+            }
+        }
+    ]
+}
+List or find Customer objects
+GET /customer?fields=…
+Description
+
+
+ 
+This operation list Customer entities. Attribute selection is enabled for all first level attributes.
+Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Retrieving list of Customers
+Request
+GET /customer
+Content-Type: application/json
+Response
+200
+[
+    {
+        "@type": "Customer",
+        "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+        "id": "1140",
+        "name": "Moon Football Club",
+        "status": "Created",
+        "engagedParty": {
+            "@type": "PartyRef",
+            "href": "https://host:port/tmf-api/partyManagement/v5/organization/500",
+            "id": "500",
+            "name": "Happy Travellers",
+            "@referredType": "Organization"
+        },
+        "contactMedium": [
+            {
+                "@type": "PhoneContactMedium",
+                "preferred": true,
+                "contactType": "homePhone",
+                "validFor": {
+                    "startDateTime": "2018-06-12T00:00:00Z",
+                    "endDateTime": "2019-01-01T00:00:00Z"
+                },
+                "phoneNumber": "01 09 75 83 51"
+            },
+            {
+                "@type": "GeographicAddressContactMedium",
+                "preferred": false,
+                "contactType": "homeAddress",
+                "validFor": {
+                    "startDateTime": "2018-06-12T00:00:00Z",
+                    "endDateTime": "2019-01-01T00:00:00Z"
+                },
+                "city": "Paris",
+                "country": "France",
+                "postCode": "75014",
+                "street1": "15 Rue des Canards"
+            }
+        ],
+        "relatedParty": [
+            {
+
+
+                 "@type": "RelatedPartyRefOrPartyRoleRef",
+                "role": "bill receiver",
+                "partyOrPartyRole": {
+                    "@type": "PartyRef",
+                    "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                    "id": "2777",
+                    "name": "John Doe (Accounting) Ltd",
+                    "@referredType": "Organization"
+                }
+            }
+        ]
+    }
+]
+Creates a Customer
+POST /customer?fields=…
+Description
+This operation creates a Customer entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+engagedParty
+engagedParty.@type
+engagedParty.id
+name
+@type
+Usage samples
+Here is an example of a request for creating a specific Customer.
+Request
+POST /customer
+Content-Type: application/json
+{
+  "@type": "Customer",
+  "name": "Moon Football Club",
+  "engagedParty": {
+    "@type": "PartyRef",
+    "href": "https://host:port/tmf-api/partyManagement/v5/organization/500",
+    "id": "500",
+    "name": "Happy Travellers",
+    "@referredType": "Organization"
+  },
+  "contactMedium": [
+    {
+
+
+       "@type": "PhoneContactMedium",
+      "preferred": true,
+      "contactType": "homePhone",
+      "validFor": {
+        "startDateTime": "2018-06-12T00:00:00Z",
+        "endDateTime": "2019-01-01T00:00:00Z"
+      },
+      "phoneNumber": "01 09 75 83 51"
+    },
+    {
+      "@type": "GeographicAddressContactMedium",
+      "preferred": false,
+      "contactType": "homeAddress",
+      "validFor": {
+        "startDateTime": "2018-06-12T00:00:00Z",
+        "endDateTime": "2019-01-01T00:00:00Z"
+      },
+      "city": "Paris",
+      "country": "France",
+      "postCode": "75014",
+      "street1": "15 Rue des Canards"
+    }
+  ],
+  "relatedParty": [
+    {
+      "@type": "RelatedPartyRefOrPartyRoleRef",
+      "role": "bill receiver",
+      "partyOrPartyRole": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/2777",
+        "id": "2777",
+        "name": "John Doe (Accounting) Ltd",
+        "@referredType": "Organization"
+      }
+    }
+  ]
+}
+Response
+201
+{
+    "@type": "Customer",
+    "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+    "id": "1140",
+    "name": "Moon Football Club",
+    "status": "Created",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/500",
+        "id": "500",
+        "name": "Happy Travellers",
+        "@referredType": "Organization"
+    },
+    "contactMedium": [
+        {
+            "@type": "PhoneContactMedium",
+            "preferred": true,
+            "contactType": "homePhone",
+
+
+             "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "phoneNumber": "01 09 75 83 51"
+        },
+        {
+            "@type": "GeographicAddressContactMedium",
+            "preferred": false,
+            "contactType": "homeAddress",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "city": "Paris",
+            "country": "France",
+            "postCode": "75014",
+            "street1": "15 Rue des Canards"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "bill receiver",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                "id": "2777",
+                "name": "John Doe (Accounting) Ltd",
+                "@referredType": "Organization"
+            }
+        }
+    ]
+}
+Updates partially a Customer
+PATCH /customer/{id}?fields=…
+Description
+This operation allows partial updates of a Customer entity. Support of json/merge
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/
+html/rfc5789) is optiona. Note: If the update operation yields to the creation of sub-resources
+or relationships, the same rules concerning mandatory sub-resource attributes and default
+value settings in the POST operation applies to the PATCH operation. Hence these tables
+are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+href
+id
+@baseType
+@baseType is immutable
+
+
+ 
+Non Patchable Attributes
+Rule
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Patchable Attributes
+Rule
+account
+agreement
+characteristic
+contactMedium
+creditProfile
+description
+engagedParty
+name
+partyRoleSpecification
+paymentMethod
+relatedParty
+role
+status
+statusReason
+validFor
+Usage samples
+Here is an example of a request for patching a customer.
+Request
+PATCH /customer/{id}
+Content-Type: application/json
+{
+    "@type": "Customer",
+    "name": "Sun Football Club",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/237",
+        "id": "237",
+        "name": "Another Long Distance Travellers",
+        "@referredType": "Organization"
+    }
+}
+Response
+
+
+ 
+200
+{
+    "@type": "Customer",
+    "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+    "id": "1140",
+    "name": "Sun Football Club",
+    "status": "Created",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/237",
+        "id": "237",
+        "name": "Another Long Distance Travellers",
+        "@referredType": "Organization"
+    },
+    "contactMedium": [
+        {
+            "@type": "PhoneContactMedium",
+            "preferred": true,
+            "contactType": "homePhone",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "phoneNumber": "01 09 75 83 51"
+        },
+        {
+            "@type": "GeographicAddressContactMedium",
+            "preferred": false,
+            "contactType": "homeAddress",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "city": "Paris",
+            "country": "France",
+            "postCode": "75014",
+            "street1": "15 Rue des Canards"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "bill receiver",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                "id": "2777",
+                "name": "John Doe (Accounting) Ltd",
+                "@referredType": "Organization"
+            }
+        }
+    ]
+}
+Here is an example of a request for patching a customer.
+Request
+
+
+ 
+PATCH /customer/{id}
+Content-Type: application/merge-patch+json
+{
+    "@type": "Customer",
+    "name": "Sun Football Club",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/237",
+        "id": "237",
+        "name": "Another Long Distance Travellers",
+        "@referredType": "Organization"
+    }
+}
+Response
+200
+{
+    "@type": "Customer",
+    "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+    "id": "1140",
+    "name": "Sun Football Club",
+    "status": "Created",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/237",
+        "id": "237",
+        "name": "Another Long Distance Travellers",
+        "@referredType": "Organization"
+    },
+    "contactMedium": [
+        {
+            "@type": "PhoneContactMedium",
+            "preferred": true,
+            "contactType": "homePhone",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "phoneNumber": "01 09 75 83 51"
+        },
+        {
+            "@type": "GeographicAddressContactMedium",
+            "preferred": false,
+            "contactType": "homeAddress",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "city": "Paris",
+            "country": "France",
+            "postCode": "75014",
+            "street1": "15 Rue des Canards"
+        }
+    ],
+    "relatedParty": [
+        {
+
+
+             "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "bill receiver",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                "id": "2777",
+                "name": "John Doe (Accounting) Ltd",
+                "@referredType": "Organization"
+            }
+        }
+    ]
+}
+Here is an example of a request for patching a customer.
+Request
+PATCH /customer/{id}
+Content-Type: application/json-patch+json
+[
+    {
+        "op": "replace",
+        "path": "/name",
+        "value": "Sun Football Club"
+    },
+    {
+        "op": "replace",
+        "path": "/engagedParty",
+        "value": {
+            "@type": "PartyRef",
+            "href": "https://host:port/tmf-api/partyManagement/v5/organization/237",
+            "id": "237",
+            "name": "Another Long Distance Travellers",
+            "@referredType": "Organization"
+        }
+    }
+]
+Response
+200
+{
+    "@type": "Customer",
+    "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+    "id": "1140",
+    "name": "Sun Football Club",
+    "status": "Created",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/237",
+        "id": "237",
+        "name": "Another Long Distance Travellers",
+        "@referredType": "Organization"
+
+
+     },
+    "contactMedium": [
+        {
+            "@type": "PhoneContactMedium",
+            "preferred": true,
+            "contactType": "homePhone",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "phoneNumber": "01 09 75 83 51"
+        },
+        {
+            "@type": "GeographicAddressContactMedium",
+            "preferred": false,
+            "contactType": "homeAddress",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "city": "Paris",
+            "country": "France",
+            "postCode": "75014",
+            "street1": "15 Rue des Canards"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "bill receiver",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                "id": "2777",
+                "name": "John Doe (Accounting) Ltd",
+                "@referredType": "Organization"
+            }
+        }
+    ]
+}
+Here is an example of a request for patching a customer.
+Request
+PATCH /customer/{id}
+Content-Type: application/json-patch-query+json
+[
+    {
+        "op": "replace",
+        "path": "/contactMedium/preferred?city=Paris",
+        "value": true
+    }
+]
+Response
+
+
+ 
+200
+{
+    "@type": "Customer",
+    "href": "https://host:port/tmf-api/customerManagement/v5/customer/1140",
+    "id": "1140",
+    "name": "Moon Football Club",
+    "status": "Created",
+    "engagedParty": {
+        "@type": "PartyRef",
+        "href": "https://host:port/tmf-api/partyManagement/v5/organization/236",
+        "id": "236",
+        "name": "Long Distance Travellers",
+        "@referredType": "Organization"
+    },
+    "contactMedium": [
+        {
+            "@type": "PhoneContactMedium",
+            "preferred": true,
+            "contactType": "homePhone",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "phoneNumber": "01 09 75 83 51"
+        },
+        {
+            "@type": "GeographicAddressContactMedium",
+            "preferred": true,
+            "contactType": "homeAddress",
+            "validFor": {
+                "startDateTime": "2018-06-12T00:00:00Z",
+                "endDateTime": "2019-01-01T00:00:00Z"
+            },
+            "city": "Paris",
+            "country": "France",
+            "postCode": "75014",
+            "street1": "15 Rue des Canards"
+        }
+    ],
+    "relatedParty": [
+        {
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "role": "bill receiver",
+            "partyOrPartyRole": {
+                "@type": "PartyRef",
+                "href": "https://host:port/tmf-
+api/partyManagement/v5/organization/2777",
+                "id": "2777",
+                "name": "John Doe (Accounting) Ltd",
+                "@referredType": "Organization"
+            }
+        }
+    ]
+}
+Deletes a Customer
+DELETE /customer/{id}
+
+
+ 
+Description
+This operation deletes a Customer entity.
+Usage samples
+This operation deletes a Customer resource.
+Request
+DELETE /customer/1140
+Content-Type: application/json
+Response
+204
+
+
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+
+
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+
+
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+
+
+ Acknowledgements
+Release History
+Release
+Number
+Date
+Release led by:
+Description
+0.a
+28/11/2013
+Arindam Basu (Ericsson)
+Sudipta Dutta (Ericsson)
+Brinda Santh M (IBM)
+Hemant Gour (IBM)
+Shashank Singh (IBM)
+Vishal Aggarwal (IBM)
+Nitish Jaisoor (Infosys)
+Rajesh 
+Gannaprapu
+(Infosys)
+Srinivasan 
+Duraiswamy
+(Infosys)
+Veeramani K (Infosys)
+Initial Spec prepared in the TMF
+Conference held at Bangalore, India
+(Nov 26 to Nov 28)
+0.b
+5/03/2014
+Christian Traxler (Infonova)
+Alexander Sturn (Infonova)
+Gilbert Scheiblhofer (A1)
+Josh Salomon (Amdocs)
+Véronique 
+Mauneau
+(Orange)
+Maxime Delon (Orange)
+Extension of customer API mgmt.
+during Spec Jam held in Vienna,
+Austria
+2.0
+15/04/2016
+Pierre Gauthier (TM Forum)
+Mariano Belaunde (Orange)
+Regenerated from API Data Model and
+re-branded.
+Does not include any more accounting
+and payment mean resources since
+this is provided through the Accounting
+API.
+3.0
+24/04/2018
+Mariano Belaunde (Orange)
+Update to support Guidelines 3.0
+Release 4.0
+30/05/2019
+Mariano Belaunde
+Orange Labs
+Regeneration after schematization
+Release 5.0
+08/03/2023
+Rajesh Sinha
+Jio Platforms Ltd
+Regeneration after schematization
+Release 5.0
+16/06/2023
+Uwe Sülter 
+Sergei Lukin
+Deutsche Telekom
+Migration to v5
+
+
+ 
+Contributors to Document
+Veronique Mauneau
+Orange
+Jean-Luc Tymen
+Orange
+Mariano Belaunde
+Orange
+Pierre Gauthier
+TM Forum
+John Morey
+Ciena
+Cliff C Faurer
+AMKB Cloud
+Uwe Sülter
+Deutsche Telekom
+Sergei Lukin
+Deutsche Telekom
+
+

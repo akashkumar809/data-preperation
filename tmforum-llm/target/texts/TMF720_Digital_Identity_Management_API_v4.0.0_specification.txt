@@ -1,0 +1,1712 @@
+© TM Forum 2022. All Rights Reserved 
+ 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Digital Identity API User Guide 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMF720 
+Team Approved Date:  16-Dec-2021 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 2 of 38
+NOTICE 
+Copyright © TM Forum 2022. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that 
+comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, and 
+distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice and 
+this section are included on all such copies and derivative works. However, this document itself may not be 
+modified in any way, including by removing the copyright notice or references to TM FORUM, except as 
+needed for the purpose of developing any document or deliverable produced by a TM FORUM Collaboration 
+Project Team (in which case the rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, 
+must be followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its 
+successors or assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM 
+DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP 
+RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that 
+would necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify 
+the TM FORUM Team Administrator and provide an indication of its willingness to grant patent licenses to 
+such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project 
+Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim 
+of ownership of any patent claims that would necessarily be infringed by implementations of this TM 
+FORUM Standards Final Deliverable by a patent holder that is not willing to provide a license to such 
+patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this TM FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights 
+that might be claimed to pertain to the implementation or use of the technology described in this TM 
+FORUM Standards Final Deliverable or the extent to which any license under such rights might or might 
+not be available; neither does it represent that it has made any effort to identify any such rights. 
+Information on TM FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM website. Copies of claims 
+of rights made available for publication and any assurances of licenses to be made available, or the result 
+of an attempt made to obtain a general license or permission for the use of such proprietary rights by 
+implementers or users of this TM FORUM Standards Final Deliverable, can be obtained from the TM 
+FORUM Team Administrator. TM FORUM makes no representation that any information or list of 
+intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 3 of 38
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 4 of 38
+Table of Contents 
+NOTICE ..................................................................................................................................................... 2 
+Table of Contents ....................................................................................................................................... 4 
+List of Tables ............................................................................................................................................. 5 
+Introduction ................................................................................................................................................ 6 
+Sample Use Cases .................................................................................................................................... 7 
+Support of polymorphism and extension patterns ....................................................................................... 8 
+RESOURCE MODEL ................................................................................................................................. 9 
+Managed Entity and Task Resource Models .......................................................................................... 9 
+Digital Identity resource ....................................................................................................................... 9 
+Notification Resource Models ............................................................................................................... 15 
+Digital Identity Create Event .............................................................................................................. 16 
+Digital Identity State Change Event ................................................................................................... 17 
+Digital Identity Delete Event ............................................................................................................... 17 
+Digital Identity Attribute Value Change Event .................................................................................... 18 
+API OPERATIONS ................................................................................................................................... 19 
+Operations on Digital Identity ................................................................................................................ 19 
+List digital identities ........................................................................................................................... 19 
+Retrieve digital identity....................................................................................................................... 20 
+Create digital identity ......................................................................................................................... 23 
+Patch digital identity ........................................................................................................................... 27 
+Delete digital identity ......................................................................................................................... 34 
+API Notifications ................................................................................................................................ 35 
+Register listener ................................................................................................................................... 35 
+Unregister listener ................................................................................................................................ 36 
+Publish Event to listener ....................................................................................................................... 36 
+Acknowledgements .................................................................................................................................. 38 
+Document History ................................................................................................................................. 38 
+Version History .................................................................................................................................. 38 
+Release History ................................................................................................................................. 38 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 5 of 38
+List of Tables 
+ 
+N/A 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 6 of 38
+Introduction 
+ 
+The following document is the specification of the REST API for Digital Identity management.  
+A digital identity enables identification / authentication of Party, PartyRole, or Resource in order to allow 
+Party, PartyRole, or Resource (for an app) to retrieve permission. Ideally, the digital identity should be 
+defined at party level, but business UC could require having finer-grainer scope and require a digital identify 
+for one or a set of party role. For example, it can be used to have a digital identity carrying all professional 
+party role delegated by the employer and another one carrying all party role played personally. 
+Digital Identity could be provided to an application to trigger interaction with other system (logistic system 
+triggering automatically order to supplier)   
+At least one Credential is needed for an active digital identity. A Credential enables identification / 
+authentication.  In this API, credential specialization are provided but it could be extended by 
+implementation. One or many contact medium might be defined for each Credential to be used for reset. 
+Avatar(s) might be represented by an Attachment such as a picture. 
+ 
+Following diagram illustrates the Digital Identity in a global party domain: 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 7 of 38
+Sample Use Cases 
+This section includes a set of main use cases that can be performed with this API. Additional use cases can 
+be generated using the operations and resources defined in this specification. 
+• create a digital identity for an individual in order to identify this customer to browse owned 
+product inventory. The party could provide a cool jpg as avatar and pick phone medium for contact 
+method to retrieve password (when lost) 
+ 
+ 
+• Change avatar jpg for an existing digital identity 
+• Manage a digital identity for an application and link authorization to this identity 
+• Retrieve inactive digital identity to remove them 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 8 of 38
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list 
+of generic meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit 
+from base entities, for instance a biometric credential and token credential inheriting properties from the 
+credential entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 
+2 document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list 
+of credential instances some may be instances of biometric credential where other could be instances of 
+login/password credential, network credential or token credential. The @type gives this information. All 
+resources and sub-resources of this API have a @type attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities (like for instance in RelatedParty object) to 
+explicitly denote the actual entity type of the referred class. Notice that in reference entities the @type, when 
+used, denotes the class type of the reference itself, such as RelatedParty, and not the class type of the 
+referred object (IndividualRef or OrganizationRef). However, since reference classes are rarely sub-classed, 
+@type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an 
+Entity or to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has 
+been extended. 
+ 
+Presence of sub classes in the TMF720 swagger 
+The TMF720 swagger features: 
+• 
+EmailMedium and PhoneMedium as DigitalIdentityContactMedium specializations 
+• 
+BiometricCredential, TokenCredential, LoginPasswordCredential and NetworkCredential as 
+Credential specializations 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 9 of 38
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Digital Identity resource 
+DigitalIdentity is a class that allow to describe a digital identity for an individual or a resource or a specific 
+party role. One of these three MUST be provided. If an individual is provided, this identity will be for all 
+her/his partyRole. To avoid confusion, it is recommended in this case to not provide partyRoleIdentified. 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 10 of 38
+Field descriptions 
+DigitalIdentity fields 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+attachment 
+A list of attachment ref or values (AttachmentRefOrValue [*]). List of 
+attachment associated with this digital identity. Could be used to link a cute cat 
+or moose picture to a digital identity for example. 
+contactMedium 
+A list of digital identity contact mediums (DigitalIdentityContactMedium [*]). List 
+of contact medium associated with the digital identity. 
+creationDate 
+A date time (DateTime). Date and time of the Digital Identity creation 
+(timestamp). 
+credential 
+A list of credentials (Credential [*]). A list of credential/authentification method 
+that are used for this digital identity. 
+individualIdentified 
+A party reference (PartyRef). Individual identified by this digital identity. In this 
+case the digitial identity is for all her/his role. It is recommended to not provide 
+partyRoleIdentified if individualIdentified provided. 
+lastUpdate 
+A date time (DateTime). Date and time of the Digital Identity last update 
+(timestamp). 
+nickname 
+A string. Nickname associated to this digital identity (like Juanito17 or the 
+QuebecMoose etc...). 
+partyRoleIdentified 
+A list of related parties (RelatedParty [*]). Related Parties who are identified by 
+this digital identity. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Parties who have an interest in this 
+digital identity (like the organization in charge of providing identity). This is NOT 
+the party identified by this digital identity. 
+resourceIdentified 
+A resource reference (ResourceRef). Resource identified by this digital identity. 
+It is recommended to no provided individualIdentified or partyRoleIdentified if 
+resourceIdentified provided. 
+status 
+A string. Used to indicate the current lifecycle status of this digital identity 
+(unknown, active, suspended, archived). 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 11 of 38
+validFor 
+A time period. The period for which this digital identity is valid. 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. An attachment complements the description of an element, for 
+example through a document, a video, a picture. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+id 
+A string. Unique identifier for this particular attachment. 
+url 
+An uri (Uri). Remote reference to the content if web-addressable. 
+name 
+A string. The name of the attachment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if 
+embedded, encoded as base64. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period of time for which the attachment is valid. 
+Credential sub-resource 
+Credential is a class that allow to describe an authentication method. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contactMedium 
+A list of digital identity contact mediums (DigitalIdentityContactMedium [*]). List 
+of contact medium associated with this credential/authentication method. 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 12 of 38
+id 
+A string. an identifier for a credential/authentication method for this digital 
+identity. 
+state 
+A string. Used to indicate the current lifecycle state of this credential (like 
+active, inactive, expired). 
+trustLevel 
+A string. A level of assurance associated with this credential - this could be 
+used to limit/allow specific permission based on this trust level. 
+validFor 
+A time period. The period for which this digital identity is valid. 
+DigitalIdentityContactMedium sub-resource 
+Indicates the contact medium that could be used to contact the party. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+contactType 
+A string. Type of the contact medium to qualify it like pro email / personal 
+email. This is not used to define the contact medium used. 
+id 
+A string. Identifier for this contact medium. 
+preferred 
+A boolean. If true, indicates that is the preferred contact medium. 
+validFor 
+A time period. The time period that the contact medium is valid for. 
+Quantity sub-resource 
+An amount in a given unit. 
+amount 
+A float. Numeric value in a given unit. 
+units 
+A string. Unit. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 13 of 38
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+PartyRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ResourceRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for 
+disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 14 of 38
+Json representation sample 
+Provided below is the json representation of an example of a 'DigitalIdentity' resource object 
+{ 
+    "id": "11", 
+    "href": "https://host:port/digitalIdentityManagement:v4:digitalIdentity/11", 
+    "creationDate": "2021-10-05T08:36:12.275Z", 
+    "lastUpdate": "2021-10-05T08:36:12.275Z", 
+    "nickname": "BigJuanito7", 
+    "status": "active", 
+    "attachment": [ 
+        { 
+            "attachmentType": "avatarPicture", 
+            "description": "avatar", 
+            "mimeType": "jpeg", 
+            "name": "BigJuanito7Avatar", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 91, 
+                "units": "Ko" 
+            }, 
+            "validFor": { 
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Attachment" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "id": "1", 
+            "contactType": "Private", 
+            "preferred": true, 
+            "validFor": { 
+                "endDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "EmailMedium", 
+            "emailAddress": "BigJuanito7@tmf.com" 
+        } 
+    ], 
+    "credential": [ 
+        { 
+            "id": "1", 
+            "state": "active", 
+            "trustLevel": "high", 
+            "contactMedium": [ 
+                { 
+                    "id": "2", 
+                    "contactType": "Private", 
+                    "preferred": true, 
+                    "validFor": { 
+                        "endDateTime": "1985-04-12T23:20:50.52Z" 
+                    }, 
+                    "@type": "PhoneMedium", 
+                    "phoneNumber": "415798565" 
+                } 
+            ], 
+            "validFor": { 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 15 of 38
+                "startDateTime": "1985-04-12T23:20:50.52Z" 
+            }, 
+            "@type": "Credential" 
+        } 
+    ], 
+    "individualIdentified": { 
+        "id": "78", 
+        "href": "https://host:port/partyManagement/v4/individual/78", 
+        "name": "Jean", 
+        "@type": "PartyRef", 
+        "@referredType": "Individual" 
+    }, 
+    "partyRoleIdentified": [ 
+        { 
+            "id": "78-89", 
+            "href": "https://host:port/CustomerManagement/v4/customer/78-89", 
+            "@type": "RelatedParty", 
+            "@referredType": "Customer" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "25", 
+            "href": "https://host:port/partyManagement/v4/organization/25", 
+            "name": "TMF", 
+            "role": "DigitalIdentityProvider", 
+            "@type": "PartyRef", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "1985-04-12T23:20:50.52Z" 
+    }, 
+    "@type": "DigitalIdentity" 
+} 
+ 
+Notification Resource Models 
+ 
+4 notifications are defined for this API 
+Notifications related to DigitalIdentity: 
+    - DigitalIdentityCreateEvent 
+    - DigitalIdentityStateChangeEvent 
+    - DigitalIdentityDeleteEvent 
+    - DigitalIdentityAttributeValueChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event 
+structure containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and 
+the name of the resource (eventType).  
+
+
+© TM Forum 2022. All Rights Reserved
+Page 16 of 38
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to 
+the resource concerned by the notification using the resource name as access field ("resourceName" 
+placeholder). 
+ 
+Digital Identity Create Event 
+Notification DigitalIdentityCreateEvent case for resource DigitalIdentity 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 17 of 38
+Json representation sample 
+Provided below is the json representation of an example of a 'DigitalIdentityCreateEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"DigitalIdentityCreateEvent", 
+     "event": { 
+        "digitalIdentity" :  
+            {-- SEE DigitalIdentity RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Digital Identity State Change Event 
+Notification DigitalIdentityStateChangeEvent case for resource DigitalIdentity 
+Json representation sample 
+Provided below is the json representation of an example of a 'DigitalIdentityStateChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"DigitalIdentityStateChangeEvent", 
+     "event": { 
+        "digitalIdentity" :  
+            {-- SEE DigitalIdentity RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Digital Identity Delete Event 
+Notification DigitalIdentityDeleteEvent case for resource DigitalIdentity 
+Json representation sample 
+Provided below is the json representation of an example of a 'DigitalIdentityDeleteEvent' notification event 
+object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"DigitalIdentityDeleteEvent", 
+     "event": { 
+        "digitalIdentity" :  
+            {-- SEE DigitalIdentity RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 18 of 38
+Digital Identity Attribute Value Change Event 
+Notification DigitalIdentityAttributeValueChangeEvent case for resource DigitalIdentity 
+Json representation sample 
+Provided below is the json representation of an example of a 'DigitalIdentityAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"DigitalIdentityAttributeValueChangeEvent", 
+     "event": { 
+        "digitalIdentity" :  
+            {-- SEE DigitalIdentity RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 19 of 38
+API OPERATIONS 
+Only allowed operations are listed: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET digitalIdentity 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST digitalIdentity 
+ 
+POST must be used to 
+create a new digitalIdentity 
+resource 
+If resource is created code 
+201 is send back. 
+Partial Update of an Entity 
+PATCH digitalIdentity 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE digitalIdentity 
+DELETE must be used to 
+remove a resource 
+ 
+Filtering and attribute selection rules are described in the TMF630 REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Digital Identity 
+List digital identities 
+  GET /digitalIdentity?fields=...&{filtering} 
+Description 
+This operation list digital identity entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 20 of 38
+Usage Samples 
+Here's an example of a request for retrieving a list of digital identities. The given criteria is the status 
+(active) and Credential level (low). 
+ 
+Request 
+ 
+GET /tmf-api/digitalIdentityManagement/v4/digitalIdentity?fields=id,href,lastUpdate,nickname&status=active 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "11", 
+        "href": "https://host:port/digitalIdentityManagement/v4/digitalIdentity/11", 
+        "lastUpdate": "2021-10-05T08:36:12.275Z", 
+        "nickname": "BigJuanito7" 
+    }, 
+    { 
+        "id": "27", 
+        "href": "https://host:port/digitalIdentityManagement/v4/digitalIdentity/24", 
+        "lastUpdate": "2021-09-25T08:36:12.275Z", 
+        "nickname": "TheMoose" 
+    }, 
+    { 
+        "id": "38", 
+        "href": "https://host:port/digitalIdentityManagement/v4/digitalIdentity/38", 
+        "lastUpdate": "2021-09-315T08:36:12.275Z", 
+        "nickname": "CheeseMan" 
+    } 
+] 
+ 
+Retrieve digital identity 
+  GET /digitalIdentity/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a digital identity entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an 
+implementation. 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 21 of 38
+Usage Samples 
+Here's an example of a request for retrieving a digital identity by reference (id). The given criteria is the 
+digital identity is 11. 
+ 
+Request 
+ 
+GET /tmf-api/digitalIdentityManagement/v4/digitalIdentity/sd65-8874 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "11", 
+    "href": "https://host:port/digitalIdentityManagement/v4/digitalIdentity/11", 
+    "creationDate": "2021-10-05T08:36:12.275Z", 
+    "lastUpdate": "2021-10-05T08:36:12.275Z", 
+    "nickname": "BigJuanito7", 
+    "status": "pending", 
+    "attachment": [ 
+        { 
+            "attachmentType": "avatarPicture", 
+            "description": "avatar", 
+            "mimeType": "jpeg", 
+            "name": "BigJuanito7Avatar", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 91, 
+                "units": "Ko" 
+            }, 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "Atachment" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "id": "1", 
+            "contactType": "Private", 
+            "preferred": true, 
+            "validFor": { 
+                "endDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "EmailMedium", 
+            "emailAddress": "BigJuanito7@tmf.com" 
+        } 
+    ], 
+    "credential": [ 
+        { 
+            "id": "1", 
+            "state": "active", 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 22 of 38
+            "trustLevel": "high", 
+            "contactMedium": [ 
+                { 
+                    "id": "2", 
+                    "contactType": "Private", 
+                    "preferred": true, 
+                    "validFor": { 
+                        "endDateTime": "2021-10-05T08:36:12.275Z" 
+                    }, 
+                    "@type": "PhoneMedium", 
+                    "phoneNumber": "415798565" 
+                } 
+            ], 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "LoginPasswordCredential", 
+            "login": "TheRealJuanito", 
+            "password": "****************" 
+        } 
+    ], 
+    "individualIdentified": { 
+        "id": "78", 
+        "href": "https://host:port/partyManagement/v4/individual/78", 
+        "name": "Jean", 
+        "@type": "PartyRef", 
+        "@referredType": "Individual" 
+    }, 
+    "partyRoleIdentified": [ 
+        { 
+            "id": "78-89", 
+            "href": "https://host:port/CustomerManagement/v4/customer/78-89", 
+            "@type": "RelatedParty", 
+            "@referredType": "Customer" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "25", 
+            "href": "https://host:port/partyManagement/v4/organization/25", 
+            "name": "TMF", 
+            "role": "DigitalIdentityProvider", 
+            "@type": "PartyRef", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "2021-10-05T08:36:12.275Z" 
+    }, 
+    "@type": "DigitalIdentity" 
+} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 23 of 38
+Create digital identity 
+  POST /digitalIdentity 
+Description 
+This operation creates a digital identity entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+DigitalIdentity, including any possible rule conditions and applicable default values. Notice that it is up to 
+an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+credential 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+attachment 
+ 
+contactMedium 
+ 
+creationDate 
+ 
+individualIdentified 
+ 
+lastUpdate 
+ 
+nickname 
+ 
+partyRoleIdentified 
+ 
+relatedParty 
+ 
+resourceIdentified 
+ 
+status 
+ 
+validFor 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships 
+when creating a DigitalIdentity resource. 
+Context 
+Mandatory Sub-Attributes 
+relatedParty 
+id, @referredType 
+partyRoleIdentified 
+id, @referredType 
+resourceIdentified 
+id 
+individualIdentified 
+id 
+credential 
+id, @type 
+contactMedium 
+id 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 24 of 38
+Usage Samples 
+Here's an example of a request for creating a digital identity - the resulting digital identity is digital identity 
+11. 
+ 
+Request 
+ 
+POST /tmf-api/digitalIdentityManagement/v4/digitalIdentity 
+Content-Type: application/json 
+ 
+{ 
+    "nickname": "BigJuanito7", 
+    "attachment": [ 
+        { 
+            "attachmentType": "avatarPicture", 
+            "description": "avatar", 
+            "mimeType": "jpeg", 
+            "name": "BigJuanito7Avatar", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 91, 
+                "units": "Ko" 
+            }, 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "Atachment" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "id": "1", 
+            "contactType": "Private", 
+            "preferred": true, 
+            "validFor": { 
+                "endDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "EmailMedium", 
+            "emailAddress": "BigJuanito7@tmf.com" 
+        } 
+    ], 
+    "credential": [ 
+        { 
+            "id": "1", 
+            "state": "active", 
+            "trustLevel": "high", 
+            "contactMedium": [ 
+                { 
+                    "id": "2", 
+                    "contactType": "Private", 
+                    "preferred": true, 
+                    "validFor": { 
+                        "endDateTime": "2021-10-05T08:36:12.275Z" 
+                    }, 
+                    "@type": "PhoneMedium", 
+                    "phoneNumber": "415798565" 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 25 of 38
+                } 
+            ], 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "LoginPasswordCredential", 
+            "login": "TheRealJuanito", 
+            "password": "AseR45iyttk5SD5df8y3pOI7" 
+        } 
+    ], 
+    "individualIdentified": { 
+        "id": "78", 
+        "name": "Jean", 
+        "@type": "PartyRef", 
+        "@referredType": "Individual" 
+    }, 
+    "partyRoleIdentified": [ 
+        { 
+            "id": "78-89", 
+            "@type": "RelatedParty", 
+            "@referredType": "Customer" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "25", 
+            "name": "TMF", 
+            "role": "DigitalIdentityProvider", 
+            "@type": "PartyRef", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "2021-10-05T08:36:12.275Z" 
+    }, 
+    "@type": "DigitalIdentity" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "11", 
+    "href": "https://host:port/digitalIdentityManagement/v4/digitalIdentity/11", 
+    "creationDate": "2021-10-05T08:36:12.275Z", 
+    "lastUpdate": "2021-10-05T08:36:12.275Z", 
+    "nickname": "BigJuanito7", 
+    "status": "pending", 
+    "attachment": [ 
+        { 
+            "attachmentType": "avatarPicture", 
+            "description": "avatar", 
+            "mimeType": "jpeg", 
+            "name": "BigJuanito7Avatar", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 26 of 38
+            "size": { 
+                "amount": 91, 
+                "units": "Ko" 
+            }, 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "Atachment" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "id": "1", 
+            "contactType": "Private", 
+            "preferred": true, 
+            "validFor": { 
+                "endDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "EmailMedium", 
+            "emailAddress": "BigJuanito7@tmf.com" 
+        } 
+    ], 
+    "credential": [ 
+        { 
+            "id": "1", 
+            "state": "active", 
+            "trustLevel": "high", 
+            "contactMedium": [ 
+                { 
+                    "id": "2", 
+                    "contactType": "Private", 
+                    "preferred": true, 
+                    "validFor": { 
+                        "endDateTime": "2021-10-05T08:36:12.275Z" 
+                    }, 
+                    "@type": "PhoneMedium", 
+                    "phoneNumber": "415798565" 
+                } 
+            ], 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "LoginPasswordCredential", 
+            "login": "TheRealJuanito", 
+            "password": "****************" 
+        } 
+    ], 
+    "individualIdentified": { 
+        "id": "78", 
+        "href": "https://host:port/partyManagement/v4/individual/78", 
+        "name": "Jean", 
+        "@type": "PartyRef", 
+        "@referredType": "Individual" 
+    }, 
+    "partyRoleIdentified": [ 
+        { 
+            "id": "78-89", 
+            "href": "https://host:port/CustomerManagement/v4/customer/78-89", 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 27 of 38
+            "@type": "RelatedParty", 
+            "@referredType": "Customer" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "25", 
+            "href": "https://host:port/partyManagement/v4/organization/25", 
+            "name": "TMF", 
+            "role": "DigitalIdentityProvider", 
+            "@type": "PartyRef", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "2021-10-05T08:36:12.275Z" 
+    }, 
+    "@type": "DigitalIdentity" 
+} 
+ 
+Patch digital identity 
+  PATCH /digitalIdentity/{id} 
+Description 
+This operation allows partial updates of a digital identity entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies to 
+the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on 
+their usage. 
+Patchable Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+attachment 
+ 
+contactMedium 
+ 
+creationDate 
+ 
+credential 
+ 
+individualIdentified 
+ 
+lastUpdate 
+ 
+nickname 
+ 
+partyRoleIdentified 
+ 
+relatedParty 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 28 of 38
+Patchable Attributes 
+Rule 
+resourceIdentified 
+ 
+status 
+ 
+validFor 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+href 
+ 
+id 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating digital identity 11 - Change nickname to Juanito78 and add a 
+token credential - the full resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/digitalIdentityManagement/v4/digitalIdentity/11 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "id": "11", 
+    "nickname": "BigJuanito78", 
+    "attachment": [ 
+        { 
+            "attachmentType": "avatarPicture", 
+            "description": "avatar", 
+            "mimeType": "jpeg", 
+            "name": "BigJuanito7Avatar", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 91, 
+                "units": "Ko" 
+            }, 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "Atachment" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "id": "1", 
+            "contactType": "Private", 
+            "preferred": true, 
+            "validFor": { 
+                "endDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "EmailMedium", 
+            "emailAddress": "BigJuanito7@tmf.com" 
+        } 
+    ], 
+    "credential": [ 
+        { 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 29 of 38
+            "id": "1", 
+            "state": "active", 
+            "trustLevel": "high", 
+            "contactMedium": [ 
+                { 
+                    "id": "2", 
+                    "contactType": "Private", 
+                    "preferred": true, 
+                    "validFor": { 
+                        "endDateTime": "2021-10-05T08:36:12.275Z" 
+                    }, 
+                    "@type": "PhoneMedium", 
+                    "phoneNumber": "415798565" 
+                } 
+            ], 
+            "validFor": { 
+                "startDateTime": "2021-11-04T08:36:12.275Z" 
+            }, 
+            "@type": "LoginPasswordCredential", 
+            "login": "TheRealJuanito", 
+            "password": "****************" 
+        }, 
+        { 
+            "id": "2", 
+            "state": "active", 
+            "trustLevel": "medium", 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "TokenCredential", 
+            "tokenCredential": "eyJz93a...k4laUWw", 
+            "tokenType": "Bearer" 
+        } 
+    ], 
+    "individualIdentified": { 
+        "id": "78", 
+        "href": "https://host:port/partyManagement/v4/individual/78", 
+        "name": "Jean", 
+        "@type": "PartyRef", 
+        "@referredType": "Individual" 
+    }, 
+    "partyRoleIdentified": [ 
+        { 
+            "id": "78-89", 
+            "href": "https://host:port/CustomerManagement/v4/customer/78-89", 
+            "@type": "RelatedParty", 
+            "@referredType": "Customer" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "25", 
+            "href": "https://host:port/partyManagement/v4/organization/25", 
+            "name": "TMF", 
+            "role": "DigitalIdentityProvider", 
+            "@type": "PartyRef", 
+            "@referredType": "Organization" 
+        } 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 30 of 38
+    ], 
+    "validFor": { 
+        "startDateTime": "2021-10-05T08:36:12.275Z" 
+    }, 
+    "@type": "DigitalIdentity" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "11", 
+    "href": "https://host:port/digitalIdentityManagement/v4/digitalIdentity/11", 
+    "creationDate": "2021-10-05T08:36:12.275Z", 
+    "lastUpdate": "2021-10-05T08:36:12.275Z", 
+    "nickname": "BigJuanito78", 
+    "status": "pending", 
+    "attachment": [ 
+        { 
+            "attachmentType": "avatarPicture", 
+            "description": "avatar", 
+            "mimeType": "jpeg", 
+            "name": "BigJuanito7Avatar", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 91, 
+                "units": "Ko" 
+            }, 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "Atachment" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "id": "1", 
+            "contactType": "Private", 
+            "preferred": true, 
+            "validFor": { 
+                "endDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "EmailMedium", 
+            "emailAddress": "BigJuanito7@tmf.com" 
+        } 
+    ], 
+    "credential": [ 
+        { 
+            "id": "1", 
+            "state": "active", 
+            "trustLevel": "high", 
+            "contactMedium": [ 
+                { 
+                    "id": "2", 
+                    "contactType": "Private", 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 31 of 38
+                    "preferred": true, 
+                    "validFor": { 
+                        "endDateTime": "2021-10-05T08:36:12.275Z" 
+                    }, 
+                    "@type": "PhoneMedium", 
+                    "phoneNumber": "415798565" 
+                } 
+            ], 
+            "validFor": { 
+                "startDateTime": "2021-11-04T08:36:12.275Z" 
+            }, 
+            "@type": "LoginPasswordCredential", 
+            "login": "TheRealJuanito", 
+            "password": "****************" 
+        }, 
+        { 
+            "id": "2", 
+            "state": "active", 
+            "trustLevel": "medium", 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "TokenCredential", 
+            "tokenCredential": "eyJz93a...k4laUWw", 
+            "tokenType": "Bearer" 
+        } 
+    ], 
+    "individualIdentified": { 
+        "id": "78", 
+        "href": "https://host:port/partyManagement/v4/individual/78", 
+        "name": "Jean", 
+        "@type": "PartyRef", 
+        "@referredType": "Individual" 
+    }, 
+    "partyRoleIdentified": [ 
+        { 
+            "id": "78-89", 
+            "href": "https://host:port/CustomerManagement/v4/customer/78-89", 
+            "@type": "RelatedParty", 
+            "@referredType": "Customer" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "25", 
+            "href": "https://host:port/partyManagement/v4/organization/25", 
+            "name": "TMF", 
+            "role": "DigitalIdentityProvider", 
+            "@type": "PartyRef", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "2021-10-05T08:36:12.275Z" 
+    }, 
+    "@type": "DigitalIdentity" 
+} 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 32 of 38
+ 
+Here's an example of a request for updating digital identity 11 - Change nickname to Juanito78 and add a 
+token credential  - the full resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/digitalIdentityManagement/v4/digitalIdentity/11 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "replace", 
+        "path": "nickname", 
+        "value": "BigJuanito78" 
+    }, 
+    { 
+        "op": "add", 
+        "path": "credential", 
+        "value": { 
+            "id": "2", 
+            "state": "active", 
+            "trustLevel": "medium", 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "TokenCredential", 
+            "tokenCredential": "eyJz93a...k4laUWw", 
+            "tokenType": "Bearer" 
+        } 
+    } 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "11", 
+    "href": "https://host:port/digitalIdentityManagement/v4/digitalIdentity/11", 
+    "creationDate": "2021-10-05T08:36:12.275Z", 
+    "lastUpdate": "2021-10-05T08:36:12.275Z", 
+    "nickname": "BigJuanito78", 
+    "status": "pending", 
+    "attachment": [ 
+        { 
+            "attachmentType": "avatarPicture", 
+            "description": "avatar", 
+            "mimeType": "jpeg", 
+            "name": "BigJuanito7Avatar", 
+            "url": "http://host/Content/4aafacbd-11ff-4dc8-b445-305f2215715f", 
+            "size": { 
+                "amount": 91, 
+                "units": "Ko" 
+            }, 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 33 of 38
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "Atachment" 
+        } 
+    ], 
+    "contactMedium": [ 
+        { 
+            "id": "1", 
+            "contactType": "Private", 
+            "preferred": true, 
+            "validFor": { 
+                "endDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "EmailMedium", 
+            "emailAddress": "BigJuanito7@tmf.com" 
+        } 
+    ], 
+    "credential": [ 
+        { 
+            "id": "1", 
+            "state": "active", 
+            "trustLevel": "high", 
+            "contactMedium": [ 
+                { 
+                    "id": "2", 
+                    "contactType": "Private", 
+                    "preferred": true, 
+                    "validFor": { 
+                        "endDateTime": "2021-10-05T08:36:12.275Z" 
+                    }, 
+                    "@type": "PhoneMedium", 
+                    "phoneNumber": "415798565" 
+                } 
+            ], 
+            "validFor": { 
+                "startDateTime": "2021-11-04T08:36:12.275Z" 
+            }, 
+            "@type": "LoginPasswordCredential", 
+            "login": "TheRealJuanito", 
+            "password": "****************" 
+        }, 
+        { 
+            "id": "2", 
+            "state": "active", 
+            "trustLevel": "medium", 
+            "validFor": { 
+                "startDateTime": "2021-10-05T08:36:12.275Z" 
+            }, 
+            "@type": "TokenCredential", 
+            "tokenCredential": "eyJz93a...k4laUWw", 
+            "tokenType": "Bearer" 
+        } 
+    ], 
+    "individualIdentified": { 
+        "id": "78", 
+        "href": "https://host:port/partyManagement/v4/individual/78", 
+        "name": "Jean", 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 34 of 38
+        "@type": "PartyRef", 
+        "@referredType": "Individual" 
+    }, 
+    "partyRoleIdentified": [ 
+        { 
+            "id": "78-89", 
+            "href": "https://host:port/CustomerManagement/v4/customer/78-89", 
+            "@type": "RelatedParty", 
+            "@referredType": "Customer" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "25", 
+            "href": "https://host:port/partyManagement/v4/organization/25", 
+            "name": "TMF", 
+            "role": "DigitalIdentityProvider", 
+            "@type": "PartyRef", 
+            "@referredType": "Organization" 
+        } 
+    ], 
+    "validFor": { 
+        "startDateTime": "2021-10-05T08:36:12.275Z" 
+    }, 
+    "@type": "DigitalIdentity" 
+} 
+ 
+Delete digital identity 
+  DELETE /digitalIdentity/{id} 
+Description 
+This operation deletes a digital identity entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a digital identity. 
+ 
+Request 
+ 
+DELETE /tmf-api/digitalIdentityManagement/v4/digitalIdentity/12 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 35 of 38
+API Notifications 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its 
+health state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if 
+it does not support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint 
+can be created again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 36 of 38
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be 
+replaced by one of the notification types supported by this API (see Notification resources Models section) 
+and EVENT BODY refers to the data structure of the given notification type. 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 37 of 38
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+
+
+© TM Forum 2022. All Rights Reserved
+Page 38 of 38
+Acknowledgements 
+Document History 
+Version History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 4.0.0 
+ 
+31/10/2021 
+Pierre Gauthier, TM Forum 
+pgauthier@tmforum.org  
+ 
+Ludovic Robert, Orange 
+Ludovic.robert@orange.com 
+First Release of the Document. 
+ 
+Release History 
+Release 
+Status 
+Date  
+Release led by: 
+Description  
+Pre-
+production 
+ 
+P. Gauthier / L .Robert  
+Version 4.0 of the API REST 
+Note: the version 4.0 is 
+assigned to all the APIs 
+delivered from the release 19.0 
+Production 
+18-Mar-2022 Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+
+

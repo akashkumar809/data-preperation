@@ -1,0 +1,1878 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Promotion Management API User 
+Guide 
+ 
+ 
+ 
+ 
+ 
+TMF671 
+Release 20.5 
+June 2021 
+ 
+ 
+Latest Update: TM Forum Release 20.5 
+Member Evaluation 
+Version 4.1.0 
+IPR Mode: RAND 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 34 
+Notice 
+Copyright © TM Forum 2019. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 34 
+Table of Contents 
+ 
+Notice ............................................................................................................................................................................. 2 
+Table of Contents ........................................................................................................................................................ 3 
+List of Tables ................................................................................................................................................................ 4 
+Introduction .................................................................................................................................................................. 5 
+Sample Use Cases ............................................................................................................................................................ 6 
+Support of polymorphism and extension patterns ......................................................................................................... 8 
+Resource Model ............................................................................................................................................................... 9 
+Managed Entity Model ................................................................................................................................................ 9 
+Promotion resource ................................................................................................................................................. 9 
+Notification Resource Models ................................................................................................................................... 17 
+Promotion Create Event ......................................................................................................................................... 18 
+Promotion Delete Event ......................................................................................................................................... 18 
+Promotion Attribute Value Change Event.............................................................................................................. 19 
+Promotion State Change Event .............................................................................................................................. 20 
+API Operations ............................................................................................................................................................... 22 
+Operations on Promotion .......................................................................................................................................... 22 
+List promotions ...................................................................................................................................................... 22 
+Retrieve promotion ................................................................................................................................................ 25 
+Create promotion ................................................................................................................................................... 26 
+Patch promotion .................................................................................................................................................... 28 
+Delete promotion ................................................................................................................................................... 30 
+API Notifications ............................................................................................................................................................ 31 
+Register listener ..................................................................................................................................................... 31 
+Unregister listener ..................................................................................................................................................... 31 
+Publish Event to listener ............................................................................................................................................ 32 
+Acknowledgements ....................................................................................................................................................... 34 
+Release History .......................................................................................................................................................... 34 
+Contributors to Document ........................................................................................................................................ 34 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 34 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 34 
+Introduction 
+The following document is the user guide of the REST API for Promotion. It includes the model definition as well as 
+all available operations. 
+ 
+It describes a single managed resource called Promotion. 
+Promotions are known as additional discounts, vouchers, bonus or gifts to a party who meets the pre-defined 
+criteria. Using promotion, the enterprise can attract customers and encourage more consumption, especially 
+continuous purchases.  
+ 
+This API is about the configuration and maintenance of this business object and not its execution.  
+The execution of promotions is the responsibility of enterprise platform which must apply the discount (or gift, 
+voucher, etc.) based on the information retrieved from Promotion API.  
+ 
+Promotion API provides the following operations: 
+• 
+List of existing promotions depending on filter criteria; 
+• 
+Retrieval of an existing promotion by identifier; 
+• 
+Partial update of an existing promotion; 
+• 
+Creation (configuration) of a new promotion;  
+• 
+Deletion of an existing promotion; 
+• 
+Notification of events:  
+o Promotion creation; 
+o Promotion delete; 
+o Promotion attribute update; 
+o Promotion state update. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 34 
+Sample Use Cases 
+This section includes a set of main use cases that can be performed with this API. Additional use cases can be 
+generated using the operations and resources defined in this specification. 
+User case 
+Prepaid customer recharges his phone, meets the criteria of a specific promotion and 
+obtains it. 
+ 
+Actors 
+Customer. 
+ 
+Pre-conditions 
+Promotion related to recharges previously configured. 
+Promotion released. 
+ 
+Expected outcome 
+Promotion benefits being provided to the customer. 
+ 
+Operation 
+GET /promotion 
+ 
+Description 
+1. Customer gets a notification about a promotion after doing a top-up of £25; 
+2. Customer checks its details:  
+a. “Top-up by £20 or more and get 5GB of data for only £5”. 
+3. Customer appreciates the promotion and buys 5GB of data. 
+ 
+Note 
+Purchase handled by other API (TMF622). 
+ 
+Use Case 1 Promotion for prepaid customers 
+  
+User case 
+Creation of new promotion related to customer retention. 
+ 
+Actors 
+Agent. 
+ 
+Pre-conditions 
+None. 
+ 
+Expected outcome 
+New promotion configured. 
+ 
+Operation 
+POST /promotion 
+ 
+Description 
+1. Agent receives a request to create a new promotion where 3 months of Netflix are 
+given for free to a customer when he (she) extends his(her) contract for more 24 
+months; 
+2. Agent submits the promotion details; 
+3. New promotion with status “draft” is created. 
+ 
+Use Case 2 New promotion 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 34 
+User case 
+Retirement of a promotion. 
+ 
+Actors 
+Agent. 
+ 
+Pre-conditions 
+Promotion previously released. 
+Promotion details are obsolete. 
+ 
+Expected outcome 
+Promotion status updated. 
+ 
+Operation 
+PATCH /promotion/id 
+ 
+Description 
+1. Agent receives a request to archive a promotion; 
+2. Agent submits the new promotion status; 
+3. Promotion status changed to “retirement”. 
+ 
+Use Case 3 Retirement of a promotion 
+ 
+User case 
+Promotion with 10% discount for new purchase in digital channels. 
+ 
+Actors 
+Customer. 
+ 
+Pre-conditions 
+Promotion previously configured and released. 
+ 
+Expected outcome 
+Promotion shown to the customer. 
+ 
+Operation 
+GET /promotion 
+ 
+Description 
+1. Customer logs in; 
+2. Channel informs the customer about 10% discount in new purchases; 
+3. Customer ignores promotion. 
+ 
+Use Case 4 Promotion for digital channels 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 34 
+Support of polymorphism and extension patterns 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance a BillingAccount and SettlementAccount inheriting properties from the abstract Account entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Account instances some may be instances of BillingAccount where other could be instances of SettlementAccount. 
+The @type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance an AccountRef object) to explicitly denote 
+the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes the class 
+type of the reference itself, such as BillingAccountRef or SettlementAccountRef, and not the class type of the referred 
+object. However, since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 34 
+Resource Model 
+Managed Entity Model 
+Promotion resource 
+Promotion is used to provide the additional discount, voucher, bonus or gift to the customer who meets the pre-
+defined criteria. Using promotion, the enterprise can attract the users and encourage more consumption, 
+especially continuous purchases.  
+Normally, Promotion is not regarded as one type of product or product offering. It is often applied when the 
+customer buys the product offerings with the price or amount surpassing the certain limit. 
+Promotion resource model 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 34 
+Field descriptions 
+Promotion resource 
+@baseType 
+A string. The base type for use in polymorphic collections. 
+@schemaLocation 
+A string. A link to the schema describing a resource (for type extension). 
+@type 
+A string. The class type of the actual resource (for type extension). 
+description 
+A string. Details about the purpose of this promotion. 
+href 
+A string. Hyperlink to access the promotion. 
+id 
+A string. Unique identifier of promotion. 
+lastUpdate 
+A date time (DateTime). Latest update date of promotion. 
+lifecycleStatus 
+A string. Value of promotion status.  
+Our suggestion would be:  
+• 
+draft; 
+• 
+test; 
+• 
+waitForApproval; 
+• 
+release; 
+• 
+suspend; 
+• 
+retirement. 
+name 
+A string. Name of promotion. 
+pattern 
+A list of promotion patterns (PromotionPattern [*]). Contains the conditions and 
+benefits of the promotion toan eligible party. 
+promotionType 
+A string. Type of promotion.  
+The basic type are: 
+• 
+Award; 
+o Gift or free unit is given to the party. 
+• 
+Discount; 
+o Deduct from an account, debt or charge. 
+• 
+Reduction. 
+o Bring down the quantity or value or something. 
+However, other types of promotion can be used. 
+validFor 
+A time period. The period for which the promotion is valid. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 34 
+AttachmentRefOrValue sub-resource 
+An attachment by value or by reference. An attachment complements the description of an element, for example 
+through a document, a video, a picture. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. A narrative text describing the content of the attachment. 
+href 
+An uri (Uri). URI for this Attachment. 
+id 
+A string. Unique identifier for this attachment. 
+url 
+An uri (Uri). Uniform Resource Locator, is a web page address (a subset of URI). 
+name 
+A string. The name of the attachment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+attachmentType 
+A string. Attachment type such as video, picture. 
+content 
+A base 6 4 (Base64). The actual contents of the attachment object, if embedded, 
+encoded as base64. 
+mimeType 
+A string. Attachment mime type such as extension file for video, picture and 
+document. 
+size 
+A quantity (Quantity). The size of the attachment. 
+validFor 
+A time period. The period for which the attachment is valid. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 34 
+PromotionAction sub-resource 
+Action of the promotion. When the customer meets the conditions in the promotion pattern, the customer can be 
+given the benefits in the action. 
+@baseType 
+A string. The base type for use in polymorphic collections. 
+@schemaLocation 
+A string. A link to the schema describing a resource (for type extension). 
+@type 
+A string. The class type of the actual resource (for type extension). 
+actionEntityRef 
+An entity reference (EntityRef). It refers to the entity that is impacted by the 
+promotion action.  
+• 
+When the Promotion type is Award, the actionEntityRef is the party account; 
+• 
+When the Promotion type is Discount, it is the product offering; 
+• 
+When the Promotion type is Reduction, it is the product offering also. 
+actionType 
+A string.  
+Action type can be one of the following:  
+1. voice (minute); 
+2. data (MB); 
+3. data (GB); 
+4. SMS; 
+5. bonus point; 
+6. physical gift; 
+7. voucher; 
+8. promotion code; 
+9. an existing offering; 
+10. currency. 
+However, other types of action can be used. 
+actionValue 
+A string.  
+• 
+When the Promotion type is Award, it means the amount or value of the 
+awards decided by actionType; 
+• 
+When the Promotion type is Discount, it means the value of the discount; 
+• 
+When the Promotion type is Reduction, it means the value of the reduced 
+money. 
+id 
+A string. Unique identifier. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 34 
+PromotionCriteria sub-resource 
+Set of criteria to be followed by all parties. 
+@baseType 
+A string. The base type for use in polymorphic collections. 
+@schemaLocation 
+A string. A link to the schema describing a resource (for type extension). 
+@type 
+A string. The class type of the actual resource (for type extension). 
+criteriaOperator 
+A string. Logic operator of this criteria instruction: '=' or '>' or '<' or '>=' or '<=' or '<>'. 
+criteriaParameter 
+A string. The parameter (factor) of the criteria. The basic factors are abstracted from 
+these data sources. And there are several detail parameters. For instance:  
+1. Individual 
+1.1. id; 
+1.2. name; 
+1.3. birth date. 
+ 
+2. Product Offering 
+2.1. id; 
+2.2. duty free amount; 
+2.3. tax included amount; 
+2.4. product order id; 
+2.5. price type; 
+2.6. channel name. 
+ 
+3. Product  
+3.1. id; 
+3.2. duration amount; 
+3.3. duration units. 
+ 
+4. Product Offering Category 
+4.1. id. 
+ 
+5. Top up Balance 
+5.1. amount; 
+5.2. recurring period; 
+ 
+6. Customer Bill 
+6.1. amount due. 
+ 
+However, other details can be considered. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 34 
+criteriaValue 
+A string. The value is filled for the comparison of the criteria. 
+id 
+A string. Unique identifier. 
+ 
+PromotionCriteriaGroup sub-resource 
+Set of group criteria to promotion. Fulfilling these criteria, parties will receive benefits. 
+@baseType 
+A string. The base type for use in polymorphic collections. 
+@schemaLocation 
+A string. A link to the schema describing a resource (for type extension). 
+@type 
+A string. The class type of the actual resource (for type extension). 
+criteria 
+A list of promotion criteria (PromotionCriteria [1..*]). Set of criteria to be followed 
+by all parties. 
+criteriaLogicalRelationship A string. Logical relation followed by all criteria. 
+groupName 
+A string. Name of the group to be easily identified. 
+id 
+A string. Unique Identifier. 
+ 
+PromotionPattern sub-resource 
+Contains the conditions and benefits of the promotion to an eligible party. 
+@baseType 
+A string. The base type for use in polymorphic collections. 
+@schemaLocation 
+A string. A link to the schema describing a resource (for type extension). 
+@type 
+A string. The class type of the actual resource (for type extension). 
+action 
+A list of promotion actions (PromotionAction [1..*]). Action of the promotion. 
+When the customer meets the conditions in the promotion pattern, the 
+customer can be given the benefits in the action. 
+criteriaGroup 
+A list of promotion criteria groups (PromotionCriteriaGroup [1..*]). Set of 
+group criteria to promotion. Fulfilling these criteria, parties will receive 
+benefits. 
+criteriaGroupLogicalRelationship A string. Logical relation followed by the criteria group. 
+description 
+A string. Small description to clarify the pattern details. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 34 
+id 
+A string. Unique identifier of promotion pattern. 
+name 
+A string. Alias to promotion pattern. This way is easily mentioned. 
+priority 
+An integer. Priority. Smaller number means high. 
+validFor 
+A time period. The period for which the promotion pattern is valid. 
+ 
+EntityRef relationship 
+Entity reference schema to be use for all entityRef class. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 34 
+Json representation sample 
+We provide below the json representation of an example of a 'Promotion' resource object. 
+{ 
+    "id": "PREPAIDOFFER_5GB", 
+    "href": "https:/host:port/tmf-api/promotion/v4/promotion/8474", 
+    "description": "Top-up by \u00a320 or more and get 5GB of data for only \u00a35", 
+    "lastUpdate": "2021-01-19T00:00:00.000Z", 
+    "lifecycleStatus": "release", 
+    "name": "More 5GB data when \u00a320 top-up", 
+    "pattern": [ 
+        { 
+            "id": "PATTERN_PREPAID_PRODUCT_OFFERING_5GB", 
+            "action": [ 
+                { 
+                    "id": "ACTION_PREPAID_PRODUCT_OFFERING_5GB", 
+                    "actionEntityRef": { 
+                        "id": "PRODUCT_OFFERING_5GB", 
+                        "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_5GB", 
+                        "name": "5GB data add-on" 
+                    }, 
+                    "actionType": "3", 
+                    "actionValue": "5" 
+                } 
+            ], 
+            "criteriaGroup": [ 
+                { 
+                    "id": "GROUP_PREPAID_PRODUCT_OFFERING_5GB", 
+                    "criteria": [ 
+                        { 
+                            "id": "CRITERIA_PREPAID_PRODUCT_OFFERING_5GB", 
+                            "criteriaOperator": ">=", 
+                            "criteriaParameter": "5.3", 
+                            "criteriaValue": "\u00a320" 
+                        } 
+                    ] 
+                } 
+            ] 
+        } 
+    ], 
+    "promotionType": "Reduction", 
+    "validFor": { 
+        "startDateTime": "2020-01-05T12:00:56.982Z", 
+        "endDateTime": "9999-12-31T23:59:59.999Z" 
+    } 
+} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 34 
+Notification Resource Models 
+5 notifications are defined for this API: 
+    - PromotionCreateEvent 
+    - PromotionDeleteEvent 
+    - PromotionAttributeValueChangeEvent 
+    - PromotionStateChangeEvent 
+    - PromotionInformationRequiredEvent 
+ 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+ 
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+Event resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 34 
+Promotion Create Event 
+We provide below the json representation of an example of a “PromotionCreateEvent” event: 
+Json representation sample 
+{ 
+ 
+"eventId": "00001", 
+ 
+"eventTime": "2015-11-16T16:42:25-04:00", 
+ 
+"eventType": "PromotionCreateEvent", 
+ 
+"event": { 
+ 
+ 
+"promotion": { 
+ 
+ 
+ 
+"id": "RETENTIONNETFLIX3M", 
+ 
+ 
+ 
+"href": "https:/host:port/tmf-api/promotion/v4/promotion/RETENTIONNETFLIX3M", 
+ 
+ 
+ 
+"description": "Retention for more 24 months gives free Netflix for 3months", 
+ 
+ 
+ 
+"lastUpdate": "2021-01-19T00:00:00.000Z", 
+ 
+ 
+ 
+"lifecycleStatus": "draft", 
+ 
+ 
+ 
+"name": "3months of free Netflix when retention for more 24 months", 
+ 
+ 
+ 
+"pattern": [{ 
+ 
+ 
+ 
+ 
+"action": [{ 
+ 
+ 
+ 
+ 
+ 
+"actionEntityRef": { 
+ 
+ 
+ 
+ 
+ 
+ 
+"id": "POSTPAID_PRODUCT_OFFERING_NETFLIX", 
+ 
+ 
+ 
+ 
+ 
+ 
+"href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_NETFLIX", 
+ 
+ 
+ 
+ 
+ 
+ 
+"name": "Netflix 3MFree" 
+ 
+ 
+ 
+ 
+ 
+}, 
+ 
+ 
+ 
+ 
+ 
+"actionType": "9" 
+ 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+ 
+"criteriaGroup": [{ 
+ 
+ 
+ 
+ 
+ 
+"criteria": [{ 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaOperator": "=", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaParameter": "3.2", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaValue": "24" 
+ 
+ 
+ 
+ 
+ 
+}, { 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaOperator": "=", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaParameter": "3.3", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaValue": "months" 
+ 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+"promotionType": "Award", 
+ 
+ 
+ 
+"validFor": { 
+ 
+ 
+ 
+ 
+"startDateTime": "2020-01-05T12:00:56.982Z", 
+ 
+ 
+ 
+ 
+"endDateTime": "9999-12-31T23:59:59.999Z" 
+ 
+ 
+ 
+}} 
+ 
+} 
+} 
+ 
+Promotion Delete Event 
+We provide below the json representation of an example of a “PromotionDeleteEvent” event: 
+Json representation sample 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 34 
+{ 
+ 
+"eventId": "00001", 
+ 
+"eventTime": "2015-11-16T16:42:25-04:00", 
+ 
+"eventType": "PromotionDeleteEvent", 
+ 
+"event": { 
+ 
+ 
+"promotion": { 
+ 
+ 
+ 
+"id": "CUSTBIRTHDAY", 
+ 
+ 
+ 
+"href": "https:/host:port/tmf-api/promotion/v4/promotion/CUSTBIRTHDAY", 
+ 
+ 
+ 
+"description": "It's your birthday! 50 loyalty points will be added to your account", 
+ 
+ 
+ 
+"lastUpdate": "2000-01-19T00:00:00.000Z", 
+ 
+ 
+ 
+"lifecycleStatus": "retirement", 
+ 
+ 
+ 
+"name": "50 loyalty points just to you", 
+ 
+ 
+ 
+"pattern": [{ 
+ 
+ 
+ 
+ 
+"id": "PATTERN_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+"action": [{ 
+ 
+ 
+ 
+ 
+ 
+"id": "ACTION_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+"actionType": "10", 
+ 
+ 
+ 
+ 
+ 
+"actionValue": "50 loyalty points" 
+ 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+ 
+"criteriaGroup": [{ 
+ 
+ 
+ 
+ 
+ 
+"id": "GROUP_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+"criteria": [{ 
+ 
+ 
+ 
+ 
+ 
+ 
+"id": "CRITERIA_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaOperator": "=", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaParameter": "1.3", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaValue": "02-09" 
+ 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+"promotionType": "Award", 
+ 
+ 
+ 
+"validFor": { 
+ 
+ 
+ 
+ 
+"startDateTime": "2020-01-05T12:00:56.982Z", 
+ 
+ 
+ 
+ 
+"endDateTime": "9999-12-31T23:59:59.999Z" 
+ 
+ 
+ 
+}} 
+ 
+} 
+} 
+Promotion Attribute Value Change Event 
+Notification PromotionAttributeValueChangeEvent case for resource Promotion. 
+Json representation sample 
+{ 
+ 
+"eventId": "00001", 
+ 
+"eventTime": "2015-11-16T16:42:25-04:00", 
+ 
+"eventType": " PromotionAttributeValueChangeEvent ", 
+ 
+"event": { 
+ 
+ 
+"promotion": { 
+ 
+ 
+ 
+"id": "CUSTBIRTHDAY", 
+ 
+ 
+ 
+"href": "https:/host:port/tmf-api/promotion/v4/promotion/CUSTBIRTHDAY", 
+ 
+ 
+ 
+"description": "It's your birthday! 50 loyalty points will be added to your account", 
+ 
+ 
+ 
+"lastUpdate": "2000-01-19T00:00:00.000Z", 
+ 
+ 
+ 
+"lifecycleStatus": "retirement", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 34 
+ 
+ 
+ 
+"name": "50 loyalty points just to you", 
+ 
+ 
+ 
+"pattern": [{ 
+ 
+ 
+ 
+ 
+"id": "PATTERN_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+"action": [{ 
+ 
+ 
+ 
+ 
+ 
+"id": "ACTION_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+"actionType": "10", 
+ 
+ 
+ 
+ 
+ 
+"actionValue": "50 loyalty points" 
+ 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+ 
+"criteriaGroup": [{ 
+ 
+ 
+ 
+ 
+ 
+"id": "GROUP_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+"criteria": [{ 
+ 
+ 
+ 
+ 
+ 
+ 
+"id": "CRITERIA_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaOperator": "=", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaParameter": "1.3", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaValue": "02-09" 
+ 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+"promotionType": "Award", 
+ 
+ 
+ 
+"validFor": { 
+ 
+ 
+ 
+ 
+"startDateTime": "2020-01-05T12:00:56.982Z", 
+ 
+ 
+ 
+ 
+"endDateTime": "9999-12-31T23:59:59.999Z" 
+ 
+ 
+ 
+}} 
+ 
+} 
+} 
+ 
+Promotion State Change Event 
+Notification PromotionStateChangeEvent case for resource Promotion. 
+Json representation sample 
+{ 
+ 
+"eventId": "00001", 
+ 
+"eventTime": "2015-11-16T16:42:25-04:00", 
+ 
+"eventType": " PromotionStateChangeEvent", 
+ 
+"event": { 
+ 
+ 
+"promotion": { 
+ 
+ 
+ 
+"id": "CUSTBIRTHDAY", 
+ 
+ 
+ 
+"href": "https:/host:port/tmf-api/promotion/v4/promotion/CUSTBIRTHDAY", 
+ 
+ 
+ 
+"description": "It's your birthday! 50 loyalty points will be added to your account", 
+ 
+ 
+ 
+"lastUpdate": "2000-01-19T00:00:00.000Z", 
+ 
+ 
+ 
+"lifecycleStatus": "retirement", 
+ 
+ 
+ 
+"name": "50 loyalty points just to you", 
+ 
+ 
+ 
+"pattern": [{ 
+ 
+ 
+ 
+ 
+"id": "PATTERN_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+"action": [{ 
+ 
+ 
+ 
+ 
+ 
+"id": "ACTION_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+"actionType": "10", 
+ 
+ 
+ 
+ 
+ 
+"actionValue": "50 loyalty points" 
+ 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+ 
+"criteriaGroup": [{ 
+ 
+ 
+ 
+ 
+ 
+"id": "GROUP_50_LOYALTY POINTS", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 34 
+ 
+ 
+ 
+ 
+ 
+"criteria": [{ 
+ 
+ 
+ 
+ 
+ 
+ 
+"id": "CRITERIA_50_LOYALTY POINTS", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaOperator": "=", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaParameter": "1.3", 
+ 
+ 
+ 
+ 
+ 
+ 
+"criteriaValue": "02-09" 
+ 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+ 
+}] 
+ 
+ 
+ 
+}], 
+ 
+ 
+ 
+"promotionType": "Award", 
+ 
+ 
+ 
+"validFor": { 
+ 
+ 
+ 
+ 
+"startDateTime": "2020-01-05T12:00:56.982Z", 
+ 
+ 
+ 
+ 
+"endDateTime": "9999-12-31T23:59:59.999Z" 
+ 
+ 
+ 
+}} 
+ 
+} 
+} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 34 
+API Operations 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve a representation of a resource. 
+Create Entity 
+POST Resource 
+POST must be used to create a new resource. 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to partially update a resource. 
+Complete Update of an 
+Entity 
+PUT Resource 
+PUT must be used to completely update a resource identified 
+by its resource URI. 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to remove a resource. 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to execute Task resources. 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be used to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Promotion 
+List promotions 
+  GET /promotion?fields=...&{filtering} 
+Description 
+This operation lists promotion entities. Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 34 
+Usage Samples 
+Here's an example of a request for retrieving multiple Promotion. 
+Request 
+GET /tmf-api/promotionManagement/v4/promotion 
+Accept: application/json 
+Response 
+200 
+ 
+[{ 
+        "id": "CUSTBIRTHDAY", 
+        "href": "https:/host:port/tmf-api/promotion/v4/promotion/CUSTBIRTHDAY", 
+        "description": "It's your birthday! 50 loyalty points will be added to your account", 
+        "lastUpdate": "2000-01-19T00:00:00.000Z", 
+        "lifecycleStatus": "retirement", 
+        "name": "50 loyalty points just to you", 
+        "pattern": [{ 
+                "id": "PATTERN_50_LOYALTY POINTS", 
+                "action": [{ 
+                        "id": "ACTION_50_LOYALTY POINTS", 
+                        "actionType": "10", 
+                        "actionValue": "50 loyalty points" 
+                }], 
+                "criteriaGroup": [{ 
+                        "id": "GROUP_50_LOYALTY POINTS", 
+                        "criteria": [ 
+                            { 
+                                "id": "CRITERIA_50_LOYALTY POINTS", 
+                                "criteriaOperator": "=", 
+                                "criteriaParameter": "1.3", 
+                                "criteriaValue": "02-09" 
+                            }] 
+                    }] 
+        }], 
+        "promotionType": "Award", 
+        "validFor": { 
+            "startDateTime": "2020-01-05T12:00:56.982Z", 
+            "endDateTime": "9999-12-31T23:59:59.999Z" 
+        } 
+    }, 
+    { 
+        "id": "RETENTIONNETFLIX3M", 
+        "href": "https:/host:port/tmf-api/promotion/v4/promotion/RETENTIONNETFLIX3M", 
+        "description": "Retention for more 24 months gives free Netflix for 3months", 
+        "lastUpdate": "2021-02-10T00:00:00.000Z", 
+        "lifecycleStatus": "draft", 
+        "name": "3months of free Netflix when retention for more 24 months", 
+        "pattern": [{ 
+                "action": [{ 
+                        "actionEntityRef": { 
+                            "id": "POSTPAID_PRODUCT_OFFERING_NETFLIX", 
+                            "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_NETFLIX", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 34 
+                            "name": "Netflix 3MFree" 
+                        }, 
+                        "actionType": "9" 
+                    } 
+                ], 
+                "criteriaGroup": [{ 
+                        "criteria": [{ 
+                                "criteriaOperator": "=", 
+                                "criteriaParameter": "3.2", 
+                                "criteriaValue": "24" 
+                            },{ 
+                                "criteriaOperator": "=", 
+                                "criteriaParameter": "3.3", 
+                                "criteriaValue": "months" 
+                            }] 
+                    }] 
+         }], 
+        "promotionType": "Award", 
+        "validFor": { 
+            "startDateTime": "2020-01-05T12:00:56.982Z", 
+            "endDateTime": "9999-12-31T23:59:59.999Z" 
+        } 
+    },{ 
+        "id": "PREPAIDOFFER_5GB", 
+        "href": "https:/host:port/tmf-api/promotion/v4/promotion/PREPAIDOFFER_5GB", 
+        "description": "Top-up by \u00a320 or more and get 5GB of data for only \u00a35", 
+        "lastUpdate": "2021-02-10T00:00:00.000Z", 
+        "lifecycleStatus": "release", 
+        "name": "More 5GB data when 20euros top-up", 
+        "pattern": [{ 
+                "id": "PATTERN_PREPAID_PRODUCT_OFFERING_5GB", 
+                "action": [{ 
+                        "id": "ACTION_PREPAID_PRODUCT_OFFERING_5GB", 
+                        "actionEntityId": { 
+                            "id": "PRODUCT_OFFERING_5GB", 
+                            "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_5GB", 
+                            "name": "5GB data add-on" 
+                        }, 
+                        "actionType": "3", 
+                        "actionValue": "5" 
+                }], 
+                "criteriaGroup": [{ 
+                        "id": "GROUP_PREPAID_PRODUCT_OFFERING_5GB", 
+                        "criteria": [{ 
+                                "id": "CRITERIA_PREPAID_PRODUCT_OFFERING_5GB", 
+                                "criteriaOperator": ">=", 
+                                "criteriaParameter": "5.1", 
+                                "criteriaValue": "\u00a320" 
+                            }] 
+                    }] 
+            }], 
+        "promotionType": "Reduction", 
+        "validFor": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 34 
+            "startDateTime": "2020-01-05T12:00:56.982Z", 
+            "endDateTime": "9999-12-31T23:59:59.999Z" 
+        } 
+    }] 
+ 
+Retrieve promotion 
+  GET /promotion/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a promotion entity. Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving a specific Promotion. 
+Request 
+GET /tmf-api/promotionManagement/v4/promotion/RETENTIONNETFLIX3M 
+Accept: application/json 
+Response 
+200 
+ 
+{ 
+    "id": "RETENTIONNETFLIX3M", 
+    "href": "https:/host:port/tmf-api/promotion/v4/promotion/RETENTIONNETFLIX3M", 
+    "description": "Retention for more 24 months gives free Netflix for 3months", 
+    "lastUpdate": "2021-02-10T00:00:00.000Z", 
+    "lifecycleStatus": "draft", 
+    "name": "3months of free Netflix when retention for more 24 months", 
+    "pattern": [{ 
+            "action": [{ 
+                    "actionEntityRef": { 
+                        "id": "POSTPAID_PRODUCT_OFFERING_NETFLIX", 
+                        "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_NETFLIX", 
+                        "name": "Netflix 3MFree" 
+                    }, 
+                    "actionType": "9" 
+                }], 
+            "criteriaGroup": [{ 
+                    "criteria": [{ 
+                            "criteriaOperator": "=", 
+                            "criteriaParameter": "3.2", 
+                            "criteriaValue": "24" 
+                        },{ 
+                            "criteriaOperator": "=", 
+                            "criteriaParameter": "3.3", 
+                            "criteriaValue": "months" 
+                        }] 
+                }] 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 34 
+     }], 
+    "promotionType": "Award", 
+    "validFor": { 
+        "startDateTime": "2020-01-05T12:00:56.982Z", 
+        "endDateTime": "9999-12-31T23:59:59.999Z" 
+    } 
+} 
+ 
+Create promotion 
+  POST /promotion 
+Description 
+This operation creates a promotion entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non-mandatory attributes when creating a Promotion, 
+including any possible rule conditions and applicable default values.  
+Notice that it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+name 
+N/A 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+Only required if the resource is extended. 
+@schemaLocation 
+@type 
+description 
+N/A 
+lastUpdate 
+lifecycleStatus 
+pattern 
+promotionType 
+validFor 
+ 
+ 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a specific Promotion. 
+Request 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 34 
+POST /tmf-api/promotionManagement/v4/promotion 
+Content-Type: application/json 
+ 
+{ 
+    "description": "Retention for more 24 months gives free Netflix for 3months", 
+    "lastUpdate": "2021-01-19T00:00:00.000Z", 
+    "lifecycleStatus": "draft", 
+    "name": "3months of free Netflix when retention for more 24 months", 
+    "pattern": [{ 
+            "action": [{ 
+                    "actionEntityRef": { 
+                        "id": "POSTPAID_PRODUCT_OFFERING_NETFLIX", 
+                        "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_NETFLIX", 
+                        "name": "Netflix 3MFree" 
+                    }, 
+                    "actionType": "9" 
+            }], 
+            "criteriaGroup": [{ 
+                    "criteria": [{ 
+                            "criteriaOperator": "=", 
+                            "criteriaParameter": "3.2", 
+                            "criteriaValue": "24" 
+                        },{ 
+                            "criteriaOperator": "=", 
+                            "criteriaParameter": "3.3", 
+                            "criteriaValue": "months" 
+                        }] 
+                }] 
+    }], 
+    "promotionType": "Award", 
+    "validFor": { 
+        "startDateTime": "2020-01-05T12:00:56.982Z", 
+        "endDateTime": "9999-12-31T23:59:59.999Z" 
+    } 
+} 
+ 
+Response 
+201 
+ 
+{ 
+    "id": "RETENTIONNETFLIX3M", 
+    "href": "https:/host:port/tmf-api/promotion/v4/promotion/RETENTIONNETFLIX3M", 
+    "description": "Retention for more 24 months gives free Netflix for 3months", 
+    "lastUpdate": "2021-01-19T00:00:00.000Z", 
+    "lifecycleStatus": "draft", 
+    "name": "3months of free Netflix when retention for more 24 months", 
+    "pattern": [{ 
+            "action": [{ 
+                    "actionEntityRef": { 
+                        "id": "POSTPAID_PRODUCT_OFFERING_NETFLIX", 
+                        "href": "https://mycsp.com:8080/tmf-
+api/productCatalogManagement/v4/productOffering/PRODUCT_OFFERING_NETFLIX", 
+                        "name": "Netflix 3MFree" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 34 
+                    }, 
+                    "actionType": "9" 
+            }], 
+            "criteriaGroup": [{ 
+                    "criteria": [{ 
+                            "criteriaOperator": "=", 
+                            "criteriaParameter": "3.2", 
+                            "criteriaValue": "24" 
+                        },{ 
+                            "criteriaOperator": "=", 
+                            "criteriaParameter": "3.3", 
+                            "criteriaValue": "months" 
+                        }] 
+                }] 
+        }], 
+    "promotionType": "Award", 
+    "validFor": { 
+        "startDateTime": "2020-01-05T12:00:56.982Z", 
+        "endDateTime": "9999-12-31T23:59:59.999Z" 
+    } 
+} 
+ 
+Patch promotion 
+  PATCH /promotion/{id} 
+Description 
+This operation allows partial updates of a promotion entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.   
+Hence these tables are not repeated here. 
+ 
+ 
+ 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 34 
+description 
+N/A 
+lastUpdate 
+lifecycleStatus 
+name 
+pattern 
+promotionType 
+validFor 
+Non Patchable Attributes 
+Rule 
+id 
+N/A 
+href 
+pattern.id 
+pattern.criteriaGroup.id 
+pattern.criteriaGroup.criteria.id 
+pattern.action.id 
+@baseType 
+@schemaLocation 
+@type 
+ 
+Usage Samples 
+Here's an example of a request for patching a Promotion. 
+Request 
+PATCH /tmf-api/promotionManagement/v4/promotion/RETENTIONNETFLIX3M 
+Content-Type: application/merge-patch+json 
+{ 
+    "lifecycleStatus": "retirement" 
+} 
+Response 
+200 
+ 
+{ 
+    "id": "CUSTBIRTHDAY", 
+    "href": "https:/host:port/tmf-api/promotion/v4/promotion/CUSTBIRTHDAY", 
+    "description": "It's your birthday! 50 loyalty points will be added to your account", 
+    "lastUpdate": "2000-01-19T00:00:00.000Z", 
+    "lifecycleStatus": "retirement", 
+    "name": "50 loyalty points just to you", 
+    "pattern": [{ 
+            "id": "PATTERN_50_LOYALTY POINTS", 
+            "action": [{ 
+                    "id": "ACTION_50_LOYALTY POINTS", 
+                    "actionType": "10", 
+                    "actionValue": "50 loyalty points" 
+            }], 
+            "criteriaGroup": [{ 
+                    "id": "GROUP_50_LOYALTY POINTS", 
+                    "criteria": [{ 
+                            "id": "CRITERIA_50_LOYALTY POINTS", 
+                            "criteriaOperator": "=", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 34 
+                            "criteriaParameter": "1.3", 
+                            "criteriaValue": "02-09" 
+                        }] 
+                }] 
+        }], 
+    "promotionType": "Award", 
+    "validFor": { 
+        "startDateTime": "2020-01-05T12:00:56.982Z", 
+        "endDateTime": "9999-12-31T23:59:59.999Z" 
+    } 
+} 
+ 
+Delete promotion 
+  DELETE /promotion/{id} 
+Description 
+This operation deletes a promotion entity. 
+Usage Samples 
+Here's an example of a request for patching a Promotion. 
+Request 
+DELETE /tmf-api/promotionManagement/v4/promotion/RETENTIONNETFLIX3M 
+ 
+Response 
+204 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 34 
+API Notifications 
+For every single of operation on the entities use the following templates and provide sample REST notification POST 
+calls. It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+Request 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+Response 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 34 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+Request 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+Response 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the callback 
+url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service can set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+ 
+ 
+Request 
+POST /client/listener 
+Accept: application/json 
+{ 
+    "event": { EVENT BODY }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+Response 
+201 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 34 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design Guidelines. 
+ 
+ 
+ 
+
+
+ 
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 34 
+Acknowledgements 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 1.0 
+04/15/2017 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+Mariano Belaunde Orange 
+Labs 
+First Release of the Document 
+Release 2.0 
+11/06/2018 
+Mariano Belaunde  
+Orange Labs 
+Alignment with Guidelines 3.0 
+Release 3.0  
+23/06/2021 
+Lara Silva 
+Vodafone 
+lara.silva3@vodafone.com 
+Alignment with guidelines 4.0.1 
+ 
+ 
+Contributors to Document 
+ 
+ 
+ 
+ 
+ 
+
+

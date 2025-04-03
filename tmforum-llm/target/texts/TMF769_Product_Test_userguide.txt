@@ -1,0 +1,5784 @@
+TM Forum Specification 
+Product Test
+Maturity Level: Beta
+Team Approved Date: 16-07-2024
+Approval Status: Team Approved
+IPR Mode: RAND
+Release Status: Pre-Production
+Version 5.0.0
+TMF769
+
+
+ NOTICE
+Copyright © TM Forum 2024. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+
+
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  1
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Service Quality Assurance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+New Product Validation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Partner Onboarding and Certification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Fault Detection and Troubleshooting . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Performance Benchmarking . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Regulatory Compliance. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Customer Experience Optimization. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+Support Of Polymorphism And Extension Patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Resource Model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+ProductTest resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+ProductTestSpecification resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  20
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  31
+ProductTest . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  32
+ProductTestSpecification. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  37
+API Operations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  46
+Operations on ProductTest . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  46
+List or find ProductTest objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  46
+Retrieves a ProductTest by ID. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  52
+Creates a ProductTest. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  55
+Updates partially a ProductTest. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  59
+Operations on ProductTestSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  65
+List or find ProductTestSpecification objects. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  65
+Retrieves a ProductTestSpecification by ID . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  68
+Creates a ProductTestSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  72
+Updates partially a ProductTestSpecification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  78
+Deletes a ProductTestSpecification. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  93
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  95
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  95
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  96
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  96
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  98
+Release History. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  98
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  98
+
+
+ Introduction
+The following document is the specification of the REST API for Product Test Management.
+It includes the model definition as well as all available operations. Possible actions are
+creating, updating and retrieving Product Test.
+The ProductTest API serves as a standardized mechanism for placing a product test with all
+the necessary test parameterst TO conduct thorough evaluations and assessments of CSP
+products. Its primary objective is to facilitate a wholistic and systematic examination of the
+various services encompassed within a product, thereby ensuring its quality, performance,
+and reliability.
+The API consists of a simple set of operations that interact with Product/Service
+Management systems in a consistent manner. A product test is a procedure intended to
+check the quality, performance, or reliability of a service.
+Moreover, the ProductTest API provides Communication Service Providers (CSPs) with the
+ability to expose a testing interface to partner CSPs, such as Internet Service Providers
+(ISPs), enabling them to perform and retrieve test results on products. This fosters
+collaboration and transparency within the ecosystem, allowing for mutual assurance of
+product quality and performance.
+Operating on a modular architecture, the ProductTest API orchestrates the decomposition of
+the product into its constituent services and interfaces seamlessly with the ServiceTest API
+for individual service evaluations. By leveraging the capabilities of the ServiceTest API, it
+initiates and manages a series of service tests, each tailored to scrutinize specific aspects of
+the product’s functionality.
+Product Test Management API manages product test resource and product specification test
+resource:
+• A product test specification describes the product test in terms of parameters to be
+configured and measures to be taken.
+• A product exists for a controlled test invocation on a service. The product test is
+executed according to a schedule. and contains product test configuration parameters
+that are to be applied at execution time, and product test measures that result.
+
+
+ Sample Use Cases
+Service Quality Assurance
+The broadband wholesale provider can use the ProductTest API to ensure the quality and
+reliability of the broadband services they offer to their clients, such as Internet Service
+Providers (ISPs) or telecommunication companies. By conducting regular product tests on
+various aspects like speed, latency, and reliability, they can identify any potential issues and
+proactively address them, thereby maintaining high service standards.
+New Product Validation
+When introducing a new broadband product or service, the wholesale provider can leverage
+the ProductTest API to validate its performance and compatibility across different network
+configurations and customer environments. This includes testing features like bandwidth
+allocation, network scalability, and interoperability with existing infrastructure to ensure
+seamless integration and optimal performance.
+Partner Onboarding and Certification
+To onboard new ISP partners onto their network, the wholesale provider can utilize the
+ProductTest API to certify their readiness and compatibility with the broadband services
+offered. By defining standardized test scenarios and parameters, they can evaluate the
+partner ISPs' network capabilities and ensure they meet the required standards before
+granting access to the wholesale network.
+Fault Detection and Troubleshooting
+In case of network faults or service disruptions, the broadband wholesale provider can
+employ the ProductTest API to quickly diagnose and troubleshoot the underlying issues. By
+automating diagnostic tests and analyzing test results in real-time, they can pinpoint the root
+cause of the problem and expedite the resolution process, minimizing downtime and
+customer impact.
+Performance Benchmarking
+The wholesale provider can use the ProductTest API to benchmark the performance of their
+broadband services against industry standards and competitor offerings. By conducting
+comparative tests on factors like speed, latency, and reliability, they can identify areas for
+improvement and differentiate their services based on superior performance metrics.
+Regulatory Compliance
+To comply with regulatory requirements and industry standards, such as quality of service
+(QoS) regulations, the broadband wholesale provider can utilize the ProductTest API to
+conduct regular compliance audits and performance assessments. This includes measuring
+key performance indicators (KPIs) mandated by regulatory bodies and generating
+comprehensive reports to demonstrate compliance.
+
+
+ 
+Customer Experience Optimization
+By continuously monitoring and analyzing service performance through the ProductTest API,
+the wholesale provider can proactively identify opportunities to enhance the overall customer
+experience. This includes optimizing network configurations, implementing service upgrades,
+and addressing potential bottlenecks to deliver faster, more reliable broadband services to
+end-users.
+These use cases demonstrate how the ProductTest API can enable a broadband wholesale
+provider to ensure service quality, drive operational efficiency, and maintain a competitive
+edge in the broadband market.
+
+
+ Support Of Polymorphism And Extension
+Patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines v3.0 Part 2 document.
+The @type attribute provides a way to represent the actual class type of an entity. All
+resources and sub-resources of this API have a @type attributes that can be provided when
+this is useful. Such as ServiceTest, ServiceTestSpecification Entity. All resources and sub-
+resources of this API have a @type attributes that can be provided when this is useful.
+The @referredType can be used within reference entities (like for instance ServiceRef) to
+explicitly denote the actual entity type of the referred class. Notice that in reference entities
+the @type, when used, denotes the class types of the reference itself, such as ServiceRef,
+and not the class type of the referred object. However, since reference classes are rarely
+sub-classed, @type is generally not useful in reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+Notice that because these meta-attributes have a generic meaning, we will not repeat their
+definition in the resource description tables of each resource and each sub-resource.
+
+
+ Resource Model
+Managed Entity and Task Resource Models
+ProductTest resource
+A product test is an entity that exists for a controlled test invocation on a product. The
+product 
+test is executed according to a schedule and contains product test configuration parameters
+that are to be 
+applied at execution time, and product test measures that result.
+Resource model
+
+
+ 
+ProductTest
+description : String
+endDateTime : DateTime
+href : String
+id : String
+mode : ENUM String
+onDemand
+proactive
+name : String (1)
+startDateTime : DateTime
+state : ExecutionStateType
+validFor : TimePeriod
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+«Enumeration»
+ExecutionStateType
+acknowledged
+inProgress
+rejected
+pending
+cancelled
+completed
+failed
+MeasureThresholdRuleViolation
+conformanceComparatorExact : Boolean
+conformanceComparatorLower : String
+conformanceComparatorUpper : String
+conformanceTargetExact : String
+conformanceTargetLower : String
+conformanceTargetUpper : String
+description : String
+name : String
+numberOfAllowedCrossing : Integer
+thresholdRuleSeverity : String
+tolerancePeriod : Duration
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+ExternalIdentifier
+externalIdentifierType : String
+id : String (1)
+owner : String
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+IncidentRef
+href : String
+id : String (1)
+name : String (1)
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type : String (1)
+CharacteristicRelationship
+id : String (1)
+relationshipType : String (1)
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+ProductTestSpecificationRef
+href : String
+id : String (1)
+name : String (1)
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type : String (1)
+Characteristic
+id : String
+name : String (1)
+valueType : String
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+discriminator:
+ObjectCharacteristic
+NumberCharacteristic
+BooleanArrayCharacteristic
+Characteristic
+BooleanCharacteristic
+NumberArrayCharacteristic
+IntegerCharacteristic
+ObjectArrayCharacteristic
+StringArrayCharacteristic
+IntegerArrayCharacteristic
+StringCharacteristic
+RelatedPartyRefOrPartyRoleRef
+role : String (1)
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+ProductRef
+href : String
+id : String (1)
+name : String (1)
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type : String (1)
+PartyRoleRef
+href : String
+id : String (1)
+name : String (1)
+partyId : String
+partyName : String
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type = PartyRoleRef
+AppliedConsequence
+appliedAction : String
+description : String
+name : String
+repeatAction : Boolean
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+PartyRef
+href : String
+id : String (1)
+name : String (1)
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type = PartyRef
+PartyRefOrPartyRoleRef
+                                        
+discriminator:
+PartyRef
+PartyRoleRef
+TestMeasure
+accuracy : Float
+captureDateTime : DateTime
+captureMethod : String
+metricDescription : String
+metricHref : String
+metricName : String
+unitOfMeasure : String
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+testMeasure
+0..*
+value
+0..1
+testMeasureCharacteristic
+0..*
+characteristic
+0..*
+relatedParty
+0..*
+partyOrPartyRole
+0..1
+ruleViolation
+0..*
+externalIdentifier
+0..*
+incidentRef
+0..*
+testSpecification
+1
+relatedProduct
+1
+appliedConsequence
+0..*
+characteristicRelationship
+0..*
+ 
+ 
+ Color  Description
+ 
+ Resource (entry point)
+ 
+ Sub-resource
+ 
+ Sub-resource (reference entity)
+ 
+ Enumeration
+(1) : Mandatory property
+Figure 1 - ProductTest
+
+
+ 
+[.] | .//
+Figure 2 - ProductTest
+Field descriptions
+ProductTest fields
+characteristic
+A Characteristic. Describes a given characteristic of an object or
+entity through a name/value pair. This is an abstract base class,
+the actual value is in one of the strongly-typed subclasses :
+StringCharacteristic, ObjectCharacteristic, FloatCharacteristic,
+BooleanCharacteristic, NumberCharacteristic,
+IntegerCharacteristic, StringArrayCharacteristic,
+ObjectArrayCharacteristic, BooleanArrayCharacteristic,
+NumberArrayCharacteristic, IntegerArrayCharacteristic…
+Characteristic can be instanciated as
+* BooleanArrayCharacteristic
+* BooleanCharacteristic
+* IntegerArrayCharacteristic
+* IntegerCharacteristic
+* NumberArrayCharacteristic
+* NumberCharacteristic
+* ObjectArrayCharacteristic
+* ObjectCharacteristic
+* StringArrayCharacteristic
+* StringCharacteristic
+description
+A String. Description of the product test.
+endDateTime
+A DateTime. The end date and time of the product test.
+externalIdentifier
+An ExternalIdentifier. An identification of an entity that is owned
+by or originates in a software system different from the current
+system, for example a ProductOrder handed off from a
+commerce platform into an order handling system. The structure
+identifies the system itself, the nature of the entity within the
+system (e.g. class name) and the unique ID of the entity within
+the system. It is anticipated that multiple external IDs can be held
+for a single entity, e.g. if the entity passed through multiple
+systems on the way to the current system. In this case the
+consumer is expected to sequence the IDs in the array in reverse
+order of provenance, i.e. most recent system first in the list.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+incidentRef
+An IncidentRef. Incident reference.
+mode
+A String. An indication of whether the product test is running in
+"proactive" or "onDemand" mode. ENUMERATED with values:
+* onDemand
+* proactive
+name
+A String. The name of the product test.
+
+
+ 
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+relatedProduct
+A ProductRef. A Product reference.
+startDateTime
+A DateTime. The start date and time of the product test.
+state
+An ExecutionStateType. Possible values for the state of the
+execution. ENUMERATED with values:
+* acknowledged
+* rejected
+* pending
+* inProgress
+* cancelled
+* completed
+* failed
+testMeasure
+A TestMeasure. A TestMeasure specifies a measure of a specific
+aspect of a product, service, or resource test, such as lost
+packets or connectivity status.
+testSpecification
+A ProductTestSpecificationRef. Product Test specification
+reference: ProductTestSpecification(s) required to realize a Test
+Specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ExternalIdentifier sub-resource fields
+externalIdentifierType
+A String. Type of the identification, typically would be the type of
+the entity within the external system.
+id
+A String. Identification of the entity within the external system.
+owner
+A String. Name of the external system that owns the entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IncidentRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+
+
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ProductTestSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Characteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Characteristic can be instanciated as
+* BooleanArrayCharacteristic
+* BooleanCharacteristic
+* IntegerArrayCharacteristic
+* IntegerCharacteristic
+* NumberArrayCharacteristic
+* NumberCharacteristic
+* ObjectArrayCharacteristic
+* ObjectCharacteristic
+* StringArrayCharacteristic
+* StringCharacteristic
+
+
+ 
+value
+This property is present in subclasses
+ObjectCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An object. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+NumberCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Number. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+BooleanArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Boolean. A characteristic which value is an array of
+Boolean(s).
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+
+
+ 
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+BooleanCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Boolean. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+NumberArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A Number. A characteristic which value is an array of Number(s).
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IntegerCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An Integer. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+
+
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ObjectArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An object. Collection of characteristic values.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+StringArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A String. Collection of string characteristics.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IntegerArrayCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+An Integer. A characteristic which value is an array of Integer(s).
+
+
+ 
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+StringCharacteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+value
+A String. Value of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedPartyRefOrPartyRoleRef sub-resource fields
+partyOrPartyRole
+A PartyRefOrPartyRoleRef.
+role
+A String. Role played by the related party or party role in the
+context of the specific entity it is linked to. Such as 'initiator',
+'customer', 'salesAgent', 'user'.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ProductRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+
+
+ 
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+TestMeasure sub-resource fields
+accuracy
+A Float. The number of digits of accuracy captured for
+associated Metrics.
+captureDateTime
+A DateTime. The date and time that the metric was captured.
+captureMethod
+A String. The method used to capture the Metrics (This may be
+replaced by a set of entities similar to the Performance
+Monitoring Ref).
+metricDescription
+A String. Brief description of the metric.
+metricHref
+A String. Hyperlink to access a metric for detail information.
+metricName
+A String. The name of the metric.
+ruleViolation
+A MeasureThresholdRuleViolation. A
+measureThresholdRuleViolation is a violation of a rule that
+defines the in the MericDefMeasureThresholdRule.
+testMeasureCharacteristic
+A Characteristic. Describes a given characteristic of an object or
+entity through a name/value pair. This is an abstract base class,
+the actual value is in one of the strongly-typed subclasses :
+StringCharacteristic, ObjectCharacteristic, FloatCharacteristic,
+BooleanCharacteristic, NumberCharacteristic,
+IntegerCharacteristic, StringArrayCharacteristic,
+ObjectArrayCharacteristic, BooleanArrayCharacteristic,
+NumberArrayCharacteristic, IntegerArrayCharacteristic…
+Characteristic can be instanciated as
+* BooleanArrayCharacteristic
+* BooleanCharacteristic
+* IntegerArrayCharacteristic
+* IntegerCharacteristic
+* NumberArrayCharacteristic
+* NumberCharacteristic
+* ObjectArrayCharacteristic
+* ObjectCharacteristic
+* StringArrayCharacteristic
+* StringCharacteristic
+unitOfMeasure
+A String. The unit of measure for the metric values, such as
+meters, cubic yards, kilograms [ISO 1000].
+
+
+ 
+value
+A Characteristic. Describes a given characteristic of an object or
+entity through a name/value pair. This is an abstract base class,
+the actual value is in one of the strongly-typed subclasses :
+StringCharacteristic, ObjectCharacteristic, FloatCharacteristic,
+BooleanCharacteristic, NumberCharacteristic,
+IntegerCharacteristic, StringArrayCharacteristic,
+ObjectArrayCharacteristic, BooleanArrayCharacteristic,
+NumberArrayCharacteristic, IntegerArrayCharacteristic…
+Characteristic can be instanciated as
+* BooleanArrayCharacteristic
+* BooleanCharacteristic
+* IntegerArrayCharacteristic
+* IntegerCharacteristic
+* NumberArrayCharacteristic
+* NumberCharacteristic
+* ObjectArrayCharacteristic
+* ObjectCharacteristic
+* StringArrayCharacteristic
+* StringCharacteristic
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CharacteristicRelationship sub-resource fields
+id
+A String. Unique identifier of the characteristic.
+relationshipType
+A String. The type of relationship.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+
+
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRoleRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+partyId
+A String. The identifier of the engaged party that is linked to the
+PartyRole object.
+partyName
+A String. The name of the engaged party that is linked to the
+PartyRole object.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+MeasureThresholdRuleViolation sub-resource fields
+appliedConsequence
+An AppliedConsequence. An Applied Consequence defines the
+action (prescribed action or notification) to take when a
+MeasureThresholdRuleViolation occurs.
+conformanceComparatorExact
+A Boolean. An operator that when applied on a value specifies
+whether it is the same target value or not. This operator is used
+to compare with the conformanceTargetExact if used.
+conformanceComparatorLower
+A String. An operator that when applied on a value specifies
+whether a threshold is crossed or ceased to be crossed. This
+operator is used to compare with the conformanceTargetLower if
+used.
+conformanceComparatorUpper
+A String. An operator that when applied on a value specifies
+whether a threshold is crossed or ceased to be crossed. This
+operator is used to compare with the conformanceTargetUpper if
+used.
+conformanceTargetExact
+A String. To cater for values that are not numerical test metrics
+(e.g. a DSL line can be Synchronised or Unsynchronised. If the
+latter, the test should result in a rule violation).The allowed value
+can contain a REGEX expression.
+conformanceTargetLower
+A String. A value used to determine if the threshold is crossed or
+ceases to be crossed. It represents the lower limit. The value
+should be less than the conformanceTargetUpper if used. The
+conformance comparators should also be logically defined so as
+to not lead to a logically impossible condition.
+
+
+ 
+conformanceTargetUpper
+A String. A value used to determine if the threshold is crossed or
+ceases to be crossed. It represents the Upper limit. The value
+should be greater than the conformanceTargetLower if used. The
+conformance comparators should also be logically defined so as
+to not lead to a logically impossible condition.
+description
+A String. Description for the MetricDefMeasureThresholdRule .
+name
+A String. Name for the MetricDefMeasureThresholdRule .
+numberOfAllowedCrossing
+An Integer. The number of allowed crossing occurrences in
+reference to the tolerancePeriod without a consequence being
+initiated.
+thresholdRuleSeverity
+A String. A threshold can be generated in different severity
+levels. A crossing for each level may require a different condition
+and possibly trigger a different consequence.
+tolerancePeriod
+A Duration. A time interval in a given unit of time.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+AppliedConsequence sub-resource fields
+appliedAction
+A String. The action for a violated threshold. This could be a
+hyperlink to the action.
+description
+A String. A narrative that explains in detail what the consequence
+is.
+name
+A String. A word, term, or phrase by which Consequence is
+known and distinguished from other
+MetricDefMeasureConsequences.
+repeatAction
+A Boolean. An indicator used to specify that a consequence
+should cease being applied if a value is in the same range as the
+previous value or continue being applied if a value is in the same
+range as the previous value. If the repeatAction is True, if the
+consequence is always applied as soon as the MetricMeasure
+value is in the range of values and if the repeatAction is False,
+the consequence is applied only if the previous MetricMeasure
+value was not in the same range.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'ProductTest' resource object.
+
+
+ 
+{
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/b9b1727e-faae-497f-8e82-43ebe92de6ce",
+    "id": "b9b1727e-faae-497f-8e82-43ebe92de6ce",
+    "description": "When the request is received and the ServiceID is validated, the
+ServiceID is used to Diagnose the network, the found details are then returned to
+the Supplier.",
+    "startDateTime": "2024-03-08T00:00:00.00Z",
+    "endDateTime": "2024-03-08T00:00:01.00Z",
+    "mode": "onDemand",
+    "state": "completed",
+    "validFor": {
+        "startDateTime": "2024-03-08T00:00:00.00Z",
+        "endDateTime": "2024-03-08T00:00:01.00Z"
+    },
+    "relatedParty": [
+        {
+            "role": "ISP",
+            "@type": "RelatedPartyRefOrPartyRoleRef",
+            "partyOrPartyRole": {
+                "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+                "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+                "name": "ISP-X",
+                "@type": "PartyRef",
+                "@referredType": "Organisation"
+            }
+        }
+    ],
+    "relatedProduct": {
+        "href": "https://mycsp.com/tmf-api/productInventory/v5/product/ae443f8d-
+aa6a-41f9-8ec7-8b01e7f666e6",
+        "id": "ae443f8d-aa6a-41f9-8ec7-8b01e7f666e6",
+        "@type": "ProductRef",
+        "name": "S410996"
+    },
+    "testSpecification": {
+        "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+        "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+        "name": "Service Diagnostics",
+        "@type": "ProductTestSpecificationRef"
+    },
+    "characteristic": [
+        {
+            "name": "overallStatus",
+            "value": "up",
+            "@type":"StringCharacteristic"
+        },
+        {
+            "name": "committedRateUp",
+            "value": 100,
+            "@type":"NumberCharacteristic"
+        },
+        {
+            "name": "committedRateDown",
+            "value": 200,
+            "@type":"NumberCharacteristic"
+        }
+    ],
+    "testMeasure": [
+
+
+         {
+            "captureDateTime": "2024-03-08T00:00:00.001Z",
+            "captureMethod": "Automatic capture by OLT",
+            "metricName": "Uni Port Status",
+            "metricDescription": "OLT - Uni Port Status",
+            "value": {
+                "name": "status",
+                "value": "up",
+                "@type":"StringCharacteristic"
+            },
+            "@type": "TestMeasure"
+        },
+        {
+            "captureDateTime": "2024-03-08T00:00:00.001Z",
+            "captureMethod": "Automatic capture by OLT",
+            "metricName": "ONT reachability",
+            "metricDescription": "OLT - ONT reachability",
+            "value": {
+                "name": "status",
+                "value": "online",
+                "@type":"StringCharacteristic"
+            },
+            "@type": "TestMeasure"
+        },
+        {
+            "captureDateTime": "2024-03-08T00:00:00.001Z",
+            "captureMethod": "Automatic capture by OLT",
+            "metricName": "CFM",
+            "metricDescription": "OLT - CFM Status",
+            "value": {
+                "name": "cfm",
+                "value": "up",
+                "@type":"StringCharacteristic"
+            },
+            "testMeasureCharacteristic": [
+                {
+                    "name": "lastStatusChange",
+                    "value": "2024-03-07T23:59:00.001Z",
+                    "@type":"StringCharacteristic"
+                },
+                {
+                    "name": "previousStatusValue",
+                    "value": "down",
+                    "@type":"StringCharacteristic"
+                }
+            ],
+            "@type": "TestMeasure"
+        },
+        {
+            "captureDateTime": "2024-03-08T00:00:00.001Z",
+            "captureMethod": "Automatic capture by OLT",
+            "metricName": "DHCP/PPP status",
+            "metricDescription": "OLT - DHCP/PPP status",
+            "value": {
+                "name": "dhcp/ppp",
+                "value": "established",
+                "@type":"StringCharacteristic"
+            },
+            "@type": "TestMeasure"
+        },
+        {
+            "captureDateTime": "2024-03-08T00:00:00.001Z",
+            "captureMethod": "Automatic capture by OLT",
+
+
+             "metricName": "ENNI Status",
+            "metricDescription": "PE - ENNI status",
+            "value": {
+                "name": "enniStatus",
+                "value": "up",
+                "@type":"StringCharacteristic"
+            },
+            "@type": "TestMeasure"
+        },
+        {
+            "captureDateTime": "2024-03-08T00:00:00.001Z",
+            "captureMethod": "Automatic capture by OLT",
+            "metricName": "E2E Traffic",
+            "metricDescription": "End to end traffic",
+            "value": {
+                "name": "e2eTraffic",
+                "value": "yes",
+                "@type":"StringCharacteristic"
+            },
+            "@type": "TestMeasure"
+        }
+    ],
+    "incidentRef": [
+        {
+            "id": "TIC-DEV00027757",
+            "name": "MainteinerIncidentReference",
+            "@type": "IncidentRef"
+        }
+    ],
+    "@type": "ProductTest"
+}
+ProductTestSpecification resource
+The product test specification describes the product test in terms of parameters to be
+configured and 
+measures to be taken.
+Resource model
+
+
+ 
+ProductTestSpecification
+@type = ProductTestSpecification
+ProductTestSpecRelationship
+href : String
+id : String (1)
+name : String (1)
+relationshipType : String (1)
+role : String
+validFor : TimePeriod
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type : String (1)
+TargetProductSchema
+@schemaLocation : Uri (1)
+@type : String (1)
+EntitySpecification
+attachment : AttachmentRefOrValue [0..*]
+constraint : ConstraintRef [0..*]
+description : String
+entitySpecRelationship : EntitySpecificationRelationship [0..*]
+href : String
+id : String
+isBundle : Boolean
+lastUpdate : DateTime
+lifecycleStatus : String
+name : String (1)
+relatedParty : RelatedPartyRefOrPartyRoleRef [0..*]
+specCharacteristic : CharacteristicSpecification [0..*]
+targetEntitySchema : TargetEntitySchema
+validFor : TimePeriod
+version : String
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+discriminator:
+EntitySpecification
+ProductTestSpecification
+TestMeasureDefinition
+captureFrequency : String
+captureMethod : String
+capturePeriod : Duration
+metricDescription : String
+metricHref : String
+metricName : String
+name : String (1)
+unitOfMeasure : String
+validFor : TimePeriod
+valueType : String
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+MetricDefMeasureConsequence
+description : String
+name : String
+prescribeAction : String
+repeatAction : Boolean
+validFor : TimePeriod
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+MetricDefMeasureThresholdRule
+conformanceComparatorExact : Boolean
+conformanceComparatorLower : String
+conformanceComparatorUpper : String
+conformanceTargetExact : String
+conformanceTargetLower : String
+conformanceTargetUpper : String
+description : String
+name : String
+numberOfAllowedCrossing : Integer
+thresholdRuleSeverity : String
+tolerancePeriod : Duration
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+ProductSpecificationRef
+href : String
+id : String (1)
+name : String (1)
+version : String
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type : String (1)
+testMeasureDefinition
+0..*
+relatedProductSpecification
+1..*
+thresholdRule
+0..*
+productTestSpecRelationship
+0..*
+consequence
+0..*
+targetProductSchema
+0..1
+ Color  Description
+ 
+ Resource (entry point)
+ 
+ Sub-resource
+ 
+ Sub-resource (reference entity)
+ 
+ Sub-resource with details in separate diagram
+(1) : Mandatory property
+Figure 3 - ProductTestSpecification
+[.] | .//
+Figure 4 - ProductTestSpecification
+
+
+ 
+EntitySpecification
+description : String
+href : String
+id : String
+isBundle : Boolean
+lastUpdate : DateTime
+lifecycleStatus : String
+name : String (1)
+validFor : TimePeriod
+version : String
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+discriminator:
+EntitySpecification
+ProductTestSpecification
+AssociationSpecificationRef
+href : String
+id : String (1)
+name : String (1)
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type : String (1)
+TargetEntitySchema
+@schemaLocation : String (1)
+@type : String (1)
+CharacteristicSpecificationRelationship
+characteristicSpecificationId : String
+name : String (1)
+parentSpecificationHref : Uri
+parentSpecificationId : String (1)
+relationshipType : String (1)
+validFor : TimePeriod
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+RelatedPartyRefOrPartyRoleRef
+role : String (1)
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+Attachment
+attachmentType : String (1)
+content : Base64
+description : String
+href : String
+id : String
+mimeType : String (1)
+name : String
+size : Quantity
+url : String
+validFor : TimePeriod
+@baseType : String
+@schemaLocation : String
+@type = Attachment
+EntitySpecificationRelationship
+href : String
+name : String
+relationshipType : String (1)
+role : String (1)
+validFor : TimePeriod (1)
+@baseType : String
+@schemaLocation : String
+PartyRoleRef
+href : String
+id : String (1)
+name : String (1)
+partyId : String
+partyName : String
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type = PartyRoleRef
+PartyRef
+href : String
+id : String (1)
+name : String (1)
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type = PartyRef
+PartyRefOrPartyRoleRef
+                                        
+discriminator:
+PartyRef
+PartyRoleRef
+CharacteristicSpecification
+configurable : Boolean
+description : String
+extensible : Boolean
+id : String
+isUnique : Boolean
+maxCardinality : Integer
+minCardinality : Integer
+name : String (1)
+regex : String
+validFor : TimePeriod
+valueType : String (1)
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+@valueSchemaLocation : String
+AttachmentRefOrValue
+                                        
+discriminator:
+Attachment
+AttachmentRef
+AttachmentRef
+description : String
+href : String
+id : String (1)
+name : String (1)
+url : String
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type = AttachmentRef
+ConstraintRef
+href : String
+id : String (1)
+name : String (1)
+version : String
+@baseType : String
+@referredType : String
+@schemaLocation : String
+@type : String (1)
+CharacteristicValueSpecification
+isDefault : Boolean
+rangeInterval : String
+regex : String
+unitOfMeasure : String
+validFor : TimePeriod
+valueFrom : Integer
+valueTo : Integer
+valueType : String
+@baseType : String
+@schemaLocation : String
+@type : String (1)
+discriminator:
+IntegerArrayCharacteristicValueSpecification
+BooleanCharacteristicValueSpecification
+NumberCharacteristicValueSpecification
+ObjectCharacteristicValueSpecification
+StringArrayCharacteristicValueSpecification
+StringCharacteristicValueSpecification
+ObjectArrayCharacteristicValueSpecification
+NumberArrayCharacteristicValueSpecification
+BooleanArrayCharacteristicValueSpecification
+CharacteristicValueSpecification
+IntegerCharacteristicValueSpecification
+relatedParty
+0..*
+entitySpecRelationship
+0..*
+specCharacteristic
+0..*
+attachment
+0..*
+partyOrPartyRole
+0..1
+targetEntitySchema
+0..1
+constraint
+0..*
+associationSpec
+1
+ 
+ 
+charSpecRelationship
+0..*
+characteristicValueSpecification
+0..*
+ 
+ 
+ Color  Description
+ 
+ Sub-resource (sub-graph in current diagram)
+ 
+ Sub-resource
+ 
+ Sub-resource (reference entity)
+(1) : Mandatory property
+Figure 5 - EntitySpecification
+[.] | .//
+Figure 6 - EntitySpecification
+Field descriptions
+ProductTestSpecification fields
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+constraint
+A ConstraintRef. Constraint reference. The Constraint resource
+represents a policy/rule applied to an entity or entity spec.
+description
+A String. Description of a product test specification.
+entitySpecRelationship
+An EntitySpecificationRelationship. A migration, substitution,
+dependency or exclusivity relationship between/among entity
+specifications.
+href
+A String. Hyperlink reference.
+
+
+ 
+id
+A String. Unique identifier.
+isBundle
+A Boolean. IsBundle determines whether specification
+represents a single specification (false), or a bundle of
+specifications (true).
+lastUpdate
+A DateTime. Date and time of the last update of the specification.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status of this
+catalog item.
+name
+A String. Name given to the specification.
+productTestSpecRelationship
+A ProductTestSpecRelationship. A substitution, dependency or
+exclusivity relationship between/among product specifications.
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+relatedProductSpecification
+A ProductSpecificationRef. ProductSpecification reference. A
+product Specification represents entities that are orderable from
+the provider of the catalog.
+specCharacteristic
+A CharacteristicSpecification. This class defines a characteristic
+specification.
+targetEntitySchema
+A TargetEntitySchema. The reference object to the schema and
+type of target entity which is described by a specification.
+testMeasureDefinition
+A TestMeasureDefinition. A TestMeasureDefinition specifies a
+measure of a specific aspect of a product, service, or resource
+test, such as lost packets or connectivity status.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. Specification version.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ProductTestSpecRelationship sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+relationshipType
+A String. Type of relationship such as substitution, dependency,
+exclusivity.
+role
+A String. The association role for this product test specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+
+
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+TestMeasureDefinition sub-resource fields
+captureFrequency
+A String. The frequency of capture for the metric. Note: This may
+be replaced by a set of entities similar to the Performance
+Monitoring.
+captureMethod
+A String. The method used to capture the Metric. Note: This may
+be replaced by a set of entities similar to the Performance
+Monitoring.
+capturePeriod
+A Duration. A time interval in a given unit of time.
+metricDescription
+A String. Brief description of the metric.
+metricHref
+A String. Hyperlink to access a metric for detail information.
+metricName
+A String. The name of a metric that in the test measure.
+name
+A String. The name of the TestMeasureDefinition.
+thresholdRule
+A MetricDefMeasureThresholdRule. A
+MetricDefMeasureThresholdRule is a rule that defines the
+condition (raise or clear) to achieve to apply consequences when
+a threshold is crossed or ceased to be crossed. It also defines
+the severity of the raise or clear of the threshold.
+unitOfMeasure
+A String. Name of a service test specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+valueType
+A String. A kind of value that the Metric value can take on, such
+as numeric, text, and so forth.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ProductSpecificationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+
+
+ 
+targetProductSchema
+A TargetProductSchema. The reference object to the schema
+and type of target product which is described by product
+specification.
+version
+A String. Version of the product specification.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+MetricDefMeasureThresholdRule sub-resource fields
+conformanceComparatorExact
+A Boolean. An operator that when applied on a value specifies
+whether the value is the same or not. This operator is used to
+compare with the conformanceTargetExact if used.
+conformanceComparatorLower
+A String. An operator that when applied on a value specifies
+whether a threshold is crossed or ceased to be crossed. This
+operator is used to Service Test Management API REST
+Specification compare with the conformanceTargetLower if used.
+conformanceComparatorUpper
+A String. An operator that when applied on a value specifies
+whether a threshold is crossed or ceased to be crossed. This
+operator is used to compare with the conformanceTargetUpper if
+used.
+conformanceTargetExact
+A String. To cater for values that are not numerical test metrics
+(e.g. a DSL line can be Synchronised or Unsynchronised. If the
+latter, the test should result in a rule violation). The allowed value
+can contain a REGEX expression.
+conformanceTargetLower
+A String. A value used to determine if the threshold is crossed or
+ceases to be crossed. It represents the lower limit. The value
+should be less than the conformanceTargetUpper if used. The
+conformance comparators should also be logically defined so as
+to not lead to a logically impossible condition.
+conformanceTargetUpper
+A String. A value used to determine if the threshold is crossed or
+ceases to be crossed. It represents the Upper limit. The value
+should be greater than the conformanceTargetLower if used. The
+conformance comparators should also be logically defined so as
+to not lead to a logically impossible condition.
+consequence
+A MetricDefMeasureConsequence. A
+MetricDefMeasureConsequence defines the action (prescribed
+action or notification) to take when a
+MetricDefMeasureThresholdRule is crossed.
+description
+A String. Description for the MetricDefMeasureThresholdRule .
+name
+A String. Name for the MetricDefMeasureThresholdRule .
+
+
+ 
+numberOfAllowedCrossing
+An Integer. The number of allowed crossing occurrences in
+reference to the tolerancePeriod without a consequence being
+initiated.
+thresholdRuleSeverity
+A String. A threshold can be generated in different severity
+levels. A crossing for each level may require a different condition
+and possibly trigger a different consequence.
+tolerancePeriod
+A Duration. A time interval in a given unit of time.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+MetricDefMeasureConsequence sub-resource fields
+description
+A String. A narrative that explains in detail what the consequence
+is.
+name
+A String. A word, term, or phrase by which a
+MetricDefMeasureConsequence is known and distinguished
+from other MetricDefMeasureConsequences.
+prescribeAction
+A String. Recommended remedy for a violated threshold. This
+could be the hyperlink to the action.
+repeatAction
+A Boolean. An indicator used to specify that a consequence
+should cease being applied if a value is in the same range as the
+previous value or continue being applied if a value is in the same
+range as the previous value. If the repeatAction is True, if the
+consequence is always applied as soon as the MetricMeasure
+value is in the range of values and if the repeatAction is False,
+the consequence is applied only if the previous MetricMeasure
+value was not in the same range.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+TargetProductSchema sub-resource fields
+@schemaLocation
+A Uri. This field provides a link to the schema describing the
+target product.
+@type
+A String. Class type of the target product.
+EntitySpecification sub-resource fields
+
+
+ 
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+constraint
+A ConstraintRef. Constraint reference. The Constraint resource
+represents a policy/rule applied to an entity or entity spec.
+description
+A String. Description of the specification.
+entitySpecRelationship
+An EntitySpecificationRelationship. A migration, substitution,
+dependency or exclusivity relationship between/among entity
+specifications.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+isBundle
+A Boolean. IsBundle determines whether specification
+represents a single specification (false), or a bundle of
+specifications (true).
+lastUpdate
+A DateTime. Date and time of the last update of the specification.
+lifecycleStatus
+A String. Used to indicate the current lifecycle status of this
+catalog item.
+name
+A String. Name given to the specification.
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+specCharacteristic
+A CharacteristicSpecification. This class defines a characteristic
+specification.
+targetEntitySchema
+A TargetEntitySchema. The reference object to the schema and
+type of target entity which is described by a specification.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+version
+A String. Specification version.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+EntitySpecification can be instanciated as
+* ProductTestSpecification
+productTestSpecRelationship
+This property is present in subclasses
+relatedProductSpecification
+This property is present in subclasses
+testMeasureDefinition
+This property is present in subclasses
+Json representation sample(s)
+We provide below a JSON representation as example of the 'ProductTestSpecification'
+resource object.
+
+
+ 
+{
+  "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+  "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/ba01e0f0-8e6a-452d-9535-
+6b72ea67e712",
+  "id": "ba01e0f0-8e6a-452d-9535-6b72ea67e712",
+  "version": "1.0",
+  "name": "Diagnostic Product FTTH",
+  "lifecycleStatus": "active",
+  "validFor": {
+    "@type": "TimePeriod",
+    "endDateTime": "2024-01-01T00:00:00.00Z",
+    "startDateTime": "2025-01-01T00:00:00.00Z"
+  },
+  "specCharacteristic": [
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "overallStatus",
+      "description": "This provides an overall status for the product based on
+different tests executed",
+      "valueType": "string",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "StringCharacteristicValueSpecification",
+          "valueType": "string",
+          "value":"V1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateUp",
+      "description": "This provides the information of the CIR based on the product
+definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateDown",
+      "description": "This provides the information of the CIR Down based on the
+product definition",
+      "valueType": "number",
+      "configurable": false,
+
+
+       "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    }
+  ],
+  "testMeasureDefinition": [
+    {
+      "name": "Uni Port Status",
+      "metricDescription": "OLT - Uni Port Status",
+      "metricName": "Uni Port Status",
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "Down",
+          "description": "This UNI Port Status is down",
+          "name": "UniPortDown",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+      ],
+      "@type": "TestMeasureDefinition"
+    },
+    {
+      "name": "DHCP/PPP Status",
+      "metricDescription": "DHCP/PPP Status",
+      "metricName": "DHCP/PPP Status",
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "PPP Terminated",
+          "description": "This PPP session is down",
+          "name": "PPP Status",
+
+
+           "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        },
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "No Session",
+          "description": "This DHCP session is down",
+          "name": "DHCPStatus",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+      ],
+      "@type": "TestMeasureDefinition"
+    }
+  ],
+  "ProductTestSpecRelationship": [
+    {
+      "@type": "ProductTestSpecRelationship",
+      "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+      "relationshipType": "dependency"
+    }
+  ],
+  "relatedProductSpecification": [
+    {
+      "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+      "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+      "name":"FTTH Product Specification",
+      "@type": "RelatedProductSpecification"
+    }
+  ],
+  "@type": "ProductTestSpecification",
+
+
+   "@baseType": "ProductTestSpecification"
+}
+Notification Resource Models
+7 notifications are defined for this API.
+Notifications related to ProductTest:
+• Create Event
+• Attribute Value Change Event
+• State Change Event
+Notifications related to ProductTestSpecification:
+• Create Event
+• Delete Event
+• Attribute Value Change Event
+• State Change Event
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+
+
+ 
+Figure 7 Notification Pattern
+ProductTest
+Create Event
+Message example for ProductTestCreateEvent event
+Content-Type: application/json
+{
+    "correlationId": "35768906-7ccc-4ca3-8892-c2bbd8054009",
+    "description": "ProductTestCreateEvent",
+    "domain": "Service Assurance",
+    "eventId": "965dfda1-06c4-49cb-bcb9-1aa2a93fb2af",
+    "eventTime": "2022-08-25T12:21:36.704Z",
+    "eventType": "ProductTestCreateEvent",
+    "priority": "1",
+    "timeOcurred": "2022-08-25T12:21:32.568Z",
+    "title": "ProductTestCreateEvent",
+    "event": {
+        "productTest": {
+            "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/b9b1727e-faae-497f-8e82-43ebe92de6ce",
+            "id": "b9b1727e-faae-497f-8e82-43ebe92de6ce",
+            "description": "When the request is received and the ServiceID is
+
+
+ validated, the ServiceID is used to Diagnose the network, the found details are then
+returned to the Supplier.",
+            "startDateTime": "2024-03-08T00:00:00.00Z",
+            "endDateTime": "2024-03-08T00:00:01.00Z",
+            "mode": "onDemand",
+            "state": "completed",
+            "validFor": {
+                "startDateTime": "2024-03-08T00:00:00.00Z",
+                "endDateTime": "2024-03-08T00:00:01.00Z"
+            },
+            "relatedParty": [
+                {
+                    "role": "ISP",
+                    "@type": "RelatedPartyRefOrPartyRoleRef",
+                    "partyOrPartyRole": {
+                        "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+                        "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+                        "name": "ISP-X",
+                        "@type": "PartyRef",
+                        "@referredType": "Organisation"
+                    }
+                }
+            ],
+            "relatedProduct": {
+                "href": "https://mycsp.com/tmf-
+api/productInventory/v5/product/ae443f8d-aa6a-41f9-8ec7-8b01e7f666e6",
+                "id": "ae443f8d-aa6a-41f9-8ec7-8b01e7f666e6",
+                "@type": "ProductRef",
+                "name": "S410996"
+            },
+            "testSpecification": {
+                "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+                "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+                "name": "Service Diagnostics",
+                "@type": "ProductTestSpecificationRef"
+            },
+            "characteristic": [
+                {
+                    "name": "overallStatus",
+                    "value": "up",
+                    "@type":"StringCharacteristic"
+                },
+                {
+                    "name": "committedRateUp",
+                    "value": 100,
+                    "@type":"NumberCharacteristic"
+                },
+                {
+                    "name": "committedRateDown",
+                    "value": 200,
+                    "@type":"NumberCharacteristic"
+                }
+            ],
+            "testMeasure": [
+                {
+                    "captureDateTime": "2024-03-08T00:00:00.001Z",
+                    "captureMethod": "Automatic capture by OLT",
+                    "metricName": "Uni Port Status",
+                    "metricDescription": "OLT - Uni Port Status",
+                    "value": {
+
+
+                         "name": "status",
+                        "value": "up",
+                        "@type":"StringCharacteristic"
+                    },
+                    "@type": "TestMeasure"
+                },
+                {
+                    "captureDateTime": "2024-03-08T00:00:00.001Z",
+                    "captureMethod": "Automatic capture by OLT",
+                    "metricName": "ONT reachability",
+                    "metricDescription": "OLT - ONT reachability",
+                    "value": {
+                        "name": "status",
+                        "value": "online",
+                        "@type":"StringCharacteristic"
+                    },
+                    "@type": "TestMeasure"
+                },
+                {
+                    "captureDateTime": "2024-03-08T00:00:00.001Z",
+                    "captureMethod": "Automatic capture by OLT",
+                    "metricName": "CFM",
+                    "metricDescription": "OLT - CFM Status",
+                    "value": {
+                        "name": "cfm",
+                        "value": "up",
+                        "@type":"StringCharacteristic"
+                    },
+                    "testMeasureCharacteristic": [
+                        {
+                            "name": "lastStatusChange",
+                            "value": "2024-03-07T23:59:00.001Z",
+                            "@type":"StringCharacteristic"
+                        },
+                        {
+                            "name": "previousStatusValue",
+                            "value": "down",
+                            "@type":"StringCharacteristic"
+                        }
+                    ],
+                    "@type": "TestMeasure"
+                },
+                {
+                    "captureDateTime": "2024-03-08T00:00:00.001Z",
+                    "captureMethod": "Automatic capture by OLT",
+                    "metricName": "DHCP/PPP status",
+                    "metricDescription": "OLT - DHCP/PPP status",
+                    "value": {
+                        "name": "dhcp/ppp",
+                        "value": "established",
+                        "@type":"StringCharacteristic"
+                    },
+                    "@type": "TestMeasure"
+                },
+                {
+                    "captureDateTime": "2024-03-08T00:00:00.001Z",
+                    "captureMethod": "Automatic capture by OLT",
+                    "metricName": "ENNI Status",
+                    "metricDescription": "PE - ENNI status",
+                    "value": {
+                        "name": "enniStatus",
+                        "value": "up",
+                        "@type":"StringCharacteristic"
+
+
+                     },
+                    "@type": "TestMeasure"
+                },
+                {
+                    "captureDateTime": "2024-03-08T00:00:00.001Z",
+                    "captureMethod": "Automatic capture by OLT",
+                    "metricName": "E2E Traffic",
+                    "metricDescription": "End to end traffic",
+                    "value": {
+                        "name": "e2eTraffic",
+                        "value": "yes",
+                        "@type":"StringCharacteristic"
+                    },
+                    "@type": "TestMeasure"
+                }
+            ],
+            "incidentRef": [
+                {
+                    "id": "TIC-DEV00027757",
+                    "name": "MainteinerIncidentReference",
+                    "@type": "IncidentRef"
+                }
+            ],
+            "@type": "ProductTest"
+        }
+    },
+    "reportingSystem": {
+        "id": "51d61d67-07a4-470f-b27b-b20fdf989e35",
+        "name": "APP-675",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "6a15927f-8feb-4ed0-91d9-b60da1b5a132",
+        "name": "APP-374",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ProductTestCreateEvent"
+}
+Attribute Value Change Event
+Message example for ProductTestAttributeValueChangeEvent event
+Content-Type: application/json
+{
+    "correlationId": "67f7126c-4254-4733-9462-a12f47ff884a",
+    "description": "ProductTestAttributeValueChangeEvent",
+    "domain": "Service Assurance",
+    "eventId": "96e15d34-31bb-4d80-98b1-3e8385dadbdf",
+    "eventTime": "2022-08-25T12:21:36.714Z",
+    "eventType": "ProductTestAttributeValueChangeEvent",
+    "priority": "3",
+    "timeOcurred": "2022-08-25T12:21:36.133Z",
+    "title": "ProductTestAttributeValueChangeEvent",
+    "event": {
+        "productTest": {
+
+
+             "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/b9b1727e-faae-497f-8e82-43ebe92de6ce",
+            "id": "b9b1727e-faae-497f-8e82-43ebe92de6ce",
+            "description": "Description change",
+            "@type": "ProductTest"
+        }
+    },
+    "reportingSystem": {
+        "id": "c69c6ace-082a-449e-be54-5eca894cc295",
+        "name": "APP-675",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "fca42cfb-4f81-40ba-a311-32915cb4bfe4",
+        "name": "APP-374",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@schemaLocation": "https://mycsp.com/tmf-
+api/schema/Product/ProductTest.schema.json",
+    "@type": "ProductTestAttributeValueChangeEvent"
+}
+State Change Event
+Message example for ProductTestStateChangeEvent event with ?fields=state property only
+Content-Type: application/json
+{
+    "correlationId": "f5b717c5-4da9-4687-823e-b44d63f81805",
+    "description": "ProductTestStateChangeEvent",
+    "domain": "Service Assurance",
+    "eventId": "18bab44e-a3f9-4995-b641-cdda15025387",
+    "eventTime": "2022-08-25T12:21:36.678Z",
+    "eventType": "ProductTestStateChangeEvent",
+    "priority": "2",
+    "timeOcurred": "2022-08-25T12:21:28.377Z",
+    "title": "ProductTestStateChangeEvent",
+    "event": {
+        "productTest": {
+            "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/b59f3c92-1192-4739-87de-a6aad611c3da",
+            "id": "b59f3c92-1192-4739-87de-a6aad611c3da",
+            "@type": "ProductTest",
+            "state": "completed"
+        }
+    },
+    "reportingSystem": {
+        "id": "49144272-e489-42b0-8710-c060469184ed",
+        "name": "APP-675",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "58ea2313-c057-43ba-910b-36876293c751",
+        "name": "APP-374",
+        "@type": "ReportingResource",
+
+
+         "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ProductTestStateChangeEvent"
+}
+ProductTestSpecification
+Create Event
+Message example for ProductTestSpecificationCreateEvent event
+Content-Type: application/json
+{
+  "correlationId": "1c8af9cd-847f-43ac-86de-0a40e6c51ca2",
+  "description": "ProductTestSpecificationCreateEvent",
+  "domain": "Service Assurance",
+  "eventId": "57e8b58e-6121-427f-9f38-03848fe5876d",
+  "eventTime": "2024-08-25T12:21:36.704Z",
+  "eventType": "ProductTestSpecificationCreateEvent",
+  "priority": "1",
+  "timeOcurred": "2024-08-25T12:21:32.568Z",
+  "title": "ProductTestSpecificationCreateEvent",
+  "event": {
+    "productTestSpecification": {
+      "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/ba01e0f0-8e6a-452d-9535-
+6b72ea67e712",
+      "id": "ba01e0f0-8e6a-452d-9535-6b72ea67e712",
+      "version": "1.0",
+      "name": "Diagnostic Product FTTH",
+      "lifecycleStatus": "active",
+      "validFor": {
+        "@type": "TimePeriod",
+        "endDateTime": "2024-01-01T00:00:00.00Z",
+        "startDateTime": "2025-01-01T00:00:00.00Z"
+      },
+      "specCharacteristic": [
+        {
+          "@type": "CharacteristicSpecification",
+          "name": "overallStatus",
+          "description": "This provides an overall status for the product based on
+different tests executed",
+          "valueType": "string",
+          "configurable": false,
+          "minCardinality": 1,
+          "maxCardinality": 1,
+          "isUnique": true,
+          "extensible": false,
+          "characteristicValueSpecification": [
+            {
+              "@type": "StringCharacteristicValueSpecification",
+              "valueType": "string",
+              "value":"V1"
+            }
+
+
+           ]
+        },
+        {
+          "@type": "CharacteristicSpecification",
+          "name": "committedRateUp",
+          "description": "This provides the information of the CIR based on the
+product definition",
+          "valueType": "number",
+          "configurable": false,
+          "minCardinality": 1,
+          "maxCardinality": 1,
+          "isUnique": true,
+          "extensible": false,
+          "characteristicValueSpecification": [
+            {
+              "@type": "NumberCharacteristicValueSpecification",
+              "valueType": "number",
+              "value":"1"
+            }
+          ]
+        },
+        {
+          "@type": "CharacteristicSpecification",
+          "name": "committedRateDown",
+          "description": "This provides the information of the CIR Down based on the
+product definition",
+          "valueType": "number",
+          "configurable": false,
+          "minCardinality": 1,
+          "maxCardinality": 1,
+          "isUnique": true,
+          "extensible": false,
+          "characteristicValueSpecification": [
+            {
+              "@type": "NumberCharacteristicValueSpecification",
+              "valueType": "number",
+              "value":"1"
+            }
+          ]
+        }
+      ],
+      "testMeasureDefinition": [
+        {
+          "name": "Uni Port Status",
+          "metricDescription": "OLT - Uni Port Status",
+          "metricName": "Uni Port Status",
+          "unitOfMeasure": "HeartBeat",
+          "captureFrequency": "once",
+          "captureMethod": "Automatic capture by OLT",
+          "valueType": "string",
+          "thresholdRule": [
+            {
+              "@type": "MetricDefMeasureThresholdRule",
+              "conformanceTargetExact": "Down",
+              "description": "This UNI Port Status is down",
+              "name": "UniPortDown",
+              "numberOfAllowedCrossing": 0,
+              "thresholdRuleSeverity": "1",
+              "consequence": [
+                {
+                  "@type": "MetricDefMeasureConsequence",
+                  "prescribeAction": "raiseTicket",
+                  "description": "Raise an incident ticket",
+
+
+                   "name": "raiseTicket",
+                  "repeatAction": false
+                },
+                {
+                  "@type": "MetricDefMeasureConsequence",
+                  "prescribeAction": "sendWarning",
+                  "description": "Send a warning to the NOC",
+                  "name": "sendWarning"
+                }
+              ]
+            }
+          ],
+          "@type": "TestMeasureDefinition"
+        },
+        {
+          "name": "DHCP/PPP Status",
+          "metricDescription": "DHCP/PPP Status",
+          "metricName": "DHCP/PPP Status",
+          "unitOfMeasure": "HeartBeat",
+          "captureFrequency": "once",
+          "captureMethod": "Automatic capture by OLT",
+          "valueType": "string",
+          "thresholdRule": [
+            {
+              "@type": "MetricDefMeasureThresholdRule",
+              "conformanceTargetExact": "PPP Terminated",
+              "description": "This PPP session is down",
+              "name": "PPP Status",
+              "numberOfAllowedCrossing": 0,
+              "thresholdRuleSeverity": "1",
+              "consequence": [
+                {
+                  "@type": "MetricDefMeasureConsequence",
+                  "prescribeAction": "raiseTicket",
+                  "description": "Raise an incident ticket",
+                  "name": "raiseTicket",
+                  "repeatAction": false
+                },
+                {
+                  "@type": "MetricDefMeasureConsequence",
+                  "prescribeAction": "sendWarning",
+                  "description": "Send a warning to the NOC",
+                  "name": "sendWarning"
+                }
+              ]
+            },
+            {
+              "@type": "MetricDefMeasureThresholdRule",
+              "conformanceTargetExact": "No Session",
+              "description": "This DHCP session is down",
+              "name": "DHCPStatus",
+              "numberOfAllowedCrossing": 0,
+              "thresholdRuleSeverity": "1",
+              "consequence": [
+                {
+                  "@type": "MetricDefMeasureConsequence",
+                  "prescribeAction": "raiseTicket",
+                  "description": "Raise an incident ticket",
+                  "name": "raiseTicket",
+                  "repeatAction": false
+                },
+                {
+                  "@type": "MetricDefMeasureConsequence",
+
+
+                   "prescribeAction": "sendWarning",
+                  "description": "Send a warning to the NOC",
+                  "name": "sendWarning"
+                }
+              ]
+            }
+          ],
+          "@type": "TestMeasureDefinition"
+        }
+      ],
+      "ProductTestSpecRelationship": [
+        {
+          "@type": "ProductTestSpecRelationship",
+          "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+          "relationshipType": "dependency"
+        }
+      ],
+      "relatedProductSpecification": [
+        {
+          "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+          "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+          "name":"FTTH Product Specification",
+          "@type": "RelatedProductSpecification"
+        }
+      ],
+      "@type": "ProductTestSpecification",
+      "@baseType": "ProductTestSpecification"
+    }
+  },
+  "reportingSystem": {
+    "id": "409",
+    "name": "APP-675",
+    "@type": "ReportingResource",
+    "@referredType": "LogicalResource"
+  },
+  "source": {
+    "id": "4",
+    "name": "APP-374",
+    "@type": "ReportingResource",
+    "@referredType": "LogicalResource"
+  },
+  "@baseType": "Event",
+  "@type": "ProductTestSpecificationCreateEvent"
+}
+Delete Event
+Message example for ProductTestSpecificationDeleteEvent event
+Content-Type: application/json
+{
+    "correlationId": "d697938a-374e-435d-ae29-e5c198ddced4",
+    "description": "ProductTestSpecificationDeleteEvent",
+    "domain": "Service Assurance",
+    "eventId": "f4ea6f37-60d3-451d-8a4f-183fde2e19f0",
+    "eventTime": "2024-08-25T12:21:36.724Z",
+    "eventType": "ProductTestSpecificationDeleteEvent",
+
+
+     "priority": "4",
+    "timeOcurred": "2024-08-25T12:21:36.363Z",
+    "title": "ProductTestSpecificationDeleteEvent",
+    "event": {
+        "productTestSpecification": {
+            "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/ba01e0f0-8e6a-452d-9535-
+6b72ea67e712",
+            "id": "ba01e0f0-8e6a-452d-9535-6b72ea67e712",
+            "@type": "productTestSpecification"
+        }
+    },
+    "reportingSystem": {
+        "id": "409",
+        "name": "APP-675",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "4",
+        "name": "APP-374",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ProductTestSpecificationDeleteEvent"
+}
+Attribute Value Change Event
+Message example for ProductTestSpecificationAttributeValueChangeEvent event
+Content-Type: application/json
+{
+    "correlationId": "180874f1-6ea1-4391-9c99-a12f6cde93e6",
+    "description": "ProductTestSpecificationAttributeValueChangeEvent",
+    "domain": "Service Assurance",
+    "eventId": "31cedf69-3b50-42bb-b116-ac37d82a90f1",
+    "eventTime": "2024-08-25T12:21:36.714Z",
+    "eventType": "ProductTestAttributeValueChangeEvent",
+    "priority": "3",
+    "timeOcurred": "2024-08-25T12:21:36.133Z",
+    "title": "ProductTestSpecificationAttributeValueChangeEvent",
+    "event": {
+      "productTestSpecification": {
+        "description": "A Product Test Specification is a formal document designed
+to define the parameters and procedures for conducting thorough testing on a
+specific product or service",
+        "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/ba01e0f0-8e6a-452d-9535-
+6b72ea67e712",
+        "id": "ba01e0f0-8e6a-452d-9535-6b72ea67e712",
+        "version": "1.0",
+        "name": "Diagnostic Product FTTH",
+        "lifecycleStatus": "active",
+        "validFor": {
+          "@type": "TimePeriod",
+          "endDateTime": "2024-01-01T00:00:00.00Z",
+          "startDateTime": "2025-01-01T00:00:00.00Z"
+
+
+         },
+        "specCharacteristic": [
+          {
+            "@type": "CharacteristicSpecification",
+            "name": "overallStatus",
+            "description": "This provides an overall status for the product based on
+different tests executed",
+            "valueType": "string",
+            "configurable": false,
+            "minCardinality": 1,
+            "maxCardinality": 1,
+            "isUnique": true,
+            "extensible": false,
+            "characteristicValueSpecification": [
+              {
+                "@type": "StringCharacteristicValueSpecification",
+                "valueType": "string",
+                "value":"V1"
+              }
+            ]
+          },
+          {
+            "@type": "CharacteristicSpecification",
+            "name": "committedRateUp",
+            "description": "This provides the information of the CIR based on the
+product definition",
+            "valueType": "number",
+            "configurable": false,
+            "minCardinality": 1,
+            "maxCardinality": 1,
+            "isUnique": true,
+            "extensible": false,
+            "characteristicValueSpecification": [
+              {
+                "@type": "NumberCharacteristicValueSpecification",
+                "valueType": "number",
+                "value":"1"
+              }
+            ]
+          },
+          {
+            "@type": "CharacteristicSpecification",
+            "name": "committedRateDown",
+            "description": "This provides the information of the CIR Down based on
+the product definition",
+            "valueType": "number",
+            "configurable": false,
+            "minCardinality": 1,
+            "maxCardinality": 1,
+            "isUnique": true,
+            "extensible": false,
+            "characteristicValueSpecification": [
+              {
+                "@type": "NumberCharacteristicValueSpecification",
+                "valueType": "number",
+                "value":"1"
+              }
+            ]
+          }
+        ],
+        "testMeasureDefinition": [
+          {
+
+
+             "name": "Uni Port Status",
+            "metricDescription": "OLT - Uni Port Status",
+            "metricName": "Uni Port Status",
+            "unitOfMeasure": "HeartBeat",
+            "captureFrequency": "once",
+            "captureMethod": "Automatic capture by OLT",
+            "valueType": "string",
+            "thresholdRule": [
+              {
+                "@type": "MetricDefMeasureThresholdRule",
+                "conformanceTargetExact": "Down",
+                "description": "This UNI Port Status is down",
+                "name": "UniPortDown",
+                "numberOfAllowedCrossing": 0,
+                "thresholdRuleSeverity": "1",
+                "consequence": [
+                  {
+                    "@type": "MetricDefMeasureConsequence",
+                    "prescribeAction": "raiseTicket",
+                    "description": "Raise an incident ticket",
+                    "name": "raiseTicket",
+                    "repeatAction": false
+                  },
+                  {
+                    "@type": "MetricDefMeasureConsequence",
+                    "prescribeAction": "sendWarning",
+                    "description": "Send a warning to the NOC",
+                    "name": "sendWarning"
+                  }
+                ]
+              }
+            ],
+            "@type": "TestMeasureDefinition"
+          },
+          {
+            "name": "DHCP/PPP Status",
+            "metricDescription": "DHCP/PPP Status",
+            "metricName": "DHCP/PPP Status",
+            "unitOfMeasure": "HeartBeat",
+            "captureFrequency": "once",
+            "captureMethod": "Automatic capture by OLT",
+            "valueType": "string",
+            "thresholdRule": [
+              {
+                "@type": "MetricDefMeasureThresholdRule",
+                "conformanceTargetExact": "PPP Terminated",
+                "description": "This PPP session is down",
+                "name": "PPP Status",
+                "numberOfAllowedCrossing": 0,
+                "thresholdRuleSeverity": "1",
+                "consequence": [
+                  {
+                    "@type": "MetricDefMeasureConsequence",
+                    "prescribeAction": "raiseTicket",
+                    "description": "Raise an incident ticket",
+                    "name": "raiseTicket",
+                    "repeatAction": false
+                  },
+                  {
+                    "@type": "MetricDefMeasureConsequence",
+                    "prescribeAction": "sendWarning",
+                    "description": "Send a warning to the NOC",
+                    "name": "sendWarning"
+
+
+                   }
+                ]
+              },
+              {
+                "@type": "MetricDefMeasureThresholdRule",
+                "conformanceTargetExact": "No Session",
+                "description": "This DHCP session is down",
+                "name": "DHCPStatus",
+                "numberOfAllowedCrossing": 0,
+                "thresholdRuleSeverity": "1",
+                "consequence": [
+                  {
+                    "@type": "MetricDefMeasureConsequence",
+                    "prescribeAction": "raiseTicket",
+                    "description": "Raise an incident ticket",
+                    "name": "raiseTicket",
+                    "repeatAction": false
+                  },
+                  {
+                    "@type": "MetricDefMeasureConsequence",
+                    "prescribeAction": "sendWarning",
+                    "description": "Send a warning to the NOC",
+                    "name": "sendWarning"
+                  }
+                ]
+              }
+            ],
+            "@type": "TestMeasureDefinition"
+          }
+        ],
+        "ProductTestSpecRelationship": [
+          {
+            "@type": "ProductTestSpecRelationship",
+            "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+            "relationshipType": "dependency"
+          }
+        ],
+        "relatedProductSpecification": [
+          {
+            "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+            "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+            "name":"FTTH Product Specification",
+            "@type": "RelatedProductSpecification"
+          }
+        ],
+        "@type": "ProductTestSpecification",
+        "@baseType": "ProductTestSpecification"
+      }
+    },
+    "@baseType": "Event",
+    "@type": "ProductTestSpecificationAttributeValueChangeEvent"
+}
+State Change Event
+Message example for ProductTestSpecificationStateChangeEvent event
+Content-Type: application/json
+
+
+ 
+{
+    "correlationId": "9800ed1f-1315-4594-accf-eae6f168d76f",
+    "description": "ProductTetsSpecificationStateChangeEvent illustration",
+    "domain": "Service Assurance",
+    "eventId": "ec6d33c0-2b61-422b-98ce-0026aaf92f14",
+    "eventTime": "2022-08-25T12:21:36.678Z",
+    "eventType": "ProductTetsSpecificationStateChangeEvent",
+    "priority": "2",
+    "timeOcurred": "2022-08-25T12:21:28.377Z",
+    "title": "ProductTetsSpecificationStateChangeEvent",
+    "event": {
+        "ProductTetsSpecification": {
+            "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/ba01e0f0-8e6a-452d-9535-
+6b72ea67e712",
+            "id": "ba01e0f0-8e6a-452d-9535-6b72ea67e712",
+            "state": "completed",
+            "@type": "ProductTetsSpecification"
+        }
+    },
+    "reportingSystem": {
+        "id": "409",
+        "name": "APP-675",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "4",
+        "name": "APP-374",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "ProductTetsSpecificationStateChangeEvent"
+}
+
+
+ API Operations
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Complete Update of an Entity
+PUT Resource
+PUT must be used to
+completely update a resource
+identified by its resource URI
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Execute an Action on an Entity
+POST on TASK Resource
+POST must be used to execute
+Task Resources
+Other Request Methods
+POST on TASK Resource
+GET and POST must not be
+used to tunnel other request
+methods.
+Filtering and attribute selection rules are described in the TMF630 REST Design Guidelines
+Part 1 document.
+Notifications are also described in a subsequent section.
+Operations on ProductTest
+List or find ProductTest objects
+GET /productTest?fields=…
+Description
+This operation list ProductTest entities. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Here's an example of a request for retrieving product tests.
+Request
+GET /productTest?mode=onDemand&state=completed
+Content-Type: application/json
+
+
+ 
+Response
+200
+[
+  {
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/b9b1727e-faae-497f-8e82-43ebe92de6ce",
+    "id": "b9b1727e-faae-497f-8e82-43ebe92de6ce",
+    "description": "When the request is received and the ServiceID is validated, the
+ServiceID is used to Diagnose the network, the found details are then returned to
+the Supplier.",
+    "startDateTime": "2024-03-08T00:00:00.00Z",
+    "endDateTime": "2024-03-08T00:00:01.00Z",
+    "mode": "onDemand",
+    "state": "completed",
+    "validFor": {
+      "startDateTime": "2024-03-08T00:00:00.00Z",
+      "endDateTime": "2024-03-08T00:00:01.00Z"
+    },
+    "relatedParty": [
+      {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+        "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+        }
+      }
+    ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/ae443f8d-aa6a-
+41f9-8ec7-8b01e7f666e6",
+      "id": "ae443f8d-aa6a-41f9-8ec7-8b01e7f666e6",
+      "@type": "ProductRef",
+      "name": "S410996"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "characteristic": [
+      {
+        "name": "overallStatus",
+        "value": "up",
+        "@type":"StringCharacteristic"
+      },
+      {
+        "name": "committedRateUp",
+        "value": 100,
+        "@type":"NumberCharacteristic"
+      },
+      {
+
+
+         "name": "committedRateDown",
+        "value": 200,
+        "@type":"NumberCharacteristic"
+      }
+    ],
+    "testMeasure": [
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "Uni Port Status",
+        "metricDescription": "OLT - Uni Port Status",
+        "value": {
+          "name": "status",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "ONT reachability",
+        "metricDescription": "OLT - ONT reachability",
+        "value": {
+          "name": "status",
+          "value": "online",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "CFM",
+        "metricDescription": "OLT - CFM Status",
+        "value": {
+          "name": "cfm",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "testMeasureCharacteristic": [
+          {
+            "name": "lastStatusChange",
+            "value": "2024-03-07T23:59:00.001Z",
+            "@type":"StringCharacteristic"
+          },
+          {
+            "name": "previousStatusValue",
+            "value": "down",
+            "@type":"StringCharacteristic"
+          }
+        ],
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "DHCP/PPP status",
+        "metricDescription": "OLT - DHCP/PPP status",
+        "value": {
+          "name": "dhcp/ppp",
+          "value": "established",
+          "@type":"StringCharacteristic"
+
+
+         },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by PE",
+        "metricName": "ENNI Status",
+        "metricDescription": "PE - ENNI status",
+        "value": {
+          "name": "enniStatus",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by PE",
+        "metricName": "E2E Traffic",
+        "metricDescription": "End to end traffic",
+        "value": {
+          "name": "e2eTraffic",
+          "value": "yes",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      }
+    ],
+    "incidentRef": [
+      {
+        "id": "TIC-DEV00027757",
+        "name": "MainteinerIncidentReference",
+        "@type": "IncidentRef"
+      }
+    ],
+    "@type": "ProductTest"
+  },
+  {
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/68c7a048-3ded-4b71-bf6a-8ef39c6704a2",
+    "id": "68c7a048-3ded-4b71-bf6a-8ef39c6704a2",
+    "name": "Product Test FTTH SL500",
+    "description": "Product Test FTTH SL500",
+    "startDateTime": "2024-03-09T12:00:00.00Z",
+    "endDateTime": "2024-03-09T12:00:01.00Z",
+    "mode": "onDemand",
+    "state": "completed",
+    "validFor": {
+      "startDateTime": "2024-03-09T12:00:00.00Z",
+      "endDateTime": "2024-03-09T12:00:01.00Z"
+    },
+    "externalIdentifier":[
+      {
+        "externalIdentifierType":"Product",
+        "owner":"ISP-X",
+        "id":"f7559531-d142-4754-bcc8-b814e504ac48",
+        "@type":"ExternalIdentifier"
+      }
+    ],
+    "relatedParty": [
+      {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+
+
+         "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "Updated ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+        }
+      }
+    ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/95b34658-c50e-
+4dca-904a-ae2bbcb976d0",
+      "id": "95b34658-c50e-4dca-904a-ae2bbcb976d0",
+      "@type": "ProductRef",
+      "name": "S234186"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Updated Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "characteristic": [
+      {
+        "name": "overallStatus",
+        "value": "down",
+        "@type":"StringCharacteristic"
+      },
+      {
+        "name": "committedRateUp",
+        "value": 100,
+        "@type":"NumberCharacteristic"
+      },
+      {
+        "name": "committedRateDown",
+        "value": 200,
+        "@type":"NumberCharacteristic"
+      }
+    ],
+    "testMeasure": [
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "Uni Port Status",
+        "metricDescription": "OLT - Uni Port Status",
+        "value": {
+          "name": "status",
+          "value": "down",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "ONT reachability",
+        "metricDescription": "OLT - ONT reachability",
+        "value": {
+          "name": "status",
+          "value": "online",
+
+
+           "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "CFM",
+        "metricDescription": "OLT - CFM Status",
+        "value": {
+          "name": "cfm",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "testMeasureCharacteristic": [
+          {
+            "name": "lastStatusChange",
+            "value": "2024-03-09T11:59:00.001Z",
+            "@type":"StringCharacteristic"
+          },
+          {
+            "name": "previousStatusValue",
+            "value": "down",
+            "@type":"StringCharacteristic"
+          }
+        ],
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "DHCP/PPP status",
+        "metricDescription": "OLT - DHCP/PPP status",
+        "value": {
+          "name": "dhcp/ppp",
+          "value": "established",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by PE",
+        "metricName": "ENNI Status",
+        "metricDescription": "PE - ENNI status",
+        "value": {
+          "name": "enniStatus",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by PE",
+        "metricName": "E2E Traffic",
+        "metricDescription": "End to end traffic",
+        "value": {
+          "name": "e2eTraffic",
+          "value": "yes",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+
+
+       }
+    ],
+    "incidentRef": [
+      {
+        "id": "TIC-DEV00027757",
+        "name": "MaintainerIncidentReference",
+        "@type": "IncidentRef"
+      }
+    ],
+    "@type": "ProductTest"
+  }
+  
+]
+Retrieves a ProductTest by ID
+GET /productTest/{id}?fields=…
+Description
+This operation retrieves a ProductTest entity. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Here's an example of a request for retrieving a specific product test.
+Request
+GET /productTest/6fa8f2a8-4f6c-4cb8-a3de-4d0273a02f19
+Content-Type: application/json
+Response
+200
+{
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/6fa8f2a8-4f6c-4cb8-a3de-4d0273a02f19",
+    "id": "6fa8f2a8-4f6c-4cb8-a3de-4d0273a02f19",
+    "name": "Product Test FTTH SL500",
+    "description": "Product Test FTTH SL500",
+    "startDateTime": "2024-03-09T12:00:00.00Z",
+    "endDateTime": "2024-03-09T12:00:01.00Z",
+    "mode": "onDemand",
+    "state": "completed",
+    "validFor": {
+      "startDateTime": "2024-03-09T12:00:00.00Z",
+      "endDateTime": "2024-03-09T12:00:01.00Z"
+    },
+    "externalIdentifier":[
+      {
+        "externalIdentifierType":"Product",
+        "owner":"ISP-X",
+
+
+         "id":"f7559531-d142-4754-bcc8-b814e504ac48",
+        "@type":"ExternalIdentifier"
+      }
+    ],
+    "relatedParty": [
+      {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+        "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "Updated ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+        }
+      }
+    ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/95b34658-c50e-
+4dca-904a-ae2bbcb976d0",
+      "id": "95b34658-c50e-4dca-904a-ae2bbcb976d0",
+      "@type": "ProductRef",
+      "name": "S234186"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Updated Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "characteristic": [
+      {
+        "name": "overallStatus",
+        "value": "down",
+        "@type":"StringCharacteristic"
+      },
+      {
+        "name": "committedRateUp",
+        "value": 100,
+        "@type":"NumberCharacteristic"
+      },
+      {
+        "name": "committedRateDown",
+        "value": 200,
+        "@type":"NumberCharacteristic"
+      }
+    ],
+    "testMeasure": [
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "Uni Port Status",
+        "metricDescription": "OLT - Uni Port Status",
+        "value": {
+          "name": "status",
+          "value": "down",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+
+
+       {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "ONT reachability",
+        "metricDescription": "OLT - ONT reachability",
+        "value": {
+          "name": "status",
+          "value": "online",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "CFM",
+        "metricDescription": "OLT - CFM Status",
+        "value": {
+          "name": "cfm",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "testMeasureCharacteristic": [
+          {
+            "name": "lastStatusChange",
+            "value": "2024-03-09T11:59:00.001Z",
+            "@type":"StringCharacteristic"
+          },
+          {
+            "name": "previousStatusValue",
+            "value": "down",
+            "@type":"StringCharacteristic"
+          }
+        ],
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "DHCP/PPP status",
+        "metricDescription": "OLT - DHCP/PPP status",
+        "value": {
+          "name": "dhcp/ppp",
+          "value": "established",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "ENNI Status",
+        "metricDescription": "PE - ENNI status",
+        "value": {
+          "name": "enniStatus",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-09T12:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+
+
+         "metricName": "E2E Traffic",
+        "metricDescription": "End to end traffic",
+        "value": {
+          "name": "e2eTraffic",
+          "value": "yes",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      }
+    ],
+    "incidentRef": [
+      {
+        "id": "TIC-DEV00027757",
+        "name": "MaintainerIncidentReference",
+        "@type": "IncidentRef"
+      }
+    ],
+    "@type": "ProductTest"
+  }
+Creates a ProductTest
+POST /productTest?fields=…
+Description
+This operation creates a ProductTest entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+name
+relatedProduct
+relatedProduct.@type
+relatedProduct.id
+relatedProduct.name
+testSpecification
+testSpecification.@type
+testSpecification.id
+testSpecification.name
+@type
+Usage samples
+Creation of a new product test with POST operation
+Request
+POST /productTest
+
+
+ Content-Type: application/json
+{
+  "name": "Product Test FTTH SL500",
+  "description": "Product Test FTTH SL500",
+  "mode": "onDemand",
+  "relatedParty": [
+    {
+      "role": "ISP",
+      "@type": "RelatedPartyRefOrPartyRoleRef",
+      "partyOrPartyRole": {
+        "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+        "name": "ISP Fibre X",
+        "@type": "PartyRef"
+      }
+    }
+  ],
+  "relatedProduct": {
+    "id": "ae443f8d-aa6a-41f9-8ec7-8b01e7f666e6",
+    "name": "S410996",
+    "@type": "ProductRef"
+  },
+  "testSpecification": {
+    "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+    "name": "Service Diagnostics",
+    "@type": "ProductTestSpecificationRef"
+  },
+  "@type":"ProductTest"
+}
+Response
+201
+{
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/b9b1727e-faae-497f-8e82-43ebe92de6ce",
+    "id": "b9b1727e-faae-497f-8e82-43ebe92de6ce",
+    "description": "When the request is received and the ServiceID is validated, the
+ServiceID is used to Diagnose the network, the found details are then returned to
+the Supplier.",
+    "startDateTime": "2024-03-08T00:00:00.00Z",
+    "endDateTime": "2024-03-08T00:00:01.00Z",
+    "mode": "onDemand",
+    "state": "completed",
+    "validFor": {
+      "startDateTime": "2024-03-08T00:00:00.00Z",
+      "endDateTime": "2024-03-08T00:00:01.00Z"
+    },
+    "relatedParty": [
+      {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+        "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+
+
+         }
+      }
+    ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/ae443f8d-aa6a-
+41f9-8ec7-8b01e7f666e6",
+      "id": "ae443f8d-aa6a-41f9-8ec7-8b01e7f666e6",
+      "@type": "ProductRef",
+      "name": "S410996"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "characteristic": [
+      {
+        "name": "overallStatus",
+        "value": "up",
+        "@type":"StringCharacteristic"
+      },
+      {
+        "name": "committedRateUp",
+        "value": 100,
+        "@type":"NumberCharacteristic"
+      },
+      {
+        "name": "committedRateDown",
+        "value": 200,
+        "@type":"NumberCharacteristic"        
+      }
+    ],
+    "testMeasure": [
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "Uni Port Status",
+        "metricDescription": "OLT - Uni Port Status",
+        "value": {
+          "name": "status",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "ONT reachability",
+        "metricDescription": "OLT - ONT reachability",
+        "value": {
+          "name": "status",
+          "value": "online",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+
+
+         "metricName": "CFM",
+        "metricDescription": "OLT - CFM Status",
+        "value": {
+          "name": "cfm",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "testMeasureCharacteristic": [
+          {
+            "name": "lastStatusChange",
+            "value": "2024-03-07T23:59:00.001Z",
+            "@type":"StringCharacteristic"
+          },
+          {
+            "name": "previousStatusValue",
+            "value": "down",
+            "@type":"StringCharacteristic"
+          }
+        ],
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by OLT",
+        "metricName": "DHCP/PPP status",
+        "metricDescription": "OLT - DHCP/PPP status",
+        "value": {
+          "name": "dhcp/ppp",
+          "value": "established",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by PE",
+        "metricName": "ENNI Status",
+        "metricDescription": "PE - ENNI status",
+        "value": {
+          "name": "enniStatus",
+          "value": "up",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      },
+      {
+        "captureDateTime": "2024-03-08T00:00:00.001Z",
+        "captureMethod": "Automatic capture by PE",
+        "metricName": "E2E Traffic",
+        "metricDescription": "End to end traffic",
+        "value": {
+          "name": "e2eTraffic",
+          "value": "yes",
+          "@type":"StringCharacteristic"
+        },
+        "@type": "TestMeasure"
+      }
+    ],
+    "incidentRef": [
+      {
+        "id": "TIC-DEV00027757",
+        "name": "MainteinerIncidentReference",
+        "@type": "IncidentRef"
+
+
+       }
+    ],
+    "@type": "ProductTest"
+  }
+Updates partially a ProductTest
+PATCH /productTest/{id}?fields=…
+Description
+This operation allows partial updates of a ProductTest entity. Support of json/merge
+(https://tools.ietf.org/html/rfc7396) is mandatory, support of json/patch (http://tools.ietf.org/
+html/rfc5789) is optional. Note: If the update operation yields to the creation of sub-resources
+or relationships, the same rules concerning mandatory sub-resource attributes and default
+value settings in the POST operation applies to the PATCH operation. Hence these tables
+are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+href
+id
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Patchable Attributes
+Rule
+characteristic
+description
+endDateTime
+externalIdentifier
+incidentRef
+mode
+name
+relatedParty
+relatedProduct
+startDateTime
+state
+testMeasure
+testSpecification
+validFor
+
+
+ 
+Usage samples
+Here's an example of a request for patching a product test using merge-patch+json. In this
+example, name, description and externalIdentifier is updated.
+Request
+PATCH /productTest/5bbe60db-e171-45e0-9211-4b629c2d1cc2
+Content-Type: application/merge-patch+json
+{
+    "name": "Product Test FTTH SL-500",
+    "description": "Product Test FTTH SL-500",
+    "externalIdentifier": [
+        {
+            "externalIdentifierType": "Product",
+            "owner": "ISP-X",
+            "id": "d622a6c9-e256-4718-b8e7-3f3b8c7c1d54",
+            "@type": "ExternalIdentifier"
+        }
+    ],
+    "@type":"ProductTest"
+}
+Response
+200
+{
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/5bbe60db-e171-45e0-9211-4b629c2d1cc2",
+    "id": "5bbe60db-e171-45e0-9211-4b629c2d1cc2",
+    "name": "Product Test FTTH SL-500",
+    "description": "Product Test FTTH SL-500",
+    "startDateTime": "2024-03-09T12:00:00.00Z",
+    "mode": "onDemand",
+    "state": "pending",
+    "externalIdentifier":[
+      {
+        "externalIdentifierType":"Product",
+        "owner":"ISP-X",
+        "id":"d622a6c9-e256-4718-b8e7-3f3b8c7c1d54",
+        "@type":"ExternalIdentifier"
+      }
+    ],
+    "relatedParty": [
+      {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+        "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "Updated ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+        }
+      }
+
+
+     ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/95b34658-c50e-
+4dca-904a-ae2bbcb976d0",
+      "id": "95b34658-c50e-4dca-904a-ae2bbcb976d0",
+      "@type": "ProductRef",
+      "name": "S234186"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Updated Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "@type": "ProductTest"
+  }
+Here's an example of a request for patching a product test using json-patch+json. In this
+example, description is updated.
+Request
+PATCH /productTest/5f443a68-7745-4642-9b23-b338778b8fbb
+Content-Type: application/json-patch+json
+[
+    {
+        "op": "replace",
+        "path": "/name",
+        "value": "Product Test FTTH SL-500"
+    }
+]
+Response
+200
+{
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/5f443a68-7745-4642-9b23-b338778b8fbb",
+    "id": "5f443a68-7745-4642-9b23-b338778b8fbb",
+    "name": "Product Test FTTH SL-500",
+    "description": "Product Test FTTH SL-500",
+    "startDateTime": "2024-03-09T12:00:00.00Z",
+    "mode": "onDemand",
+    "state": "pending",
+    "externalIdentifier":[
+      {
+        "externalIdentifierType":"Product",
+        "owner":"ISP-X",
+        "id":"d622a6c9-e256-4718-b8e7-3f3b8c7c1d54",
+        "@type":"ExternalIdentifier"
+      }
+    ],
+    "relatedParty": [
+
+
+       {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+        "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "Updated ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+        }
+      }
+    ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/95b34658-c50e-
+4dca-904a-ae2bbcb976d0",
+      "id": "95b34658-c50e-4dca-904a-ae2bbcb976d0",
+      "@type": "ProductRef",
+      "name": "S234186"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Updated Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "@type": "ProductTest"
+  }
+Here's an example of a request for patching a product test using json-patch-query+json. In
+this example, the RelatedParty role attribute is updated.
+Request
+PATCH /productTest/c95e791e-b2d7-4e8c-add5-eb9329ceadf1
+Content-Type: application/json-patch-query+json
+[
+  {
+    "op": "replace",
+    "path": "$.externalIdentifier[?(@.owner=='ISP-X')].owner",
+    "value": "ISP-X-Updated"
+  }
+]
+Response
+200
+{
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/c95e791e-b2d7-4e8c-add5-eb9329ceadf1",
+    "id": "c95e791e-b2d7-4e8c-add5-eb9329ceadf1",
+    "name": "Product Test FTTH SL-500",
+    "description": "Product Test FTTH SL-500",
+
+
+     "startDateTime": "2024-03-09T12:00:00.00Z",
+    "mode": "onDemand",
+    "state": "pending",
+    "externalIdentifier":[
+      {
+        "externalIdentifierType":"Product",
+        "owner":"ISP-X-Updated",
+        "id":"d622a6c9-e256-4718-b8e7-3f3b8c7c1d54",
+        "@type":"ExternalIdentifier"
+      }
+    ],
+    "relatedParty": [
+      {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+        "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "Updated ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+        }
+      }
+    ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/95b34658-c50e-
+4dca-904a-ae2bbcb976d0",
+      "id": "95b34658-c50e-4dca-904a-ae2bbcb976d0",
+      "@type": "ProductRef",
+      "name": "S234186"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Updated Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "@type": "ProductTest"
+  }
+Here's an example of a request for patching a product test using application/json. In this
+example, name, description and externalIdentifier is updated.
+Request
+PATCH /productTest/5bbe60db-e171-45e0-9211-4b629c2d1cc2
+Content-Type: application/json
+{
+    "name": "Product Test FTTH SL-500",
+    "description": "Product Test FTTH SL-500",
+    "externalIdentifier": [
+        {
+            "externalIdentifierType": "Product",
+            "owner": "ISP-X",
+            "id": "d622a6c9-e256-4718-b8e7-3f3b8c7c1d54",
+            "@type": "ExternalIdentifier"
+
+
+         }
+    ],
+    "@type":"ProductTest"
+}
+Response
+200
+{
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTest/5bbe60db-e171-45e0-9211-4b629c2d1cc2",
+    "id": "5bbe60db-e171-45e0-9211-4b629c2d1cc2",
+    "name": "Product Test FTTH SL-500",
+    "description": "Product Test FTTH SL-500",
+    "startDateTime": "2024-03-09T12:00:00.00Z",
+    "mode": "onDemand",
+    "state": "pending",
+    "externalIdentifier":[
+      {
+        "externalIdentifierType":"Product",
+        "owner":"ISP-X",
+        "id":"d622a6c9-e256-4718-b8e7-3f3b8c7c1d54",
+        "@type":"ExternalIdentifier"
+      }
+    ],
+    "relatedParty": [
+      {
+        "role": "ISP",
+        "@type": "RelatedPartyRefOrPartyRoleRef",
+        "partyOrPartyRole": {
+          "id": "cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "href": "https://mycsp.com/tmf-
+api/partyManagement/v5/Organisation/cbfc8ba4-d8f6-4078-98b2-66384e1c3a20",
+          "name": "Updated ISP-X",
+          "@type": "PartyRef",
+          "@referredType": "Organisation"
+        }
+      }
+    ],
+    "relatedProduct": {
+      "href": "https://mycsp.com/tmf-api/productInventory/v5/product/95b34658-c50e-
+4dca-904a-ae2bbcb976d0",
+      "id": "95b34658-c50e-4dca-904a-ae2bbcb976d0",
+      "@type": "ProductRef",
+      "name": "S234186"
+    },
+    "testSpecification": {
+      "id": "b5843d34-081f-432a-9d02-c7b6b8c9f3e5",
+      "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/b5843d34-081f-432a-9d02-
+c7b6b8c9f3e5",
+      "name": "Updated Service Diagnostics",
+      "@type": "ProductTestSpecificationRef"
+    },
+    "@type": "ProductTest"
+  }
+
+
+ 
+Operations on ProductTestSpecification
+List or find ProductTestSpecification objects
+GET /productTestSpecification?fields=…
+Description
+This operation list ProductTestSpecification entities. Attribute selection is enabled for all first
+level attributes. Filtering may be available depending on the compliance level supported by
+an implementation.
+Usage samples
+Here's an example of a request for retrieving multiple product test specifications.
+Request
+GET /productTestSpecification?name="Diagnostic Product FTTH"
+Content-Type: application/json
+Response
+200
+[
+  {
+    "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/ba01e0f0-8e6a-452d-9535-
+6b72ea67e712",
+    "id": "ba01e0f0-8e6a-452d-9535-6b72ea67e712",
+    "version": "1.0",
+    "name": "Diagnostic Product FTTH",
+    "lifecycleStatus": "active",
+    "validFor": {
+      "@type": "TimePeriod",
+      "endDateTime": "2024-01-01T00:00:00.00Z",
+      "startDateTime": "2025-01-01T00:00:00.00Z"
+    },
+    "specCharacteristic": [
+      {
+        "@type": "CharacteristicSpecification",
+        "name": "overallStatus",
+        "description": "This provides an overall status for the product based on
+different tests executed",
+        "valueType": "string",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+
+
+             "@type": "StringCharacteristicValueSpecification",
+            "valueType": "string",
+            "value":"V1"
+          }
+        ]
+      },
+      {
+        "@type": "CharacteristicSpecification",
+        "name": "committedRateUp",
+        "description": "This provides the information of the CIR based on the
+product definition",
+        "valueType": "number",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "NumberCharacteristicValueSpecification",
+            "valueType": "number",
+            "value":"1"
+          }
+        ]
+      },
+      {
+        "@type": "CharacteristicSpecification",
+        "name": "committedRateDown",
+        "description": "This provides the information of the CIR Down based on the
+product definition",
+        "valueType": "number",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "NumberCharacteristicValueSpecification",
+            "valueType": "number",
+            "value":"1"
+          }
+        ]
+      }
+    ],
+    "testMeasureDefinition": [
+      {
+        "name": "Uni Port Status",
+        "metricDescription": "OLT - Uni Port Status",
+        "metricName": "Uni Port Status",      
+        "unitOfMeasure": "HeartBeat",
+        "captureFrequency": "once",
+        "captureMethod": "Automatic capture by OLT",
+        "valueType": "string",
+        "thresholdRule": [
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "Down",
+            "description": "This UNI Port Status is down",
+            "name": "UniPortDown",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+
+
+               {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          }
+        ],
+        "@type": "TestMeasureDefinition"
+      },
+      {
+        "name": "DHCP/PPP Status",
+        "metricDescription": "DHCP/PPP Status",
+        "metricName": "DHCP/PPP Status",      
+        "unitOfMeasure": "HeartBeat",
+        "captureFrequency": "once",
+        "captureMethod": "Automatic capture by OLT",
+        "valueType": "string",
+        "thresholdRule": [
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "PPP Terminated",
+            "description": "This PPP session is down",
+            "name": "PPP Status",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          },
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "No Session",
+            "description": "This DHCP session is down",
+            "name": "DHCPStatus",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+
+
+                 "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          }
+          
+        ],
+        "@type": "TestMeasureDefinition"
+      }    
+    ],
+    "ProductTestSpecRelationship": [
+      {
+        "@type": "ProductTestSpecRelationship",
+        "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+        "relationshipType": "dependency"
+      }
+    ],
+    "relatedProductSpecification": [
+      {
+        "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+        "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+        "name":"FTTH Product Specification",
+        "@type": "RelatedProductSpecification"
+      }
+    ],
+    "@type": "ProductTestSpecification",
+    "@baseType": "ProductTestSpecification"
+  }
+]
+Retrieves a ProductTestSpecification by ID
+GET /productTestSpecification/{id}?fields=…
+Description
+This operation retrieves a ProductTestSpecification entity. Attribute selection is enabled for
+all first level attributes. Filtering may be available depending on the compliance level
+supported by an implementation.
+Usage samples
+Here's an example of a request for retrieving a specific product test specification.
+Request
+GET /productTestSpecification/f9e62391-8538-4458-97be-97dc8c6b8e8a
+Content-Type: application/json
+
+
+ 
+Response
+200
+{
+    "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/f9e62391-8538-4458-97be-
+97dc8c6b8e8a",
+    "id": "f9e62391-8538-4458-97be-97dc8c6b8e8a",
+    "version": "1.0",
+    "name": "Diagnostic Product FTTH",
+    "lifecycleStatus": "active",
+    "validFor": {
+      "@type": "TimePeriod",
+      "endDateTime": "2024-01-01T00:00:00.00Z",
+      "startDateTime": "2025-01-01T00:00:00.00Z"
+    },
+    "specCharacteristic": [
+      {
+        "@type": "CharacteristicSpecification",
+        "name": "overallStatus",
+        "description": "This provides an overall status for the product based on
+different tests executed",
+        "valueType": "string",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "StringCharacteristicValueSpecification",
+            "valueType": "string",
+            "value":"V1"
+          }
+        ]
+      },
+      {
+        "@type": "CharacteristicSpecification",
+        "name": "committedRateUp",
+        "description": "This provides the information of the CIR based on the
+product definition",
+        "valueType": "number",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "NumberCharacteristicValueSpecification",
+            "valueType": "number",
+            "value":"1"
+          }
+        ]
+      },
+      {
+        "@type": "CharacteristicSpecification",
+
+
+         "name": "committedRateDown",
+        "description": "This provides the information of the CIR Down based on the
+product definition",
+        "valueType": "number",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "NumberCharacteristicValueSpecification",
+            "valueType": "number",
+            "value":"1"
+          }
+        ]
+      }
+    ],
+    "testMeasureDefinition": [
+      {
+        "name": "Uni Port Status",
+        "metricDescription": "OLT - Uni Port Status",
+        "metricName": "Uni Port Status",      
+        "unitOfMeasure": "HeartBeat",
+        "captureFrequency": "once",
+        "captureMethod": "Automatic capture by OLT",
+        "valueType": "string",
+        "thresholdRule": [
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "Down",
+            "description": "This UNI Port Status is down",
+            "name": "UniPortDown",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          }
+        ],
+        "@type": "TestMeasureDefinition"
+      },
+      {
+        "name": "DHCP/PPP Status",
+        "metricDescription": "DHCP/PPP Status",
+        "metricName": "DHCP/PPP Status",      
+        "unitOfMeasure": "HeartBeat",
+        "captureFrequency": "once",
+        "captureMethod": "Automatic capture by OLT",
+        "valueType": "string",
+        "thresholdRule": [
+
+
+           {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "PPP Terminated",
+            "description": "This PPP session is down",
+            "name": "PPP Status",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          },
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "No Session",
+            "description": "This DHCP session is down",
+            "name": "DHCPStatus",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          }
+          
+        ],
+        "@type": "TestMeasureDefinition"
+      }    
+    ],
+    "ProductTestSpecRelationship": [
+      {
+        "@type": "ProductTestSpecRelationship",
+        "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+        "relationshipType": "dependency"
+      }
+    ],
+    "relatedProductSpecification": [
+      {
+        "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+
+
+         "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+        "@referredType": "vCPEProductSpecification",
+        "@type": "RelatedProductSpecification"
+      }
+    ],
+    "@type": "ProductTestSpecification",
+    "@baseType": "ProductTestSpecification"
+  }
+Creates a ProductTestSpecification
+POST /productTestSpecification?fields=…
+Description
+This operation creates a ProductTestSpecification entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+name
+relatedProductSpecification
+relatedProductSpecification.@typ
+e
+relatedProductSpecification.id
+relatedProductSpecification.name
+@type
+Usage samples
+Creation of a new product test specification with POST operation
+Request
+POST /productTestSpecification
+Content-Type: application/json
+{
+  "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+  "version": "1.0",
+  "name": "Diagnostic Product FTTH",
+  "validFor": {
+    "@type": "TimePeriod",
+    "endDateTime": "2024-01-01T00:00:00.00Z",
+    "startDateTime": "2025-01-01T00:00:00.00Z"
+  },
+  "specCharacteristic": [
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "overallStatus",
+
+
+       "description": "This provides an overall status for the product based on
+different tests executed",
+      "valueType": "string",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "StringCharacteristicValueSpecification",
+          "valueType": "string",
+          "value":"V1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateUp",
+      "description": "This provides the information of the CIR based on the product
+definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateDown",
+      "description": "This provides the information of the CIR Down based on the
+product definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    }
+  ],
+  "testMeasureDefinition": [
+    {
+      "name": "Uni Port Status",
+      "metricDescription": "OLT - Uni Port Status",
+      "metricName": "Uni Port Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+
+
+       "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "Down",
+          "description": "This UNI Port Status is down",
+          "name": "UniPortDown",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+      ],
+      "@type": "TestMeasureDefinition"
+    },
+    {
+      "name": "DHCP/PPP Status",
+      "metricDescription": "DHCP/PPP Status",
+      "metricName": "DHCP/PPP Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "PPP Terminated",
+          "description": "This PPP session is down",
+          "name": "PPP Status",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        },
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "No Session",
+
+
+           "description": "This DHCP session is down",
+          "name": "DHCPStatus",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+        
+      ],
+      "@type": "TestMeasureDefinition"
+    }    
+  ],
+  "ProductTestSpecRelationship": [
+    {
+      "@type": "ProductTestSpecRelationship",
+      "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+      "relationshipType": "dependency"
+    }
+  ],
+  "relatedProductSpecification": [
+    {
+      "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+      "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+      "name":"FTTH Product Specification",
+      "@type": "RelatedProductSpecification"
+    }
+  ],
+  "@type": "ProductTestSpecification",
+  "@baseType": "ProductTestSpecification"
+}
+Response
+201
+{
+  "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+  "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/ba01e0f0-8e6a-452d-9535-
+6b72ea67e712",
+  "id": "ba01e0f0-8e6a-452d-9535-6b72ea67e712",
+  "version": "1.0",
+  "name": "Diagnostic Product FTTH",
+
+
+   "lifecycleStatus": "active",
+  "validFor": {
+    "@type": "TimePeriod",
+    "endDateTime": "2024-01-01T00:00:00.00Z",
+    "startDateTime": "2025-01-01T00:00:00.00Z"
+  },
+  "specCharacteristic": [
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "overallStatus",
+      "description": "This provides an overall status for the product based on
+different tests executed",
+      "valueType": "string",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "StringCharacteristicValueSpecification",
+          "valueType": "string",
+          "value":"V1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateUp",
+      "description": "This provides the information of the CIR based on the product
+definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateDown",
+      "description": "This provides the information of the CIR Down based on the
+product definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+
+
+     }
+  ],
+  "testMeasureDefinition": [
+    {
+      "name": "Uni Port Status",
+      "metricDescription": "OLT - Uni Port Status",
+      "metricName": "Uni Port Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "Down",
+          "description": "This UNI Port Status is down",
+          "name": "UniPortDown",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+      ],
+      "@type": "TestMeasureDefinition"
+    },
+    {
+      "name": "DHCP/PPP Status",
+      "metricDescription": "DHCP/PPP Status",
+      "metricName": "DHCP/PPP Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "PPP Terminated",
+          "description": "This PPP session is down",
+          "name": "PPP Status",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+
+
+               "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        },
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "No Session",
+          "description": "This DHCP session is down",
+          "name": "DHCPStatus",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+        
+      ],
+      "@type": "TestMeasureDefinition"
+    }    
+  ],
+  "ProductTestSpecRelationship": [
+    {
+      "@type": "ProductTestSpecRelationship",
+      "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+      "relationshipType": "dependency"
+    }
+  ],
+  "relatedProductSpecification": [
+    {
+      "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+      "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+      "name":"FTTH Product Specification",
+      "@type": "RelatedProductSpecification"
+    }
+  ],
+  "@type": "ProductTestSpecification",
+  "@baseType": "ProductTestSpecification"
+}
+Updates partially a ProductTestSpecification
+PATCH /productTestSpecification/{id}?fields=…
+
+
+ 
+Description
+This operation allows partial updates of a ProductTestSpecification entity. Support of
+json/merge 
+(https://tools.ietf.org/html/rfc7396) 
+is 
+mandatory, 
+support 
+of 
+json/patch
+(http://tools.ietf.org/html/rfc5789) is optional. Note: If the update operation yields to the
+creation of sub-resources or relationships, the same rules concerning mandatory sub-
+resource attributes and default value settings in the POST operation applies to the PATCH
+operation. Hence these tables are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+href
+id
+validFor
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Patchable Attributes
+Rule
+attachment
+constraint
+description
+entitySpecRelationship
+isBundle
+lastUpdate
+lifecycleStatus
+name
+productTestSpecRelationship
+relatedParty
+relatedProductSpecification
+specCharacteristic
+targetEntitySchema
+testMeasureDefinition
+version
+Usage samples
+Here's an example of a request for patching a product test specification using merge-
+patch+json. In this example, the version is updated.
+
+
+ 
+Request
+PATCH /productTestSpecification/629cd10a-f34d-4dcf-a3bb-0f054338ff45
+Content-Type: application/merge-patch+json
+{
+    "version": "1.1",
+    "@type": "ProductTestSpecification"
+}
+Response
+200
+{
+  "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+  "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/629cd10a-f34d-4dcf-a3bb-
+0f054338ff45",
+  "id": "629cd10a-f34d-4dcf-a3bb-0f054338ff45",
+  "version": "1.1",
+  "name": "Diagnostic Product FTTH",
+  "lifecycleStatus": "active",
+  "validFor": {
+    "@type": "TimePeriod",
+    "endDateTime": "2024-01-01T00:00:00.00Z",
+    "startDateTime": "2025-01-01T00:00:00.00Z"
+  },
+  "specCharacteristic": [
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "overallStatus",
+      "description": "This provides an overall status for the product based on
+different tests executed",
+      "valueType": "string",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "StringCharacteristicValueSpecification",
+          "valueType": "string",
+          "value":"V1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateUp",
+      "description": "This provides the information of the CIR based on the product
+definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+
+
+       "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateDown",
+      "description": "This provides the information of the CIR Down based on the
+product definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    }
+  ],
+  "testMeasureDefinition": [
+    {
+      "name": "Uni Port Status",
+      "metricDescription": "OLT - Uni Port Status",
+      "metricName": "Uni Port Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "Down",
+          "description": "This UNI Port Status is down",
+          "name": "UniPortDown",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+
+
+       ],
+      "@type": "TestMeasureDefinition"
+    },
+    {
+      "name": "DHCP/PPP Status",
+      "metricDescription": "DHCP/PPP Status",
+      "metricName": "DHCP/PPP Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "PPP Terminated",
+          "description": "This PPP session is down",
+          "name": "PPP Status",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        },
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "No Session",
+          "description": "This DHCP session is down",
+          "name": "DHCPStatus",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+        
+      ],
+      "@type": "TestMeasureDefinition"
+    }    
+  ],
+
+
+   "ProductTestSpecRelationship": [
+    {
+      "@type": "ProductTestSpecRelationship",
+      "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+      "relationshipType": "dependency"
+    }
+  ],
+  "relatedProductSpecification": [
+    {
+      "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+      "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+      "name":"FTTH Product Specification",
+      "@type": "RelatedProductSpecification"
+    }
+  ],
+  "@type": "ProductTestSpecification",
+  "@baseType": "ProductTestSpecification"
+}
+Here's an example of a request for patching a product test specification using json-
+patch+json. In this example, the version is updated.
+Request
+PATCH /productTestSpecification/80ebb914-6f9c-4109-84d5-97f851d69ecd
+Content-Type: application/json-patch+json
+[
+    {
+        "op": "test",
+        "path": "/version",
+        "value": "1.1"
+    },
+    {
+        "op": "replace",
+        "path": "/version",
+        "value": "1.2"
+    }
+]
+Response
+200
+{
+  "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+  "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/80ebb914-6f9c-4109-84d5-
+97f851d69ecd",
+  "id": "80ebb914-6f9c-4109-84d5-97f851d69ecd",
+  "version": "1.2",
+  "name": "Diagnostic Product FTTH",
+  "lifecycleStatus": "active",
+
+
+   "validFor": {
+    "@type": "TimePeriod",
+    "endDateTime": "2024-01-01T00:00:00.00Z",
+    "startDateTime": "2025-01-01T00:00:00.00Z"
+  },
+  "specCharacteristic": [
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "overallStatus",
+      "description": "This provides an overall status for the product based on
+different tests executed",
+      "valueType": "string",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "StringCharacteristicValueSpecification",
+          "valueType": "string",
+          "value":"V1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateUp",
+      "description": "This provides the information of the CIR based on the product
+definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateDown",
+      "description": "This provides the information of the CIR Down based on the
+product definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    }
+
+
+   ],
+  "testMeasureDefinition": [
+    {
+      "name": "Uni Port Status",
+      "metricDescription": "OLT - Uni Port Status",
+      "metricName": "Uni Port Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "Down",
+          "description": "This UNI Port Status is down",
+          "name": "UniPortDown",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+      ],
+      "@type": "TestMeasureDefinition"
+    },
+    {
+      "name": "DHCP/PPP Status",
+      "metricDescription": "DHCP/PPP Status",
+      "metricName": "DHCP/PPP Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "PPP Terminated",
+          "description": "This PPP session is down",
+          "name": "PPP Status",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+
+
+               "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        },
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "No Session",
+          "description": "This DHCP session is down",
+          "name": "DHCPStatus",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+        
+      ],
+      "@type": "TestMeasureDefinition"
+    }    
+  ],
+  "ProductTestSpecRelationship": [
+    {
+      "@type": "ProductTestSpecRelationship",
+      "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+      "relationshipType": "dependency"
+    }
+  ],
+  "relatedProductSpecification": [
+    {
+      "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+      "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+      "name":"FTTH Product Specification",
+      "@type": "RelatedProductSpecification"
+    }
+  ],
+  "@type": "ProductTestSpecification",
+  "@baseType": "ProductTestSpecification"
+}
+Here's an example of a request for patching a product test specification using json-patch-
+query+json. In this example, the capture period amount for the Test Measure Definition is
+updated.
+Request
+
+
+ 
+PATCH /productTestSpecification/c209961b-ad64-49e3-afb9-896a8071ac34
+Content-Type: application/json-patch-query+json
+[
+  {
+    "op": "test",
+    "path": "$.testMeasureDefinition[?(@.name=='Uni Port
+Status')].metricDescription",
+    "value": "OLT - Uni Port Status"
+  },
+  {
+      "op": "replace",
+      "path": "$.testMeasureDefinition[?(@.name=='Uni Port
+Status')].metricDescription",
+      "value": "OLT - Uni Port Status Updated"
+    }
+]
+Response
+200
+{
+    "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+    "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/c209961b-ad64-49e3-afb9-
+896a8071ac34",
+    "id": "c209961b-ad64-49e3-afb9-896a8071ac34",
+    "version": "1.2",
+    "name": "Diagnostic Product FTTH",
+    "lifecycleStatus": "active",
+    "validFor": {
+      "@type": "TimePeriod",
+      "endDateTime": "2024-01-01T00:00:00.00Z",
+      "startDateTime": "2025-01-01T00:00:00.00Z"
+    },
+    "specCharacteristic": [
+      {
+        "@type": "CharacteristicSpecification",
+        "name": "overallStatus",
+        "description": "This provides an overall status for the product based on
+different tests executed",
+        "valueType": "string",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "StringCharacteristicValueSpecification",
+            "valueType": "string",
+            "value":"S1"
+          }
+        ]
+      },
+      {
+
+
+         "@type": "CharacteristicSpecification",
+        "name": "committedRateUp",
+        "description": "This provides the information of the CIR based on the
+product definition",
+        "valueType": "number",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "NumberCharacteristicValueSpecification",
+            "valueType": "number",
+            "value":"1"
+          }
+        ]
+      },
+      {
+        "@type": "CharacteristicSpecification",
+        "name": "committedRateDown",
+        "description": "This provides the information of the CIR Down based on the
+product definition",
+        "valueType": "number",
+        "configurable": false,
+        "minCardinality": 1,
+        "maxCardinality": 1,
+        "isUnique": true,
+        "extensible": false,
+        "characteristicValueSpecification": [
+          {
+            "@type": "NumberCharacteristicValueSpecification",
+            "valueType": "number",
+            "value":"1"
+          }
+        ]
+      }
+    ],
+    "testMeasureDefinition": [
+      {
+        "name": "Uni Port Status",
+        "metricDescription": "OLT - Uni Port Status Updated",
+        "metricName": "Uni Port Status",      
+        "unitOfMeasure": "HeartBeat",
+        "captureFrequency": "once",
+        "captureMethod": "Automatic capture by OLT",
+        "valueType": "string",
+        "thresholdRule": [
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "Down",
+            "description": "This UNI Port Status is down",
+            "name": "UniPortDown",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+
+
+               {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          }
+        ],
+        "@type": "TestMeasureDefinition"
+      },
+      {
+        "name": "DHCP/PPP Status",
+        "metricDescription": "DHCP/PPP Status",
+        "metricName": "DHCP/PPP Status",      
+        "unitOfMeasure": "HeartBeat",
+        "captureFrequency": "once",
+        "captureMethod": "Automatic capture by OLT",
+        "valueType": "string",
+        "thresholdRule": [
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "PPP Terminated",
+            "description": "This PPP session is down",
+            "name": "PPP Status",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+              }
+            ]
+          },
+          {
+            "@type": "MetricDefMeasureThresholdRule",
+            "conformanceTargetExact": "No Session",
+            "description": "This DHCP session is down",
+            "name": "DHCPStatus",
+            "numberOfAllowedCrossing": 0,
+            "thresholdRuleSeverity": "1",
+            "consequence": [
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "raiseTicket",
+                "description": "Raise an incident ticket",
+                "name": "raiseTicket",
+                "repeatAction": false
+              },
+              {
+                "@type": "MetricDefMeasureConsequence",
+                "prescribeAction": "sendWarning",
+                "description": "Send a warning to the NOC",
+                "name": "sendWarning"
+
+
+               }
+            ]
+          }
+          
+        ],
+        "@type": "TestMeasureDefinition"
+      }    
+    ],
+    "ProductTestSpecRelationship": [
+      {
+        "@type": "ProductTestSpecRelationship",
+        "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+        "relationshipType": "dependency"
+      }
+    ],
+    "relatedProductSpecification": [
+      {
+        "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+        "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+        "name":"FTTH Product Specification",
+        "@type": "RelatedProductSpecification"
+      }
+    ],
+    "@type": "ProductTestSpecification",
+    "@baseType": "ProductTestSpecification"
+  }
+Here's an example of a request for patching a product test specification using
+application/json. In this example, the version is updated.
+Request
+PATCH /productTestSpecification/629cd10a-f34d-4dcf-a3bb-0f054338ff45
+Content-Type: application/json
+{
+    "version": "1.1",
+    "@type": "ProductTestSpecification"
+}
+Response
+200
+{
+  "description": "A Product Test Specification is a formal document designed to
+define the parameters and procedures for conducting thorough testing on a specific
+product or service",
+  "href": "https://mycsp.com/tmf-
+api/productTestManagement/v5/productTestSpecification/629cd10a-f34d-4dcf-a3bb-
+0f054338ff45",
+  "id": "629cd10a-f34d-4dcf-a3bb-0f054338ff45",
+  "version": "1.1",
+  "name": "Diagnostic Product FTTH",
+  "lifecycleStatus": "active",
+
+
+   "validFor": {
+    "@type": "TimePeriod",
+    "endDateTime": "2024-01-01T00:00:00.00Z",
+    "startDateTime": "2025-01-01T00:00:00.00Z"
+  },
+  "specCharacteristic": [
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "overallStatus",
+      "description": "This provides an overall status for the product based on
+different tests executed",
+      "valueType": "string",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "StringCharacteristicValueSpecification",
+          "valueType": "string",
+          "value":"V1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateUp",
+      "description": "This provides the information of the CIR based on the product
+definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    },
+    {
+      "@type": "CharacteristicSpecification",
+      "name": "committedRateDown",
+      "description": "This provides the information of the CIR Down based on the
+product definition",
+      "valueType": "number",
+      "configurable": false,
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "isUnique": true,
+      "extensible": false,
+      "characteristicValueSpecification": [
+        {
+          "@type": "NumberCharacteristicValueSpecification",
+          "valueType": "number",
+          "value":"1"
+        }
+      ]
+    }
+
+
+   ],
+  "testMeasureDefinition": [
+    {
+      "name": "Uni Port Status",
+      "metricDescription": "OLT - Uni Port Status",
+      "metricName": "Uni Port Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "Down",
+          "description": "This UNI Port Status is down",
+          "name": "UniPortDown",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+      ],
+      "@type": "TestMeasureDefinition"
+    },
+    {
+      "name": "DHCP/PPP Status",
+      "metricDescription": "DHCP/PPP Status",
+      "metricName": "DHCP/PPP Status",      
+      "unitOfMeasure": "HeartBeat",
+      "captureFrequency": "once",
+      "captureMethod": "Automatic capture by OLT",
+      "valueType": "string",
+      "thresholdRule": [
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "PPP Terminated",
+          "description": "This PPP session is down",
+          "name": "PPP Status",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+
+
+               "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        },
+        {
+          "@type": "MetricDefMeasureThresholdRule",
+          "conformanceTargetExact": "No Session",
+          "description": "This DHCP session is down",
+          "name": "DHCPStatus",
+          "numberOfAllowedCrossing": 0,
+          "thresholdRuleSeverity": "1",
+          "consequence": [
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "raiseTicket",
+              "description": "Raise an incident ticket",
+              "name": "raiseTicket",
+              "repeatAction": false
+            },
+            {
+              "@type": "MetricDefMeasureConsequence",
+              "prescribeAction": "sendWarning",
+              "description": "Send a warning to the NOC",
+              "name": "sendWarning"
+            }
+          ]
+        }
+        
+      ],
+      "@type": "TestMeasureDefinition"
+    }    
+  ],
+  "ProductTestSpecRelationship": [
+    {
+      "@type": "ProductTestSpecRelationship",
+      "id": "927f2d17-91ad-4ec9-8880-7f962b92bc77",
+      "relationshipType": "dependency"
+    }
+  ],
+  "relatedProductSpecification": [
+    {
+      "href": "https://mycsp.com/tmf-
+api/productCatalogManagement/v5/productSpecification/89af318b-8793-4915-b6a3-
+2ffe0959998e",
+      "id": "89af318b-8793-4915-b6a3-2ffe0959998e",
+      "name":"FTTH Product Specification",
+      "@type": "RelatedProductSpecification"
+    }
+  ],
+  "@type": "ProductTestSpecification",
+  "@baseType": "ProductTestSpecification"
+}
+Deletes a ProductTestSpecification
+DELETE /productTestSpecification/{id}
+Description
+
+
+ 
+This operation deletes a ProductTestSpecification entity.
+
+
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+
+
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+
+
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+
+
+ Acknowledgements
+Release History
+Release
+Number
+Date
+Release led by:
+Description
+1
+26-04-2024
+Florin Tene
+Initial version
+Contributors to Document
+Florin Tene
+
+

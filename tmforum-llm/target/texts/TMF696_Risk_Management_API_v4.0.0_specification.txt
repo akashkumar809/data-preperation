@@ -1,0 +1,3203 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Risk Management API User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF696 
+Team Approved Date:  02-Oct-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.0 
+IPR Mode: RAND 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 78 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 78 
+Direct inquiries to the TM Forum office: 
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054 USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7916 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 78 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 7 
+Introduction .............................................................................................................................................................. 8 
+Assessed Entities ......................................................................................................................................................... 8 
+Risk Assessment Categorizations ................................................................................................................................ 8 
+Sample Use Cases ......................................................................................................................................................... 10 
+Assessing Risks of a PartyRole .................................................................................................................................. 10 
+Assessing Risks of a ProductOffering ........................................................................................................................ 10 
+Assessing Risks of a PartyRoleProductOffering ........................................................................................................ 11 
+Assessing Risks of a ShoppingCart ............................................................................................................................ 11 
+Assessing Risks of a ProductOrder ............................................................................................................................ 12 
+Task Mode of Operation ............................................................................................................................................... 13 
+Support of polymorphism and extension patterns ...................................................................................................... 14 
+RESOURCE MODEL ........................................................................................................................................................ 15 
+Managed Entity and Task Resource Models ..................................................................................................... 15 
+Product Offering Risk Assessment resource ......................................................................................................... 15 
+Party Role Risk Assessment resource .................................................................................................................... 20 
+Party Role Product Offering Risk Assessment resource ........................................................................................ 24 
+Shopping Cart Risk Assessment resource .............................................................................................................. 30 
+Product Order Risk Assessment resource ............................................................................................................. 36 
+Notification Resource Models .............................................................................................................................. 41 
+Product Offering Risk Assessment Create Event ................................................................................................... 42 
+Product Offering Risk Assessment Delete Event ................................................................................................... 43 
+Product Offering Risk Assessment Status Change Event....................................................................................... 43 
+Party Role Risk Assessment Create Event ............................................................................................................. 43 
+Party Role Risk Assessment Delete Event ............................................................................................................. 44 
+Party Role Risk Assessment Status Change Event ................................................................................................. 44 
+Party Role Product Offering Risk Assessment Create Event ................................................................................. 45 
+Party Role Product Offering Risk Assessment Delete Event.................................................................................. 45 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 78 
+Party Role Product Offering Risk Assessment Status Change Event ..................................................................... 45 
+Shopping Cart Risk Assessment Create Event ....................................................................................................... 46 
+Shopping Cart Risk Assessment Delete Event ....................................................................................................... 46 
+Shopping Cart Risk Assessment Status Change Event ........................................................................................... 47 
+Product Order Risk Assessment Create Event ....................................................................................................... 47 
+Product Order Risk Assessment Delete Event ....................................................................................................... 47 
+Product Order Risk Assessment Status Change Event .......................................................................................... 48 
+API OPERATIONS ........................................................................................................................................................... 49 
+Operations on Product Offering Risk Assessment .................................................................................................... 49 
+List product offering risk assessments .................................................................................................................. 49 
+Retrieve product offering risk assessment ............................................................................................................ 51 
+Create product offering risk assessment ............................................................................................................... 52 
+Delete product offering risk assessment ............................................................................................................... 54 
+Operations on Party Role Risk Assessment .............................................................................................................. 54 
+List party role risk assessments ............................................................................................................................. 54 
+Retrieve party role risk assessment ...................................................................................................................... 55 
+Create party role risk assessment ......................................................................................................................... 56 
+Delete party role risk assessment ......................................................................................................................... 58 
+Operations on Party Role Product Offering Risk Assessment .................................................................................. 59 
+List party role product offering risk assessments .................................................................................................. 59 
+Retrieve party role product offering risk assessment ........................................................................................... 60 
+Create party role product offering risk assessment .............................................................................................. 61 
+Delete party role product offering risk assessment .............................................................................................. 64 
+Operations on Shopping Cart Risk Assessment ........................................................................................................ 64 
+List shopping cart risk assessments ....................................................................................................................... 64 
+Retrieve shopping cart risk assessment ................................................................................................................ 66 
+Create shopping cart risk assessment ................................................................................................................... 67 
+Delete shopping cart risk assessment ................................................................................................................... 69 
+Operations on Product Order Risk Assessment ........................................................................................................ 69 
+List product order risk assessments ...................................................................................................................... 69 
+Retrieve product order risk assessment ................................................................................................................ 70 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 78 
+Create product order risk assessment .................................................................................................................. 72 
+Delete product order risk assessment .................................................................................................................. 74 
+API NOTIFICATIONS....................................................................................................................................................... 75 
+Register listener ........................................................................................................................................................ 75 
+Publish Event to listener ........................................................................................................................................... 76 
+Acknowledgements ...................................................................................................................................................... 78 
+Document History ..................................................................................................................................................... 78 
+Release History ...................................................................................................................................................... 78 
+Version History ...................................................................................................................................................... 78 
+Acknowledgements .................................................................................................................................................. 78 
+Contributors to Document .................................................................................................................................... 78 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 78 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 78 
+Introduction 
+The Risk Management API allows the retrieval of Risk Assessments during interaction with PartyRoles (individuals 
+or organizations) typically engaged in an Order process from ProviderPartyRole. The Risk Assessment request is 
+usually issued by the ProviderPartyRole (e.g. Service Provider). The resources used to retrieve these assessment are 
+Task resources, as per the Open API guidelines for tasks. 
+Order related interactions of a PartyRole with a Service Provider entity is done via: Customer Service 
+Representative, Call Center, Store, Dealer, Point of Sale, WEB Portal, Applications Portal, USSD Portal, etc. 
+Assessed Entities 
+Order process related Risk Scores are assessed for the following entities: 
+• 
+PartyRole – individual or organization playing (or intending to play) a specific role with the service provider 
+• 
+ProductOffering – a specific offering (not necessarily related with a specific PartyRole) 
+• 
+PartyRoleProductOffering – a specific offering addressed by the PartyRole (e.g. currently browsed/viewed by 
+the PartyRole) 
+• 
+ShoppingCart – the shopping cart assembled by the PartyRole 
+• 
+ProductOrder – the overall order bound for payment by the PartyRole 
+As the Order Process progresses, the ProviderPartyRole may issue Risk Assessment Scores request for each of the 
+above-mentioned entities 
+Following a response to a Risk Assessment request, the ProviderPartyRole may practice (its own) relevant Policies, 
+for example: 
+• 
+getting of risk assessment scores for a PartyRole may be require a mandatory request for risk scores for 
+PartyRoleOrder (of the same PartyRole). 
+• 
+getting of risk assessment scores for a ShoppingCart may result in request for an advanced full payment, rather 
+than offer installment. 
+Risk Assessment Categorizations 
+The following table introduces the types of risks per entities: 
+Scored Entity 
+Risk Type 
+Impact 
+PartyRole 
+IDConfidenceRisk 
+PartyRole might not be genuine (e.g. Identity 
+Theft)  
+FraudRisk 
+PartyRole predicted to practice fraud 
+BadPaymentRisk 
+PartyRole predicted to avoid payments 
+CreditGamingRisk 
+PartyRole predicted to engage in credit 
+gaming 
+ProductOffering 
+FraudRisk 
+ProductOffering predicted to be affected by 
+fraud 
+BadPaymentRisk 
+ProductOffering predicted to be inflicted by 
+payment issues 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 78 
+Scored Entity 
+Risk Type 
+Impact 
+CreditGamingRisk 
+ProductOffering predicted to be inflicted by 
+credit gaming 
+PartyRoleProductOffering IDConfidenceRisk 
+PartyRole might not be genuine (e.g. Identity 
+Theft) 
+FraudRisk 
+PartyRoleProductOffering predicted to be 
+affected by fraud 
+BadPaymentRisk 
+PartyRoleProductOffering predicted to be 
+inflicted by payment issues 
+CreditGamingRisk 
+PartyRoleProductOffering predicted to be 
+inflicted by credit gaming 
+ShoppingCart 
+IDConfidenceRisk 
+PartyRole might not be genuine (e.g. Identity 
+Theft) 
+FraudRisk 
+ShoppingCart predicted to be affected by 
+fraud 
+BadPaymentRisk 
+ShoppingCart predicted to be inflicted by 
+payment issues 
+CreditGamingRisk 
+ShoppingCart predicted to be inflicted by 
+credit gaming 
+ProductOrder 
+IDConfidenceRisk 
+PartyRole might not be genuine (e.g. Identity 
+Theft) 
+PaymentMethodRisk 
+PartyRole might use “questionable” payment 
+credentials (e.g. too many/suspicious 
+purchases with a credit card) 
+FraudRisk 
+ProductOrder predicted to be affected by 
+fraud 
+BadPaymentRisk 
+ProductOrder predicted to be inflicted by 
+payment issues 
+CreditGamingRisk 
+ProductOrder predicted to be inflicted by 
+credit gaming 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 78 
+Sample Use Cases 
+Assessing Risks of a PartyRole 
+Assess Risks related with a PartyRole introduced to an Order process 
+ 
+According to the retrieved PartyRoleRiskAssessment, the Order process may hide specific offerings for that 
+PartyRole. If the IDConfidenceRisk assesses a non-genuine PartyRole (e.g. account take-over or false ID credentials), 
+the Order process may stop or request additional ID credentials.  
+Assessing Risks of a ProductOffering 
+Assess Risks related with a ProductOffering, not necessarily related with a PartyRole 
+ 
+ 
+According to the retrieved ProductOfferingRiskAssessment, the Order process may choose to highlight or hide 
+specific offerings to PartyRoles associated with specific Places.  
+PartyRole 
+PartyRoleRiskAsseeement
+PartyRole
+Order
+Process
+Risk
+Assessment
+•
+Assess PartyRole ID Confidence
+•
+Predict Fraud Risk
+•
+Predict Payment Risk
+•
+Predict Credit Gaming Risk
+•
+Select Policy
+ProductOffering
+ProductOfferingRiskAssessment
+ProductOffering
+Order
+Process
+Risk
+Assessment
+•
+Predict Fraud Risk
+•
+Predict Payment Risk
+•
+Predict Credit Gaming Risk
+•
+Select Policy
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 78 
+Assessing Risks of a PartyRoleProductOffering 
+Assess Risks related with a ProductOffering currently observrd by a specific PartyRole 
+ 
+ 
+According to the retrieved PartyRoleProductOfferingRiskAssessment, the Order process may choose to alter the 
+purchase criteria of that ProductOffering for that specific PartyRole.  
+ 
+Assessing Risks of a ShoppingCart 
+Assess Risks related with a ShoppingCart currently assembled by a specific PartyRole 
+ 
+ 
+PartyRoleProductOffering
+PartyRoleProductOfferingRiskAssessment
+Order
+Process
+Risk
+Assessment
+•
+Assess PartyRole ID Confidence
+•
+Predict Fraud Risk
+•
+Predict Payment Risk
+•
+Predict Credit Gaming Risk
+•
+Select Policy
+PartyRole
+ProductOffering
+ShoppingCart
+ShoppingCartRiskAssessment
+Order
+Process
+Risk
+Assessment
+•
+Assess PartyRole ID Confidence
+•
+Predict Fraud Risk
+•
+Predict Payment Risk
+•
+Predict Credit Gaming Risk
+•
+Select Policy
+PartyRole
+Shopping Cart
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 78 
+According to the retrieved ShoppingCartRiskAssessment, the Order process may choose to alter the payment terms 
+criteria of that ShoppingCart for that specific PartyRole. 
+ 
+Assessing Risks of a ProductOrder 
+Assess Risks related with a ProductOrder currently forwarded for payment 
+ 
+According to the retrieved ProductOrderRiskAssessment, the Order process may choose not to offer payment 
+installment. If PaymentMethodRisk indicates an issue than, the Order process may request other payment 
+credentials. 
+ProductOrder
+ProductOrderRiskAssessment
+Order
+Process
+Risk
+Assessment
+•
+Assess PartyRole ID Confidence
+•
+Assess Payment Confidence
+•
+Predict Fraud Risk
+•
+Predict Payment Risk
+•
+Predict Credit Gaming Risk
+•
+Select Policy
+PartyRole
+ProductOrder
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 78 
+Task Mode of Operation 
+The risk assessment tasks may be executed synchronously or asynchronously, according to the specific 
+implementation. 
+• 
+For an implementation that supports synchronous execution, the POST of the task is expected to return an 
+immediate result. 
+o If the implementation chooses to persist the task (e.g. for accounting purposes), then the id and href 
+should be populated in the POST response, and the implementation must support GET and DELETE. 
+o If the implementation does not persist the task, then the id and href should not be populated in the 
+POST response, and the implementation must not support GET and DELETE. 
+• 
+For an implementation that supports asynchronous execution, the POST of the task is expected to return an 
+interim result, and to raise an event when the execution is complete. The id and href should be populated in 
+the POST response, and the implementation must support GET and DELETE. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 78 
+Support of polymorphism and extension patterns 
+Support of polymorphic collections and types and schema-based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+RiskScore instances some may be instances of an enhanced resource RiskScoreWithConfidence (with a confidence 
+level added for the score) where other could be instances of the basic RiskScore. The @type gives this information. 
+All resources and sub-resources of this API have a @type attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities to explicitly denote the actual entity type of the referred 
+class. Notice that in reference entities the @type, when used, denotes the class type of the reference itself, and not 
+the class type of the referred object. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended, so if @type was RiskScoreWithConfidence then @baseType would be RiskScore. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 78 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Product Offering Risk Assessment resource 
+This is a task resource allowing assessment of the risks associated with a product offering. For example, the risk 
+associated with iPhone X will probably be higher than the risk for a battery. 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 78 
+Field descriptions 
+ProductOfferingRiskAssessment fields 
+status 
+A string. The status of the risk assessment, such as Succeeded, In Progress, Failed, 
+output from the task. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+productOffering 
+A product offering reference (ProductOfferingRef). The product offering for which the 
+assessment is to be carried out, must be supplied as input to the task, with the 
+attribute id populated. 
+characteristic 
+A list of characteristics (Characteristic [*]). Additional characteristics for which the risk 
+might be assessed, optional input to the task. 
+place 
+A related place (RelatedPlace). The place for which the risk is assessed, this is optional 
+input to the task. 
+riskAssessmentResult 
+A risk assessment result (RiskAssessmentResult). The result of the risk assessment, 
+output from the task. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 78 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+RelatedPlace sub-resource 
+A  Place and an associated role as installation address, delivery address, etc.... 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role of the place, such as: [home delivery], [shop retrieval]). 
+RiskAssessmentResult sub-resource 
+This resource reflects the risk assessment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 78 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+overallScore 
+A float. An overall assessment of the risk, composed from the individual scores. 
+score 
+A list of risk scores (RiskScore [*]). Additional characteristics for which the risk might 
+be assessed, optional input to the task. 
+validFor 
+A time period. Period for which this result is considered valid and not stale. 
+RiskScore sub-resource 
+This resource reflects a score for a specific risk. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+riskName 
+A risk type (RiskType). The name of the risk. 
+score 
+A float. The risk score. 
+ProductOfferingRef relationship 
+ProductOffering reference. A product offering represents entities that are orderable from the provider of the 
+catalog, this resource includes pricing information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 78 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOfferingRiskAssessment' resource object 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+    ], 
+    "productOffering": { 
+        "id": "7656", 
+        "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+        "name": "Home Gateway", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 19, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 20, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 7, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 5, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 78 
+Party Role Risk Assessment resource 
+This is a task resource allowing assessment of the risks associated with a party role. 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 78 
+Field descriptions 
+PartyRoleRiskAssessment fields 
+status 
+A string. The status of the risk assessment, such as Succeeded, In Progress, Failed, 
+output from the task. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+partyRole 
+A related party (RelatedParty). The party role for which the assessment is to be 
+carried out, must be supplied as input to the task, with the attribute id populated. 
+characteristic 
+A list of characteristics (Characteristic [*]). Additional characteristics for which the risk 
+might be assessed, optional input to the task. 
+place 
+A related place (RelatedPlace). The place for which the risk is assessed, this is optional 
+input to the task. 
+riskAssessmentResult 
+A risk assessment result (RiskAssessmentResult). The result of the risk assessment, 
+output from the task. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 78 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+RelatedPlace sub-resource 
+A  Place and an associated role as installation adress, delivery address, etc.... 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 78 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role of the place, such as: [home delivery], [shop retrieval]). 
+RiskAssessmentResult sub-resource 
+This resource reflects the risk assessment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+overallScore 
+A float. An overall assessment of the risk, composed from the individual scores. 
+score 
+A list of risk scores (RiskScore [*]). Additional characteristics for which the risk might 
+be assessed, optional input to the task. 
+validFor 
+A time period. Period for which this result is considered valid and not stale. 
+RiskScore sub-resource 
+This resource reflects a score for a specific risk. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+riskName 
+A risk type (RiskType). The name of the risk. 
+score 
+A float. The risk score. 
+Json representation sample 
+We provide below the json representation of an example of a 'PartyRoleRiskAssessment' resource object 
+{ 
+    "status": "Completed", 
+    "partyRole": { 
+        "id": "9866", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 78 
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+        "name": "Sandy Smith", 
+        "@referredType": "Individual" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 65, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 80, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 20, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 14, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+Party Role Product Offering Risk Assessment resource 
+This is a task resource allowing assessment of the risks associated with a party or party role that considers acquiring 
+a specific product offering. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 78 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 78 
+Field descriptions 
+PartyRoleProductOfferingRiskAssessment fields 
+status 
+A string. The status of the risk assessment, such as Succeeded, In Progress, Failed, 
+output from the task. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+partyRole 
+A related party (RelatedParty). The party or party role for which the assessment is to 
+be carried out, must be supplied as input to the task, with the attribute id populated. 
+productOffering 
+A product offering reference (ProductOfferingRef). The product offering for which the 
+assessment is to be carried out, must be supplied as input to the task, with the 
+attribute id populated. 
+characteristic 
+A list of characteristics (Characteristic [*]). Additional characteristics for which the risk 
+might be assessed, optional input to the task. 
+place 
+A related place (RelatedPlace). The place for which the risk is assessed, this is optional 
+input to the task. 
+riskAssessmentResult 
+A risk assessment result (RiskAssessmentResult). The result of the risk assessment, 
+output from the task. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 78 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+RelatedPlace sub-resource 
+A  Place and an associated role as installation address, delivery address, etc.... 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 78 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role of the place, such as: [home delivery], [shop retrieval]). 
+RiskAssessmentResult sub-resource 
+This resource reflects the risk assessment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+overallScore 
+A float. An overall assessment of the risk, composed from the individual scores. 
+score 
+A list of risk scores (RiskScore [*]). Additional characteristics for which the risk might 
+be assessed, optional input to the task. 
+validFor 
+A time period. Period for which this result is considered valid and not stale. 
+RiskScore sub-resource 
+This resource reflects a score for a specific risk. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+riskName 
+A risk type (RiskType). The name of the risk. 
+score 
+A float. The risk score. 
+ProductOfferingRef relationship 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 78 
+ProductOffering reference. A product offering represents entities that are orderable from the provider of the 
+catalog, this resource includes pricing information. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'PartyRoleProductOfferingRiskAssessment' resource 
+object 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+    ], 
+    "partyRole": { 
+        "@type": "RelatedParty", 
+        "id": "9866", 
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+        "name": "Sandy Smith", 
+        "@referredType": "Individual" 
+    }, 
+    "productOffering": { 
+        "id": "7656", 
+        "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+        "name": "Home Gateway", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "@referredType": "GeographicalAddress", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicalAddressManagement/v4/geographicalAddress/234546467567334" 
+    }, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 78 
+    "riskAssessmentResult": { 
+        "overallScore": 21, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 32, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 8, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 16, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+Shopping Cart Risk Assessment resource 
+This is a task resource allowing assessment of the risks associated with a shopping cart - presumably created by a 
+party role and containing one or more product offerings. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 78 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 78 
+Field descriptions 
+ShoppingCartRiskAssessment fields 
+status 
+A string. The status of the risk assessment, such as Succeeded, In Progress, Failed, 
+output from the task. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+shoppingCart 
+A shopping cart reference (ShoppingCartRef). The shopping cart for which the 
+assessment is to be carried out, must be supplied as input to the task, with the 
+attribute id populated. 
+characteristic 
+A list of characteristics (Characteristic [*]). Additional characteristics for which the risk 
+might be assessed, optional input to the task. 
+place 
+A related place (RelatedPlace). The place for which the risk is assessed, this is optional 
+input to the task. 
+riskAssessmentResult 
+A risk assessment result (RiskAssessmentResult). The result of the risk assessment, 
+output from the task. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 78 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+RelatedPlace sub-resource 
+A  Place and an associated role as installation address, delivery address, etc.... 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role of the place, such as: [home delivery], [shop retrieval]). 
+RiskAssessmentResult sub-resource 
+This resource reflects the risk assessment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 78 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+overallScore 
+A float. An overall assessment of the risk, composed from the individual scores. 
+score 
+A list of risk scores (RiskScore [*]). Additional characteristics for which the risk might 
+be assessed, optional input to the task. 
+validFor 
+A time period. Period for which this result is considered valid and not stale. 
+RiskScore sub-resource 
+This resource reflects a score for a specific risk. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+riskName 
+A risk type (RiskType). The name of the risk. 
+score 
+A float. The risk score. 
+ShoppingCartRef relationship 
+ShoppingCart (ShoppingCartRef) . The shopping cart which the recommendation is related with. 
+href 
+A string. Hypertext Reference of the shopping cart. 
+id 
+A string. Unique identifier of shopping cart. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+Json representation sample 
+We provide below the json representation of an example of a 'ShoppingCartRiskAssessment' resource object 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+        { 
+            "name": "ContactPersonName", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 78 
+            "valueType": "string", 
+            "value": "David Alexander" 
+        } 
+    ], 
+    "shoppingCart": { 
+        "id": "1203", 
+        "href": "https://mycsp.com:8080/tmf-api/shoppingCart/v4/shoppingCart/1203", 
+        "@referredType": "ShoppingCart" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 12, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 10, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 13, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 9, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 78 
+Product Order Risk Assessment resource 
+This is a task resource allowing assessment of the risks associated with a product order - presumably submitted by 
+a party role and containing one or more product offerings. 
+Resource model 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 78 
+Field descriptions 
+ProductOrderRiskAssessment fields 
+status 
+A string. The status of the risk assessment, such as Succeeded, In Progress, Failed, 
+output from the task. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+productOrder 
+A product order reference (ProductOrderRef). The product order for which the 
+assessment is to be carried out, must be supplied as input to the task, with the 
+attribute id populated. 
+characteristic 
+A list of characteristics (Characteristic [*]). Additional characteristics for which the risk 
+might be assessed, optional input to the task. 
+place 
+A related place (RelatedPlace). The place for which the risk is assessed, this is optional 
+input to the task. 
+riskAssessmentResult 
+A risk assessment result (RiskAssessmentResult). The result of the risk assessment, 
+output from the task. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 78 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+RelatedPlace sub-resource 
+A  Place and an associated role as installation address, delivery address, etc.... 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role of the place, such as: [home delivery], [shop retrieval]). 
+RiskAssessmentResult sub-resource 
+This resource reflects the risk assessment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 78 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+overallScore 
+A float. An overall assessment of the risk, composed from the individual scores. 
+score 
+A list of risk scores (RiskScore [*]). Additional characteristics for which the risk might 
+be assessed, optional input to the task. 
+validFor 
+A time period. Period for which this result is considered valid and not stale. 
+RiskScore sub-resource 
+This resource reflects a score for a specific risk. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+riskName 
+A risk type (RiskType). The name of the risk. 
+score 
+A float. The risk score. 
+ProductOrderRef relationship 
+ProductOrder (ProductOrder) .The product order which the recommendation is related with. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOrderRiskAssessment' resource object 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 40 of 78 
+        { 
+            "name": "CouponType", 
+            "valueType": "string", 
+            "value": "Discount21" 
+        } 
+    ], 
+    "productOrder": { 
+        "id": "267734", 
+        "href": "https://mycsp.com:8080/tmf-api/productOrder/v4/productOrder/267734", 
+        "@referredType": "ProductOrder" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 16, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 0, 
+                "riskName": "PaymentMethodRisk" 
+            }, 
+            { 
+                "score": 15, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 14, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 7, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 41 of 78 
+Notification Resource Models 
+15 notifications are defined for this API 
+Notifications related to ProductOfferingRiskAssessment: 
+    - ProductOfferingRiskAssessmentCreateEvent 
+    - ProductOfferingRiskAssessmentDeleteEvent 
+    - ProductOfferingRiskAssessmentStatusChangeEvent 
+Notifications related to PartyRoleRiskAssessment: 
+    - PartyRoleRiskAssessmentCreateEvent 
+    - PartyRoleRiskAssessmentDeleteEvent 
+    - PartyRoleRiskAssessmentStatusChangeEvent 
+Notifications related to PartyRoleProductOfferingRiskAssessment: 
+    - PartyRoleProductOfferingRiskAssessmentCreateEvent 
+    - PartyRoleProductOfferingRiskAssessmentDeleteEvent 
+    - PartyRoleProductOfferingRiskAssessmentStatusChangeEvent 
+Notifications related to ShoppingCartRiskAssessment: 
+    - ShoppingCartRiskAssessmentCreateEvent 
+    - ShoppingCartRiskAssessmentDeleteEvent 
+    - ShoppingCartRiskAssessmentStatusChangeEvent 
+Notifications related to ProductOrderRiskAssessment: 
+    - ProductOrderRiskAssessmentCreateEvent 
+    - ProductOrderRiskAssessmentDeleteEvent 
+    - ProductOrderRiskAssessmentStatusChangeEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 42 of 78 
+ 
+Product Offering Risk Assessment Create Event 
+Notification ProductOfferingRiskAssessmentCreateEvent case for resource ProductOfferingRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOfferingRiskAssessmentCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 43 of 78 
+    "eventType":"ProductOfferingRiskAssessmentCreateEvent", 
+     "event": { 
+        "productOfferingRiskAssessment" :  
+            {-- SEE ProductOfferingRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Product Offering Risk Assessment Delete Event 
+Notification ProductOfferingRiskAssessmentDeleteEvent case for resource ProductOfferingRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOfferingRiskAssessmentDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProductOfferingRiskAssessmentDeleteEvent", 
+     "event": { 
+        "productOfferingRiskAssessment" :  
+            {-- SEE ProductOfferingRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Product Offering Risk Assessment Status Change Event 
+Notification ProductOfferingRiskAssessmentStatusChangeEvent case for resource ProductOfferingRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOfferingRiskAssessmentStatusChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProductOfferingRiskAssessmentStatusChangeEvent", 
+     "event": { 
+        "productOfferingRiskAssessment" :  
+            {-- SEE ProductOfferingRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Party Role Risk Assessment Create Event 
+Notification PartyRoleRiskAssessmentCreateEvent case for resource PartyRoleRiskAssessment 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 44 of 78 
+Json representation sample 
+We provide below the json representation of an example of a 'PartyRoleRiskAssessmentCreateEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"PartyRoleRiskAssessmentCreateEvent", 
+     "event": { 
+        "partyRoleRiskAssessment" :  
+            {-- SEE PartyRoleRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Party Role Risk Assessment Delete Event 
+Notification PartyRoleRiskAssessmentDeleteEvent case for resource PartyRoleRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'PartyRoleRiskAssessmentDeleteEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"PartyRoleRiskAssessmentDeleteEvent", 
+     "event": { 
+        "partyRoleRiskAssessment" :  
+            {-- SEE PartyRoleRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Party Role Risk Assessment Status Change Event 
+Notification PartyRoleRiskAssessmentStatusChangeEvent case for resource PartyRoleRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'PartyRoleRiskAssessmentStatusChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"PartyRoleRiskAssessmentStatusChangeEvent", 
+     "event": { 
+        "partyRoleRiskAssessment" :  
+            {-- SEE PartyRoleRiskAssessment RESOURCE SAMPLE --} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 45 of 78 
+    } 
+} 
+ 
+Party Role Product Offering Risk Assessment Create Event 
+Notification PartyRoleProductOfferingRiskAssessmentCreateEvent case for resource 
+PartyRoleProductOfferingRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 
+'PartyRoleProductOfferingRiskAssessmentCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"PartyRoleProductOfferingRiskAssessmentCreateEvent", 
+     "event": { 
+        "partyRoleProductOfferingRiskAssessment" :  
+            {-- SEE PartyRoleProductOfferingRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Party Role Product Offering Risk Assessment Delete Event 
+Notification PartyRoleProductOfferingRiskAssessmentDeleteEvent case for resource 
+PartyRoleProductOfferingRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 
+'PartyRoleProductOfferingRiskAssessmentDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"PartyRoleProductOfferingRiskAssessmentDeleteEvent", 
+     "event": { 
+        "partyRoleProductOfferingRiskAssessment" :  
+            {-- SEE PartyRoleProductOfferingRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Party Role Product Offering Risk Assessment Status Change Event 
+Notification PartyRoleProductOfferingRiskAssessmentStatusChangeEvent case for resource 
+PartyRoleProductOfferingRiskAssessment 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 46 of 78 
+Json representation sample 
+We provide below the json representation of an example of a 
+'PartyRoleProductOfferingRiskAssessmentStatusChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"PartyRoleProductOfferingRiskAssessmentStatusChangeEvent", 
+     "event": { 
+        "partyRoleProductOfferingRiskAssessment" :  
+            {-- SEE PartyRoleProductOfferingRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Shopping Cart Risk Assessment Create Event 
+Notification ShoppingCartRiskAssessmentCreateEvent case for resource ShoppingCartRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ShoppingCartRiskAssessmentCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ShoppingCartRiskAssessmentCreateEvent", 
+     "event": { 
+        "shoppingCartRiskAssessment" :  
+            {-- SEE ShoppingCartRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Shopping Cart Risk Assessment Delete Event 
+Notification ShoppingCartRiskAssessmentDeleteEvent case for resource ShoppingCartRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ShoppingCartRiskAssessmentDeleteEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ShoppingCartRiskAssessmentDeleteEvent", 
+     "event": { 
+        "shoppingCartRiskAssessment" :  
+            {-- SEE ShoppingCartRiskAssessment RESOURCE SAMPLE --} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 47 of 78 
+    } 
+} 
+ 
+Shopping Cart Risk Assessment Status Change Event 
+Notification ShoppingCartRiskAssessmentStatusChangeEvent case for resource ShoppingCartRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ShoppingCartRiskAssessmentStatusChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ShoppingCartRiskAssessmentStatusChangeEvent", 
+     "event": { 
+        "shoppingCartRiskAssessment" :  
+            {-- SEE ShoppingCartRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Product Order Risk Assessment Create Event 
+Notification ProductOrderRiskAssessmentCreateEvent case for resource ProductOrderRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOrderRiskAssessmentCreateEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProductOrderRiskAssessmentCreateEvent", 
+     "event": { 
+        "productOrderRiskAssessment" :  
+            {-- SEE ProductOrderRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Product Order Risk Assessment Delete Event 
+Notification ProductOrderRiskAssessmentDeleteEvent case for resource ProductOrderRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOrderRiskAssessmentDeleteEvent' 
+notification event object 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 48 of 78 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProductOrderRiskAssessmentDeleteEvent", 
+     "event": { 
+        "productOrderRiskAssessment" :  
+            {-- SEE ProductOrderRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Product Order Risk Assessment Status Change Event 
+Notification ProductOrderRiskAssessmentStatusChangeEvent case for resource ProductOrderRiskAssessment 
+Json representation sample 
+We provide below the json representation of an example of a 'ProductOrderRiskAssessmentStatusChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ProductOrderRiskAssessmentStatusChangeEvent", 
+     "event": { 
+        "productOrderRiskAssessment" :  
+            {-- SEE ProductOrderRiskAssessment RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 49 of 78 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve 
+a representation of a 
+resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create 
+a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be 
+used to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Product Offering Risk Assessment 
+List product offering risk assessments 
+  GET /productOfferingRiskAssessment?fields=...&{filtering} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 50 of 78 
+Description 
+This operation list product offering risk assessment entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving multiple tasks for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/productOfferingRiskAssessment 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "777666345666", 
+        "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/productOfferingRiskAssessment/777666345666", 
+        "status": "InProgress", 
+        "characteristic": [ 
+            { 
+                "name": "Bandwidth", 
+                "valueType": "string", 
+                "value": "500MBps" 
+            } 
+        ], 
+        "productOffering": { 
+            "id": "7656", 
+            "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+            "name": "Home Gateway", 
+            "@referredType": "ProductOffering" 
+        }, 
+        "place": { 
+            "@type": "RelatedPlace", 
+            "role": "home address", 
+            "id": "234546467567334", 
+            "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+            "@referredType": "GeographicAddress" 
+        } 
+    } 
+] 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 51 of 78 
+Retrieve product offering risk assessment 
+  GET 
+/productOfferingRiskAssessment/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a product offering risk assessment entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific task for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/productOfferingRiskAssessment/777666345666 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "777666345666", 
+    "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/productOfferingRiskAssessment/777666345666", 
+    "status": "InProgress", 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+    ], 
+    "productOffering": { 
+        "id": "7656", 
+        "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+        "name": "Home Gateway", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 52 of 78 
+    } 
+} 
+ 
+Create product offering risk assessment 
+  POST /productOfferingRiskAssessment 
+Description 
+This operation creates a product offering risk assessment entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ProductOfferingRiskAssessment, including any possible rule conditions and applicable default values. Notice that it 
+is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+productOffering 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+status 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+characteristic 
+ 
+place 
+ 
+riskAssessmentResult 
+ 
+ 
+Usage Samples 
+Here's an example of a request for executing a task for party role risk assessment. In this example, we illustrate a 
+synchronous execution with no persistence, so there is no id or href in the response. 
+ 
+Request 
+ 
+POST /tmf-api/riskManagement/v4/productOfferingRiskAssessment 
+Content-Type: application/json 
+ 
+{ 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 53 of 78 
+    ], 
+    "productOffering": { 
+        "id": "7656", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "id": "234546467567334", 
+        "@referredType": "GeographicAddress" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+    ], 
+    "productOffering": { 
+        "id": "7656", 
+        "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+        "name": "Home Gateway", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 19, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 20, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 7, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 54 of 78 
+            { 
+                "score": 5, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+Delete product offering risk assessment 
+  DELETE /productOfferingRiskAssessment/{id} 
+Description 
+This operation deletes a product offering risk assessment entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a task. 
+ 
+Request 
+ 
+DELETE /tmf-api/riskManagement/v4/productOfferingRiskAssessment/777666345666 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Party Role Risk Assessment 
+List party role risk assessments 
+  GET /partyRoleRiskAssessment?fields=...&{filtering} 
+Description 
+This operation list party role risk assessment entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 55 of 78 
+Usage Samples 
+Here's an example of a request for retrieving multiple tasks for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/partyRoleRiskAssessment?status=InProcess 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "777666444555", 
+        "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/partyRoleRiskAssessment/777666444555", 
+        "status": "InProgress", 
+        "partyRole": { 
+            "id": "9866", 
+            "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+            "name": "Sandy Smith", 
+            "@referredType": "Individual" 
+        }, 
+        "place": { 
+            "@type": "RelatedPlace", 
+            "role": "home address", 
+            "id": "234546467567334", 
+            "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+            "@referredType": "GeographicAddress" 
+        } 
+    } 
+] 
+ 
+Retrieve party role risk assessment 
+  GET /partyRoleRiskAssessment/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a party role risk assessment entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 56 of 78 
+Usage Samples 
+Here's an example of a request for retrieving a specific task for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/partyRoleRiskAssessment/777666444555 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "777666444555", 
+    "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/partyRoleRiskAssessment/777666444555", 
+    "status": "InProgress", 
+    "partyRole": { 
+        "id": "9866", 
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+        "name": "Sandy Smith", 
+        "@referredType": "Individual" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    } 
+} 
+ 
+Create party role risk assessment 
+  POST /partyRoleRiskAssessment 
+Description 
+This operation creates a party role risk assessment entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+PartyRoleRiskAssessment, including any possible rule conditions and applicable default values. Notice that it is up 
+to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+partyRole 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 57 of 78 
+ 
+Non Mandatory Attributes 
+Rule 
+status 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+characteristic 
+ 
+place 
+ 
+riskAssessmentResult 
+ 
+ 
+Usage Samples 
+Here's an example of a request for executing a task for party role risk assessment. In this example, we illustrate a 
+synchronous execution with no persistence, so there is no id or href in the response. 
+ 
+Request 
+ 
+POST /tmf-api/riskManagement/v4/partyRoleRiskAssessment 
+Content-Type: application/json 
+ 
+{ 
+    "partyRole": { 
+        "id": "9866", 
+        "@referredType": "Individual" 
+    }, 
+    "place": { 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "@referredType": "GeographicAddress" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "status": "Completed", 
+    "partyRole": { 
+        "id": "9866", 
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+        "name": "Sandy Smith", 
+        "@referredType": "Individual" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 58 of 78 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 65, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 80, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 20, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 14, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+Delete party role risk assessment 
+  DELETE /partyRoleRiskAssessment/{id} 
+Description 
+This operation deletes a party role risk assessment entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a task. 
+ 
+Request 
+ 
+DELETE /tmf-api/riskManagement/v4/partyRoleRiskAssessment/777666444555 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 59 of 78 
+Response 
+ 
+204 
+ 
+ 
+Operations on Party Role Product Offering Risk Assessment 
+List party role product offering risk assessments 
+  GET 
+/partyRoleProductOfferingRiskAssessment?fields=...&{filtering
+} 
+Description 
+This operation list party role product offering risk assessment entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving multiple tasks for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/partyRoleProductOfferingRiskAssessment 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "777666121888", 
+        "href": "https://mycsp.com:8080/tmf-
+api/riskManagement/v4/partyRoleProductOfferingRiskAssessment/777666121888", 
+        "status": "InProgress", 
+        "characteristic": [ 
+            { 
+                "name": "Bandwidth", 
+                "valueType": "string", 
+                "value": "500MBps" 
+            } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 60 of 78 
+        ], 
+        "partyRole": { 
+            "@type": "RelatedParty", 
+            "id": "9866", 
+            "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+            "name": "Sandy Smith", 
+            "@referredType": "Individual" 
+        }, 
+        "productOffering": { 
+            "id": "7656", 
+            "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+            "name": "Home Gateway", 
+            "@referredType": "ProductOffering" 
+        }, 
+        "place": { 
+            "@type": "RelatedPlace", 
+            "@referredType": "GeographicalAddress", 
+            "role": "home address", 
+            "id": "234546467567334", 
+            "href": "https://mycsp.com:8080/tmf-
+api/geographicalAddressManagement/v4/geographicalAddress/234546467567334" 
+        } 
+    } 
+] 
+ 
+Retrieve party role product offering risk assessment 
+  GET 
+/partyRoleProductOfferingRiskAssessment/{id}?fields=...&{filt
+ering} 
+Description 
+This operation retrieves a party role product offering risk assessment entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific task for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/partyRoleProductOfferingRiskAssessment/777666121888 
+Accept: application/json 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 61 of 78 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "777666121888", 
+    "href": "https://mycsp.com:8080/tmf-
+api/riskManagement/v4/partyRoleProductOfferingRiskAssessment/777666121888", 
+    "status": "InProgress", 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+    ], 
+    "partyRole": { 
+        "@type": "RelatedParty", 
+        "id": "9866", 
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+        "name": "Sandy Smith", 
+        "@referredType": "Individual" 
+    }, 
+    "productOffering": { 
+        "id": "7656", 
+        "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+        "name": "Home Gateway", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "@referredType": "GeographicalAddress", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicalAddressManagement/v4/geographicalAddress/234546467567334" 
+    } 
+} 
+ 
+Create party role product offering risk assessment 
+  POST /partyRoleProductOfferingRiskAssessment 
+Description 
+This operation creates a party role product offering risk assessment entity. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 62 of 78 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+PartyRoleProductOfferingRiskAssessment, including any possible rule conditions and applicable default values. 
+Notice that it is up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+partyRole 
+ 
+productOffering 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+status 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+characteristic 
+ 
+place 
+ 
+riskAssessmentResult 
+ 
+ 
+Usage Samples 
+Here's an example of a request for executing a task for party role risk assessment. In this example, we illustrate a 
+synchronous execution with no persistence, so there is no id or href in the response. 
+ 
+Request 
+ 
+POST /tmf-api/riskManagement/v4/partyRoleProductOfferingRiskAssessment 
+Content-Type: application/json 
+ 
+{ 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+    ], 
+    "partyRole": { 
+        "id": "9866", 
+        "@referredType": "Individual" 
+    }, 
+    "productOffering": { 
+        "id": "7656", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "@referredType": "GeographicalAddress", 
+        "role": "home address", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 63 of 78 
+        "id": "234546467567334" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+        { 
+            "name": "Bandwidth", 
+            "valueType": "string", 
+            "value": "500MBps" 
+        } 
+    ], 
+    "partyRole": { 
+        "@type": "RelatedParty", 
+        "id": "9866", 
+        "href": "https://mycsp.com:8080/tmf-api/partyManagement/v1/individual/9866", 
+        "name": "Sandy Smith", 
+        "@referredType": "Individual" 
+    }, 
+    "productOffering": { 
+        "id": "7656", 
+        "href": "https://mycsp.com:8080/tmf-api/productCatalogManagement/v4/productOffering/7656", 
+        "name": "Home Gateway", 
+        "@referredType": "ProductOffering" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "@referredType": "GeographicalAddress", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-
+api/geographicalAddressManagement/v4/geographicalAddress/234546467567334" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 21, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 32, 
+                "riskName": "FraudRisk" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 64 of 78 
+            }, 
+            { 
+                "score": 8, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 16, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+Delete party role product offering risk assessment 
+  DELETE /partyRoleProductOfferingRiskAssessment/{id} 
+Description 
+This operation deletes a party role product offering risk assessment entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a task. 
+ 
+Request 
+ 
+DELETE /tmf-api/riskManagement/v4/partyRoleProductOfferingRiskAssessment/777666121888 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Shopping Cart Risk Assessment 
+List shopping cart risk assessments 
+  GET /shoppingCartRiskAssessment?fields=...&{filtering} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 65 of 78 
+Description 
+This operation list shopping cart risk assessment entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving multiple tasks for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/shoppingCartRiskAssessment?status=InProcess 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "777666345777", 
+        "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/shoppingCartRiskAssessment/777666345777", 
+        "status": "InProgress", 
+        "characteristic": [ 
+            { 
+                "name": "ContactPersonName", 
+                "valueType": "string", 
+                "value": "David Alexander" 
+            } 
+        ], 
+        "shoppingCart": { 
+            "id": "1203", 
+            "href": "https://mycsp.com:8080/tmf-api/shoppingCart/v4/shoppingCart/1203", 
+            "@referredType": "ShoppingCart" 
+        }, 
+        "place": { 
+            "@type": "RelatedPlace", 
+            "role": "home address", 
+            "id": "234546467567334", 
+            "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+            "@referredType": "GeographicAddress" 
+        } 
+    } 
+] 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 66 of 78 
+Retrieve shopping cart risk assessment 
+  GET /shoppingCartRiskAssessment/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a shopping cart risk assessment entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific task for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/shoppingCartRiskAssessment/777666123777 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "777666345777", 
+    "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/shoppingCartRiskAssessment/777666345777", 
+    "status": "InProgress", 
+    "characteristic": [ 
+        { 
+            "name": "ContactPersonName", 
+            "valueType": "string", 
+            "value": "David Alexander" 
+        } 
+    ], 
+    "shoppingCart": { 
+        "id": "1203", 
+        "href": "https://mycsp.com:8080/tmf-api/shoppingCart/v4/shoppingCart/1203", 
+        "@referredType": "ShoppingCart" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    } 
+} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 67 of 78 
+ 
+Create shopping cart risk assessment 
+  POST /shoppingCartRiskAssessment 
+Description 
+This operation creates a shopping cart risk assessment entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ShoppingCartRiskAssessment, including any possible rule conditions and applicable default values. Notice that it is 
+up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+shoppingCart 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+status 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+characteristic 
+ 
+place 
+ 
+riskAssessmentResult 
+ 
+ 
+Usage Samples 
+Here's an example of a request for executing a task for party role risk assessment. In this example, we illustrate a 
+synchronous execution with no persistence, so there is no id or href in the response. 
+ 
+Request 
+ 
+POST /tmf-api/riskManagement/v4/shoppingCartRiskAssessment 
+Content-Type: application/json 
+ 
+{ 
+    "characteristic": [ 
+        { 
+            "name": "ContactPersonName", 
+            "valueType": "string", 
+            "value": "David Alexander" 
+        } 
+    ], 
+    "shoppingCart": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 68 of 78 
+        "id": "1203", 
+        "@referredType": "ShoppingCart" 
+    }, 
+    "place": { 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "@referredType": "GeographicAddress" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+        { 
+            "name": "ContactPersonName", 
+            "valueType": "string", 
+            "value": "David Alexander" 
+        } 
+    ], 
+    "shoppingCart": { 
+        "id": "1203", 
+        "href": "https://mycsp.com:8080/tmf-api/shoppingCart/v4/shoppingCart/1203", 
+        "@referredType": "ShoppingCart" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 12, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 10, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+                "score": 13, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 69 of 78 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 9, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+Delete shopping cart risk assessment 
+  DELETE /shoppingCartRiskAssessment/{id} 
+Description 
+This operation deletes a shopping cart risk assessment entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a task. 
+ 
+Request 
+ 
+DELETE /tmf-api/riskManagement/v4/shoppingCartRiskAssessment/777666123777 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Product Order Risk Assessment 
+List product order risk assessments 
+  GET /productOrderRiskAssessment?fields=...&{filtering} 
+Description 
+This operation list product order risk assessment entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 70 of 78 
+Usage Samples 
+Here's an example of a request for retrieving multiple tasks for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/productOrderRiskAssessment 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "777666121999", 
+        "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/productOrderRiskAssessment/777666121999", 
+        "status": "InProgress", 
+        "characteristic": [ 
+            { 
+                "name": "CouponType", 
+                "valueType": "string", 
+                "value": "Discount21" 
+            } 
+        ], 
+        "productOrder": { 
+            "id": "267734", 
+            "href": "https://mycsp.com:8080/tmf-api/productOrder/v4/productOrder/267734", 
+            "@referredType": "ProductOrder" 
+        }, 
+        "place": { 
+            "@type": "RelatedPlace", 
+            "role": "home address", 
+            "id": "234546467567334", 
+            "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+            "@referredType": "GeographicAddress" 
+        } 
+    } 
+] 
+ 
+Retrieve product order risk assessment 
+  GET /productOrderRiskAssessment/{id}?fields=...&{filtering} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 71 of 78 
+Description 
+This operation retrieves a product order risk assessment entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a specific task for party role risk assessment. 
+ 
+Request 
+ 
+GET /tmf-api/riskManagement/v4/productOrderRiskAssessment/777666121999 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "777666121999", 
+    "href": "https://mycsp.com:8080/tmf-api/riskManagement/v4/productOrderRiskAssessment/777666121999", 
+    "status": "InProgress", 
+    "characteristic": [ 
+        { 
+            "name": "CouponType", 
+            "valueType": "string", 
+            "value": "Discount21" 
+        } 
+    ], 
+    "productOrder": { 
+        "id": "267734", 
+        "href": "https://mycsp.com:8080/tmf-api/productOrder/v4/productOrder/267734", 
+        "@referredType": "ProductOrder" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    } 
+} 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 72 of 78 
+Create product order risk assessment 
+  POST /productOrderRiskAssessment 
+Description 
+This operation creates a product order risk assessment entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+ProductOrderRiskAssessment, including any possible rule conditions and applicable default values. Notice that it is 
+up to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+productOrder 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+status 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+characteristic 
+ 
+place 
+ 
+riskAssessmentResult 
+ 
+ 
+Usage Samples 
+Here's an example of a request for executing a task for party role risk assessment. In this example, we illustrate a 
+synchronous execution with no persistence, so there is no id or href in the response. 
+ 
+Request 
+ 
+POST /tmf-api/riskManagement/v4/productOrderRiskAssessment 
+Content-Type: application/json 
+ 
+{ 
+    "characteristic": [ 
+        { 
+            "name": "CouponType", 
+            "valueType": "string", 
+            "value": "Discount21" 
+        } 
+    ], 
+    "productOrder": { 
+        "id": "267734", 
+        "@referredType": "ProductOrder" 
+    }, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 73 of 78 
+    "place": { 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "@referredType": "GeographicAddress" 
+    } 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "status": "Completed", 
+    "characteristic": [ 
+        { 
+            "name": "CouponType", 
+            "valueType": "string", 
+            "value": "Discount21" 
+        } 
+    ], 
+    "productOrder": { 
+        "id": "267734", 
+        "href": "https://mycsp.com:8080/tmf-api/productOrder/v4/productOrder/267734", 
+        "@referredType": "ProductOrder" 
+    }, 
+    "place": { 
+        "@type": "RelatedPlace", 
+        "role": "home address", 
+        "id": "234546467567334", 
+        "href": "https://mycsp.com:8080/tmf-api/geographicAddress/v4/geographicAddress/234546467567334", 
+        "@referredType": "GeographicAddress" 
+    }, 
+    "riskAssessmentResult": { 
+        "overallScore": 16, 
+        "validFor": { 
+            "startDateTime": "2017-08-23T00:00:22.920Z", 
+            "endDateTime": "2018-03-25T00:00:22.920Z" 
+        }, 
+        "score": [ 
+            { 
+                "score": 0, 
+                "riskName": "IDConfidenceRisk" 
+            }, 
+            { 
+                "score": 0, 
+                "riskName": "PaymentMethodRisk" 
+            }, 
+            { 
+                "score": 15, 
+                "riskName": "FraudRisk" 
+            }, 
+            { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 74 of 78 
+                "score": 14, 
+                "riskName": "BadPaymentRisk" 
+            }, 
+            { 
+                "score": 7, 
+                "riskName": "CreditGamingRisk" 
+            } 
+        ] 
+    } 
+} 
+ 
+Delete product order risk assessment 
+  DELETE /productOrderRiskAssessment/{id} 
+Description 
+This operation deletes a product order risk assessment entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a task. 
+ 
+Request 
+ 
+DELETE /tmf-api/riskManagement/v4/productOrderRiskAssessment/777666121999 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 75 of 78 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST 
+notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST 
+Guidelines reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 76 of 78 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the 
+callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 77 of 78 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design 
+Guidelines. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 78 of 78 
+Acknowledgements 
+Document History 
+Release History 
+Release Status 
+Date  
+Release led by: 
+Description  
+Release 0.1 
+24-Sep-2019 
+Moshe Zolotov 
+Amdocs 
+Moshe.Zolotov@amdocs.com 
+Initial work-in-progress 
+iteration of draft.  
+Release 1.0 
+25-Mar-2020 
+Jonathan Goldberg, Amdocs 
+Jonathan.Goldberg@Amdocs.c
+om 
+Alignment with design 
+guidelines, correcting examples 
+Pre-production 
+02-Oct-2020 
+Jonathan Goldberg, Amdocs 
+Jonathan.Goldberg@Amdocs.c
+om 
+2020 Sprint 5 
+Production 
+24-Nov-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Version History 
+Version Number 
+Date  
+Release led by: 
+Description  
+4.0.0 
+02-Oct-2020 
+Alan Pope 
+Final edits prior to publication 
+ 
+Acknowledgements 
+Contributors to Document 
+Moshe Zolotov 
+Amdocs 
+Gadi Solotorevsky 
+Amdocs 
+Jonathan Goldberg 
+Amdocs 
+ 
+
+

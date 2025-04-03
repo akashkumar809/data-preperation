@@ -1,0 +1,1560 @@
+TM Forum Specification 
+Revenue Sharing Algorithm 
+Management
+Maturity Level: General availability
+Team Approved Date: 29-09-2023
+Approval Status: Team Approved
+IPR Mode: RAND
+Release Status: Production
+Version 5.0.0
+TMF736
+
+
+ NOTICE
+Copyright © TM Forum 2023. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+
+
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  1
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Support of polymorphism and extension patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+RESOURCE MODEL . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+PartyRevSharingAlgorithm resource. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+Party Rev Sharing Algorithm Attribute Value Change Event . . . . . . . . . . . . . . . . . . . . . .  9
+Party Rev Sharing Algorithm State Change Event . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+Party Rev Sharing Algorithm Create Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  12
+Party Rev Sharing Algorithm Delete Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  14
+API OPERATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  16
+Operations on PartyRevSharingAlgorithm . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  16
+Retrieves a PartyRevSharingAlgorithm by ID . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  16
+List or find PartyRevSharingAlgorithm objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  18
+Creates a PartyRevSharingAlgorithm . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+Updates partially a PartyRevSharingAlgorithm . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  22
+Deletes a PartyRevSharingAlgorithm . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  29
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  30
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  30
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  31
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  31
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+Release History. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+
+
+ Introduction
+The following document is the user guide of the REST API for revenue sharing algorithms
+management. It includes the model definition as well as all available operations.
+
+
+ Sample Use Cases
+Reader will find example of use cases using Partner Revenue Sharing Algorithms API in
+“Zero-Touch Partnering Use-Cases” document.
+
+
+ Support of polymorphism and extension
+patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below. Polymorphism in
+collections occurs when entities inherit from base entities, for instance a BillingAccount and
+SettlementAccount inheriting properties from the abstract Account entity.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines, Part 2 (TMF630).
+The @type attribute provides a way to represent the actual class type of an entity. For
+example, within a list of Account instances some may be instances of BillingAccount where
+other could be instances of SettlementAccount. The @type gives this information. All
+resources and sub-resources of this API have a @type attributes that can be provided when
+this is useful.
+The @referredType can be used within reference entities (like for instance an AccountRef
+object) to explicitly denote the actual entity type of the referred class. Notice that in reference
+entities the @type, when used, denotes the class type of the reference itself, such as
+BillingAccountRef or SettlementAccountRef, and not the class type of the referred object.
+However since reference classes are rarely sub-classed, @type is generally not useful in
+reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+
+
+ RESOURCE MODEL
+Managed Entity and Task Resource Models
+PartyRevSharingAlgorithm resource
+The PartyRevSharingAlgorithm resource is policy type of algorithm to calculate revenue
+share.
+Resource model
+Figure 1 - PartyRevSharingAlgorithm
+Field descriptions
+PartyRevSharingAlgorithm fields
+actionVariable
+A PartyRevSharingPolicyActionVariable. The policy action
+variables of the policy to calculate revenue share.
+conditionVariable
+A PartyRevSharingPolicyConditionVariable. The policy condition
+variables of the policy to calculate revenue share.
+description
+A String. The description of party revenue sharing algorithm.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. The name of party revenue sharing algorithm.
+
+
+ 
+policy
+A PolicyRef. The policy type algorithm to calculate revenue
+share.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRevSharingPolicyActionVariable sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+policyAction
+A PolicyActionRef. Reference to PolicyAction object.
+policyActionVariable
+A PolicyVariableRef. Reference to PolicyVariable object.
+value
+A String. The value of variable.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRevSharingPolicyConditionVariable sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+policyCondition
+A PolicyConditionRef. Reference to managed PolicyCondition
+object.
+policyConditionVariable
+A PolicyVariableRef. Reference to PolicyVariable object.
+value
+A String. The value of variable.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PolicyActionRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+
+
+ 
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PolicyConditionRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PolicyEntityRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PolicyRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+version
+A String.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+
+
+ 
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PolicyVariableRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'PartyRevSharingAlgorithm'
+resource object.
+{
+  "actionVariable": [{
+    "policyAction": {
+      "@referredType": "PolicyAction",
+      "@type": "PolicyActionRef",
+      "name": "The revenue share percentage of sold price is 5%",
+      "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+      "id": "5021"
+    },
+    "@type": "PartyRevSharingPolicyActionVariable",
+    "id": "5011",
+    "value": "5%",
+    "policyActionVariable": {
+      "@referredType": "PolicyVariable",
+      "@type": "PolicyVariableRef",
+      "name": "The revenue share percentage of sold price",
+      "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+      "id": "5041"
+    }
+  }],
+  "conditionVariable": [{
+    "policyConditionVariable": {
+      "@referredType": "PolicyVariable",
+      "@type": "PolicyVariableRef",
+      "name": "sold price",
+      "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+      "id": "5040"
+
+
+     },
+    "@type": "PartyRevSharingPolicyConditionVariable",
+    "policyCondition": {
+      "@referredType": "PolicyCondition",
+      "@type": "PolicyConditionRef",
+      "name": "The sold price of single handset more than 300$",
+      "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+      "id": "5020"
+    },
+    "id": "5010",
+    "value": "300"
+  }],
+  "@type": "PartyRevSharingAlgorithm",
+  "name": "distribute charge revenue share calculate policy for Mobile handset 2023
+distribution price",
+  "description": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+  "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+  "id": "4840",
+  "policy": [{
+    "@referredType": "PolicySet",
+    "@type": "PolicyRef",
+    "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+    "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+    "id": "5840",
+    "version": "1.0"
+  }]
+}
+Notification Resource Models
+4 notifications are defined for this API.
+Notifications related to PartyRevSharingAlgorithm:
+• Party Rev Sharing Algorithm Attribute Value Change Event
+• Party Rev Sharing Algorithm State Change Event
+• Party Rev Sharing Algorithm Create Event
+• Party Rev Sharing Algorithm Delete Event
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+
+
+ 
+Figure 2 Notification Pattern
+Party Rev Sharing Algorithm Attribute Value Change Event
+Message example for PartyRevSharingAlgorithmAttributeValueChange event
+Content-Type: application/json
+{
+    "correlationId": "96003dd3-e325",
+    "description": "PartyRevSharingAlgorithmAttributeValueEvent illustration",
+    "domain": "BusinessPartner",
+    "eventId": "4110-9b59-509a64cf85a8",
+    "eventTime": "2022-08-25T12:18:12.171Z",
+    "eventType": "PartyRevSharingAlgorithmAttributeValueEvent",
+    "priority": "1",
+    "timeOcurred": "2022-08-25T12:18:06.252Z",
+    "title": "PartyRevSharingAlgorithmAttributeValueEvent",
+    "event": {
+        "partyRevSharingAlgorithm":{
+            "@type": "PartyRevSharingAlgorithm",
+            "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+            "id": "4840",
+            "name": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+            "description": "distribute charge revenue share calculate policy for
+
+
+ Mobile handset 2023 distribution price",
+            "policy": [
+                {
+                    "@type": "PolicyRef",
+                    "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/Policy/5840",
+                    "id": "5840",
+                    "name": "distribute charge revenue share calculate policy for
+Mobile handset 2023 distribution price",
+                    "@referredType": "PolicySet",
+                    "version": "1.0"
+                }
+            ],
+            "conditionVariable": [
+                {
+                    "@type": "PartyRevSharingPolicyConditionVariable",
+                    "id": "5010",
+                    "value": "300",
+                    "policyCondition": {
+                        "@type": "PolicyConditionRef",
+                        "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+                        "id": "5020",
+                        "name": "The sold price of single handset more than 300$",
+                        "@referredType": "PolicyCondition"
+                    },
+                    "policyConditionVariable": {
+                        "@type": "PolicyVariableRef",
+                        "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+                        "id": "5040",
+                        "name": "sold price",
+                        "@referredType": "PolicyVariable"
+                    }
+                }
+            ],
+            "actionVariable": [
+                {
+                    "@type": "PartyRevSharingPolicyActionVariable",
+                    "id": "5011",
+                    "value": "5%",
+                    "policyAction": {
+                        "@type": "PolicyActionRef",
+                        "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+                        "id": "5021",
+                        "name": "The revenue share percentage of sold price is 5%",
+                        "@referredType": "PolicyAction"
+                    },
+                    "policyActionVariable": {
+                        "@type": "PolicyVariableRef",
+                        "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+                        "id": "5041",
+                        "name": "The revenue share percentage of sold price",
+                        "@referredType": "PolicyVariable"
+                    }
+                }
+            ]
+        }
+    },
+    "reportingSystem": {
+      "id": "759",
+
+
+       "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+    },
+    "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "PartyRevSharingAlgorithmAttributeValueEvent"
+  }
+Party Rev Sharing Algorithm State Change Event
+Message example for PartyRevSharingAlgorithmStateChange event
+Content-Type: application/json
+{
+    "correlationId": "97003dd3-e325",
+    "description": "PartyRevSharingAlgorithmStateChangeEvent illustration",
+    "domain": "BusinessPartner",
+    "eventId": "4210-9b59-509a64cf85a8",
+    "eventTime": "2022-08-25T12:18:12.171Z",
+    "eventType": "PartyRevSharingAlgorithmStateChangeEvent",
+    "priority": "1",
+    "timeOcurred": "2022-08-25T12:18:06.252Z",
+    "title": "PartyRevSharingAlgorithmStateChangeEvent",
+    "event": {
+        "partyRevSharingAlgorithm":{
+            "@type": "PartyRevSharingAlgorithm",
+            "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+            "id": "4840",
+            "name": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+            "description": "distribute charge revenue share calculate policy for
+Mobile handset 2023 distribution price",
+            "policy": [
+                {
+                    "@type": "PolicyRef",
+                    "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/Policy/5840",
+                    "id": "5840",
+                    "name": "distribute charge revenue share calculate policy for
+Mobile handset 2023 distribution price",
+                    "@referredType": "PolicySet",
+                    "version": "1.0"
+                }
+            ],
+            "conditionVariable": [
+                {
+                    "@type": "PartyRevSharingPolicyConditionVariable",
+                    "id": "5010",
+                    "value": "300",
+                    "policyCondition": {
+                        "@type": "PolicyConditionRef",
+                        "href": "https://mycsp.com:8080/tmf-
+
+
+ api/PolicyManagement/v5/PolicyCondition/5020",
+                        "id": "5020",
+                        "name": "The sold price of single handset more than 300$",
+                        "@referredType": "PolicyCondition"
+                    },
+                    "policyConditionVariable": {
+                        "@type": "PolicyVariableRef",
+                        "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+                        "id": "5040",
+                        "name": "sold price",
+                        "@referredType": "PolicyVariable"
+                    }
+                }
+            ],
+            "actionVariable": [
+                {
+                    "@type": "PartyRevSharingPolicyActionVariable",
+                    "id": "5011",
+                    "value": "5%",
+                    "policyAction": {
+                        "@type": "PolicyActionRef",
+                        "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+                        "id": "5021",
+                        "name": "The revenue share percentage of sold price is 5%",
+                        "@referredType": "PolicyAction"
+                    },
+                    "policyActionVariable": {
+                        "@type": "PolicyVariableRef",
+                        "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+                        "id": "5041",
+                        "name": "The revenue share percentage of sold price",
+                        "@referredType": "PolicyVariable"
+                    }
+                }
+            ]
+        }
+    },
+    "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+    },
+    "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "PartyRevSharingAlgorithmStateChangeEvent"
+  }
+Party Rev Sharing Algorithm Create Event
+Message example for PartyRevSharingAlgorithmCreate event
+
+
+ 
+Content-Type: application/json
+{
+    "correlationId": "81003dd3-e325",
+    "description": "PartyRevSharingAlgorithmCreateEvent illustration",
+    "domain": "BusinessPartner",
+    "eventId": "4110-9b59-509a64cf85a8",
+    "eventTime": "2022-08-25T12:18:12.171Z",
+    "eventType": "PartyRevSharingAlgorithmCreateEvent",
+    "priority": "1",
+    "timeOcurred": "2022-08-25T12:18:06.252Z",
+    "title": "PartyRevSharingAlgorithmCreateEvent",
+    "event": {
+        "partyRevSharingAlgorithm":{
+            "@type": "PartyRevSharingAlgorithm",
+            "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+            "id": "4840",
+            "name": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+            "description": "distribute charge revenue share calculate policy for
+Mobile handset 2023 distribution price",
+            "policy": [
+                {
+                "@type": "PolicyRef",
+                "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/Policy/5840",
+                "id": "5840",
+                "name": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+                "@referredType": "PolicySet",
+                "version": "1.0"
+                }
+            ],
+            "conditionVariable": [
+                {
+                "@type": "PartyRevSharingPolicyConditionVariable",
+                "id": "5010",
+                "value": "300",
+                "policyCondition": {
+                    "@type": "PolicyConditionRef",
+                    "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+                    "id": "5020",
+                    "name": "The sold price of single handset more than 300$",
+                    "@referredType": "PolicyCondition"
+                },
+                "policyConditionVariable": {
+                    "@type": "PolicyVariableRef",
+                    "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+                    "id": "5040",
+                    "name": "sold price",
+                    "@referredType": "PolicyVariable"
+                }
+                }
+            ],
+            "actionVariable": [
+                {
+                "@type": "PartyRevSharingPolicyActionVariable",
+                "id": "5011",
+                "value": "5%",
+
+
+                 "policyAction": {
+                    "@type": "PolicyActionRef",
+                    "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+                    "id": "5021",
+                    "name": "The revenue share percentage of sold price is 5%",
+                    "@referredType": "PolicyAction"
+                },
+                "policyActionVariable": {
+                    "@type": "PolicyVariableRef",
+                    "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+                    "id": "5041",
+                    "name": "The revenue share percentage of sold price",
+                    "@referredType": "PolicyVariable"
+                }
+                }
+            ]
+        }
+    },
+    "reportingSystem": {
+      "id": "759",
+      "name": "APP-745",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+    },
+    "source": {
+      "id": "705",
+      "name": "APP-317",
+      "@type": "ReportingResource",
+      "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "PartyRevSharingAlgorithmCreateEvent"
+  }
+Party Rev Sharing Algorithm Delete Event
+Message example for PartyRevSharingAlgorithmDelete event
+Content-Type: application/json
+{
+    "correlationId": "82cfc73d-deb7",
+    "description": "PartyRevSharingAlgorithmDeleteEvent illustration",
+    "domain": "BusinessPartner",
+    "eventId": "42d6-9751-40e4f01440c9",
+    "eventTime": "2022-08-25T12:18:12.202Z",
+    "eventType": "PartyRevSharingAlgorithmDeleteEvent",
+    "priority": "4",
+    "timeOcurred": "2022-08-25T12:18:07.224Z",
+    "title": "PartyRevSharingAlgorithmDeleteEvent",
+    "event": {
+        "partyRevSharingAlgorithm": {
+            "id": "4840",
+            "href":
+"https://host:port/partyRevSharingAlgorithm/v5/partyRevSharingAlgorithm/4840",
+            "@type": "PartyRevSharingAlgorithm"
+        }
+    },
+
+
+     "reportingSystem": {
+        "id": "759",
+        "name": "APP-745",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "705",
+        "name": "APP-317",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "PartyRevSharingAlgorithmDeleteEvent"
+}
+
+
+ API OPERATIONS
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Execute an Action on an Entity
+POST on TASK Resource
+POST must be used to execute
+Task Resources
+Other Request Methods
+POST on TASK Resource
+GET and POST must not be
+used to tunnel other request
+methods.
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines.
+Notifications are also described in a subsequent section.
+Operations on PartyRevSharingAlgorithm
+Retrieves a PartyRevSharingAlgorithm by ID
+GET /partyRevSharingAlgorithm/{id}?fields=…
+Description
+This operation retrieves a PartyRevSharingAlgorithm entity. Attribute selection is enabled for
+all first level attributes. Filtering may be available depending on the compliance level
+supported by an implementation.
+Usage samples
+Here's an example of a request for retrieving a specific party revenue sharing algorithm.
+Request
+GET /partyRevSharingAlgorithm/4840
+Content-Type: application/json
+Response
+200
+
+
+ {
+    "@type": "PartyRevSharingAlgorithm",
+    "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+    "id": "4840",
+    "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+    "description": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+    "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "id": "5010",
+        "value": "300",
+        "policyCondition": {
+          "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+          "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+        "id": "5011",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+          "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+
+
+         }
+      }
+    ]
+  }
+List or find PartyRevSharingAlgorithm objects
+GET /partyRevSharingAlgorithm?fields=…
+Description
+This operation list PartyRevSharingAlgorithm entities. Attribute selection is enabled for all
+first level attributes. Filtering may be available depending on the compliance level supported
+by an implementation.
+Usage samples
+Here's an example of a request for retrieving multiple party revenue sharing algorithms.
+Request
+GET /partyRevSharingAlgorithm?policy.id=5840
+Content-Type: application/json
+Response
+200
+[
+  {
+    "@type": "PartyRevSharingAlgorithm",
+    "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+    "id": "4840",
+    "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+    "description": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+    "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "id": "5010",
+        "value": "300",
+        "policyCondition": {
+
+
+           "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+          "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+        "id": "5011",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+          "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ]
+  }
+]
+Creates a PartyRevSharingAlgorithm
+POST /partyRevSharingAlgorithm?fields=…
+Description
+This operation creates a PartyRevSharingAlgorithm entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+name
+policy
+policy.@type
+
+
+ 
+Mandatory Attributes
+Rule
+policy.id
+@type
+Usage samples
+Creation of a new PartyRevSharingAlgorithm with POST operation
+Request
+POST /partyRevSharingAlgorithm
+Content-Type: application/json
+{
+    "@type": "PartyRevSharingAlgorithm",
+    "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+    "description": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+    "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "value": "300",
+        "policyCondition": {
+          "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+          "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+
+
+           "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+          "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ]
+  }
+Response
+201
+{
+    "@type": "PartyRevSharingAlgorithm",
+    "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+    "id": "4840",
+    "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+    "description": "distribute charge revenue share calculate policy for Mobile
+handset 2023 distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+    "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "id": "5010",
+        "value": "300",
+        "policyCondition": {
+          "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+
+
+           "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+        "id": "5011",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+          "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ]
+  }
+Updates partially a PartyRevSharingAlgorithm
+PATCH /partyRevSharingAlgorithm/{id}?fields=…
+Description
+This operation allows partial updates of a PartyRevSharingAlgorithm entity. Support of
+json/merge 
+(https://tools.ietf.org/html/rfc7386) 
+is 
+mandatory, 
+support 
+of 
+json/patch
+(http://tools.ietf.org/html/rfc5789) is optiona. Note: If the update operation yields to the
+creation of sub-resources or relationships, the same rules concerning mandatory sub-
+resource attributes and default value settings in the POST operation applies to the PATCH
+operation. Hence these tables are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+href
+id
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+
+
+ 
+Patchable Attributes
+Rule
+actionVariable
+conditionVariable
+description
+name
+policy
+Usage samples
+PATCH PartyRevSharingAlgorithm request leveraging json application example
+Request
+PATCH /partyRevSharingAlgorithm/{id}
+Content-Type: application/json
+{
+  "@type": "PartyRevSharingAlgorithm",
+  "name": "revenue share calculate policy for Mobile handset 2023 distribution
+price",
+  "description": "revenue share calculate policy for Mobile handset 2023
+distribution price"
+}
+Response
+200
+{
+    "@type": "PartyRevSharingAlgorithm",
+    "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+    "id": "4840",
+    "name": "revenue share calculate policy for Mobile handset 2023 distribution
+price",
+    "description": "revenue share calculate policy for Mobile handset 2023
+distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+    "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "id": "5010",
+        "value": "300",
+
+
+         "policyCondition": {
+          "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+          "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+         "id": "5011",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+          "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ]
+  }
+PATCH PartyRevSharingAlgorithm request leveraging application merge-patch+json
+example
+Request
+PATCH /partyRevSharingAlgorithm/{id}
+Content-Type: application/merge-patch+json
+{
+  "@type": "PartyRevSharingAlgorithm",
+  "name": "revenue share calculate policy for Mobile handset 2023 distribution
+price",
+  "description": "revenue share calculate policy for Mobile handset 2023
+distribution price"
+}
+
+
+ 
+Response
+200
+{
+    "@type": "PartyRevSharingAlgorithm",
+    "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+    "id": "4840",
+    "name": "revenue share calculate policy for Mobile handset 2023 distribution
+price",
+    "description": "revenue share calculate policy for Mobile handset 2023
+distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+    "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "id": "5010",
+        "value": "300",
+        "policyCondition": {
+          "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+          "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+         "id": "5011",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+          "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+
+
+           "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ]
+  }
+PATCH PartyRevSharingAlgorithm request leveraging application json-patch+json example
+Request
+PATCH /partyRevSharingAlgorithm/{id}
+Content-Type: application/json-patch+json
+[
+  {
+    "op":"replace",
+    "path": "/name",
+    "value": "The revenue share calculate policy for Mobile handset 2023
+distribution price"
+  },
+  {
+    "op": "replace",
+    "path":"/description",
+    "value": "The revenue share calculate policy for Mobile handset 2023
+distribution price"
+ }
+]
+Response
+200
+{
+    "@type": "PartyRevSharingAlgorithm",
+    "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+    "id": "4840",
+    "name": "The revenue share calculate policy for Mobile handset 2023 distribution
+price",
+    "description": "The revenue share calculate policy for Mobile handset 2023
+distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+
+
+     "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "id": "5010",
+        "value": "300",
+        "policyCondition": {
+          "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+          "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+        "id": "5011",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+          "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ]
+  }
+PATCH PartyRevSharingAlgorithm request leveraging application json-patch-query+json
+example
+Request
+PATCH /partyRevSharingAlgorithm/{id}
+Content-Type: application/json-patch-query+json
+[
+  {
+    "op":"replace",
+    "path": "/conditionVariable.value?id=5010",
+
+
+     "value": 500
+  }
+]
+Response
+200
+{
+    "@type": "PartyRevSharingAlgorithm",
+    "href": "https://mycsp.com:8080/tmf-
+api/PartyRevSharingModelManagement/v5/PartyRevSharingAlgorithm/4840",
+    "id": "4840",
+    "name": "The revenue share calculate policy for Mobile handset 2023 distribution
+price",
+    "description": "The revenue share calculate policy for Mobile handset 2023
+distribution price",
+    "policy": [
+      {
+        "@type": "PolicyRef",
+        "href": "https://mycsp.com:8080/tmf-api/PolicyManagement/v5/Policy/5840",
+        "id": "5840",
+        "name": "distribute charge revenue share calculate policy for Mobile handset
+2023 distribution price",
+        "@referredType": "PolicySet",
+        "version": "1.0"
+      }
+    ],
+    "conditionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyConditionVariable",
+        "id": "5010",
+        "value": "500",
+        "policyCondition": {
+          "@type": "PolicyConditionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyCondition/5020",
+          "id": "5020",
+          "name": "The sold price of single handset more than 300$",
+          "@referredType": "PolicyCondition"
+        },
+        "policyConditionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5040",
+          "id": "5040",
+          "name": "sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ],
+    "actionVariable": [
+      {
+        "@type": "PartyRevSharingPolicyActionVariable",
+        "id": "5011",
+        "value": "5%",
+        "policyAction": {
+          "@type": "PolicyActionRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyAction/5021",
+
+
+           "id": "5021",
+          "name": "The revenue share percentage of sold price is 5%",
+          "@referredType": "PolicyAction"
+        },
+        "policyActionVariable": {
+          "@type": "PolicyVariableRef",
+          "href": "https://mycsp.com:8080/tmf-
+api/PolicyManagement/v5/PolicyVariable/5041",
+          "id": "5041",
+          "name": "The revenue share percentage of sold price",
+          "@referredType": "PolicyVariable"
+        }
+      }
+    ]
+  }
+Deletes a PartyRevSharingAlgorithm
+DELETE /partyRevSharingAlgorithm/{id}
+Description
+This operation deletes a PartyRevSharingAlgorithm entity.
+
+
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+
+
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+
+
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+
+
+ Acknowledgements
+Release History
+Release
+Number
+Date
+Release led by:
+Description
+Version: 5.0.0 August 2023
+Lianhua Zhang
+AsiaInfo
+zhanglh2@asiainfo.com
+Yun Li
+AsiaInfo
+liyun9@asiainfo.com
+Pierre Gauthier
+TM Forum
+pgauthier@tmforum.org
+Henrique Rodrigues
+TM Forum
+hrodrigues@tmforum.org
+First Release of the Document.
+Contributors to Document
+Lianhua Zhang
+AsiaInfo
+Yun Li
+AsiaInfo
+Pierre Gauthier
+TM Forum
+Henrique Rodrigues
+TM Forum
+
+

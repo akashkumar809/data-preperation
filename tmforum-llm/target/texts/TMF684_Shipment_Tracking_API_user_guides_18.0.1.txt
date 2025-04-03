@@ -1,0 +1,1457 @@
+ 
+ 
+ 
+ 
+ 
+TM Forum Specification 
+ 
+Shipment Tracking 
+API REST Specification 
+ 
+ 
+ 
+ 
+ 
+TMF684 
+Release 18.0.1 
+May 2018 
+ 
+ 
+ 
+Latest Update: TM Forum Release 18.0.1 TM Forum Approved 
+Version 1.0.1 
+IPR Mode: RAND 
+
+
+NOTICE 
+Copyright © TM Forum 2018. All Rights Reserved. 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns.  
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+ 
+
+
+Direct inquiries to the TM Forum office:  
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 973 944 5100 
+Fax No.  +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+
+
+TABLE OF CONTENTS 
+NOTICE ............................................................................................................................................................................ 2 
+TABLE OF CONTENTS ...................................................................................................................................................... 4 
+LIST OF TABLES ................................................................................................................................................................ 5 
+INTRODUCTION ............................................................................................................................................................... 6 
+SAMPLE USE CASES ......................................................................................................................................................... 7 
+RESOURCE MODEL .......................................................................................................................................................... 8 
+Managed Entity and Task Resource Models ............................................................................................................... 8 
+User Interaction resource ........................................................................................................................................ 8 
+Notification Resource Models .................................................................................................................................. 13 
+Shipment Tracking Creation Notification .............................................................................................................. 14 
+Shipment Tracking Change Notification ................................................................................................................ 14 
+API OPERATIONS ........................................................................................................................................................... 15 
+Operations on Shipment Tracking ............................................................................................................................ 16 
+List user interactions ............................................................................................................................................. 16 
+Retrieve Shipment Tracking .................................................................................................................................. 18 
+Create Shipment Tracking ..................................................................................................................................... 20 
+Add Shipment Tracking Checkpoint ...................................................................................................................... 23 
+Patch Shipment Tracking ....................................................................................................................................... 25 
+Delete Shipment Tracking ..................................................................................................................................... 27 
+API NOTIFICATIONS....................................................................................................................................................... 28 
+Register listener ........................................................................................................................................................ 28 
+Unregister listener .................................................................................................................................................... 29 
+Publish Event to listener ........................................................................................................................................... 29 
+ACKNOWLEGEMENTS ................................................................................................................................................... 31 
+Release History ......................................................................................................................................................... 31 
+Contributors to Document........................................................................................................................................ 31 
+
+
+LIST OF TABLES 
+ 
+N/A 
+ 
+
+
+INTRODUCTION 
+ 
+Telco companies often send goods to customers. Shipment information can be provided to them so they can be 
+aware of when things were shipped and when they will arrive. Typically telcos use different delivery companies to 
+deliver things on their behalf and this API intends to abstract the end developers from that complexity by providing 
+a single interface. A Shipment Tracking captures information about the current status of the shipment, the past 
+checkpoints and the estimated arrival date. Via this API, tracking information can be retrieved by providing an 
+order Id or the shipping company’s tracking id. 
+ 
+ 
+ 
+
+
+SAMPLE USE CASES 
+ 
+Use Case Id 
+UC_TMF_ShipmentTracking_0001 
+Use Case 
+Name 
+Customer checks were his router is using its order Id 
+Summary 
+Customer checks shipment information without knowing any details of the shipment 
+itself 
+Actor(s) 
+1. Customer 
+2. Mobile app (system) 
+Pre-
+Conditions 
+1. There is a back-end service pairing orders and shipments. 
+Begins When 
+When all pre-conditions have been met and the user taps on a button that provides 
+the detailed order info. 
+Description 
+1. Customer is browsing his latest orders 
+2. Customer taps on “track shipment” button of his last order, a router.  
+3. The app queries the required information from the back-end server using the 
+TMF shipment tracking API. 
+4. The info is rendered on the app screen. 
+  
+ 
+
+
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+USER INTERACTION RESOURCE 
+The user interaction resource is used for indicating an interaction within a user and a company (e.g.: visit 
+to a store, call to a call center, message received in a marketing campaign, etc.). A user interaction might 
+result in other actions, such as submitted orders or raised tickets. A user interaction has a description, a 
+reason, an originator (the user or the company) and contains a reference to an account, to other related 
+parties and to the channel where it occurred. 
+Resource model 
+ 
+Field descriptions 
+ShipmentTracking fields 
+Field 
+Mandatory in API messages 
+Description 
+href 
+Not on creation, yes on retrieval 
+A string. Hyperlink to access the shipment 
+information. 
+id 
+Not on creation, yes on retrieval 
+A string. Unique identifier of the shipment. 
+carrier 
+Yes 
+A string: Carrier identifier 
+trackingCode 
+No 
+A strubg; Tracking code in the carrier network 
+
+
+g
+g
+p
+g
+information 
+trackingDate 
+Yes 
+Date-time. Date when the shipment began to be 
+tracked. 
+status 
+No 
+A string. Current status of the parcel 
+statusChangeDate 
+No 
+Date-time. Last time the status changed. 
+statusChangeReason 
+No 
+Date-time. Reason why the status last changed 
+weight 
+No 
+Integer. Weight of the package in grams 
+estimatedDeliveryDate 
+No 
+Date-time. Date when the parcel is estimated to be 
+delivered 
+addressFrom 
+No 
+GeographicAddressType. Address the package 
+departed from 
+addressTo 
+Yes 
+GeographicAddressType. Address where the 
+package will be delivered 
+checkpoint 
+No 
+Array of checkpointType. Information about the 
+different places where the parcel was checked in. 
+order 
+No 
+OrderRef. Reference to the order that caused the 
+delivery 
+GeographicAddress  sub-resource 
+Address reference. Defines an address and/or identifies an existing address entity 
+An address allows textual description of an existing place over the surface of the Earth 
+This resource could be invoked as reference or value 
+Field 
+Mandatory in API 
+messages 
+Description 
+id 
+No 
+A string. Unique identifier of the entity within the 
+server 
+href 
+No 
+A string. Reference of the entity 
+streetNr 
+Yes if neither id nor 
+href nor are included 
+A string. Number identifying a specific property on a 
+public street. It may be combined with streetNrLast 
+for ranged addresses. 
+streetNrSuffix 
+No 
+A string. the first street number suffix. 
+streetNrLast 
+No 
+A string. Last number in a range of street numbers 
+allocated to a property. 
+streetNrLastSuffix 
+No 
+A string. Last street number suffix for a ranged 
+address. 
+streetName 
+Yes if neither id nor 
+href nor are included 
+A string. Name of the street or other street type. 
+streetType 
+Yes if neither id nor 
+href nor are included 
+A string. Alley, avenue, boulevard, brae, crescent, 
+drive, highway, lane, terrace, parade, place, tarn, 
+way, wharf. 
+streetSuffix 
+No 
+A string. A modifier denoting a relative direction. 
+postcode 
+Yes if neither id nor 
+href nor are included 
+A string. Descriptor for a postal delivery area, used 
+to speed and simplify the delivery of mail (also 
+known as zipcode). 
+locality 
+Yes if neither id nor 
+href nor are included 
+A string. "An area of defined or undefined 
+boundaries within a local authority or other 
+legislatively defined area, usually rural or semi-rural 
+in nature." [ANZLIC-STREET], or a suburb "a 
+bounded locality within a city, town or shire 
+principally of urban character " [ANZLICSTREET]. 
+city 
+No 
+A string. City that the address is in. 
+stateOrProvince 
+Yes if neither id nor 
+href nor are included 
+A string. the State or Province that the address is 
+in. 
+country 
+Yes if neither id nor 
+href nor are included 
+A string. Country that the address is in. 
+
+
+reference or by value. A GeoLocation allows 
+describing through coordinate(s) a point, a line or a 
+space. 
+subAddress 
+No 
+A list of sub addresses (SubAddress [*]). 
+Representation of a SubAddress  
+It is used for addressing within a property in an 
+urban area (country properties are often defined 
+differently). It may refer to a building, a building 
+cluster, or a floor of a multistory building. 
+@type 
+No 
+A string. Indicates the type of the resource. Here 
+can be 'UrbanPropertyAddress', 
+‘FormattedAddress’, ‘JapanesePropertyAddress’ , 
+‘AustralianPropertyAddress’, etc… 
+@schemaLocation 
+No 
+A string. A Link to the schema describing this REST 
+Resource. The resource described 
+'UrbanPropertyAddress' but a schema could be 
+used for other property address description. 
+ 
+GeographicLocation sub-resource 
+GeographicLocation reference. Defines a geo location and/or identifies an existing geo location entity 
+A GeoLocation allows describing through coordinate(s) a point, a line or a space. 
+This resource could be invoked as reference or value 
+Field 
+Mandatory in API 
+messages 
+Description 
+id 
+No 
+A string. Unique Identifier of a GeoLocation. 
+href 
+No 
+A string. href of the GeoLocation. 
+name 
+No 
+A string. Name of a GeoLocation. 
+type 
+Yes if href not 
+included 
+A string. Type allows describing Geolocation form: it could be a 
+point, a line, a polygon, a cylinder, etc.... 
+geographicPoint 
+Yes if href not 
+included 
+A list of geo points (GeographicPoint [*]). A GeoPoint defines a 
+geographic point through coordinates. 
+@type 
+No 
+A string. Indicates the type of the resource for extensibility 
+purposes. 
+@schemaLocation 
+No 
+A string. A Link to the schema describing this REST Resource.  
+ 
+GeographicPoint sub-resource 
+A GeoPoint defines a geographic point through coordinates. 
+Field 
+Mandatory in API 
+messages 
+Description 
+accuracy 
+Yes 
+A string. Accuracy of the coordinate specified. 
+spatialRef 
+Yes 
+A string. Geocoding referential. 
+x 
+Yes 
+A string. x coordinate (usually latitude). 
+y 
+Yes 
+A string. y coordinate (usually longitude). 
+z 
+No 
+A string. z coordinate (usually elevation). 
+ 
+subAddress sub-resource 
+Representation of a SubAddress  
+It is used for addressing within a property in an urban area (country properties are often defined differently). It may 
+refer to a building, a building cluster, or a floor of a multistory building. 
+
+
+y
+messages 
+p
+id 
+No 
+A string. Unique Identifier of the subAddress. 
+href 
+No 
+A string. Href of the subAddress. 
+type 
+No 
+A string. type of subAddress : it can be a subunit or a private 
+street. 
+name 
+No 
+A string. Name of the subAddress to identify it with a meaningful 
+identification. 
+subUnitType 
+No 
+A string. the type of subunit 
+e.g.BERTH, FLAT, PIER, SUITE, SHOP, TOWER, UNIT, 
+WHARF. 
+subUnitNumber 
+No 
+A string. the discriminator used for the subunit 
+often just a simple number e.g. FLAT 5, may also be a range. 
+levelType 
+No 
+A string. describes level types within a building. 
+levelNumber 
+No 
+A string. used where a level type may be repeated e.g. 
+BASEMENT 1, BASEMENT 2. 
+buildingName 
+No 
+A string. allows for buildings that have well-known names. 
+privateStreetName 
+No 
+A string. private streets internal to a property (e.g. a university) 
+may have internal names that are not recorded by the land title 
+office. 
+privateStreetNumber 
+No 
+A string. private streets numbers internal to a private street. 
+@type 
+No 
+A string. Type of the resource for thus subResource 
+@schemaLocation 
+No 
+A string. A Link to the schema describing the structure of this 
+REST Resource to allow for extensions 
+OrderRef relationship 
+Order reference. 
+Field 
+Mandatory in API 
+messages 
+Description 
+href 
+Yes 
+A string. Unique reference of the order. 
+id 
+Yes 
+A string. Unique identifier of the order. 
+name 
+No 
+A string. A user-friendly name for the order, such as "my telco 
+pack". 
+description 
+No 
+A string. A user-friendly description of the order. 
+CheckPoint relationship 
+Information about the places where the parcel was checked in and its status at that moment. 
+Field 
+Mandatory in API 
+messages 
+Description 
+status 
+Yes 
+A string. Status of the delivery at the moment it checked in. 
+message 
+No 
+A string. Custom message for anything related to the check in. 
+date 
+Yes 
+Date-time. Date of the check-in 
+checkPost 
+Yes 
+A string. Screen name of the site where the parcel checked in 
+such as “Madrid warehouse” 
+city 
+No 
+A string. City where the site is. 
+stateOrProvince 
+No 
+A string. State or province of the site 
+country 
+Yes 
+A string. Country of the site 
+ 
+Json representation sample 
+We provide below the json representation of an example of a 'ShipmentTracking' resource object 
+ { 
+  "id": "123", 
+  "href": "/shipmentTracking/v1/tracking/123", 
+  "carrier": "Fodex", 
+
+
+  "carrierTrackingUrl": "fodexDeliveryInc/shipments/FFFFXXXX987", 
+  "trackingDate": "2017-11-05T14:19:11.460Z", 
+  "status": "in customs", 
+  "statusChangeDate": "2017-11-10T14:19:11.460Z", 
+  "statusChangeReason": "Arrived at customs office", 
+  "weight": 2500, 
+  "estimatedDeliveryDate": "2017-11-16T14:19:11.460Z", 
+  "addressFrom": { 
+    "streetNr": "3", 
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+    "streetNr": "S/N", 
+    "streetName": "Ronda de la Comunicación", 
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "checkpoint": [ 
+     { 
+      "status": "shipped", 
+      "message": "Shipped from warehouse facilities", 
+      "trackingDate": "2017-11-05T14:19:11.460Z", 
+      "checkPost": "Springfield warehouse", 
+      "city": "Springfield", 
+      "stateOrProvince": "Oregon", 
+      "country": "USA", 
+      "postcode": "87654" 
+    }, 
+    { 
+      "status": "in progress", 
+      "message": "Arrived at Dallas to be shipped by plane", 
+      "date": "2017-11-07T14:19:11.460Z", 
+      "checkPost": "Dallas airport", 
+      "city": "Dallas", 
+      "stateOrProvince": "Texas", 
+      "country": "USA", 
+      "postcode": "75261" 
+    }, 
+    { 
+      "status": "in customs", 
+      "message": "Arrived at Madrid airport customs office", 
+      "date": "2017-11-10T14:19:11.460Z", 
+      "checkPost": "Madrid Barajas airport", 
+      "city": "Madrid", 
+      "stateOrProvince": "Madrid", 
+      "country": "ESP", 
+      "postcode": "28042" 
+    } 
+
+
+  "order": { 
+    "id": "654", 
+    "href": "https://host:port/productOrderingManagement/productOrder/654", 
+    "name": "New telco pack", 
+    "description": "Telco pack with black Friday offer" 
+  } 
+} 
+Notification Resource Models 
+2 notifications are defined for this API 
+Notifications related to ShipmentTracking: 
+    - ShipmentTrackingCreationNotification 
+    - ShipmentTrackingChangeNotification 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification resource (depicted by "SpecificNotification" placeholder) is a sub class of a generic 
+Notification structure containing an id of the event occurence (eventId), an event timestamp (eventTime), 
+and the name of the notification resource (eventType).  
+This notification structure owns an event structure ("SpecificEvent" placeholder) linked to the resource 
+concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+ 
+
+
+SHIPMENT TRACKING CREATION NOTIFICATION 
+Notification sent when a new ShipmentTracking resource is created. 
+Json representation sample 
+We provide below the json representation of an example of a 'ShipmentTrackingCreationNotification' 
+notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ShipmentTrackingCreationNotification", 
+     "event": { 
+        "shipmentTracking":  
+            {-- SEE ShipmentTracking RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+SHIPMENT TRACKING CHANGE NOTIFICATION 
+Notification sent when changing a ShipmentTracking resource. 
+Json representation sample 
+We provide below the json representation of an example of a 'ShipmentTrackingChangeNotification' 
+notification object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ShipmentTrackingChangeNotification", 
+     "event": { 
+        "shipmentTracking":  
+            {-- SEE ShipmentTracking RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to 
+retrieve a representation of 
+a resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to 
+create a new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to 
+partially update a resource 
+Complete Update of an 
+Entity 
+PUT Resource 
+PUT must be used to 
+completely update a 
+resource identified by its 
+resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to 
+remove a resource 
+Execute an Action on an 
+Entity  
+POST on TASK Resource 
+POST must be used to 
+execute Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not 
+be used to tunnel other 
+request methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+ 
+
+
+OPERATIONS ON SHIPMENT TRACKING 
+LIST USER INTERACTIONS 
+  GET /tracking?fields=...&{filtering} 
+Description 
+This operation lists shipment tracking entities. 
+Attribute selection is enabled for all first level attributes and using order.id in order to find parcels relative 
+to a certain order.  
+Filtering may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving ShipmentTracking resources. 
+ 
+Request 
+ 
+GET /shipmentTracking/v1/tracking 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+  { 
+  "id": "123", 
+  "href": "/shipmentTracking/v1/tracking/123", 
+  "carrier": "Fodex", 
+  "trackingCode": "FFFFXXXX987", 
+  "carrierTrackingUrl": "fodexDeliveryInc/shipments/FFFFXXXX987", 
+  "trackingDate": "2017-11-05T14:19:11.460Z", 
+  "status": "in customs", 
+  "statusChangeDate": "2017-11-10T14:19:11.460Z", 
+  "statusChangeReason": "Arrived at customs office", 
+  "weight": 2500, 
+  "estimatedDeliveryDate": "2017-11-16T14:19:11.460Z", 
+  "addressFrom": { 
+    "streetNr": "3", 
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+
+
+    "streetName": "Ronda de la Comunicación", 
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "checkpoint": [ 
+     { 
+      "status": "shipped", 
+      "message": "Shipped from warehouse facilities", 
+      "trackingDate": "2017-11-05T14:19:11.460Z", 
+      "checkPost": "Springfield warehouse", 
+      "city": "Springfield", 
+      "stateOrProvince": "Oregon", 
+      "country": "USA" 
+    }, 
+    { 
+      "status": "in progress", 
+      "message": "Arrived at Dallas to be shipped by plane", 
+      "date": "2017-11-07T14:19:11.460Z", 
+      "checkPost": "Dallas airport", 
+      "city": "Dallas", 
+      "stateOrProvince": "Texas", 
+      "country": "USA" 
+    }, 
+    { 
+      "status": "in customs", 
+      "message": "Arrived at Madrid airport customs office", 
+      "date": "2017-11-10T14:19:11.460Z", 
+      "checkPost": "Madrid Barajas airport", 
+      "city": "Madrid", 
+      "stateOrProvince": "Madrid", 
+      "country": "ESP" 
+    } 
+  ], 
+  "order": { 
+    "id": "654", 
+    "href": "https://host:port/productOrderingManagement/productOrder/654", 
+    "name": "New telco pack", 
+    "description": "Telco pack with black Friday offer" 
+  } 
+}, 
+{ 
+  "id": "456", 
+  "href": "/shipmentTracking/v1/tracking/456", 
+  "carrier": "PSU", 
+  "trackingCode": "PPSSSUUU354", 
+  "carrierTrackingUrl": "psuShipping/tracking/PPSSSUUU354", 
+  "trackingDate": "2017-11-10T15:00:00.000Z", 
+  "status": "Shipped", 
+  "statusChangeDate": "2017-11-12T15:00:00.000Z", 
+  "statusChangeReason": "Shipped", 
+  "weight": 1250, 
+  "estimatedDeliveryDate": "2017-11-20T20:00:00.000Z", 
+  "addressFrom": { 
+
+
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+    "streetNr": "S/N", 
+    "streetName": "Ronda de la Comunicación", 
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "checkpoint": [ 
+    { 
+      "status": "out of stock", 
+      "message": "Waiting for stock", 
+      "date": "2017-11-10T15:00:00.000Z", 
+      "checkPost": "Springfield warehouse", 
+      "city": "Springfield", 
+      "stateOrProvince": "Oregon", 
+      "country": "USA" 
+    },  
+ 
+    { 
+      "status": "shipped", 
+      "message": "Shipped from warehouse facilities", 
+      "trackingDate": "2017-11-12T15:00:00.000Z", 
+      "checkPost": "Springfield warehouse", 
+      "city": "Springfield", 
+      "stateOrProvince": "Oregon", 
+      "country": "USA" 
+    } 
+  ], 
+  "order": { 
+    "id": "999", 
+    "href": "https://host:port/productOrderingManagement/productOrder/999", 
+    "name": "Smart router", 
+    "description": "Smart 5G router" 
+  } 
+} 
+] 
+ 
+RETRIEVE SHIPMENT TRACKING 
+  GET /tracking/{id}?fields=... 
+Description 
+
+
+p
+g
+p
+g
+y
+Attribute selection is enabled for all first level attributes. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving a Shipment Tracking resource. 
+ 
+Request 
+ 
+GET /shipmentTracking/v1/tracking/123 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+  { 
+  "id": "123", 
+  "href": "/shipmentTracking/v1/tracking/123", 
+  "carrier": "Fodex", 
+  "trackingCode": "FFFFXXXX987", 
+  "carrierTrackingUrl": "fodexDeliveryInc/shipments/FFFFXXXX987", 
+  "trackingDate": "2017-11-05T14:19:11.460Z", 
+  "status": "in customs", 
+  "statusChangeDate": "2017-11-10T14:19:11.460Z", 
+  "statusChangeReason": "Arrived at customs office", 
+  "weight": 2500, 
+  "estimatedDeliveryDate": "2017-11-16T14:19:11.460Z", 
+  "addressFrom": { 
+    "streetNr": "3", 
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+    "streetNr": "S/N", 
+    "streetName": "Ronda de la Comunicación", 
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "checkpoint": [ 
+    { 
+      "status": "shipped", 
+      "message": "Shipped from warehouse facilities", 
+      "trackingDate": "2017-11-05T14:19:11.460Z", 
+      "checkPost": "Springfield warehouse", 
+
+
+      "stateOrProvince": "Oregon", 
+      "country": "USA" 
+    }, 
+    { 
+      "status": "in progress", 
+      "message": "Arrived at Dallas to be shipped by plane", 
+      "date": "2017-11-07T14:19:11.460Z", 
+      "checkPost": "Dallas airport", 
+      "city": "Dallas", 
+      "stateOrProvince": "Texas", 
+      "country": "USA" 
+    }, 
+    { 
+      "status": "in customs", 
+      "message": "Arrived at Madrid airport customs office", 
+      "date": "2017-11-10T14:19:11.460Z", 
+      "checkPost": "Madrid Barajas airport", 
+      "city": "Madrid", 
+      "stateOrProvince": "Madrid", 
+      "country": "ESP", 
+      "postcode": "28042" 
+    } 
+  ], 
+  "order": { 
+    "id": "654", 
+    "href": "https://host:port/productOrderingManagement/productOrder/654", 
+    "name": "New telco pack", 
+    "description": "Telco pack with black Friday offer" 
+  } 
+} 
+ 
+CREATE SHIPMENT TRACKING 
+  POST /tracking 
+Description 
+This operation creates a shipment tracking entity. 
+Mandatory and Non-Mandatory Attributes 
+The following tables provides the list of mandatory and non-mandatory attributes when creating a 
+ShipmentTracking, including any possible rule conditions and applicable default values. Notice that it is up 
+to an implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+carrier 
+ 
+trackingDate 
+ 
+addressTo 
+ 
+ 
+
+
+y
+id 
+ 
+Will be assigned by the server after 
+creation 
+href 
+ 
+Will be assigned by the server after 
+creation 
+trackingCode 
+ 
+ 
+carrierTrackingUrl 
+ 
+ 
+status 
+shipped 
+Could be given a default status by the 
+server on creation 
+statusChangeDate 
+ 
+ 
+statusChangeReason 
+ 
+ 
+weight 
+ 
+ 
+estimatedDeliveryDate 
+ 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships 
+when creating a ShipmentTracking resource. 
+Context 
+Mandatory Sub-Attributes 
+addressFrom 
+Check GeographicAddress mandatory fields (in case it appears) 
+addressTo 
+Check GeographicAddress mandatory fields 
+order 
+Id, href (in case it appears) 
+ 
+Usage Samples 
+Here's an example of a request for creating a ShipmentTracking resource. In this example the request 
+only passes mandatory attributes. 
+ 
+Request 
+ 
+POST /shipmentTracking/v1/tracking 
+Content-Type: application/json 
+ 
+{ 
+  "carrier": "PSU", 
+  "trackingCode": "PPSSSUUU354", 
+  "carrierTrackingUrl": "psuShipping/tracking/PPSSSUUU354", 
+  "trackingDate": "2017-11-10T15:00:00.000Z", 
+  "status": "out of stock", 
+  "weight": 1250, 
+  "estimatedDeliveryDate": "2017-11-20T20:00:00.000Z", 
+  "addressFrom": { 
+    "streetNr": "3", 
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+    "streetNr": "S/N", 
+
+
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "order": { 
+    "id": "999", 
+    "href": "https://host:port/productOrderingManagement/productOrder/999", 
+    "name": "Smart router", 
+    "description": "Smart 5G router" 
+  } 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+  "id": "456", 
+  "href": "/shipmentTracking/v1/tracking/456", 
+  "carrier": "PSU", 
+  "trackingCode": "PPSSSUUU354", 
+  "carrierTrackingUrl": "psuShipping/tracking/PPSSSUUU354", 
+  "trackingDate": "2017-11-10T15:00:00.000Z", 
+  "status": "out of stock", 
+  "statusChangeDate": "2017-11-10T15:00:00.000Z", 
+  "statusChangeReason": "Tracking created", 
+  "weight": 1250, 
+  "estimatedDeliveryDate": "2017-11-20T20:00:00.000Z", 
+  "addressFrom": { 
+    "streetNr": "3", 
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+    "streetNr": "S/N", 
+    "streetName": "Ronda de la Comunicación", 
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "order": { 
+    "id": "999", 
+    "href": "https://host:port/productOrderingManagement/productOrder/999", 
+    "name": "Smart router", 
+    "description": "Smart 5G router" 
+
+
+} 
+ 
+ADD SHIPMENT TRACKING CHECKPOINT 
+  POST /tracking/{id}/checkpoint 
+Description 
+This operation adds a checkpoint to a shipment tracking entity. 
+Mandatory and Non-Mandatory Attributes 
+The following tables provides the list of mandatory and non-mandatory attributes when creating a 
+CheckPoint, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. Notice that adding a checkpoint should update the 
+status of the parent shipmentTracking entity. 
+Mandatory Attributes 
+Rule 
+status 
+ 
+date 
+ 
+checkPost 
+ 
+country 
+ 
+ 
+Non Mandatory Attributes 
+Default Value 
+Rule 
+message 
+ 
+ 
+city 
+ 
+ 
+stateOrProvince 
+ 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating a CheckPoint resource. In this example the request only 
+passes mandatory attributes. 
+ 
+Request 
+ 
+POST /shipmentTracking/v1/tracking/123/checkpoint 
+Content-Type: application/json 
+ 
+{ 
+    "status": "out of stock", 
+    "message": "Waiting for stock", 
+    "date": "2017-11-10T15:00:00.000Z", 
+    "checkPost": "Springfield warehouse", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+} 
+ 
+
+
+Response 
+ 
+201 
+ 
+{ 
+  "id": "456", 
+  "href": "/shipmentTracking/v1/tracking/456", 
+  "carrier": "PSU", 
+  "trackingCode": "PPSSSUUU354", 
+  "carrierTrackingUrl": "psuShipping/tracking/PPSSSUUU354", 
+  "trackingDate": "2017-11-10T15:00:00.000Z", 
+  "status": "in progress", 
+  "statusChangeDate": "2017-11-10T15:00:00.000Z", 
+  "statusChangeReason": "Cannot ship in time because of lack of stock", 
+  "weight": 1250, 
+  "estimatedDeliveryDate": "2017-11-20T20:00:00.000Z", 
+  "addressFrom": { 
+    "streetNr": "3", 
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+    "streetNr": "S/N", 
+    "streetName": "Ronda de la Comunicación", 
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "checkpoint": [ 
+    { 
+      "status": "out of stock", 
+      "message": "Waiting for stock", 
+      "date": "2017-11-10T15:00:00.000Z", 
+      "checkPost": "Springfield warehouse", 
+      "city": "Springfield", 
+      "stateOrProvince": "Oregon", 
+      "country": "USA" 
+    } 
+  ], 
+  "order": { 
+    "id": "999", 
+    "href": "https://host:port/productOrderingManagement/productOrder/999", 
+    "name": "Smart router", 
+    "description": "Smart 5G router" 
+  } 
+} 
+ 
+ 
+
+
+PATCH SHIPMENT TRACKING 
+  PATCH /tracking/{id} 
+Description 
+This operation allows partial updates of a user interaction entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules 
+concerning mandatory sub-resource attributes and default value settings in the POST operation applies to 
+the PATCH operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on 
+their usage. 
+Patchable Attributes 
+Rule 
+status 
+ 
+statusChangeDate 
+ 
+statusChangeReason 
+ 
+estimatedDeliveryDate 
+ 
+addressTo 
+ 
+trackingDate 
+ 
+checkpoint 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+carrier 
+ 
+trackingCode 
+ 
+carrierTrackingUrl 
+ 
+weight 
+ 
+addressFrom 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching a shipmentTracking resource. It is a request to change the 
+tentative delivery date. 
+ 
+Request 
+ 
+PATCH /shipmentTracking/v1/tracking/123 
+Content-Type: application/json-patch+query 
+[ 
+  {"op": "replace", "path": "estimatedDeliveryDate ", "value": "2018-01-01T12:01:34.000Z"} 
+
+
+ 
+ 
+Response 
+ 
+201 
+ 
+  { 
+  "id": "123", 
+  "href": "/shipmentTracking/v1/tracking/123", 
+  "carrier": "Fodex", 
+  "trackingCode": "FFFFXXXX987", 
+  "carrierTrackingUrl": "fodexDeliveryInc/shipments/FFFFXXXX987", 
+  "trackingDate":  "2018-01-01T12:01:34.000Z", 
+  "status": "in customs", 
+  "statusChangeDate": "2017-11-10T14:19:11.460Z", 
+  "statusChangeReason": "Arrived at customs office", 
+  "weight": 2500, 
+  "estimatedDeliveryDate": "2017-11-16T14:19:11.460Z", 
+  "addressFrom": { 
+    "streetNr": "3", 
+    "streetName": "Evergreen Terrace", 
+    "streetType": "street", 
+    "postcode": "87654", 
+    "city": "Springfield", 
+    "stateOrProvince": "Oregon", 
+    "country": "USA" 
+  }, 
+  "addressTo": { 
+    "streetNr": "S/N", 
+    "streetName": "Ronda de la Comunicación", 
+    "streetType": "Calle", 
+    "postcode": "28050", 
+    "locality": "Madrid", 
+    "city": "Madrid", 
+    "stateOrProvince": "Madrid", 
+    "country": "ESP" 
+  }, 
+  "checkpoint": [ 
+    { 
+      "status": "shipped", 
+      "message": "Shipped from warehouse facilities", 
+      "trackingDate": "2017-11-05T14:19:11.460Z", 
+      "checkPost": "Springfield warehouse", 
+      "city": "Springfield", 
+      "stateOrProvince": "Oregon", 
+      "country": "USA" 
+    }, 
+    { 
+      "status": "in progress", 
+      "message": "Arrived at Dallas to be shipped by plane", 
+      "date": "2017-11-07T14:19:11.460Z", 
+      "checkPost": "Dallas airport", 
+      "city": "Dallas", 
+      "stateOrProvince": "Texas", 
+      "country": "USA" 
+    }, 
+
+
+      "status": "in customs", 
+      "message": "Arrived at Madrid airport customs office", 
+      "date": "2017-11-10T14:19:11.460Z", 
+      "checkPost": "Madrid Barajas airport", 
+      "city": "Madrid", 
+      "stateOrProvince": "Madrid", 
+      "country": "ESP", 
+      "postcode": "28042" 
+    } 
+  ], 
+  "order": { 
+    "id": "654", 
+    "href": "https://host:port/productOrderingManagement/productOrder/654", 
+    "name": "New telco pack", 
+    "description": "Telco pack with black Friday offer" 
+  } 
+} 
+ 
+DELETE SHIPMENT TRACKING 
+  DELETE /tracking/{id} 
+Description 
+This operation deletes a shipment tracking entity. 
+Usage Samples 
+Here's an example of a request for deleting a Shipment Tracking resource. 
+ 
+Request 
+ 
+DELETE /shipmentTracking/v1/tracking/789987 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+
+
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample 
+REST notification POST calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the 
+REST Guidelines reproduced below. 
+REGISTER LISTENER 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its 
+health state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if 
+it does not support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint 
+can be created again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+UNREGISTER LISTENER 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+PUBLISH EVENT TO LISTENER 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener 
+url is the callback url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be 
+replaced by one of the notification types supported by this API (see Notification resources Models section) 
+and EVENT BODY refers to the data structure of the given notification type. 
+
+
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+    }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST 
+Design Guidelines. 
+ 
+
+
+ACKNOWLEGEMENTS 
+ 
+RELEASE HISTORY 
+ 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 
+18.0.0 
+Version 1.0.0 
+13-Feb-2018 
+Guillermo Martínez del 
+Camino 
+Telefónica 
+guillermo.martinezdelca
+mino@telefonica.com 
+First Release of Draft 
+Version of the Document. 
+Release 
+18.0.1 
+Version 1.0.1 
+02-May-2018 
+Adrienne Walcott 
+Updated to reflect TM 
+Forum Approved status.  
+Updated to TM Forum new 
+brand guidelines 
+ 
+ 
+CONTRIBUTORS TO DOCUMENT 
+ 
+ 
+Initial version 
+ 
+
+

@@ -1,0 +1,3949 @@
+ 
+ 
+TM Forum Specification 
+ 
+ 
+TMF908 IoT Device Management 
+API REST Specification 
+ 
+ 
+ 
+ 
+ 
+TMF908 
+Team Approved Date: 17/Oct/2019 
+ 
+ 
+ 
+ 
+Release Status:  Production 
+Approval Status: TM Forum Approved 
+Version 1.0.1 
+IPR Mode:  RAND 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 2 of 91 
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole 
+or in part, without restriction of any kind, provided that the above copyright notice and this section are included on 
+all such copies and derivative works. However, this document itself may not be modified in any way, including by 
+removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the rules applicable 
+to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to translate it into languages 
+other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL 
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 3 of 91 
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7196 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 4 of 91 
+Table of Contents 
+ 
+NOTICE ....................................................................................................................................................................... 2 
+Table of Contents ..................................................................................................................................................... 4 
+List of Tables ............................................................................................................................................................. 7 
+Introduction .............................................................................................................................................................. 8 
+SAMPLE USE CASES ......................................................................................................................................................... 9 
+Support of polymorphism and extension patterns ...................................................................................................... 10 
+RESOURCE MODEL ........................................................................................................................................................ 11 
+Managed Entity and Task Resource Models ............................................................................................................. 11 
+Iot Device resource ................................................................................................................................................ 11 
+Data Access Endpoint resource ............................................................................................................................. 23 
+Iot Device Specification resource .......................................................................................................................... 26 
+Iot Data Event resource ......................................................................................................................................... 33 
+Iot Management Event resource ........................................................................................................................... 34 
+Resource Specification resource ........................................................................................................................... 35 
+Alarm resource ...................................................................................................................................................... 41 
+Notification Resource Models .................................................................................................................................. 47 
+Iot Device Create Event ......................................................................................................................................... 49 
+Iot Device Change Event ........................................................................................................................................ 49 
+Iot Device Batch Event ........................................................................................................................................... 49 
+Iot Device Delete Event ......................................................................................................................................... 50 
+Iot Device Heart Beat Event .................................................................................................................................. 50 
+Iot Device State Change Event .............................................................................................................................. 50 
+Iot Device Specification Create Event ................................................................................................................... 51 
+Iot Device Specification Change Event .................................................................................................................. 51 
+Iot Device Specification Batch Event ..................................................................................................................... 52 
+Iot Device Specification Delete Event .................................................................................................................... 52 
+Alarm Create Event................................................................................................................................................ 52 
+Alarm Change Event .............................................................................................................................................. 53 
+Alarm Delete Event ................................................................................................................................................ 53 
+API OPERATIONS ........................................................................................................................................................... 54 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 5 of 91 
+Operations on Iot Device .......................................................................................................................................... 55 
+List iot devices ....................................................................................................................................................... 55 
+Retrieve iot device ................................................................................................................................................. 58 
+Create iot device .................................................................................................................................................... 61 
+Patch iot device ..................................................................................................................................................... 63 
+Delete iot device .................................................................................................................................................... 68 
+Operations on Data Access Endpoint ....................................................................................................................... 68 
+List data access endpoints ..................................................................................................................................... 68 
+Retrieve data access endpoint .............................................................................................................................. 69 
+Operations on Iot Device Specification..................................................................................................................... 70 
+List iot device specifications .................................................................................................................................. 70 
+Retrieve iot device specification ........................................................................................................................... 71 
+Create iot device specification .............................................................................................................................. 72 
+Patch iot device specification ................................................................................................................................ 73 
+Delete iot device specification .............................................................................................................................. 75 
+Operations on Iot Data Event ................................................................................................................................... 76 
+List iot data events ................................................................................................................................................ 76 
+Retrieve iot data event .......................................................................................................................................... 77 
+Operations on Iot Management Event ..................................................................................................................... 78 
+List iot management events .................................................................................................................................. 78 
+Retrieve iot management event ............................................................................................................................ 79 
+Operations on Resource Specification ...................................................................................................................... 79 
+Operations on Alarm ................................................................................................................................................. 79 
+List alarms .............................................................................................................................................................. 79 
+Retrieve alarm ....................................................................................................................................................... 81 
+Create alarm .......................................................................................................................................................... 82 
+Patch alarm ............................................................................................................................................................ 84 
+API NOTIFICATIONS....................................................................................................................................................... 87 
+Register listener ........................................................................................................................................................ 87 
+Unregister listener .................................................................................................................................................... 88 
+Publish Event to listener ........................................................................................................................................... 88 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 6 of 91 
+Acknowledgements ...................................................................................................................................................... 90 
+Document History ..................................................................................................................................................... 90 
+Version History ...................................................................................................................................................... 90 
+Release History ...................................................................................................................................................... 90 
+Contributors to Document ........................................................................................................................................ 90 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 7 of 91 
+List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 8 of 91 
+Introduction 
+ 
+The following document is the specification of the REST API for Any management. It includes the model definition 
+as well as all available operations.  
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 9 of 91 
+SAMPLE USE CASES 
+Reader will find an example of use cases using Usage API in “Open Digital Business Scenarios and Use Cases” 
+document. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 10 of 91 
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema-based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base entities, 
+for instance a BillingAccount and SettlementAccount inheriting properties from the abstract Account entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Account instances some may be instances of BillingAccount where other could be instances of SettlementAccount. 
+The @type gives this information. All resources and sub-resources of this API have a @type attributes that can be 
+provided when this is useful. 
+The @referredType can be used within reference entities (like for instance an AccountRef object) to explicitly denote 
+the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes the class 
+type of the reference itself, such as BillingAccountRef or SettlementAccountRef, and not the class type of the referred 
+object. However, since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 11 of 91 
+RESOURCE MODEL 
+ 
+This API uses the GeoLocation Datamodel defined as follows:
+ 
+Managed Entity and Task Resource Models 
+Iot Device resource 
+#TODO. 
+Resource model 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 12 of 91 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 13 of 91 
+Field descriptions 
+IotDevice fields 
+batteryLevel 
+A float. 
+dateFirstUsed 
+A date time (DateTime). 
+dateInstalled 
+A date time (DateTime). 
+dateLastCalibration 
+A date time (DateTime). 
+dateLastValueReported A date time (DateTime). 
+dateManufactured 
+A date time (DateTime). 
+deviceState 
+A string. 
+deviceType 
+A string. NGSI Entity type. 
+firmwareVersion 
+A string. 
+hardwareVersion 
+A string. 
+mnc 
+A string. 
+osVersion 
+A string. 
+provider 
+A string. 
+serialNumber 
+A string. This is a string that represents a manufacturer-allocated number used to 
+identify different instances of the same hardware item. The ModelNumber and 
+PartNumber attributes are used to identify different types of hardware items. This is a 
+REQUIRED attribute. 
+softwareVersion 
+A string. 
+value 
+A string. 
+alternateName 
+A string. 
+dataProvider 
+A string. 
+dateCreated 
+A date time (DateTime). 
+dateModified 
+A date time (DateTime). 
+description 
+A string. free-text description of the resource. 
+name 
+A string. A string used to give a name to the resource. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 14 of 91 
+source 
+A string. 
+areaServed 
+A string. 
+category 
+A list of category types (CategoryType [1..*]). 
+description 
+A string. free-text description of the resource. 
+endDate 
+A date time (DateTime). A date time( DateTime). The date till the resource is effective. 
+href 
+A string. The URI for the object itself. 
+id 
+A string. Identifier of an instance of the resource. Required to be unique within the 
+resource type.  Used in URIs as the identifier for specific instances of a type. 
+lifecycleState 
+A string. The life cycle state of the resource. 
+manufactureDate 
+A date time (DateTime). This is a string attribute that defines the date of manufacture 
+of this item in the fixed format "dd/mm/yyyy". This is an optional attribute. 
+name 
+A string. A string used to give a name to the resource. 
+powerState 
+A string. This defines the current power status of the hardware item. Values include: 
+ 
+  0:  Unknown 
+  1:  Not Applicable 
+  2:  No Power Applied 
+  3: Full Power Applied 
+  4:  Power Save - Normal 
+  5:  Power Save - Degraded 
+  6:  Power Save - Standby 
+  7:  Power Save - Critical 
+  8:  Power Save - Low Power Mode 
+  9:  Power Save - Unknown 
+ 10: Power Cycle 
+ 11: Power Warning 
+ 12: Power Off. 
+serialNumber 
+A string. This is a string that represents a manufacturer-allocated number used to 
+identify different instances of the same hardware item. The ModelNumber and 
+PartNumber attributes are used to identify different types of hardware items. This is a 
+REQUIRED attribute. 
+startDate 
+A date time (DateTime). A date time ( DateTime). The date from which the resource is 
+effective. 
+version 
+A string. A field that identifies the specific version of an instance of a resource. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 15 of 91 
+versionNumber 
+A string. This is a string that identifies the version of this object. This is an optional 
+attribute. 
+category 
+A list of category types (CategoryType [1..*]). 
+dataAccessEndPoint 
+A list of data access endpoints (DataAccessEndpoint [*]). This is the endpoint exposed 
+by the IoT Device to authorized users. 
+location 
+A geographic location (GeographicLocation). A GeographicLocation is a pure-virtual 
+super-class to the GeoJSON-aligned geometries of Point (addresses and locations), 
+MultiPoint, LineString (streets, highways and boundaries), MultiLineString and 
+Polygon (countries, provinces, tracts of land). Use the @type attribute to specify 
+which of these is being specified by the geometry attribute. 
+configuration 
+A configuration (Configuration). #TODO. 
+macAddress 
+A list of mac address types (MacAddressType [*]). #TODO. 
+rule 
+A list of rules (Rule [*]). 
+address 
+An address (Address). Structured textual way of describing how to find a Property in 
+an urban area (country properties are often 
+defined differently). 
+Note: Address corresponds to SID UrbanPropertyAddress. 
+location 
+A geographic location (GeographicLocation). A GeographicLocation is a pure-virtual 
+super-class to the GeoJSON-aligned geometries of Point (addresses and locations), 
+MultiPoint, LineString (streets, highways and boundaries), MultiLineString and 
+Polygon (countries, provinces, tracts of land). Use the @type attribute to specify 
+which of these is being specified by the geometry attribute. 
+characteristic 
+A list of resource characteristics (ResourceCharacteristic [*]). 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+partyRole 
+A list of party role references (PartyRoleRef [*]). A party role represents the part 
+played by a party in a given context. 
+place 
+A place (Place). Place reference. Place defines the places where the products are sold 
+or delivered. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+resourceRelationship 
+A list of resource relationships (ResourceRelationship [*]). Describes links between 
+resources. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 16 of 91 
+Address sub-resource 
+Structured textual way of describing how to find a Property in an urban area (country properties are often 
+defined differently). 
+Note: Address corresponds to SID UrbanPropertyAddress. 
+city 
+A string. City that the address is in. 
+country 
+A string. Country that the address is in. 
+locality 
+A string. "An area of defined or undefined boundaries within a local authority or other 
+legislatively defined area, usually rural or semi-rural in nature." [ANZLIC-STREET], or a 
+suburb "a bounded locality within a city, town or shire principally of urban character " 
+[ANZLICSTREET]. 
+postcode 
+A string. descriptor for a postal delivery area, used to speed and simplify the delivery 
+of mail (also known as zipcode). 
+stateOrProvince 
+A string. the State or Province that the address is in. 
+streetName 
+A string. Name of the street or other street type. 
+streetNr 
+A string. Number identifying a specific property on a public street. It may be combined 
+with streetNrLast for ranged addresses. 
+streetNrLast 
+A string. Last number in a range of street numbers allocated to a property. 
+streetNrLastSuffix 
+A string. Last street number suffix for a ranged address. 
+streetNrSuffix 
+A string. the first street number suffix. 
+streetSuffix 
+A string. A modifier denoting a relative direction. 
+streetType 
+A string. alley, avenue, boulevard, brae, crescent, drive, highway, lane, terrace, 
+parade, place, tarn, way, wharf. 
+subAddress 
+A sub address (SubAddress). Within a property in an urban area, may refer to a 
+building, building cluster, or a floor of a multistory building. 
+DataAccessEndpoint sub-resource 
+This is the endpoint exposed by the IoT Device to authorized users. 
+category 
+A string. Category of the concrete resource, such as: Gold, Silver for MSISDN concrete 
+resource. 
+description 
+A string. Free-text description of the resource. 
+endDate 
+A date time (DateTime). The date till the resource is effective. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 17 of 91 
+href 
+A string. The URI for the object itself. 
+id 
+A string. Identifier of an instance of the resource. Required to be unique within the 
+resource type.  Used in URIs as the identifier for specific instances of a type. 
+lifecycleState 
+A string. The life cycle state of the resource. 
+name 
+A string. A string used to give a name to the resource. 
+startDate 
+A date time (DateTime). A date time (DateTime). The date from which the resource is 
+effective. 
+value 
+A string. The value of the logical resource, such as: 0044746712345 for an MSISDN. 
+version 
+A string. A field that identifies the specific version of an instance of a resource. 
+apiType 
+A string. 
+uri 
+A string. URI for using the data access API. 
+characteristic 
+A list of resource characteristics (ResourceCharacteristic [*]). 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+partyRole 
+A list of party role references (PartyRoleRef [*]). A party role represents the part 
+played by a party in a given context. 
+place 
+A place (Place). Place reference. Place defines the places where the products are sold 
+or delivered. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+resourceRelationship 
+A list of resource relationships (ResourceRelationship [*]). Describes links between 
+resources. 
+GeographicLocation sub-resource 
+A GeographicLocation is a pure-virtual super-class to the GeoJSON-aligned geometries of Point (addresses and 
+locations), MultiPoint, LineString (streets, highways and boundaries), MultiLineString and Polygon (countries, 
+provinces, tracts of land). Use the @type attribute to specify which of these is being specified by the geometry 
+attribute. 
+href 
+A string. An URI used to access to the geographic location resource. 
+id 
+A string. Unique identifier of the geographic location. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 18 of 91 
+MacAddressType sub-resource 
+#TODO. 
+MacAddressType 
+A string. 
+Note sub-resource 
+Extra information about a given entity. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be globally 
+unique, depending on provider implementation). 
+text 
+A string. Text of the note. 
+Place sub-resource 
+Place reference. Place defines the places where the products are sold or delivered. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. Role played by the related party. 
+ResourceCharacteristic sub-resource 
+ 
+name 
+A string. name of the characteristic. 
+value 
+A string. value of the characteristic. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 19 of 91 
+ResourceRelationship sub-resource 
+Describes links between resources. 
+relationshipType 
+A string. Semantic of the relationship. 
+resource 
+A resource reference (ResourceRef). A reference to the resource. 
+SubAddress sub-resource 
+Representation of a SubAddress  
+It is used for addressing within a property in an urban area (country properties are often defined differently). It may 
+refer to a building, a building cluster, or a floor of a multistory building. 
+buildingName 
+A string. Allows for buildings that have well-known names. 
+href 
+A string. 
+id 
+A string. Unique ID for this SubAddress. 
+levelNumber 
+A string. Used where a level type may be repeated e.g. BASEMENT 1, BASEMENT 2. 
+levelType 
+A string. Describes level types within a building. 
+name 
+A string. Name of the subAddress to identify it with a meaningful identification. 
+privateStreetName 
+A string. Private streets internal to a property (e.g. a university) may have internal 
+names that are not recorded by the land title office. 
+privateStreetNumber 
+A string. Private streets numbers internal to a private street. 
+subAddressType 
+A string. The type of subaddress: it can be a subunit or a private street. 
+subUnitNumber 
+A string. The discriminator of the subunit, often just a simple number e.g. FLAT 5, may 
+also be a range. 
+subUnitType 
+A string. The type of subunit, such as BERTH, FLAT, PIER, SUITE, SHOP, TOWER, UNIT, 
+WHARF. 
+PartyRoleRef relationship 
+Party role reference. A party role represents the part played by a party in a given context. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the product. 
+id 
+A string. Unique identifier of the product. 
+name 
+A string. The name of the referred party role. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 20 of 91 
+partyId 
+A string. The identifier of the engaged party that is linked to the PartyRole object. 
+partyName 
+A string. The name of the engaged party that is linked to the PartyRole object. 
+ResourceRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the resource. 
+value 
+A string. The resource value that can be used to identify a resource with a public key 
+(e.g.: a tel nr, an msisdn). 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDevice' resource object 
+{ 
+    "dateFirstUsed": "2019-05-13T00:00", 
+    "dateInstalled": "2019-05-13T00:00", 
+    "dateLastCalibration": "2019-05-13T00:00", 
+    "dateLastValueReported": "2019-05-13T00:00", 
+    "dateManufactured": "2019-05-13T00:00", 
+    "deviceState": "ok", 
+    "deviceType": "Temperature", 
+    "firmwareVersion": "1.0.0", 
+    "hardwareVersion": "1.0.0", 
+    "mnc": "01", 
+    "osVersion": "1.0.0", 
+    "provider": "Mandat International", 
+    "serialNumber": "12345", 
+    "softwareVersion": "1.0.0", 
+    "value": "0041227744222", 
+    "alternateName": "CoAP temperature sensor 3", 
+    "dataProvider": "https://www.mandint.org", 
+    "dateCreated": "2019-05-13T00:00", 
+    "dateModified": "2019-05-13T00:00", 
+    "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+    "name": "temp_3", 
+    "source": "coap://[2001:41e0:6002:1800:0:0:0:3]:61616/temp ", 
+    "areaServed": "Switzerland ", 
+    "category": "Gold ", 
+    "endDate ": "2019-05-13T00:00", 
+    "href ": "https//host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+    "lifecycleState": "InService", 
+    "manufactureDate": "2019-05-13T00:00", 
+    "powerState": "3", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 21 of 91 
+    "startDate": "2019-05-13T00:00", 
+    "version": "1.0", 
+    "versionNumber": "1.0.0", 
+    "dataAccessEndPoint": { 
+        "category": "Gold", 
+        "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+        "endDate": "2019-05-13T00:00", 
+        "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+        "id": "3", 
+        "lifecycleState": "InService", 
+        "name": "temp_3", 
+        "startDate": "2019-05-03T00:00", 
+        "value": "0041227744222", 
+        "version": "1.0", 
+        "apiType": "NGSI", 
+        "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+    }, 
+    "batteryLevel": 1.0, 
+    "configuration": { 
+        "timeout": 5, 
+        "reportingPeriod ": 300 
+    }, 
+    "macAddress": [ 
+        "02:00:00:00:00:03" 
+    ], 
+    "$id": "Device.schema.json", 
+    "address": { 
+        "addressLocality": "Geneva", 
+        "postalCode": "1209", 
+        "streetAddress": "Chemin du Champ-Baron 3" 
+    }, 
+    "location": { 
+        " attrName": "position", 
+        "coords": { 
+            "type": "Point", 
+            "coordinates": [ 
+                46.223064, 
+                6.1305982 
+            ] 
+        } 
+    }, 
+    "characteristic": [ 
+        { 
+            "name": "accuracy", 
+            "value": "1.0" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "author": "Cedric Crettaz", 
+            "date": "2019-05-13T00:00", 
+            "id": "txt001", 
+            "text": "This is a CoAP temperature sensor." 
+        } 
+    ], 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 22 of 91 
+    "partyRole": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "partyId": "MI", 
+            "partyName": "Mandat International" 
+        } 
+    ], 
+    "place": { 
+        "href": "Chemin du Champ-Baron 3", 
+        "id": "1209", 
+        "name": "Geneva Office" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "role": "vendor" 
+        } 
+    ], 
+    "resourceRelationship": [ 
+        { 
+            "@Type": "IotAgent", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "id": "MI", 
+            "name": "UDG", 
+            "value": "0041227744222" 
+        } 
+    ], 
+    "iotAgent": [ 
+        { 
+            "name": "UDG", 
+            "objectId": "udgmi", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "@referredType": "IotAgent", 
+            "dataAccessEndPoint": { 
+                "category": "Gold", 
+                "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+                "endDate": "2019-05-13T00:00", 
+                "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+                "id": "3", 
+                "lifecycleState": "InService", 
+                "name": "temp_3", 
+                "startDate": "2019-05-03T00:00", 
+                "value": "0041227744222", 
+                "version": "1.0", 
+                "apiType": "NGSI", 
+                "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+            } 
+        } 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 23 of 91 
+    ] 
+} 
+Data Access Endpoint resource 
+This is the endpoint exposed by the IoT Device to authorized users. 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 24 of 91 
+Field descriptions 
+DataAccessEndpoint fields 
+category 
+A string. Category of the concrete resource, such as: Gold, Silver for MSISDN concrete 
+resource. 
+description 
+A string. Free-text description of the resource. 
+endDate 
+A date time (DateTime). The date till the resource is effective. 
+href 
+A string. The URI for the object itself. 
+id 
+A string. Identifier of an instance of the resource. Required to be unique within the 
+resource type.  Used in URIs as the identifier for specific instances of a type. 
+lifecycleState 
+A string. The life cycle state of the resource. 
+name 
+A string. A string used to give a name to the resource. 
+startDate 
+A date time (DateTime). A date time (DateTime). The date from which the resource is 
+effective. 
+value 
+A string. The value of the logical resource, such as: 0044746712345 for an MSISDN. 
+version 
+A string. A field that identifies the specific version of an instance of a resource. 
+apiType 
+A string. 
+uri 
+A string. URI for using the data access API. 
+characteristic 
+A list of resource characteristics (ResourceCharacteristic [*]). 
+note 
+A list of notes (Note [*]). Extra information about a given entity. 
+partyRole 
+A list of party role references (PartyRoleRef [*]). A party role represents the part 
+played by a party in a given context. 
+place 
+A place (Place). Place reference. Place defines the places where the products are sold 
+or delivered. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+resourceRelationship 
+A list of resource relationships (ResourceRelationship [*]). Describes links between 
+resources. 
+Note sub-resource 
+Extra information about a given entity. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 25 of 91 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity (may or may not be globally 
+unique, depending on provider implementation). 
+text 
+A string. Text of the note. 
+Place sub-resource 
+Place reference. Place defines the places where the products are sold or delivered. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. Role played by the related party. 
+ResourceCharacteristic sub-resource 
+ 
+name 
+A string. name of the characteristic. 
+value 
+A string. value of the characteristic. 
+ResourceRelationship sub-resource 
+Describes links between resources. 
+relationshipType 
+A string. Semantic of the relationship. 
+resource 
+A resource reference (ResourceRef). A reference to the resource. 
+PartyRoleRef relationship 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 26 of 91 
+Party role reference. A party role represents the part played by a party in a given context. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the product. 
+id 
+A string. Unique identifier of the product. 
+name 
+A string. The name of the referred party role. 
+partyId 
+A string. The identifier of the engaged party that is linked to the PartyRole object. 
+partyName 
+A string. The name of the engaged party that is linked to the PartyRole object. 
+ResourceRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the resource. 
+value 
+A string. The resource value that can be used to identify a resource with a public key 
+(e.g.: a tel nr, an msisdn). 
+Json representation sample 
+We provide below the json representation of an example of a 'DataAccessEndpoint' resource object 
+{ 
+    "category": "Gold", 
+    "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+    "endDate": "2019-05-13T00:00", 
+    "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+    "id": "3", 
+    "lifecycleState": "InService", 
+    "name": "temp_3", 
+    "startDate": "2019-05-03T00:00", 
+    "value": "0041227744222", 
+    "version": "1.0", 
+    "apiType": "NGSI", 
+    "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+} 
+Iot Device Specification resource 
+#TODO. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 27 of 91 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 28 of 91 
+Field descriptions 
+IotDeviceSpecification fields 
+description 
+A string. A narrative that explains in detail what the service specification is. 
+href 
+A string. Reference of the service specification. 
+id 
+A string. Unique identifier of the service specification. 
+isBundle 
+A boolean. isBundle determines whether a ServiceSpecification represents a single 
+ServiceSpecification (false), or a bundle of ServiceSpecification (true). 
+lastUpdate 
+A date time (DateTime). Date and time of the last update of the service 
+specification. 
+lifecycleStatus 
+A string. Used to indicate the current lifecycle status of the service specification. 
+name 
+A string. Name of the service specification. 
+version 
+A string. Service specification version. 
+attachment 
+A list of attachment references (AttachmentRef [*]). A list of attachments 
+(Attachment [*]). Complements the description of the specification through video, 
+pictures... 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of related party references 
+(RelatedParty [*]). A related party defines party or party role linked to a specific 
+entity. 
+resourceSpecCharacteristic A list of resource spec characteristics (ResourceSpecCharacteristic [*]). A list of 
+service spec characteristics (ServiceSpecCharacteristic [*]). This class represents the 
+key features of this service specification. 
+resourceSpecRelationship 
+A list of resource spec relationships (ResourceSpecRelationship [*]). A list of 
+resource specifications related to this specification, e.g. migration, substitution, 
+dependency or exclusivity relationship. 
+resourceSpecification 
+A list of resource specification references (ResourceSpecificationRef [*]). A list of 
+resource specification references (ResourceSpecificationRef [*]). The 
+ResourceSpecification is required for a service specification with type 
+ResourceFacingServiceSpecification (RFSS). 
+targetServiceSchema 
+A target service schema (TargetServiceSchema). A target service schema reference 
+(TargetServiceSchemaRef). The reference object to the schema and type of target 
+service which is described by service specification. 
+validFor 
+A time period. The period for which the service specification is valid. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 29 of 91 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. Role played by the related party. 
+ResourceSpecCharRelationship sub-resource 
+An aggregation, migration, substitution, dependency or exclusivity relationship between/among 
+resourceSpecCharacteristics. 
+href 
+A string. Hyperlink reference to the target specification. 
+id 
+A string. Unique identifier of the target specification. 
+name 
+A string. Name of the target characteristic. 
+relationshipType 
+A string. Type of relationship such as aggregation, migration, substitution, 
+dependency, exclusivity. 
+role 
+A string. The association role for this service specification. 
+validFor 
+A time period. The period for which the serviceSpecCharRelationship is valid. 
+ResourceSpecCharacteristic sub-resource 
+This class represents the key features of this service specification. For example, bandwidth is a characteristic of 
+many different types of services; if bandwidth is a relevant characteristic (e.g., from the point-of-view of a 
+Customer obtaining this Service via a Product) then bandwidth would be a ServiceSpecCharacteristic for that 
+particular Service. 
+@valueSchemaLocation 
+A string. This (optional) field provides a link to the schema describing the 
+value type. 
+configurable 
+A boolean. If true, the Boolean indicates that the serviceSpecCharacteristic is 
+configurable. 
+description 
+A string. A narrative that explains in detail what the serviceSpecCharacteristic 
+is. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 30 of 91 
+extensible 
+A boolean. An indicator that specifies that the values for the characteristic 
+can be extended by adding new values when instantiating a characteristic for 
+an Entity. 
+isUnique 
+A boolean. An indicator that specifies if a value is unique for the specification. 
+Possible values are; "unique while value is in effect" and "unique whether 
+value is in effect or not". 
+maxCardinality 
+An integer. The maximum number of instances a CharacteristicValue can take 
+on. For example, zero to five phone numbers in a group calling plan, where 
+five is the value for the maxCardinality. 
+minCardinality 
+An integer. The minimum number of instances a CharacteristicValue can take 
+on. For example, zero to five phone numbers in a group calling plan, where 
+zero is the value for the minCardinality. 
+name 
+A string. A word, term, or phrase by which this characteristic specification is 
+known and distinguished from other characteristic specifications. 
+regex 
+A string. A rule or principle represented in regular expression used to derive 
+the value of a characteristic value. 
+resourceSpecCharRelationship 
+A list of resource spec char relationships (ResourceSpecCharRelationship [*]). 
+A list of resource spec char relationships (ResourceSpecCharRelationship [*]). 
+An aggregation, migration, substitution, dependency or exclusivity 
+relationship between/among Specification Characteristics. 
+resourceSpecCharacteristicValue A list of resource spec characteristic values (ResourceSpecCharacteristicValue 
+[*]). A list of resource spec characteristic values 
+(ResourceSpecCharacteristicValue [*]). A ResourceSpecCharacteristicValue 
+object is used to define a set of attributes, each of which can be assigned to a 
+corresponding set of attributes in a ResourceSpecCharacteristic object. The 
+values of the attributes in the ResourceSpecCharacteristicValue object 
+describe the values of the attributes that a corresponding 
+ResourceSpecCharacteristic object can take on. 
+validFor 
+A time period. The period for which the serviceSpecCharacteristic is valid. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as numeric, 
+text and so forth. 
+ResourceSpecCharacteristicValue sub-resource 
+A ResourceSpecCharacteristicValue object is used to define a set of attributes, each of which can be assigned to a 
+corresponding set of attributes in a ResourceSpecCharacteristic object. The values of the attributes in the 
+ResourceSpecCharacteristicValue object describe the values of the attributes that a corresponding 
+ResourceSpecCharacteristic object can take on. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 31 of 91 
+isDefault 
+A boolean. Indicates if the value is the default value for a characteristic. 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the valueFrom and 
+valueTo attributes. If applicable, possible values are "open", "closed", "closedBottom" 
+and "closedTop". 
+regex 
+A string. A regular expression constraint for given value. 
+unitOfMeasure 
+A string. A length, surface, volume, dry measure, liquid measure, money, weight, 
+time, and the like. In general, a determinate quantity or magnitude of the kind 
+designated, taken as a standard of comparison for others of the same kind, in 
+assigning to them numerical values, as 1 foot, 1 yard, 1 mile, 1 square foot. 
+validFor 
+A time period. The period of time for which a value is applicable. 
+value 
+An any (Any). A discrete value that the characteristic can take on, or the actual value 
+of the characteristic. 
+valueFrom 
+An integer. The low range value that a characteristic can take on. 
+valueTo 
+An integer. The upper range value that a characteristic can take on. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as numeric, text, and 
+so forth. 
+ResourceSpecRelationship sub-resource 
+A migration, substitution, dependency or exclusivity relationship between/among Resource specifications. 
+href 
+A string. Reference of the target ResourceSpecification. 
+id 
+A string. Unique identifier of the target ResourceSpecification. 
+name 
+A string. The name given to the target Resource specification instance. 
+relationshipType 
+A string. Type of relationship such as migration, substitution, dependency, exclusivity. 
+role 
+A string. The association role for this Resource specification. 
+validFor 
+A time period. The period for which the ResourceSpecRelationship is valid. 
+TargetServiceSchema sub-resource 
+The reference object to the schema and type of target service which is described by service specification. 
+@schemaLocation 
+A string. This field provides a link to the schema describing the target service. 
+@type 
+A string. Class type of the target service. 
+AttachmentRef relationship 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 32 of 91 
+Attachment reference. An attachment complements the description of an element (for instance a product) through 
+video, pictures. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. URL serving as reference for the attachment resource. 
+id 
+A string. Unique-Identifier for this attachment. 
+name 
+A string. Name of the related entity. 
+description 
+A string. A narrative text describing the content of the attachment. 
+url 
+A string. Link to the attachment media/content. 
+ResourceSpecificationRef relationship 
+Resource Specification reference: The ResourceSpecification is required to realize a ProductSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the resource specification. 
+id 
+A string. Unique identifier of the resource specification. 
+name 
+A string. Name of the requiredResourceSpecification. 
+version 
+A string. Resource specification version. 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceSpecification' resource object 
+{ 
+    "description": "This  iot device specification ...", 
+    "href": "https:/host:port/tmf-api/iotDeviceSpecification/v1/iotDeviceSpecification/4976", 
+    "id": "4976", 
+    "isBundle": true, 
+    "lastUpdate": "2019-10-03T00:00", 
+    "lifecycleStatus": "a string ...", 
+    "name": "a string ...", 
+    "version": "a string ...", 
+    "attachment": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+    ], 
+    "resourceSpecRelationship": [ 
+        {} 
+    ], 
+    "resourceSpecCharacteristic": [ 
+        {} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 33 of 91 
+    ], 
+    "resourceSpecification": [ 
+        {} 
+    ], 
+    "targetServiceSchema": {}, 
+    "validFor": {} 
+} 
+Iot Data Event resource 
+#TODO. 
+Resource model 
+ 
+Field descriptions 
+IotDataEvent fields 
+correlationId 
+A string. The correlation id for this event. 
+description 
+A string. An explnatory of the event. 
+domain 
+A string. The domain of the event. 
+eventId 
+A string. The identifier of the notification. 
+eventTime 
+A date time (DateTime). Time of the event occurrence. 
+eventType 
+A string. The type of the notification. 
+priority 
+A string. A priority. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 34 of 91 
+timeOcurred 
+A date time (DateTime). The time the event occured. 
+title 
+A string. The title of the event. 
+event 
+An any (Any). 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDataEvent' resource object 
+{ 
+    "correlationId": "413", 
+    "description": "This  iot data event ...", 
+    "domain": "a string ...", 
+    "eventId": "374", 
+    "eventTime": "2019-10-03T00:00", 
+    "eventType": "a string ...", 
+    "priority": "a string ...", 
+    "timeOcurred": "2019-10-03T00:00", 
+    "title": "a string ...", 
+    "event": {} 
+} 
+Iot Management Event resource 
+Generic IotManagementEvent structure used to define commonalities between sub concepts of 
+PartyIotManagementEvent and Financial IotManagementEvent. 
+Resource model 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 35 of 91 
+Field descriptions 
+IotManagementEvent fields 
+correlationId 
+A string. The correlation id for this event. 
+description 
+A string. 
+domain 
+A string. The domain of the event. 
+eventId 
+A string. The identifier of the notification. 
+eventTime 
+A date time (DateTime). Time of the event occurrence. 
+eventType 
+A string. The type of the notification. 
+priority 
+A string. A priority. 
+timeOcurred 
+A date time (DateTime). The time the event occurred. 
+title 
+A string. The title of the event. 
+description 
+A string. 
+event 
+An any (Any). 
+Json representation sample 
+We provide below the json representation of an example of an 'IotManagementEvent' resource object 
+{ 
+    "correlationId": "423", 
+    "description": "This  iot management event ...", 
+    "domain": "a string ...", 
+    "eventId": "536", 
+    "eventTime": "2019-10-03T00:00", 
+    "eventType": "a string ...", 
+    "priority": "a string ...", 
+    "timeOcurred": "2019-10-03T00:00", 
+    "title": "a string ...", 
+    "event": {} 
+} 
+Resource Specification resource 
+ResourceSpecification is a class that offers characteristics to describe a type of service. 
+Functionally, it acts as a template by which Services may be instantiated. By sharing the same specification, these 
+services would therefore share the same set of characteristics. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 36 of 91 
+Resource model 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 37 of 91 
+Field descriptions 
+ResourceSpecification fields 
+attachment 
+A list of attachment references (AttachmentRef [*]). A list of attachments 
+(Attachment [*]). Complements the description of the specification through video, 
+pictures... 
+description 
+A string. A narrative that explains in detail what the service specification is. 
+href 
+A string. Reference of the service specification. 
+id 
+A string. Unique identifier of the service specification. 
+isBundle 
+A boolean. isBundle determines whether a ServiceSpecification represents a single 
+ServiceSpecification (false), or a bundle of ServiceSpecification (true). 
+lastUpdate 
+A date time (DateTime). Date and time of the last update of the service 
+specification. 
+lifecycleStatus 
+A string. Used to indicate the current lifecycle status of the service specification. 
+name 
+A string. Name of the service specification. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of related party references 
+(RelatedParty [*]). A related party defines party or party role linked to a specific 
+entity. 
+resourceSpecCharacteristic A list of resource spec characteristics (ResourceSpecCharacteristic [*]). A list of 
+service spec characteristics (ServiceSpecCharacteristic [*]). This class represents the 
+key features of this service specification. 
+resourceSpecRelationship 
+A list of resource spec relationships (ResourceSpecRelationship [*]). A list of 
+resource specifications related to this specification, e.g. migration, substitution, 
+dependency or exclusivity relationship. 
+resourceSpecification 
+A list of resource specification references (ResourceSpecificationRef [*]). A list of 
+resource specification references (ResourceSpecificationRef [*]). The 
+ResourceSpecification is required for a service specification with type 
+ResourceFacingServiceSpecification (RFSS). 
+targetServiceSchema 
+A target service schema (TargetServiceSchema). A target service schema reference 
+(TargetServiceSchemaRef). The reference object to the schema and type of target 
+service which is described by service specification. 
+validFor 
+A time period. The period for which the service specification is valid. 
+version 
+A string. Service specification version. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 38 of 91 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+name 
+A string. Name of the related entity. 
+role 
+A string. Role played by the related party. 
+ResourceSpecCharRelationship sub-resource 
+An aggregation, migration, substitution, dependency or exclusivity relationship between/among 
+resourceSpecCharacteristics. 
+href 
+A string. Hyperlink reference to the target specification. 
+id 
+A string. Unique identifier of the target specification. 
+name 
+A string. Name of the target characteristic. 
+relationshipType 
+A string. Type of relationship such as aggregation, migration, substitution, 
+dependency, exclusivity. 
+role 
+A string. The association role for this service specification. 
+validFor 
+A time period. The period for which the serviceSpecCharRelationship is valid. 
+ResourceSpecCharacteristic sub-resource 
+This class represents the key features of this service specification. For example, bandwidth is a characteristic of 
+many different types of services; if bandwidth is a relevant characteristic (e.g., from the point-of-view of a 
+Customer obtaining this Service via a Product) then bandwidth would be a ServiceSpecCharacteristic for that 
+particular Service. 
+@valueSchemaLocation 
+A string. This (optional) field provides a link to the schema describing the 
+value type. 
+configurable 
+A boolean. If true, the Boolean indicates that the serviceSpecCharacteristic is 
+configurable. 
+description 
+A string. A narrative that explains in detail what the serviceSpecCharacteristic 
+is. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 39 of 91 
+extensible 
+A boolean. An indicator that specifies that the values for the characteristic 
+can be extended by adding new values when instantiating a characteristic for 
+an Entity. 
+isUnique 
+A boolean. An indicator that specifies if a value is unique for the specification. 
+Possible values are; "unique while value is in effect" and "unique whether 
+value is in effect or not". 
+maxCardinality 
+An integer. The maximum number of instances a CharacteristicValue can take 
+on. For example, zero to five phone numbers in a group calling plan, where 
+five is the value for the maxCardinality. 
+minCardinality 
+An integer. The minimum number of instances a CharacteristicValue can take 
+on. For example, zero to five phone numbers in a group calling plan, where 
+zero is the value for the minCardinality. 
+name 
+A string. A word, term, or phrase by which this characteristic specification is 
+known and distinguished from other characteristic specifications. 
+regex 
+A string. A rule or principle represented in regular expression used to derive 
+the value of a characteristic value. 
+resourceSpecCharRelationship 
+A list of resource spec char relationships (ResourceSpecCharRelationship [*]). 
+A list of resource spec char relationships (ResourceSpecCharRelationship [*]). 
+An aggregation, migration, substitution, dependency or exclusivity 
+relationship between/among Specification Characteristics. 
+resourceSpecCharacteristicValue A list of resource spec characteristic values (ResourceSpecCharacteristicValue 
+[*]). A list of resource spec characteristic values 
+(ResourceSpecCharacteristicValue [*]). A ResourceSpecCharacteristicValue 
+object is used to define a set of attributes, each of which can be assigned to a 
+corresponding set of attributes in a ResourceSpecCharacteristic object. The 
+values of the attributes in the ResourceSpecCharacteristicValue object 
+describe the values of the attributes that a corresponding 
+ResourceSpecCharacteristic object can take on. 
+validFor 
+A time period. The period for which the serviceSpecCharacteristic is valid. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as numeric, 
+text and so forth. 
+ResourceSpecCharacteristicValue sub-resource 
+A ResourceSpecCharacteristicValue object is used to define a set of attributes, each of which can be assigned to a 
+corresponding set of attributes in a ResourceSpecCharacteristic object. The values of the attributes in the 
+ResourceSpecCharacteristicValue object describe the values of the attributes that a corresponding 
+ResourceSpecCharacteristic object can take on. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 40 of 91 
+isDefault 
+A boolean. Indicates if the value is the default value for a characteristic. 
+rangeInterval 
+A string. An indicator that specifies the inclusion or exclusion of the valueFrom and 
+valueTo attributes. If applicable, possible values are "open", "closed", "closedBottom" 
+and "closedTop". 
+regex 
+A string. A regular expression constraint for given value. 
+unitOfMeasure 
+A string. A length, surface, volume, dry measure, liquid measure, money, weight, 
+time, and the like. In general, a determinate quantity or magnitude of the kind 
+designated, taken as a standard of comparison for others of the same kind, in 
+assigning to them numerical values, as 1 foot, 1 yard, 1 mile, 1 square foot. 
+validFor 
+A time period. The period of time for which a value is applicable. 
+value 
+An any (Any). A discrete value that the characteristic can take on, or the actual value 
+of the characteristic. 
+valueFrom 
+An integer. The low range value that a characteristic can take on. 
+valueTo 
+An integer. The upper range value that a characteristic can take on. 
+valueType 
+A string. A kind of value that the characteristic can take on, such as numeric, text, and 
+so forth. 
+ResourceSpecRelationship sub-resource 
+A migration, substitution, dependency or exclusivity relationship between/among Resource specifications. 
+href 
+A string. Reference of the target ResourceSpecification. 
+id 
+A string. Unique identifier of the target ResourceSpecification. 
+name 
+A string. The name given to the target Resource specification instance. 
+relationshipType 
+A string. Type of relationship such as migration, substitution, dependency, exclusivity. 
+role 
+A string. The association role for this Resource specification. 
+validFor 
+A time period. The period for which the ResourceSpecRelationship is valid. 
+TargetServiceSchema sub-resource 
+The reference object to the schema and type of target service which is described by service specification. 
+@schemaLocation 
+A string. This field provides a link to the schema describing the target service. 
+@type 
+A string. Class type of the target service. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 41 of 91 
+AttachmentRef relationship 
+Attachment reference. An attachment complements the description of an element (for instance a product) through 
+video, pictures. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. URL serving as reference for the attachment resource. 
+id 
+A string. Unique-Identifier for this attachment. 
+name 
+A string. Name of the related entity. 
+description 
+A string. A narrative text describing the content of the attachment. 
+url 
+A string. Link to the attachment media/content. 
+ResourceSpecificationRef relationship 
+Resource Specification reference: The ResourceSpecification is required to realize a ProductSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+href 
+A string. Reference of the resource specification. 
+id 
+A string. Unique identifier of the resource specification. 
+name 
+A string. Name of the requiredResourceSpecification. 
+version 
+A string. Resource specification version. 
+Json representation sample 
+We provide below the json representation of an example of a 'ResourceSpecification' resource object 
+{ 
+    "href": "https://mycsp.com:8080/tmf-api/resourceCatalogManagement/v3/resourceSpecification/42", 
+    "id": "42", 
+    "name": "Firewall", 
+    "version": "1.0", 
+    "@referredType": "ResourceFunctionSpec" 
+} 
+Alarm resource 
+This resource represents an alarm supporting the information model defined in ITU-T X.733. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 42 of 91 
+Resource model 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 43 of 91 
+Field descriptions 
+Alarm fields 
+@baseType 
+A string. The base type of this alarm. 
+@schemaLocation 
+A string. A reference to the schema describing this alarm. 
+@type 
+A string. The type for this alarm. 
+ackState 
+A string. Provides the Acknowledgement State of the alarm ACKNOWLEDGED, 
+UNACKNOWLEDGED. 
+ackSystemId 
+A string. Provides the name of the system that last changed the ackState of an 
+alarm, i.e. acknowledged or unacknowledged the alarm. 
+ackUserId 
+A string. Provides the id of the user who has last changed the ack state of the 
+alarm, i.e. acknowledged or unacknowledged the alarm. 
+affectedService 
+A list of affected services (AffectedService [*]). 
+alarmChangedTime 
+A date time (DateTime). Indicates the last date and time when the alarm is 
+changed on the alarm-owning system. Any change to the alarm whether coming 
+from the alarmed resource or triggered by a change from the client is changing 
+this time. 
+alarmClearedTime 
+A date time (DateTime). Indicates the time (as a date + time) at which the alarm 
+is cleared at the source. 
+alarmDetails 
+A string. Contains further information on the alarm. 
+alarmEscalation 
+A string. Indicates if this alarm has been escalated or not. 
+alarmRaisedTime 
+A date time (DateTime). Indicates the time (as a date + time) at which the alarm 
+occurred at its source. 
+alarmReportingTime 
+A date time (DateTime). Indicates the time (as a date + time) at which the alarm 
+was reported by the owning OSS. It might be different from the 
+alarmRaisedTime. For instance, if the alarm list is maintained by an EMS, the 
+alarmRaisedtime would be the time the alarm 
+  was detected by the NE, while the alarmReportingTime would be the time this 
+alarm was stored in the alarm list of the EMS. 
+alarmType 
+A string. Categorize the alarm. Should be one of the values defined in X.733 8.1.1 
+or 3GPP TS 32.111-2 Annex A: 
+ 
+Communications Alarm 
+ 
+Processing Error Alarm 
+ 
+Environmental Alarm 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 44 of 91 
+ 
+Quality of Service Alarm 
+ 
+Equipment Alarm 
+ 
+Integrity Violation 
+ 
+Operational Violation 
+ 
+Physical Violation 
+ 
+Security Service or Mechanism Violation 
+ 
+Time Domain Violation. 
+alarmedObject 
+An alarmed object (AlarmedObject). Identifies the managed object instance 
+associated with the alarm. 
+alarmedObjectType 
+A string. The type (class) of the managed object associated with the event. 
+clearSystemId 
+A string. Provides the id of the system where the user who invoked the 
+alarmCleared operation is located. 
+clearUserId 
+A string. Provides the id of the user who invoked the alarmCleared operation. 
+comments 
+A list of comments (Comment [*]). Indicates the comments entered on the 
+alarm. 
+correlatedAlarm 
+A list of correlated alarms (CorrelatedAlarm [*]). Indicates the alarms attached to 
+this alarm as correlated alarms from a correlation point of view. An alarm can be 
+correlated to one or more underlying alarms. There might be multiple levels of 
+alarm correlation and an underlying alarm in one relation can be itself a parent 
+alarm for other underlying alarms. 
+crossedThresholdInformation A crossed threshold information (CrossedThresholdInformation). Identifies the 
+details of the threshold that has been crossed. 
+externalAlarmId 
+A string. An identifier of the alarm in the source system. 
+href 
+A string. A reference to the alarm. 
+id 
+An integer. Identifier of the alarm, determined by the alarm owning system. 
+isRootCause 
+A boolean. Indicates whether the alarm is a root cause alarm. 
+parentAlarm 
+A list of parent alarms (ParentAlarm [*]). Indicates the alarms attached to this 
+alarm as parent alarms from a correlation point of view. 
+perceivedSeverity 
+A string. Lists the possible severities that can be allocated to an Alarm. The 
+values are consistent with ITU-T Recommendation X.733: 
+ 
+CRITICAL 
+ 
+MAJOR 
+ 
+MINOR 
+ 
+WARNING 
+ 
+INDETERMINATE 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 45 of 91 
+ 
+CLEARED 
+Once an alarm has been cleared, its perceived severity is set to CLEARED and can 
+no longer be set. 
+plannedOutageIndicator 
+A string. Indicates that the Managed Object (related to this alarm) is in planned 
+outage (in planned maintenance, or out-of-service). 
+probableCause 
+A string. Provides the probable cause of the alarm. The values are consistent 
+with ITU-T Recommendation X.733 or 3GPP TS 32.111-2 Annex B. 
+proposedRepairedActions 
+A string. Indicates proposed repair actions, if known to the system emitting the 
+alarm. 
+serviceAffecting 
+A string. Indicates whether the alarm affects service or not. 
+sourceSystemId 
+A string. 
+specificProblem 
+A string. Provides more specific information about the alarm. 
+state 
+A string. Defines the alarm state during its life cycle RAISED, UPDATED or 
+CLEARED. 
+AffectedService sub-resource 
+ 
+href 
+A string. Provides the identifier of the service affected by the alarm. 
+id 
+A string. 
+AlarmedObject sub-resource 
+Identifies the managed object instance associated with the alarm. 
+href 
+A string. A reference to the managed object associated with the event. 
+id 
+A string. The identifier of the managed object associated with the event. 
+Comment sub-resource 
+Indicates the comments entered on the alarm. 
+comment 
+A string. Indicates the text of the comment. 
+systemId 
+A string. Indicates the system identifier on which the client set the comment. 
+time 
+A date time (DateTime). Indicates the time commenting the alarm. 
+userId 
+A string. Indicates the user commenting the alarm. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 46 of 91 
+CorrelatedAlarm sub-resource 
+Indicates the alarms attached to this alarm as correlated alarms from a correlation point of view. An alarm can be 
+correlated to one or more underlying alarms. There might be multiple levels of alarm correlation and an underlying 
+alarm in one relation can be itself a parent alarm for other underlying alarms. 
+href 
+A string. 
+id 
+A string. 
+CrossedThresholdInformation sub-resource 
+Identifies the details of the threshold that has been crossed. 
+direction 
+A string. Indicates the threshold crossing direction: up or down. 
+granularity 
+A string. Indicates the granularity at which the indicator is evaluated for 
+threshold crossing. 
+indicatorName 
+A string. Indicates the name of indicator which crossed the threshold. 
+indicatorUnit 
+A string. Indicates the unit of the measurement of the indicator corresponding to 
+the threshold that has been crossed. 
+observedValue 
+A string. Indicates the value of the indicator which crossed the threshold. 
+thresholdCrossingDescription A string. Indicates further information on the threshold crossing alarm. 
+thresholdId 
+A string. Indicates the threshold id that caused the alarm. 
+thresholdRef 
+A string. 
+ParentAlarm sub-resource 
+Indicates the alarms attached to this alarm as parent alarms from a correlation point of view.  
+href 
+A string. 
+id 
+A string. 
+Json representation sample 
+We provide below the json representation of an example of an 'Alarm' resource object 
+{ 
+    "id": "8675309", 
+    "href": "https://host:port/alarmManagement/v4/alarm/8675309", 
+    "@baseType": "Alarm", 
+    "@type": "Alarm", 
+    "@schemaLocation": "https:://host:port/Alarm.schema.json", 
+    "externalAlarmId": "5551212", 
+    "state": "UPDATED", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 47 of 91 
+    "alarmType": "Environmental Alarm", 
+    "perceivedSeverity": "MAJOR", 
+    "probableCause": "Rectifier Low voltage", 
+    "specificProblem": "ps=3,sl=1,in=8", 
+    "alarmedObjectType": "Rectifier", 
+    "alarmedObject": { 
+        "id": "93051825", 
+        "href": "https://host:port/resourceInventoryManagement/v4/resource/93051825" 
+    }, 
+    "sourceSystemId": "ems-1", 
+    "alarmDetails": "voltage=95", 
+    "alarmRaisedTime": "2019-07-03T03:32:17.235Z", 
+    "alarmReportingTime": "2019-07-03T03:32:17.552Z", 
+    "alarmChangedTime": "2019-07-03T03:32:52.744Z", 
+    "ackSystemId": "ems-1", 
+    "ackUserId": "bob@example.net", 
+    "ackTime": "2019-07-03T03:33:12.623Z", 
+    "ackState": "ACKNOWLEDGED", 
+    "isRoot": false, 
+    "parentAlarm": { 
+        "id": "8675300" 
+    }, 
+    "correlatedAlarm": [ 
+        { 
+            "id": "8675399", 
+            "href": "https://host:port/alarmManagement/v4/alarm/868675399" 
+        } 
+    ], 
+    "comments": [ 
+        { 
+            "userId": "bob@example.net", 
+            "systemId": "ems-1", 
+            "time": "2019-07-03T03:37:33.827Z", 
+            "comment": "Dispatched" 
+        } 
+    ] 
+} 
+ 
+Notification Resource Models 
+13 notifications are defined for this API 
+Notifications related to IotDevice: 
+    - IotDeviceCreateEvent 
+    - IotDeviceChangeEvent 
+    - IotDeviceBatchEvent 
+    - IotDeviceDeleteEvent 
+    - IotDeviceHeartBeatEvent 
+    - IotDeviceStateChangeEvent 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 48 of 91 
+Notifications related to IotDeviceSpecification: 
+    - IotDeviceSpecificationCreateEvent 
+    - IotDeviceSpecificationChangeEvent 
+    - IotDeviceSpecificationBatchEvent 
+    - IotDeviceSpecificationDeleteEvent 
+Notifications related to Alarm: 
+    - AlarmCreateEvent 
+    - AlarmChangeEvent 
+    - AlarmDeleteEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 49 of 91 
+Iot Device Create Event 
+Notification IotDeviceCreateEvent case for resource IotDevice 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceCreateEvent", 
+     "event": { 
+        "iotDevice" :  
+            {-- SEE IotDevice RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Iot Device Change Event 
+Notification IotDeviceChangeEvent case for resource IotDevice 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceChangeEvent", 
+     "event": { 
+        "iotDevice" :  
+            {-- SEE IotDevice RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Iot Device Batch Event 
+Notification IotDeviceBatchEvent case for resource IotDevice 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceBatchEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceBatchEvent", 
+     "event": { 
+        "iotDevice" :  
+            {-- SEE IotDevice RESOURCE SAMPLE --} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 50 of 91 
+    } 
+} 
+ 
+Iot Device Delete Event 
+Notification IotDeviceDeleteEvent case for resource IotDevice 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceDeleteEvent", 
+     "event": { 
+        "iotDevice" :  
+            {-- SEE IotDevice RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Iot Device Heart Beat Event 
+Notification IotDeviceHeartBeatEvent case for resource IotDevice 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceHeartBeatEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceHeartBeatEvent", 
+     "event": { 
+        "iotDevice" :  
+            {-- SEE IotDevice RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Iot Device State Change Event 
+Notification IotDeviceStateChangeEvent case for resource IotDevice 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceStateChangeEvent' notification event 
+object 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 51 of 91 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceStateChangeEvent", 
+     "event": { 
+        "iotDevice" :  
+            {-- SEE IotDevice RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Iot Device Specification Create Event 
+Notification IotDeviceSpecificationCreateEvent case for resource IotDeviceSpecification 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceSpecificationCreateEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceSpecificationCreateEvent", 
+     "event": { 
+        "iotDeviceSpecification" :  
+            {-- SEE IotDeviceSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Iot Device Specification Change Event 
+Notification IotDeviceSpecificationChangeEvent case for resource IotDeviceSpecification 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceSpecificationChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceSpecificationChangeEvent", 
+     "event": { 
+        "iotDeviceSpecification" :  
+            {-- SEE IotDeviceSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 52 of 91 
+Iot Device Specification Batch Event 
+Notification IotDeviceSpecificationBatchEvent case for resource IotDeviceSpecification 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceSpecificationBatchEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceSpecificationBatchEvent", 
+     "event": { 
+        "iotDeviceSpecification" :  
+            {-- SEE IotDeviceSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Iot Device Specification Delete Event 
+Notification IotDeviceSpecificationDeleteEvent case for resource IotDeviceSpecification 
+Json representation sample 
+We provide below the json representation of an example of an 'IotDeviceSpecificationDeleteEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"IotDeviceSpecificationDeleteEvent", 
+     "event": { 
+        "iotDeviceSpecification" :  
+            {-- SEE IotDeviceSpecification RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Alarm Create Event 
+Notification AlarmCreateEvent case for resource Alarm 
+Json representation sample 
+We provide below the json representation of an example of an 'AlarmCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AlarmCreateEvent", 
+     "event": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 53 of 91 
+        "alarm" :  
+            {-- SEE Alarm RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Alarm Change Event 
+Notification AlarmChangeEvent case for resource Alarm 
+Json representation sample 
+We provide below the json representation of an example of an 'AlarmChangeEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AlarmChangeEvent", 
+     "event": { 
+        "alarm" :  
+            {-- SEE Alarm RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Alarm Delete Event 
+Notification AlarmDeleteEvent case for resource Alarm 
+Json representation sample 
+We provide below the json representation of an example of an 'AlarmDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"AlarmDeleteEvent", 
+     "event": { 
+        "alarm" :  
+            {-- SEE Alarm RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 54 of 91 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on 
+Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve a 
+representation of a resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create a new 
+resource 
+Partial Update of 
+an Entity 
+PATCH Resource 
+PATCH must be used to partially update 
+a resource 
+Complete Update 
+of an Entity 
+PUT Resource 
+PUT must be used to completely update 
+a resource identified by its resource URI  
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to remove a 
+resource 
+Execute an Action 
+on an Entity  
+POST on TASK Resource 
+POST must be used to execute Task 
+Resources 
+Other Request 
+Methods 
+POST on TASK Resource 
+GET and POST must not be used to 
+tunnel other request methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 55 of 91 
+Operations on Iot Device 
+List iot devices 
+  GET /iotDevice?fields=...&{filtering} 
+Description 
+This operation list iot device entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving IotDevice resources. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotDevice 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "dateFirstUsed": "2019-05-13T00:00", 
+    "dateInstalled": "2019-05-13T00:00", 
+    "dateLastCalibration": "2019-05-13T00:00", 
+    "dateLastValueReported": "2019-05-13T00:00", 
+    "dateManufactured": "2019-05-13T00:00", 
+    "deviceState": "ok", 
+    "deviceType": "Temperature", 
+    "firmwareVersion": "1.0.0", 
+    "hardwareVersion": "1.0.0", 
+    "mnc": "01", 
+    "osVersion": "1.0.0", 
+    "provider": "Mandat International", 
+    "serialNumber": "12345", 
+    "softwareVersion": "1.0.0", 
+    "value": "0041227744222", 
+    "alternateName": "CoAP temperature sensor 3", 
+    "dataProvider": "https://www.mandint.org", 
+    "dateCreated": "2019-05-13T00:00", 
+    "dateModified": "2019-05-13T00:00", 
+    "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 56 of 91 
+    "name": "temp_3", 
+    "source": "coap://[2001:41e0:6002:1800:0:0:0:3]:61616/temp ", 
+    "areaServed": "Switzerland ", 
+    "category": "Gold ", 
+    "endDate ": "2019-05-13T00:00", 
+    "href ": "https//host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+    "lifecycleState": "InService", 
+    "manufactureDate": "2019-05-13T00:00", 
+    "powerState": "3", 
+    "startDate": "2019-05-13T00:00", 
+    "version": "1.0", 
+    "versionNumber": "1.0.0", 
+    "dataAccessEndPoint": { 
+        "category": "Gold", 
+        "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+        "endDate": "2019-05-13T00:00", 
+        "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+        "id": "3", 
+        "lifecycleState": "InService", 
+        "name": "temp_3", 
+        "startDate": "2019-05-03T00:00", 
+        "value": "0041227744222", 
+        "version": "1.0", 
+        "apiType": "NGSI", 
+        "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+    }, 
+    "batteryLevel": 1.0, 
+    "configuration": { 
+        "timeout": 5, 
+        "reportingPeriod ": 300 
+    }, 
+    "macAddress": [ 
+        "02:00:00:00:00:03" 
+    ], 
+    "$id": "Device.schema.json", 
+    "address": { 
+        "addressLocality": "Geneva", 
+        "postalCode": "1209", 
+        "streetAddress": "Chemin du Champ-Baron 3" 
+    }, 
+    "location": { 
+        " attrName": "position", 
+        "coords": { 
+            "type": "Point", 
+            "coordinates": [ 
+                46.223064, 
+                6.1305982 
+            ] 
+        } 
+    }, 
+    "characteristic": [ 
+        { 
+            "name": "accuracy", 
+            "value": "1.0" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 57 of 91 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "author": "Cedric Crettaz", 
+            "date": "2019-05-13T00:00", 
+            "id": "txt001", 
+            "text": "This is a CoAP temperature sensor." 
+        } 
+    ], 
+    "partyRole": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "partyId": "MI", 
+            "partyName": "Mandat International" 
+        } 
+    ], 
+    "place": { 
+        "href": "Chemin du Champ-Baron 3", 
+        "id": "1209", 
+        "name": "Geneva Office" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "role": "vendor" 
+        } 
+    ], 
+    "resourceRelationship": [ 
+        { 
+            "@Type": "IotAgent", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "id": "MI", 
+            "name": "UDG", 
+            "value": "0041227744222" 
+        } 
+    ], 
+    "iotAgent": [ 
+        { 
+            "name": "UDG", 
+            "objectId": "udgmi", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "@referredType": "IotAgent", 
+            "dataAccessEndPoint": { 
+                "category": "Gold", 
+                "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+                "endDate": "2019-05-13T00:00", 
+                "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 58 of 91 
+                "id": "3", 
+                "lifecycleState": "InService", 
+                "name": "temp_3", 
+                "startDate": "2019-05-03T00:00", 
+                "value": "0041227744222", 
+                "version": "1.0", 
+                "apiType": "NGSI", 
+                "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+            } 
+        } 
+    ] 
+} 
+] 
+ 
+Retrieve iot device 
+  GET /iotDevice/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an iot device entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving an IotDevice resource. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotDevice/42 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "dateFirstUsed": "2019-05-13T00:00", 
+    "dateInstalled": "2019-05-13T00:00", 
+    "dateLastCalibration": "2019-05-13T00:00", 
+    "dateLastValueReported": "2019-05-13T00:00", 
+    "dateManufactured": "2019-05-13T00:00", 
+    "deviceState": "ok", 
+    "deviceType": "Temperature", 
+    "firmwareVersion": "1.0.0", 
+    "hardwareVersion": "1.0.0", 
+    "mnc": "01", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 59 of 91 
+    "osVersion": "1.0.0", 
+    "provider": "Mandat International", 
+    "serialNumber": "12345", 
+    "softwareVersion": "1.0.0", 
+    "value": "0041227744222", 
+    "alternateName": "CoAP temperature sensor 3", 
+    "dataProvider": "https://www.mandint.org", 
+    "dateCreated": "2019-05-13T00:00", 
+    "dateModified": "2019-05-13T00:00", 
+    "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+    "name": "temp_3", 
+    "source": "coap://[2001:41e0:6002:1800:0:0:0:3]:61616/temp ", 
+    "areaServed": "Switzerland ", 
+    "category": "Gold ", 
+    "endDate ": "2019-05-13T00:00", 
+    "href ": "https//host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+    "lifecycleState": "InService", 
+    "manufactureDate": "2019-05-13T00:00", 
+    "powerState": "3", 
+    "startDate": "2019-05-13T00:00", 
+    "version": "1.0", 
+    "versionNumber": "1.0.0", 
+    "dataAccessEndPoint": { 
+        "category": "Gold", 
+        "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+        "endDate": "2019-05-13T00:00", 
+        "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+        "id": "3", 
+        "lifecycleState": "InService", 
+        "name": "temp_3", 
+        "startDate": "2019-05-03T00:00", 
+        "value": "0041227744222", 
+        "version": "1.0", 
+        "apiType": "NGSI", 
+        "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+    }, 
+    "batteryLevel": 1.0, 
+    "configuration": { 
+        "timeout": 5, 
+        "reportingPeriod ": 300 
+    }, 
+    "macAddress": [ 
+        "02:00:00:00:00:03" 
+    ], 
+    "$id": "Device.schema.json", 
+    "address": { 
+        "addressLocality": "Geneva", 
+        "postalCode": "1209", 
+        "streetAddress": "Chemin du Champ-Baron 3" 
+    }, 
+    "location": { 
+        " attrName": "position", 
+        "coords": { 
+            "type": "Point", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 60 of 91 
+            "coordinates": [ 
+                46.223064, 
+                6.1305982 
+            ] 
+        } 
+    }, 
+    "characteristic": [ 
+        { 
+            "name": "accuracy", 
+            "value": "1.0" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "author": "Cedric Crettaz", 
+            "date": "2019-05-13T00:00", 
+            "id": "txt001", 
+            "text": "This is a CoAP temperature sensor." 
+        } 
+    ], 
+    "partyRole": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "partyId": "MI", 
+            "partyName": "Mandat International" 
+        } 
+    ], 
+    "place": { 
+        "href": "Chemin du Champ-Baron 3", 
+        "id": "1209", 
+        "name": "Geneva Office" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "role": "vendor" 
+        } 
+    ], 
+    "resourceRelationship": [ 
+        { 
+            "@Type": "IotAgent", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "id": "MI", 
+            "name": "UDG", 
+            "value": "0041227744222" 
+        } 
+    ], 
+    "iotAgent": [ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 61 of 91 
+        { 
+            "name": "UDG", 
+            "objectId": "udgmi", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "@referredType": "IotAgent", 
+            "dataAccessEndPoint": { 
+                "category": "Gold", 
+                "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+                "endDate": "2019-05-13T00:00", 
+                "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+                "id": "3", 
+                "lifecycleState": "InService", 
+                "name": "temp_3", 
+                "startDate": "2019-05-03T00:00", 
+                "value": "0041227744222", 
+                "version": "1.0", 
+                "apiType": "NGSI", 
+                "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+            } 
+        } 
+    ] 
+} 
+ 
+Create iot device 
+  POST /iotDevice 
+Description 
+This operation creates an iot device entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating an IotDevice, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+category 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+batteryLevel 
+ 
+dateFirstUsed 
+ 
+dateInstalled 
+ 
+dateLastCalibration 
+ 
+dateLastValueReported 
+ 
+dateManufactured 
+ 
+deviceState 
+ 
+deviceType 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 62 of 91 
+Non Mandatory Attributes 
+Rule 
+firmwareVersion 
+ 
+hardwareVersion 
+ 
+mnc 
+ 
+osVersion 
+ 
+provider 
+ 
+serialNumber 
+ 
+softwareVersion 
+ 
+value 
+ 
+alternateName 
+ 
+dataProvider 
+ 
+dateCreated 
+ 
+dateModified 
+ 
+description 
+ 
+name 
+ 
+source 
+ 
+areaServed 
+ 
+description 
+ 
+endDate 
+ 
+lifecycleState 
+ 
+manufactureDate 
+ 
+name 
+ 
+powerState 
+ 
+serialNumber 
+ 
+startDate 
+ 
+version 
+ 
+versionNumber 
+ 
+dataAccessEndPoint 
+ 
+location 
+ 
+configuration 
+ 
+macAddress 
+ 
+rule 
+ 
+address 
+ 
+location 
+ 
+characteristic 
+ 
+note 
+ 
+partyRole 
+ 
+place 
+ 
+relatedParty 
+ 
+resourceRelationship 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating an IotDevice resource. In this example the request only passes 
+mandatory attributes. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 63 of 91 
+ 
+Request 
+ 
+POST /tmf-api/iotdevicemanagement/v4/iotDevice 
+Content-Type: application/json 
+ 
+{ 
+    "category": "Gold " 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "category": "Gold " 
+} 
+ 
+Patch iot device 
+  PATCH /iotDevice/{id} 
+Description 
+This operation allows partial updates of an iot device entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+batteryLevel 
+ 
+dateFirstUsed 
+ 
+dateInstalled 
+ 
+dateLastCalibration 
+ 
+dateLastValueReported 
+ 
+dateManufactured 
+ 
+deviceState 
+ 
+deviceType 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 64 of 91 
+Patchable Attributes 
+Rule 
+firmwareVersion 
+ 
+hardwareVersion 
+ 
+mnc 
+ 
+osVersion 
+ 
+provider 
+ 
+serialNumber 
+ 
+softwareVersion 
+ 
+value 
+ 
+alternateName 
+ 
+dataProvider 
+ 
+dateCreated 
+ 
+dateModified 
+ 
+description 
+ 
+name 
+ 
+source 
+ 
+areaServed 
+ 
+category 
+ 
+description 
+ 
+endDate 
+ 
+lifecycleState 
+ 
+manufactureDate 
+ 
+name 
+ 
+powerState 
+ 
+serialNumber 
+ 
+startDate 
+ 
+version 
+ 
+versionNumber 
+ 
+category 
+ 
+dataAccessEndPoint 
+ 
+location 
+ 
+configuration 
+ 
+macAddress 
+ 
+rule 
+ 
+address 
+ 
+location 
+ 
+characteristic 
+ 
+note 
+ 
+partyRole 
+ 
+place 
+ 
+relatedParty 
+ 
+resourceRelationship 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 65 of 91 
+Usage Samples 
+Here's an example of a request for patching an IotDevice resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/iotdevicemanagement/v4/iotDevice/42 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "dateFirstUsed": "2019-05-13T00:00", 
+    "dateInstalled": "2019-05-13T00:00", 
+    "dateLastCalibration": "2019-05-13T00:00", 
+    "dateLastValueReported": "2019-05-13T00:00", 
+    "dateManufactured": "2019-05-13T00:00", 
+    "deviceState": "ok", 
+    "deviceType": "Temperature", 
+    "firmwareVersion": "1.0.0", 
+    "hardwareVersion": "1.0.0", 
+    "mnc": "01", 
+    "osVersion": "1.0.0", 
+    "provider": "Mandat International", 
+    "serialNumber": "12345", 
+    "softwareVersion": "1.0.0", 
+    "value": "0041227744222", 
+    "alternateName": "CoAP temperature sensor 3", 
+    "dataProvider": "https://www.mandint.org", 
+    "dateCreated": "2019-05-13T00:00", 
+    "dateModified": "2019-05-13T00:00", 
+    "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+    "name": "new name", 
+    "source": "coap://[2001:41e0:6002:1800:0:0:0:3]:61616/temp ", 
+    "areaServed": "Switzerland ", 
+    "category": "Gold ", 
+    "endDate ": "2019-05-13T00:00", 
+    "href ": "https//host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+    "lifecycleState": "InService", 
+    "manufactureDate": "2019-05-13T00:00", 
+    "powerState": "3", 
+    "startDate": "2019-05-13T00:00", 
+    "version": "1.0", 
+    "versionNumber": "1.0.0", 
+    "dataAccessEndPoint": { 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 66 of 91 
+        "category": "Gold", 
+        "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+        "endDate": "2019-05-13T00:00", 
+        "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+        "id": "3", 
+        "lifecycleState": "InService", 
+        "name": "temp_3", 
+        "startDate": "2019-05-03T00:00", 
+        "value": "0041227744222", 
+        "version": "1.0", 
+        "apiType": "NGSI", 
+        "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+    }, 
+    "batteryLevel": 1.0, 
+    "configuration": { 
+        "timeout": 5, 
+        "reportingPeriod ": 300 
+    }, 
+    "macAddress": [ 
+        "02:00:00:00:00:03" 
+    ], 
+    "$id": "Device.schema.json", 
+    "address": { 
+        "addressLocality": "Geneva", 
+        "postalCode": "1209", 
+        "streetAddress": "Chemin du Champ-Baron 3" 
+    }, 
+    "location": { 
+        " attrName": "position", 
+        "coords": { 
+            "type": "Point", 
+            "coordinates": [ 
+                46.223064, 
+                6.1305982 
+            ] 
+        } 
+    }, 
+    "characteristic": [ 
+        { 
+            "name": "accuracy", 
+            "value": "1.0" 
+        } 
+    ], 
+    "note": [ 
+        { 
+            "author": "Cedric Crettaz", 
+            "date": "2019-05-13T00:00", 
+            "id": "txt001", 
+            "text": "This is a CoAP temperature sensor." 
+        } 
+    ], 
+    "partyRole": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 67 of 91 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "partyId": "MI", 
+            "partyName": "Mandat International" 
+        } 
+    ], 
+    "place": { 
+        "href": "Chemin du Champ-Baron 3", 
+        "id": "1209", 
+        "name": "Geneva Office" 
+    }, 
+    "relatedParty": [ 
+        { 
+            "@referredType": "temperatureSensor", 
+            "href": "https://www.mandint.org/temperatureSensor", 
+            "id": "CoapTempSensor", 
+            "name": "Mandat International", 
+            "role": "vendor" 
+        } 
+    ], 
+    "resourceRelationship": [ 
+        { 
+            "@Type": "IotAgent", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "id": "MI", 
+            "name": "UDG", 
+            "value": "0041227744222" 
+        } 
+    ], 
+    "iotAgent": [ 
+        { 
+            "name": "UDG", 
+            "objectId": "udgmi", 
+            "href": "https://www.mandint.org/iotAgent", 
+            "@referredType": "IotAgent", 
+            "dataAccessEndPoint": { 
+                "category": "Gold", 
+                "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+                "endDate": "2019-05-13T00:00", 
+                "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+                "id": "3", 
+                "lifecycleState": "InService", 
+                "name": "temp_3", 
+                "startDate": "2019-05-03T00:00", 
+                "value": "0041227744222", 
+                "version": "1.0", 
+                "apiType": "NGSI", 
+                "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+            } 
+        } 
+    ], 
+    "id": "42" 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 68 of 91 
+} 
+ 
+Delete iot device 
+  DELETE /iotDevice/{id} 
+Description 
+This operation deletes an iot device entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting an IotDevice resource. 
+ 
+Request 
+ 
+DELETE /tmf-api/iotdevicemanagement/v4/iotDevice/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Data Access Endpoint 
+List data access endpoints 
+  GET /dataAccessEndpoint?fields=...&{filtering} 
+Description 
+This operation list data access endpoint entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving DataAccessEndpoint resources. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 69 of 91 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/dataAccessEndpoint 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "category": "Gold", 
+    "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+    "endDate": "2019-05-13T00:00", 
+    "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+    "id": "3", 
+    "lifecycleState": "InService", 
+    "name": "temp_3", 
+    "startDate": "2019-05-03T00:00", 
+    "value": "0041227744222", 
+    "version": "1.0", 
+    "apiType": "NGSI", 
+    "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+} 
+] 
+ 
+Retrieve data access endpoint 
+  GET /dataAccessEndpoint/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a data access endpoint entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving a DataAccessEndpoint resource. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/dataAccessEndpoint/3 
+Accept: application/json 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 70 of 91 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "category": "Gold", 
+    "description": "This is a temperature sensor using CoAP and 6LoWPAN.", 
+    "endDate": "2019-05-13T00:00", 
+    "href": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3", 
+    "id": "3", 
+    "lifecycleState": "InService", 
+    "name": "temp_3", 
+    "startDate": "2019-05-03T00:00", 
+    "value": "0041227744222", 
+    "version": "1.0", 
+    "apiType": "NGSI", 
+    "uri": "https://host:port/tmf-api/iotDevice/v1/iotDevice/temp_3/dataAccessEndpoint/3" 
+} 
+ 
+Operations on Iot Device Specification 
+List iot device specifications 
+  GET /iotDeviceSpecification?fields=...&{filtering} 
+Description 
+This operation list iot device specification entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving IotDeviceSpecification resources. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotDeviceSpecification 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 71 of 91 
+    "description": "This  iot device specification ...", 
+    "href": "https:/host:port/tmf-api/iotDeviceSpecification/v1/iotDeviceSpecification/4976", 
+    "id": "4976", 
+    "isBundle": true, 
+    "lastUpdate": "2019-10-03T00:00", 
+    "lifecycleStatus": "a string ...", 
+    "name": "a string ...", 
+    "version": "a string ...", 
+    "attachment": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+    ], 
+    "resourceSpecRelationship": [ 
+        {} 
+    ], 
+    "resourceSpecCharacteristic": [ 
+        {} 
+    ], 
+    "resourceSpecification": [ 
+        {} 
+    ], 
+    "targetServiceSchema": {}, 
+    "validFor": {} 
+} 
+] 
+ 
+Retrieve iot device specification 
+  GET /iotDeviceSpecification/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an iot device specification entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving an IotDeviceSpecification resource. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotDeviceSpecification/4976 
+Accept: application/json 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 72 of 91 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "description": "This  iot device specification ...", 
+    "href": "https:/host:port/tmf-api/iotDeviceSpecification/v1/iotDeviceSpecification/4976", 
+    "id": "4976", 
+    "isBundle": true, 
+    "lastUpdate": "2019-10-03T00:00", 
+    "lifecycleStatus": "a string ...", 
+    "name": "a string ...", 
+    "version": "a string ...", 
+    "attachment": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+    ], 
+    "resourceSpecRelationship": [ 
+        {} 
+    ], 
+    "resourceSpecCharacteristic": [ 
+        {} 
+    ], 
+    "resourceSpecification": [ 
+        {} 
+    ], 
+    "targetServiceSchema": {}, 
+    "validFor": {} 
+} 
+ 
+Create iot device specification 
+  POST /iotDeviceSpecification 
+Description 
+This operation creates an iot device specification entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating an 
+IotDeviceSpecification, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+ 
+Mandatory Attributes 
+Rule 
+name 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 73 of 91 
+ 
+Non Mandatory Attributes 
+Rule 
+description 
+ 
+isBundle 
+ 
+lastUpdate 
+ 
+lifecycleStatus 
+ 
+version 
+ 
+attachment 
+ 
+relatedParty 
+ 
+resourceSpecCharacteristic 
+ 
+resourceSpecRelationship 
+ 
+resourceSpecification 
+ 
+targetServiceSchema 
+ 
+validFor 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating an IotDeviceSpecification resource. In this example the request only 
+passes mandatory attributes. 
+ 
+Request 
+ 
+POST /tmf-api/iotdevicemanagement/v4/iotDeviceSpecification 
+Content-Type: application/json 
+ 
+{ 
+    "name": "a string ..." 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "href": "https:/host:port/tmf-api/iotDeviceSpecification/v1/iotDeviceSpecification/4976", 
+    "id": "4976", 
+    "name": "a string ..." 
+} 
+ 
+Patch iot device specification 
+  PATCH /iotDeviceSpecification/{id} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 74 of 91 
+Description 
+This operation allows partial updates of an iot device specification entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+isBundle 
+ 
+lifecycleStatus 
+ 
+name 
+ 
+version 
+ 
+attachment 
+ 
+relatedParty 
+ 
+resourceSpecCharacteristic 
+ 
+resourceSpecRelationship 
+ 
+resourceSpecification 
+ 
+targetServiceSchema 
+ 
+validFor 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+lastUpdate 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching an IotDeviceSpecification resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/iotdevicemanagement/v4/iotDeviceSpecification/4976 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 75 of 91 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "description": "This  iot device specification ...", 
+    "href": "https:/host:port/tmf-api/iotDeviceSpecification/v1/iotDeviceSpecification/4976", 
+    "id": "4976", 
+    "isBundle": true, 
+    "lastUpdate": "2019-10-03T00:00", 
+    "lifecycleStatus": "a string ...", 
+    "name": "new name", 
+    "version": "a string ...", 
+    "attachment": [ 
+        {} 
+    ], 
+    "relatedParty": [ 
+        {} 
+    ], 
+    "resourceSpecRelationship": [ 
+        {} 
+    ], 
+    "resourceSpecCharacteristic": [ 
+        {} 
+    ], 
+    "resourceSpecification": [ 
+        {} 
+    ], 
+    "targetServiceSchema": {}, 
+    "validFor": {} 
+} 
+ 
+Delete iot device specification 
+  DELETE /iotDeviceSpecification/{id} 
+Description 
+This operation deletes an iot device specification entity. 
+Usage Samples 
+Here's an example of a request for deleting an IotDeviceSpecification resource. 
+ 
+Request 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 76 of 91 
+DELETE /tmf-api/iotdevicemanagement/v4/iotDeviceSpecification/42 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Iot Data Event 
+List iot data events 
+  GET /iotDataEvent?fields=...&{filtering} 
+Description 
+This operation list iot data event entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving IotDataEvent resources. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotDataEvent 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "correlationId": "413", 
+    "description": "This  iot data event ...", 
+    "domain": "a string ...", 
+    "eventId": "374", 
+    "eventTime": "2019-10-03T00:00", 
+    "eventType": "a string ...", 
+    "priority": "a string ...", 
+    "timeOcurred": "2019-10-03T00:00", 
+    "title": "a string ...", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 77 of 91 
+    "event": {} 
+} 
+] 
+ 
+Retrieve iot data event 
+  GET /iotDataEvent/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an iot data event entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving an IotDataEvent resource. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotDataEvent/42 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "correlationId": "413", 
+    "description": "This  iot data event ...", 
+    "domain": "a string ...", 
+    "eventId": "374", 
+    "eventTime": "2019-10-03T00:00", 
+    "eventType": "a string ...", 
+    "priority": "a string ...", 
+    "timeOcurred": "2019-10-03T00:00", 
+    "title": "a string ...", 
+    "event": {} 
+} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 78 of 91 
+Operations on Iot Management Event 
+List iot management events 
+  GET /iotManagementEvent?fields=...&{filtering} 
+Description 
+This operation list iot management event entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving IotManagementEvent resources. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotManagementEvent 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "correlationId": "423", 
+    "description": "This  iot management event ...", 
+    "domain": "a string ...", 
+    "eventId": "536", 
+    "eventTime": "2019-10-03T00:00", 
+    "eventType": "a string ...", 
+    "priority": "a string ...", 
+    "timeOcurred": "2019-10-03T00:00", 
+    "title": "a string ...", 
+    "event": {} 
+} 
+] 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 79 of 91 
+Retrieve iot management event 
+  GET /iotManagementEvent/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an iot management event entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving an IotManagementEvent resource. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/iotManagementEvent/42 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "correlationId": "423", 
+    "description": "This  iot management event ...", 
+    "domain": "a string ...", 
+    "eventId": "536", 
+    "eventTime": "2019-10-03T00:00", 
+    "eventType": "a string ...", 
+    "priority": "a string ...", 
+    "timeOcurred": "2019-10-03T00:00", 
+    "title": "a string ...", 
+    "event": {} 
+} 
+ 
+Operations on Resource Specification 
+Operations on Alarm 
+List alarms 
+  GET /alarm?fields=...&{filtering} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 80 of 91 
+Description 
+This operation list alarm entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving Alarm resources. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/alarm 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+{ 
+    "id": "8675309", 
+    "href": "https://host:port/alarmManagement/v4/alarm/8675309", 
+    "@baseType": "Alarm", 
+    "@type": "Alarm", 
+    "@schemaLocation": "https:://host:port/Alarm.schema.json", 
+    "externalAlarmId": "5551212", 
+    "state": "UPDATED", 
+    "alarmType": "Environmental Alarm", 
+    "perceivedSeverity": "MAJOR", 
+    "probableCause": "Rectifier Low voltage", 
+    "specificProblem": "ps=3,sl=1,in=8", 
+    "alarmedObjectType": "Rectifier", 
+    "alarmedObject": { 
+        "id": "93051825", 
+        "href": "https://host:port/resourceInventoryManagement/v4/resource/93051825" 
+    }, 
+    "sourceSystemId": "ems-1", 
+    "alarmDetails": "voltage=95", 
+    "alarmRaisedTime": "2019-07-03T03:32:17.235Z", 
+    "alarmReportingTime": "2019-07-03T03:32:17.552Z", 
+    "alarmChangedTime": "2019-07-03T03:32:52.744Z", 
+    "ackSystemId": "ems-1", 
+    "ackUserId": "bob@example.net", 
+    "ackTime": "2019-07-03T03:33:12.623Z", 
+    "ackState": "ACKNOWLEDGED", 
+    "isRoot": false, 
+    "parentAlarm": { 
+        "id": "8675300" 
+    }, 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 81 of 91 
+    "correlatedAlarm": [ 
+        { 
+            "id": "8675399", 
+            "href": "https://host:port/alarmManagement/v4/alarm/868675399" 
+        } 
+    ], 
+    "comments": [ 
+        { 
+            "userId": "bob@example.net", 
+            "systemId": "ems-1", 
+            "time": "2019-07-03T03:37:33.827Z", 
+            "comment": "Dispatched" 
+        } 
+    ] 
+} 
+] 
+ 
+Retrieve alarm 
+  GET /alarm/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves an alarm entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here's an example of a request for retrieving an Alarm resource. 
+ 
+Request 
+ 
+GET /tmf-api/iotdevicemanagement/v4/alarm/8675309 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "8675309", 
+    "href": "https://host:port/alarmManagement/v4/alarm/8675309", 
+    "@baseType": "Alarm", 
+    "@type": "Alarm", 
+    "@schemaLocation": "https:://host:port/Alarm.schema.json", 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 82 of 91 
+    "externalAlarmId": "5551212", 
+    "state": "UPDATED", 
+    "alarmType": "Environmental Alarm", 
+    "perceivedSeverity": "MAJOR", 
+    "probableCause": "Rectifier Low voltage", 
+    "specificProblem": "ps=3,sl=1,in=8", 
+    "alarmedObjectType": "Rectifier", 
+    "alarmedObject": { 
+        "id": "93051825", 
+        "href": "https://host:port/resourceInventoryManagement/v4/resource/93051825" 
+    }, 
+    "sourceSystemId": "ems-1", 
+    "alarmDetails": "voltage=95", 
+    "alarmRaisedTime": "2019-07-03T03:32:17.235Z", 
+    "alarmReportingTime": "2019-07-03T03:32:17.552Z", 
+    "alarmChangedTime": "2019-07-03T03:32:52.744Z", 
+    "ackSystemId": "ems-1", 
+    "ackUserId": "bob@example.net", 
+    "ackTime": "2019-07-03T03:33:12.623Z", 
+    "ackState": "ACKNOWLEDGED", 
+    "isRoot": false, 
+    "parentAlarm": { 
+        "id": "8675300" 
+    }, 
+    "correlatedAlarm": [ 
+        { 
+            "id": "8675399", 
+            "href": "https://host:port/alarmManagement/v4/alarm/868675399" 
+        } 
+    ], 
+    "comments": [ 
+        { 
+            "userId": "bob@example.net", 
+            "systemId": "ems-1", 
+            "time": "2019-07-03T03:37:33.827Z", 
+            "comment": "Dispatched" 
+        } 
+    ] 
+} 
+ 
+Create alarm 
+  POST /alarm 
+Description 
+This operation creates an alarm entity. 
+Mandatory and Non Mandatory Attributes 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 83 of 91 
+The following tables provide the list of mandatory and non mandatory attributes when creating an Alarm, including 
+any possible rule conditions and applicable default values. Notice that it is up to an implementer to add additional 
+mandatory attributes. 
+Mandatory Attributes 
+Rule 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+ackState 
+ 
+ackSystemId 
+ 
+ackUserId 
+ 
+affectedService 
+ 
+alarmChangedTime 
+ 
+alarmClearedTime 
+ 
+alarmDetails 
+ 
+alarmEscalation 
+ 
+alarmRaisedTime 
+ 
+alarmReportingTime 
+ 
+alarmType 
+ 
+alarmedObject 
+ 
+alarmedObjectType 
+ 
+clearSystemId 
+ 
+clearUserId 
+ 
+comments 
+ 
+correlatedAlarm 
+ 
+crossedThresholdInformation 
+ 
+externalAlarmId 
+ 
+isRootCause 
+ 
+parentAlarm 
+ 
+perceivedSeverity 
+ 
+plannedOutageIndicator 
+ 
+probableCause 
+ 
+proposedRepairedActions 
+ 
+serviceAffecting 
+ 
+sourceSystemId 
+ 
+specificProblem 
+ 
+state 
+ 
+ 
+Usage Samples 
+Here's an example of a request for creating an Alarm resource. In this example the request only passes mandatory 
+attributes. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 84 of 91 
+ 
+Request 
+ 
+POST /tmf-api/iotdevicemanagement/v4/alarm 
+Content-Type: application/json 
+ 
+{} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "8675309", 
+    "href": "https://host:port/alarmManagement/v4/alarm/8675309" 
+} 
+ 
+Patch alarm 
+  PATCH /alarm/{id} 
+Description 
+This operation allows partial updates of an alarm entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+ 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+ackState 
+ 
+ackSystemId 
+ 
+ackUserId 
+ 
+affectedService 
+ 
+alarmChangedTime 
+ 
+alarmClearedTime 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 85 of 91 
+Patchable Attributes 
+Rule 
+alarmDetails 
+ 
+alarmEscalation 
+ 
+alarmRaisedTime 
+ 
+alarmReportingTime 
+ 
+alarmType 
+ 
+alarmedObject 
+ 
+alarmedObjectType 
+ 
+clearSystemId 
+ 
+clearUserId 
+ 
+comments 
+ 
+correlatedAlarm 
+ 
+crossedThresholdInformation 
+ 
+externalAlarmId 
+ 
+isRootCause 
+ 
+parentAlarm 
+ 
+perceivedSeverity 
+ 
+plannedOutageIndicator 
+ 
+probableCause 
+ 
+proposedRepairedActions 
+ 
+serviceAffecting 
+ 
+sourceSystemId 
+ 
+specificProblem 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+ 
+Usage Samples 
+Here's an example of a request for patching an Alarm resource. 
+ 
+Request 
+ 
+PATCH /tmf-api/iotdevicemanagement/v4/alarm/8675309 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "name": "new name" 
+} 
+ 
+ 
+ 
+Response 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 86 of 91 
+200 
+ 
+{ 
+    "id": "8675309", 
+    "href": "https://host:port/alarmManagement/v4/alarm/8675309", 
+    "@baseType": "Alarm", 
+    "@type": "Alarm", 
+    "@schemaLocation": "https:://host:port/Alarm.schema.json", 
+    "externalAlarmId": "5551212", 
+    "state": "UPDATED", 
+    "alarmType": "Environmental Alarm", 
+    "perceivedSeverity": "MAJOR", 
+    "probableCause": "Rectifier Low voltage", 
+    "specificProblem": "ps=3,sl=1,in=8", 
+    "alarmedObjectType": "Rectifier", 
+    "alarmedObject": { 
+        "id": "93051825", 
+        "href": "https://host:port/resourceInventoryManagement/v4/resource/93051825" 
+    }, 
+    "sourceSystemId": "ems-1", 
+    "alarmDetails": "voltage=95", 
+    "alarmRaisedTime": "2019-07-03T03:32:17.235Z", 
+    "alarmReportingTime": "2019-07-03T03:32:17.552Z", 
+    "alarmChangedTime": "2019-07-03T03:32:52.744Z", 
+    "ackSystemId": "ems-1", 
+    "ackUserId": "bob@example.net", 
+    "ackTime": "2019-07-03T03:33:12.623Z", 
+    "ackState": "ACKNOWLEDGED", 
+    "isRoot": false, 
+    "parentAlarm": { 
+        "id": "8675300" 
+    }, 
+    "correlatedAlarm": [ 
+        { 
+            "id": "8675399", 
+            "href": "https://host:port/alarmManagement/v4/alarm/868675399" 
+        } 
+    ], 
+    "comments": [ 
+        { 
+            "userId": "bob@example.net", 
+            "systemId": "ems-1", 
+            "time": "2019-07-03T03:37:33.827Z", 
+            "comment": "Dispatched" 
+        } 
+    ], 
+    "name": "new name" 
+} 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 87 of 91 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST notification POST 
+calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST Guidelines 
+reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if the request is not successful. 
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 88 of 91 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the callback 
+url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 89 of 91 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design Guidelines. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 90 of 91 
+Acknowledgements 
+ 
+Document History 
+Version History 
+Version 
+Number 
+Date  
+Release led by: 
+Description  
+1.0 
+17-Oct-2019 
+Pierre Gauthier 
+Team Approved. This is the initial 
+release of this document 
+1.0.1 
+25-May-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Pre-production 
+17-Oct-2019 
+Pierre Gauthier 
+This is the initial release of this 
+document. 
+Production 
+25-May-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Contributors to Document 
+Name 
+Affiliation 
+Pierre Gauthier 
+TM Forum 
+Cédric Crettaz 
+IoT Lab (Mandat International) 
+Stephen Harrop 
+Vodafone 
+Vance Shipley 
+Sigscale 
+
+
+© TM Forum 2020. All Rights Reserved.                                                                                                                                Page 91 of 91 
+Name 
+Affiliation 
+Namal Prasanna Jayathilake  
+Dialog Axiata 
+Sandaruwan Jayasinghe 
+Dialog Axiata  
+ 
+
+

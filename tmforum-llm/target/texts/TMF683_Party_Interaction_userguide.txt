@@ -1,0 +1,3557 @@
+TM Forum Specification 
+Party Interaction
+Maturity Level: General availability
+Team Approved Date: 29-09-2023
+Approval Status: Team Approved
+IPR Mode: RAND
+Release Status: Production
+Version 5.0.0
+TMF683
+
+
+ NOTICE
+Copyright © TM Forum 2023. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative
+works that comment on or otherwise explain it or assist in its implementation may be
+prepared, copied, published, and distributed, in whole or in part, without restriction of any
+kind, provided that the above copyright notice and this section are included on all such
+copies and derivative works. However, this document itself may not be modified in any way,
+including by removing the copyright notice or references to TM FORUM, except as needed
+for the purpose of developing any document or deliverable produced by a TM FORUM
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in
+the TM FORUM IPR Policy, must be followed) or as required to translate it into languages
+other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM
+or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054, USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+
+
+ Table of Contents
+NOTICE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  i
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  1
+Sample Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+Support of polymorphism and extension patterns. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+RESOURCE MODEL . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+Managed Entity and Task Resource Models. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+PartyInteraction resource . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+Notification Resource Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+Party Interaction Delete Event. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  34
+Party Interaction Attribute Value Change Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  35
+Party Interaction Create Event . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  36
+API OPERATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  40
+Operations on PartyInteraction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  40
+List or find PartyInteraction objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  40
+Retrieves a PartyInteraction by ID. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  42
+Creates a PartyInteraction. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  45
+Updates partially a PartyInteraction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  52
+Deletes a PartyInteraction. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  66
+API NOTIFICATIONS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  67
+Register listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  67
+Unregister listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  68
+Publish Event to listener . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  68
+Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  70
+Version History . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  70
+Contributors to Document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  70
+
+
+ Introduction
+The following document is the user guide of the REST API for Party Interaction
+management. It includes the model definition as well as all available operations.
+Users are communicating constantly with our enterprises either calling, entering our stores
+or using our websites and apps. Our companies are also communicating with them
+proactively by sending them new offers and providing support through different channels.
+Sometimes it is different to keep track of all those actions throughout all channels.
+A Party Interaction captures information about past interactions in-order to re-use it in
+future ones. This allows agents to serve users better by knowing the steps they went
+through. It also allows customers to see better, the actions they have performed and how
+they interacted with us.
+The Party Interaction Management API provides a mechanism to manage party interactions.
+Creation, update and retrieval.
+
+
+ Sample Use Cases
+Use Case Id
+UC_TMF_PartyInteractionManagement_0001
+Use Case Name
+Agent checks previous user interactions
+Summary
+This case an agent, either from a store or call center, checks the previous
+interactions a user had with the company.
+Actor(s)
+1. User (person, may or may not be a customer)
+2. Agent (with a dashboard connected to the systems exposing the APIs)
+Pre-Conditions
+1. The identity of the user is known (his details were requested in the store or
+his phone number identified when he called).
+Begins When
+When all pre-conditions have been met and the user begins speaking with an
+agent. The agent requests using the dashboard the user’s interactions info.
+Description
+1. The agent requests the last user’s interactions.
+2. His dashboard shows a timeline with all the user interactions of the user.
+3. The agent clicks in one to see its details.
+4. The detailed interaction appears on screen.
+Use Case Id
+UC_TMF_PartyInteractionManagement_0002
+Use Case Name
+User checks previous interactions in app
+Summary
+This case describes how an app might show the user a list of his last
+interactions with the company.
+Actor(s)
+1. User (person)
+2. Mobile App (system)
+Pre-Conditions
+1. App back-end is available.
+2. User has logged into the mobile app.
+Begins When
+When all pre-conditions have been met the app may prompt a timeline with the
+user’s last interactions as a consequence-of a user action within the app.
+Description
+1. The user logs in the app.
+2. In-order to check when he visited a certain store, he clicks on the timeline
+button.
+3. The user sees when he last went there.
+Use Case Id
+UC_TMF_PartyInteractionManagement_0003
+Use Case Name
+Customer calls to call center and complain about his bill
+Summary
+This case an agent, either from a store or call center, start a new interaction
+Actor(s)
+1. User (person, a customer)
+2. Agent (with a dashboard connected to the systems exposing the APIs)
+
+
+ 
+Use Case Id
+UC_TMF_PartyInteractionManagement_0003
+Pre-Conditions
+1. The identity of the user is known (his details were requested in the store or
+his phone number identified when he called).
+Begins When
+When all pre-conditions have been met and the user begins speaking with an
+agent. The agent requests using the dashboard the user’s interactions info.
+Description
+1. A customer calls the Customer Service for a bill dispute.
+2. The Agent checks the customer bill and realizes that there is indeed a
+problem with this customer. He performs the following actions : 
+◦Previous bill adjustment
+◦A goodwill (discount) will be given to the customer for loyalty and
+retention reasons
+3. As the customer seems to be happy with the solution, the Agent uses the
+interaction to present a new offer to the customer (cf. cross-sell activity) 
+4. The customer accepts this new offer
+5. Agent sends additional commercial information about the new offer
+ 
+This is described as below with one single partyInteraction which contains one
+item (RelatedEntityRefOrValue) per InteractionItem : 
+partyInteraction#1 (description : “call from Mr. Doe complaining about his bill”)
+InteractionItem#1.1 : reason : creation of a troubleTicket (TT) to adjust the
+previous bill. The items (RelatedEntityRefOrValue) is a link to this TT.
+InteractionItem#1.2 : reason : creation of a productOrder (PO) to give the
+discount to the customer. The items (RelatedEntityRefOrValue) is a link to this
+PO.
+InteractionItem#1.3 : reason : creation of a quote to represent the proposal
+made 
+to 
+the 
+customer 
+in 
+the 
+cross-sell 
+context. 
+The items
+(RelatedEntityRefOrValue) is a link to this quote (or no item is no quote is
+done).
+InteractionItem#1.4 : reason : creation of a productOrder (PO) to add the new
+offer to the customer’s inventory. The items (RelatedEntityRefOrValue) is a link
+to this PO.
+InteractionItem#1.5 : reason : Commercial information and documentation is
+sent to the customer. These documents are described here as attachments
+(AttachmentRefOrValue).
+
+
+ Support of polymorphism and extension
+patterns
+Support of polymorphic collections and types and schema based extension is provided by
+means of a list of generic meta-attributes that we describe below. Polymorphism in
+collections 
+occurs 
+when 
+entities 
+inherit 
+from 
+base 
+entities, 
+for 
+instance 
+a
+StoreVisitPartyInteraction inheriting properties from the PartyInteraction. entity.
+Generic support of polymorphism and pattern extensions is described in the TMF API
+Guidelines v3.0 Part 2 document.
+The @type attribute provides a way to represent the actual class type of an entity. For
+example, within a list of PartyInteraction instances some may be instances of
+StoreVisitPartyInteraction. The @type gives this information. All resources and sub-
+resources of this API have a @type attributes that can be provided when this is useful.
+The @referredType can be used within reference entities (like for instance an
+PartyInteractionRef object) to explicitly denote the actual entity type of the referred class.
+Notice that in reference entities the @type, when used, denotes the class type of the
+reference itself, such as BStoreVisitPartyInteractionRef, and not the class type of the
+referred object. However since reference classes are rarely sub-classed, @type is generally
+not useful in reference objects.
+The @schemaLocation property can be used in resources to allow specifying user-defined
+properties of an Entity or to specify the expected characteristics of an entity.
+The @baseType attribute gives a way to provide explicitly the base of class of a given
+resource that has been extended.
+
+
+ RESOURCE MODEL
+Managed Entity and Task Resource Models
+PartyInteraction resource
+Resource model
+Figure 1 - PartyInteraction
+
+
+ 
+Figure 2 - EntityRefOrValue
+
+
+ 
+Figure 3 - InteractionItem
+
+
+ 
+Figure 4 - Organization
+
+
+ 
+Figure 5 - Individual
+
+
+ 
+Figure 6 - Party
+
+
+ 
+Figure 7 - PartyOrPartyRole
+
+
+ 
+Figure 8 - PartyRole
+Field descriptions
+PartyInteraction fields
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+creationDate
+A DateTime. Date when the interaction was created in the
+system.
+description
+A String. Description of the interaction.
+direction
+A String. Specifies who started the interaction. It might be the
+party or the enterprise exposing this API. Possible values are
+?inbound? and ?outbound?.
+
+
+ 
+externalIdentifier
+An ExternalIdentifier. An identification of an entity that is owned
+by or originates in a software system different from the current
+system, for example a ProductOrder handed off from a
+commerce platform into an order handling system. The structure
+identifies the system itself, the nature of the entity within the
+system (e.g. class name) and the unique ID of the entity within
+the system. It is anticipated that multiple external IDs can be held
+for a single entity, e.g. if the entity passed through multiple
+systems on the way to the current system. In this case the
+consumer is expected to sequence the IDs in the array in reverse
+order of provenance, i.e. most recent system first in the list.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+interactionDate
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+interactionItem
+An InteractionItem.
+interactionRelationship
+An InteractionRelationship.
+lastUpdate
+A DateTime. Date when the interaction last updated in the
+system.
+note
+A Note. Extra information about a given entity.
+reason
+A String. Reason why the interaction happened.
+relatedChannel
+A RelatedChannel. Where the interaction took place (e.g. web,
+mobile app, store, kiosk, etc.).
+relatedParty
+A RelatedPartyOrPartyRole. RelatedParty reference. A related
+party defines party or party role or its reference, linked to a
+specific entity.
+status
+A String. Status of the interaction (opened, inProgress,
+completed).
+statusChangeDate
+A DateTime. Last time the status changed.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+AccountRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+
+
+ 
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+AgreementRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Attachment sub-resource fields
+attachmentType
+A String. A business characterization of the purpose of the
+attachment, for example logo, instructionManual, contractCopy.
+content
+A Base64. The actual contents of the attachment object, if
+embedded, encoded as base64.
+description
+A String. A narrative text describing the content of the
+attachment.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+mimeType
+A String. A technical characterization of the attachment content
+format using IETF Mime Types.
+name
+A String. The name of the attachment.
+size
+A Quantity. An amount in a given unit.
+url
+A String. Uniform Resource Locator, is a web page address (a
+subset of URI).
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+AttachmentRef sub-resource fields
+
+
+ 
+description
+A String. A narrative text describing the content of the
+attachment.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+url
+A String. Link to the attachment media/content.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ChannelRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Characteristic sub-resource fields
+characteristicRelationship
+A CharacteristicRelationship. Another Characteristic that is
+related to the current Characteristic;.
+id
+A String. Unique identifier of the characteristic.
+name
+A String. Name of the characteristic.
+valueType
+A String. Data type of the value of the characteristic.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CharacteristicRelationship sub-resource fields
+
+
+ 
+id
+A String. Unique identifier of the characteristic.
+relationshipType
+A String. The type of relationship.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ContactMedium sub-resource fields
+contactType
+A String. Type of the contact medium to qualifiy it like pro email /
+personal email. This is not used to define the contact medium
+used.
+id
+A String. Identifier for this contact medium.
+preferred
+A Boolean. If true, indicates that is the preferred contact medium.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+CreditProfile sub-resource fields
+creditProfileDate
+A DateTime. The date the profile was established.
+creditRiskRating
+An Integer. This is an integer whose value is used to rate the
+risk.
+creditScore
+An Integer. A measure of a person or organizations
+creditworthiness calculated on the basis of a combination of
+factors such as their income and credit history.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Disability sub-resource fields
+
+
+ 
+disabilityCode
+A String. Code of the disability.
+disabilityName
+A String. Name of the disability.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+Entity sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+EntityRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+ExternalIdentifier sub-resource fields
+externalIdentifierType
+A String. Type of the identification, typically would be the type of
+the entity within the external system.
+id
+A String. Identification of the entity within the external system.
+owner
+A String. Name of the external system that owns the entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Individual sub-resource fields
+aristocraticTitle
+A String. E.g. Baron, Graf, Earl.
+
+
+ 
+birthDate
+A DateTime. Birth date.
+contactMedium
+A ContactMedium. List of means for contacting the party, e.g.
+mobile phone, email address.
+countryOfBirth
+A String. Country where the individual was born.
+creditRating
+A PartyCreditProfile. List of credit profiles and scores for the
+party, typically received from an external credit broker.
+deathDate
+A DateTime. Date of death.
+disability
+A Disability. List of disabilities suffered by the individual.
+externalReference
+An ExternalIdentifier. List of identifiers of the Party in an external
+system, for example when party information is imported from a
+commerce system.
+familyName
+A String. Contains the non-chosen or inherited name. Also
+known as last name in the Western context.
+familyNamePrefix
+A String. Family name prefix.
+formattedName
+A String. A fully formatted name in one string with all of its pieces
+in their proper place and all of the necessary punctuation. Useful
+for specific contexts (Chinese, Japanese, Korean).
+gender
+A String. Gender.
+generation
+A String. E.g.. Sr, Jr, III (the third).
+givenName
+A String. First name of the individual.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+individualIdentification
+An IndividualIdentification. List of official identifications issued to
+the individual, such as passport, driving licence, social security
+number.
+languageAbility
+A LanguageAbility. List of national languages known by the
+individual.
+legalName
+A String. Legal name or birth name (name one has for official
+purposes).
+location
+A String. Temporary current location of the individual (may be
+used if the individual has approved its sharing).
+maritalStatus
+A String. Marital status (married, divorced, widow …).
+middleName
+A String. Middles name or initial.
+name
+A String. Full name flatten (first, middle, and last names) - this is
+the name that is expected to be presented in reference data
+types such as PartyRef, RelatedParty, etc. that refer to
+Individual.
+nationality
+A String. Nationality.
+otherName
+An OtherNameIndividual. List of other names by which this
+individual is known.
+
+
+ 
+partyCharacteristic
+A Characteristic. List of additional characteristics that a Party can
+take on.
+placeOfBirth
+A String. Reference to the place where the individual was born.
+preferredGivenName
+A String. Contains the chosen name by which the individual
+prefers to be addressed. Note: This name may be a name other
+than a given name, such as a nickname.
+relatedParty
+A RelatedPartyOrPartyRole. List of parties and/or party roles
+related to this party.
+skill
+A Skill. List of skills exhibited by the individual.
+status
+An IndividualStateType. Valid values for the lifecycle state of the
+individual.
+taxExemptionCertificate
+A TaxExemptionCertificate. List of tax exemptions granted to the
+party. For example, a war veteran might have partial exemption
+from state tax and a full exemption from federal tax.
+title
+A String. Useful for titles (aristocratic, social,…) Pr, Dr, Sir, …
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+IndividualIdentification sub-resource fields
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+identificationId
+A String. Identifier.
+identificationType
+A String. Identification type (passport, national identity card,
+drivers license, social security number, birth certificate).
+issuingAuthority
+A String. Authority which has issued the identifier, such as: social
+security, town hall.
+issuingDate
+A DateTime. Date at which the identifier was issued.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+InteractionItem sub-resource fields
+
+
+ 
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+creationDate
+A DateTime. Date when the interaction item was created in the
+system.
+id
+A String. Unique identifier of the interaction item.
+interactionItemRelationship
+An InteractionItemRelationship. Used to describe relationship
+between interaction items.
+interactionItemType
+A String. Classification and sub-classification. E.g. Case (type)
+(subtype/s) Ticket, Incident.
+item
+A RelatedEntityRefOrValue. A reference to an entity, where the
+type of the entity is not known in advance. A related entity
+defines a entity described by reference or by value linked to a
+specific entity. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the Entity and
+not the RelatedEntityRefOrValue class itself.
+itemDate
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+lastUpdate
+A DateTime. Date when the interaction item was last updateed in
+the system.
+note
+A Note. Extra information about a given entity.
+reason
+A String. Reason why this item is referred.
+relatedChannel
+A RelatedChannel. Where the interaction item took place (e.g.:
+web, mobile app, store, kiosk, etc.).
+relatedParty
+A RelatedPartyRefOrPartyRoleRef. RelatedParty reference. A
+related party defines party or party role or its reference, linked to
+a specific entity.
+resolution
+A String. Resolution of the interaction item.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+InteractionItemRelationship sub-resource fields
+id
+A String. Unique identifier of the referenced to interaction item
+(must be in the same PartyInteraction.
+relationshipType
+A String. Type of the interaction item relationship.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+
+
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+InteractionRelationship sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+relationshipType
+A String. Relationship type such as parent, handover, etc…
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+LanguageAbility sub-resource fields
+isFavouriteLanguage
+A Boolean. A ?true? value specifies whether the language is
+considered by the individual as his favourite one.
+languageCode
+A String. Language code (RFC 5646).
+languageName
+A String. Language name.
+listeningProficiency
+A String. Listening proficiency evaluated for this language.
+readingProficiency
+A String. Reading proficiency evaluated for this language.
+speakingProficiency
+A String. Speaking proficiency evaluated for this language.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+writingProficiency
+A String. Writing proficiency evaluated for this language.
+Note sub-resource fields
+author
+A String. Author of the note.
+date
+A DateTime. Date of the note.
+id
+A String. Identifier of the note within its containing entity.
+text
+A String. Text of the note.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+
+
+ 
+Organization sub-resource fields
+contactMedium
+A ContactMedium. List of means for contacting the party, e.g.
+mobile phone, email address.
+creditRating
+A PartyCreditProfile. List of credit profiles and scores for the
+party, typically received from an external credit broker.
+existsDuring
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+externalReference
+An ExternalIdentifier. List of identifiers of the Party in an external
+system, for example when party information is imported from a
+commerce system.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+isHeadOffice
+A Boolean. If value is true, the organization is the head office.
+isLegalEntity
+A Boolean. If value is true, the organization is a legal entity
+known by a national referential.
+name
+A String. Organization name (department name for example).
+nameType
+A String. Type of the name : Co, Inc, Ltd, etc.
+organizationChildRelationship
+An OrganizationChildRelationship. List of organizations that are
+contained within this organization. For example if this
+organization is the Legal Department, the child organizations
+might include Claims, Courts, Contracts.
+organizationIdentification
+An OrganizationIdentification. List of official identifiers given to
+the organization, for example company number in the registry of
+companies.
+organizationParentRelationship
+An OrganizationParentRelationship. Parent references of an
+organization in a structure of organizations.
+organizationType
+A String. Type of Organization (company, department…).
+otherName
+An OtherNameOrganization. List of additional names by which
+the organization is known.
+partyCharacteristic
+A Characteristic. List of additional characteristics that a Party can
+take on.
+relatedParty
+A RelatedPartyOrPartyRole. List of parties and/or party roles
+related to this party.
+status
+An OrganizationStateType. Valid values for the lifecycle state of
+the organization.
+taxExemptionCertificate
+A TaxExemptionCertificate. List of tax exemptions granted to the
+party. For example, a war veteran might have partial exemption
+from state tax and a full exemption from federal tax.
+tradingName
+A String. Name that the organization (unit) trades under.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+
+
+ 
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OrganizationChildRelationship sub-resource fields
+organization
+An OrganizationRef.
+relationshipType
+A String. Type of the relationship. Could be juridical, hierarchical,
+geographical, functional for example.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OrganizationIdentification sub-resource fields
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+identificationId
+A String. Identifier.
+identificationType
+A String. Type of identification information used to identify the
+company in a country or internationally.
+issuingAuthority
+A String. Authority which has issued the identifier (chamber of
+commerce…).
+issuingDate
+A DateTime. Date at which the identifier was issued.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OrganizationParentRelationship sub-resource fields
+organization
+An OrganizationRef.
+relationshipType
+A String. Type of the relationship. Could be juridical, hierarchical,
+geographical, functional for example.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+
+
+ 
+OrganizationRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+OtherNameIndividual sub-resource fields
+aristocraticTitle
+A String. E.g. Baron, Graf, Earl, etc.
+familyName
+A String. Contains the non-chosen or inherited name. Also
+known as last name in the Western context.
+familyNamePrefix
+A String. Family name prefix.
+formattedName
+A String. . A fully formatted name in one string with all of its
+pieces in their proper place and all of the necessary punctuation.
+Useful for specific contexts (Chinese, Japanese, Korean, etc.).
+fullName
+A String. Full name flatten (first, middle, and last names).
+generation
+A String. E.g. Sr, Jr, etc.
+givenName
+A String. First name.
+legalName
+A String. Legal name or birth name (name one has for official
+purposes).
+middleName
+A String. Middle name or initial.
+preferredGivenName
+A String. Contains the chosen name by which the person prefers
+to be addressed. Note: This name may be a name other than a
+given name, such as a nickname.
+title
+A String. Use for titles (aristrocatic, social, …): Pr, Dr, Sir,….
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+OtherNameOrganization sub-resource fields
+name
+A String. Organization name (department name for example).
+nameType
+A String. Co. , Inc. , Ltd. , Pty Ltd. , Plc; , Gmbh.
+tradingName
+A String. The name that the organization trades under.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+
+
+ 
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Party sub-resource fields
+contactMedium
+A ContactMedium. List of means for contacting the party, e.g.
+mobile phone, email address.
+creditRating
+A PartyCreditProfile. List of credit profiles and scores for the
+party, typically received from an external credit broker.
+externalReference
+An ExternalIdentifier. List of identifiers of the Party in an external
+system, for example when party information is imported from a
+commerce system.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+partyCharacteristic
+A Characteristic. List of additional characteristics that a Party can
+take on.
+relatedParty
+A RelatedPartyOrPartyRole. List of parties and/or party roles
+related to this party.
+taxExemptionCertificate
+A TaxExemptionCertificate. List of tax exemptions granted to the
+party. For example, a war veteran might have partial exemption
+from state tax and a full exemption from federal tax.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyCreditProfile sub-resource fields
+creditAgencyName
+A String. Name of the credit agency giving the score.
+creditAgencyType
+A String. Type of the credit agency giving the score.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+ratingReference
+A String. Reference corresponding to the credit rating.
+ratingScore
+An Integer32. A measure of a party's creditworthiness calculated
+on the basis of a combination of factors such as their income and
+credit history.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+
+
+ 
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRole sub-resource fields
+account
+An AccountRef. Account reference. A account may be a party
+account or a financial account.
+agreement
+An AgreementRef. Agreement reference. An agreement
+represents a contract or arrangement, either written or verbal
+and sometimes enforceable by law, such as a service level
+agreement or a customer price agreement. An agreement
+involves a number of other business entities, such as products,
+services, and resources and/or their specifications.
+characteristic
+A Characteristic. Describes the characteristic of a party role.
+contactMedium
+A ContactMedium. Indicates the contact medium that could be
+used to contact the party.
+creditProfile
+A CreditProfile. Credit profile for the party (containing credit
+scoring, …). By default only the current credit profile is retrieved.
+It can be used as a list to give the party credit profiles history, the
+first one in the list will be the current one.
+description
+A String. A description of the PartyRole.
+engagedParty
+A PartyRef. A Party reference.
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. A word, term, or phrase by which the PartyRole is
+known and distinguished from other PartyRoles. It's the name of
+the PartyRole unique entity.
+
+
+ 
+partyRoleSpecification
+A PartyRoleSpecificationRef. Party role specification reference.
+A party role specification gives additional details on the part
+played by a party in a given context.
+paymentMethod
+A PaymentMethodRef. PaymentMethod reference. A payment
+method defines a specific mean of payment (e.g direct debit).
+relatedParty
+A RelatedPartyOrPartyRole. RelatedParty reference. A related
+party defines party or party role or its reference, linked to a
+specific entity.
+role
+A String. Role played by the engagedParty in this context. As
+role is defined by partyRoleSpecification, this role attribute can
+be used to precise the role defined by partyRoleSpecification, or
+it can be used to define the role in case there is no
+partyRoleSpecification.
+status
+A String. Used to track the lifecycle status of the party role.
+statusReason
+A String. A string providing an explanation on the value of the
+status lifecycle. For instance if the status is Rejected,
+statusReason will provide the reason for rejection.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRoleRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+partyId
+A String. The identifier of the engaged party that is linked to the
+PartyRole object.
+partyName
+A String. The name of the engaged party that is linked to the
+PartyRole object.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PartyRoleSpecificationRef sub-resource fields
+
+
+ 
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+PaymentMethodRef sub-resource fields
+href
+A String. Hyperlink reference.
+id
+A String. Unique identifier.
+name
+A String. Name of the referred entity.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@referredType
+A String. The actual type of the target instance when needed for
+disambiguation.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedChannel sub-resource fields
+channel
+A ChannelRef. The channel to which the resource reference to.
+e.g. channel for selling product offerings, channel for opening a
+trouble ticket etc..
+role
+A String.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedEntityRefOrValue sub-resource fields
+entity
+An EntityRefOrValue.
+role
+A String.
+@baseType
+A String. When sub-classing, this defines the super-class.
+
+
+ 
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedPartyOrPartyRole sub-resource fields
+partyOrPartyRole
+A PartyOrPartyRole.
+role
+A String. Role played by the related party or party role in the
+context of the specific entity it is linked to. Such as 'initiator',
+'customer', 'salesAgent', 'user'.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+RelatedPartyRefOrPartyRoleRef sub-resource fields
+partyOrPartyRole
+A PartyRefOrPartyRoleRef.
+role
+A String. Role played by the related party or party role in the
+context of the specific entity it is linked to. Such as 'initiator',
+'customer', 'salesAgent', 'user'.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Skill sub-resource fields
+comment
+A String. A free text comment linked to the evaluation done.
+evaluatedLevel
+A String. Level of expertise in a skill evaluated for an individual.
+skillCode
+A String. Code of the skill.
+skillName
+A String. Name of the skill, such as Java language.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+TaxDefinition sub-resource fields
+id
+A String. Unique identifier of the tax.
+jurisdictionLevel
+A String. Level of the jurisdiction that levies the tax.
+jurisdictionName
+A String. Name of the jurisdiction that levies the tax.
+
+
+ 
+name
+A String. Tax name.
+taxType
+A String. Type of the tax.
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+TaxExemptionCertificate sub-resource fields
+attachment
+An AttachmentRefOrValue. The polymorphic attributes @type,
+@schemaLocation & @referredType are related to the
+Attachment entity and not the AttachmentRefOrValue class itself.
+certificateNumber
+A String. Identifier of a document that shows proof of exemption
+from taxes for the taxing jurisdiction.
+id
+A String. Identifier of the tax exemption within list of the
+exemptions.
+issuingJurisdiction
+A String. Name of the jurisdiction that issued the exemption.
+reason
+A String. Reason for the tax exemption.
+taxDefinition
+A TaxDefinition. A list of taxes that are covered by the exemption,
+e.g. City Tax, State Tax. The definition would include the
+exemption (e.g. for a rate exemption 0% would be a full
+exemption, 5% could be a partial exemption if the actual rate was
+10%).
+validFor
+A TimePeriod. A period of time, either as a deadline
+(endDateTime only) a startDateTime only, or both.
+@baseType
+A String. When sub-classing, this defines the super-class.
+@schemaLocation
+A String. A URI to a JSON-Schema file that defines additional
+attributes and relationships.
+@type
+A String. When sub-classing, this defines the sub-class
+Extensible name.
+Json representation sample(s)
+We provide below a JSON representation as example of the 'PartyInteraction' resource
+object.
+{
+    "id": "123",
+    "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+
+
+     },
+    "description": "Visit to store",
+    "reason": "The user wanted to buy TV and internet plan",
+    "status": "ongoing",
+    "statusChangeDate": "2020-10-02T11:53:21.789Z",
+    "direction": "inbounds",
+    "creationDate": "2020-10-02T11:37:08.013Z",
+    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        }
+    ],
+    "interactionItem": [
+        {
+            "id": "5678",
+            "reason": "The user signed up to new TV bundle and paid the decoder",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "item": 
+            {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" :
+                 {
+                    "id": "30001",
+                    "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+                    "name": "Product Order illustration sample by reference",
+                    "@referredType": "ProductOrder",
+                    "@type":"EntityRef"
+                    
+                }
+                
+
+
+             }
+        },
+        {
+            "id": "1212",
+            "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json",
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+                        }
+                    ] 
+                }
+                
+            }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+                    "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+
+
+     "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+            {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+    ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+            "id": "121",
+            "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note"
+        }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+    ]
+}
+Notification Resource Models
+4 notifications are defined for this API.
+Notifications related to PartyInteraction:
+• Party Interaction Delete Event
+• Party Interaction Attribute Value Change Event
+• Party Interaction Create Event
+
+
+ 
+The notification structure for all notifications in this API follow the pattern depicted by the
+figure below. A notification event resource (depicted by "SpecificEvent" placeholder) is a sub
+class of a generic Event structure containing at least an id of the event occurrence (eventId),
+an event timestamp (eventTime), and the name of the resource (eventType). This notification
+structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the
+resource concerned by the notification using the resource name as access field
+("resourceName" placeholder).
+Figure 9 Notification Pattern
+Party Interaction Delete Event
+Message example for PartyInteractionDeleteEvent event
+Content-Type: application/json
+{
+    "correlationId": "0be43a9f-6b43",
+    "description": "PartyInteractionDeleteEvent illustration",
+    "domain": "Commercial",
+    "eventId": "4aa5-a8ce-d1162247afaf",
+    "eventTime": "2022-11-28T13:28:06.805Z",
+    "eventType": "PartyInteractionDeleteEvent",
+    "priority": "3",
+    "timeOcurred": "2022-11-28T13:28:01.622Z",
+
+
+     "title": "PartyInteractionDeleteEvent",
+    "event": {
+        "partyInteraction": {
+            "id": "123",
+            "href": "http://servername/partyInteraction/123",
+            "@type": "PartyInteraction"
+        }
+    },
+    "reportingSystem": {
+        "id": "661",
+        "name": "APP-835",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "616",
+        "name": "APP-817",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "PartyInteractionDeleteEvent"
+}
+Party Interaction Attribute Value Change Event
+Message example for PartyInteractionAttributeValueChangeEvent event
+Content-Type: application/json
+{
+    "correlationId": "8b161265-fc15",
+    "description": "PartyInteractionAttributeValueChangeEvent illustration",
+    "domain": "Commercial",
+    "eventId": "4dff-81c5-b308c95373fa",
+    "eventTime": "2022-11-28T13:28:06.795Z",
+    "eventType": "PartyInteractionAttributeValueChangeEvent",
+    "priority": "4",
+    "timeOcurred": "2022-11-28T13:27:57.646Z",
+    "title": "PartyInteractionAttributeValueChangeEvent",
+    "event": {
+        "partyInteraction": {
+            "href": "http://servername/partyInteraction/123",
+            "id": "123",
+            "@type": "PartyInteraction",
+            "interactionDate": {
+                "startDateTime": "2019-10-02T11:36:18.758Z",
+                "endDateTime": "2019-10-02T11:53:21.789Z"
+            }
+        }
+    },
+    "reportingSystem": {
+        "id": "661",
+        "name": "APP-835",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "616",
+        "name": "APP-817",
+
+
+         "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "PartyInteractionAttributeValueChangeEvent"
+}
+Party Interaction Create Event
+Message example for PartyInteractionCreateEvent event
+Content-Type: application/json
+{
+    "correlationId": "20c77f4b-3c76",
+    "description": "PartyInteractionCreateEvent illustration",
+    "domain": "Commercial",
+    "eventId": "4103-b23b-d57302dead62",
+    "eventTime": "2022-11-28T13:28:06.780Z",
+    "eventType": "PartyInteractionCreateEvent",
+    "priority": "3",
+    "timeOcurred": "2022-11-28T13:28:01.547Z",
+    "title": "PartyInteractionCreateEvent",
+    "event": {
+        "partyInteraction":
+    {
+            "id": "123",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+            "@type": "PartyInteraction",
+            "interactionDate": {
+                "startDateTime": "2020-10-02T11:36:18.758Z",
+                "endDateTime": "2020-10-02T11:53:21.789Z"
+            },
+            "description": "Visit to store",
+            "reason": "The user wanted to buy TV and internet plan",
+            "status": "ongoing",
+            "statusChangeDate": "2020-10-02T11:53:21.789Z",
+            "direction": "inbounds",
+            "creationDate": "2020-10-02T11:37:08.013Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "relatedParty": [
+                {
+                    "role": "user",
+                    "@type": "RelatedPartyOrPartyRole",
+                    "partyOrPartyRole":
+                     {
+                        "id": "999",
+                        "href":
+"https://host:port/partyManagement/v5/individual/999",
+                        "name": "John Doe",
+                        "@type" : "PartyRef",
+                        "@referredType": "Individual"
+                    }
+                },
+                {
+                    "role": "agent",
+                    "@type": "RelatedPartyOrPartyRole",
+                    "partyOrPartyRole":
+                     {
+                        "id": "888",
+
+
+                         "href":
+"https://host:port/partyManagement/v5/individual/888",
+                        "name": "Rian Muray",
+                        "@type" : "PartyRef",
+                        "@referredType": "Individual"
+                    }
+                }
+            ],
+            "interactionItem": [
+                {
+                    "id": "5678",
+                    "reason": "The user signed up to new TV bundle and paid the
+decoder",
+                    "@type": "InteractionItem",
+                    "itemDate": {
+                        "endDateTime": "2020-10-02T11:56:01.895Z",
+                        "startDateTime": "2020-10-02T11:50:01.895Z"
+                      },
+                    "resolution": "Product order is created",
+                    "creationDate": "2020-10-02T11:50:01.895Z",
+                    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+                    "item":
+                    {
+                        "role": "interaction",
+                        "@type": "RelatedEntityRefOrValue",
+                        "entity" :
+                         {
+                            "id": "30001",
+                            "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+                            "name": "Product Order illustration sample by
+reference",
+                            "@referredType": "ProductOrder",
+                            "@type":"EntityRef"
+                        }
+                    }
+                },
+                {
+                    "id": "1212",
+                    "reason": "The user is purchasing unlimited internet plan",
+                    "@type": "InteractionItem",
+                    "itemDate": {
+                        "endDateTime": "2020-10-02T11:59:01.895Z",
+                        "startDateTime": "2020-10-02T11:50:01.895Z"
+                      },
+                    "resolution": "Product order is created",
+                    "creationDate": "2020-10-02T11:50:01.895Z",
+                    "item": {
+                        "role": "interaction",
+                        "@type": "RelatedEntityRefOrValue",
+                        "entity" :
+                        {
+                            "id": "88",
+                            "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                            "@type": "ProductOrder",
+                            "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json",
+                            "productOrderItem": [
+                                {
+                                    "id": "13219",
+
+
+                                     "action": "add",
+                                    "productOffering": {
+                                        "id": "2445",
+                                        "name": "Unlimited Internet Plus",
+                                        "@type": "ProductOfferingRef",
+                                        "@referredType": "ProductOrder"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "id": "9999",
+                    "reason": "The user paid the decoder in the store with credit
+card",
+                    "@type": "InteractionItem",
+                    "itemDate": {
+                        "endDateTime": "2020-10-02T11:56:01.895Z",
+                        "startDateTime": "2020-10-02T11:50:01.895Z"
+                      },
+                    "resolution": "TODO",
+                    "creationDate": "2020-10-02T11:50:01.895Z",
+                    "item": {
+                        "role": "interaction",
+                        "@type": "RelatedEntityRefOrValue",
+                        "entity" : {
+                            "id": "666",
+                            "href":
+"https://host:port/paymentManagement/5/payment/666",
+                            "name": "TV bundle plus decoder payment",
+                            "@type" :"EntityRef",
+                            "@referredType": "Payment"
+                        }
+                    }
+                }
+            ],
+            "relatedChannel": [
+                {
+                    "role": "interaction creation",
+                    "@type" :"RelatedChannel",
+                    "channel":
+                    {
+                        "id": "555",
+                        "name": "Madrid Gran Store",
+                        "@type": "ChannelRef"
+                    }
+                }
+            ],
+            "attachment": [
+                {
+                    "id": "111222444",
+                    "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+                    "name": "Some cool attachment",
+                    "@type": "AttachmentRef",
+                    "description": "blahblahblah",
+                    "attachmentType": "receipt",
+                    "mimeType": "application/pdf",
+                    "size": {
+
+
+                         "amount": 321321,
+                        "units": "KB"
+                      },
+                    "URL": "https://whereverthpdfis.com"
+                }
+            ],
+            "note": [
+                {
+                    "id": "121",
+                    "text": "loren ipsum ...",
+                    "author": "John Doe",
+                    "date": "2020-10-02T11:36:18.758Z",
+                    "@type" :"Note"
+                }
+            ],
+            "interactionRelationship": [
+                {
+                    "id": "1034",
+                    "href":
+"https://host:port/partyInteraction/v5/partyInteraction/1034",
+                    "@type": "InteractionRelationship",
+                    "relationshipType": "parentInteraction"
+                }
+            ]
+        }
+    },
+    "reportingSystem": {
+        "id": "661",
+        "name": "APP-835",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "source": {
+        "id": "616",
+        "name": "APP-817",
+        "@type": "ReportingResource",
+        "@referredType": "LogicalResource"
+    },
+    "@baseType": "Event",
+    "@type": "PartyInteractionCreateEvent"
+}
+
+
+ API OPERATIONS
+Remember the following Uniform Contract:
+Operation on Entities
+Uniform API Operation
+Description
+Query Entities
+GET Resource
+GET must be used to retrieve a
+representation of a resource.
+Create Entity
+POST Resource
+POST must be used to create a
+new resource
+Partial Update of an Entity
+PATCH Resource
+PATCH must be used to partially
+update a resource
+Remove an Entity
+DELETE Resource
+DELETE must be used to
+remove a resource
+Execute an Action on an Entity
+POST on TASK Resource
+POST must be used to execute
+Task Resources
+Other Request Methods
+POST on TASK Resource
+GET and POST must not be
+used to tunnel other request
+methods.
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines.
+Notifications are also described in a subsequent section.
+Operations on PartyInteraction
+List or find PartyInteraction objects
+GET /partyInteraction?fields=…
+Description
+This operation list PartyInteraction entities. Attribute selection is enabled for all first level
+attributes. Filtering may be available depending on the compliance level supported by an
+implementation.
+Usage samples
+Here's an example of a request for retrieving a list of party interaction(s). The given criteria is
+the 
+individual
+(relatedParty.partyOrPartyRole.@referredType=Individual&relatedParty.partyOrPartyRole.id
+=999)
+Request
+GET
+/partyInteraction?fields=id,href,relatedParty.partyOrPartyRole.name,relatedParty.rol
+e,relatedParty.partyOrPartyRole.id,relatedParty.partyOrPartyRole.@referredType&relat
+edParty.partyOrPartyRole.@referredType=Individual&relatedParty.partyOrPartyRole.id=9
+99
+
+
+ Content-Type: application/json
+Response
+200
+[
+    {
+        "id": "123",
+        "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+        "@type": "PartyInteraction",
+        "relatedParty": [
+            {
+                "role": "user",
+                "@type": "RelatedPartyOrPartyRole",
+                "partyOrPartyRole": 
+                {
+                    "id": "999",
+                    "href": "https://host:port/partyManagement/v5/individual/999",  
+                    "name": "John Doe",
+                    "@type" :"PartyRef",
+                    "@referredType": "Individual"
+                }
+                
+            },
+            {
+                "role": "customer",
+                "@type": "RelatedPartyOrPartyRole",
+                "partyOrPartyRole": 
+                {
+                    "id": "3434",
+                    "href": "https://host:port/partyManagement/v5/individual/3434",
+                    "name": "Malik Doe",
+                    "@type" :"PartyRoleRef",
+                    "@referredType": "Customer"
+                }
+                
+            },
+            {
+                "role": "agent",
+                "@type": "RelatedPartyOrPartyRole",
+                "partyOrPartyRole": 
+                {
+                    "id": "36666",
+                    "href": "https://host:port/partyManagement/v5/individual/36666",
+                    "name": "Rian Muray",
+                    "@type" :"PartyRef",
+                    "@referredType": "Individual"
+                }
+                
+            }
+        ]
+    },
+    {
+        "id": "555",
+        "href": "https://host:port/partyInteraction/v5/partyInteraction/555",
+        "@type": "PartyInteraction",
+        "relatedParty": 
+
+
+         [
+            {
+                "role": "user",
+                "@type": "RelatedPartyOrPartyRole",
+                "partyOrPartyRole": 
+                {
+                    "id": "999",
+                    "href": "https://host:port/partyManagement/v5/individual/999",  
+                    "name": "John Doe",
+                    "@type" :"PartyRef",
+                    "@referredType": "Individual"
+                }
+                
+            }
+            
+            
+            
+        ]
+    }
+]
+Retrieves a PartyInteraction by ID
+GET /partyInteraction/{id}?fields=…
+Description
+This operation retrieves a PartyInteraction entity. Attribute selection is enabled for all first
+level attributes. Filtering may be available depending on the compliance level supported by
+an implementation.
+Usage samples
+Here's an example of a request for retrieving a specific party interaction, id=123.
+Request
+GET /partyInteraction/123
+Content-Type: application/json
+Response
+200
+{
+    "id": "123",
+    "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+    },
+    "description": "Visit to store",
+    "reason": "The user wanted to buy TV and internet plan",
+    "status": "ongoing",
+
+
+     "statusChangeDate": "2020-10-02T11:53:21.789Z",
+    "direction": "inbounds",
+    "creationDate": "2020-10-02T11:37:08.013Z",
+    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        }
+    ],
+    "interactionItem": [
+        {
+            "id": "5678",
+            "reason": "The user signed up to new TV bundle and paid the decoder",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "item": 
+            {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" :
+                 {
+                    "id": "30001",
+                    "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+                    "name": "Product Order illustration sample by reference",
+                    "@referredType": "ProductOrder",
+                    "@type":"EntityRef"
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "1212",
+
+
+             "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+                        }
+                    ] 
+                  
+                }
+                
+            }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+                    "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+    "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+
+
+             {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+    ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+            "id": "121",
+            "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note"
+        }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+    ]
+}
+Creates a PartyInteraction
+POST /partyInteraction?fields=…
+Description
+This operation creates a PartyInteraction entity.
+Mandatory Attributes
+Mandatory Attributes
+Rule
+direction
+reason
+
+
+ 
+Mandatory Attributes
+Rule
+relatedChannel
+relatedChannel.@type
+relatedChannel.channel
+relatedChannel.channel.@type
+relatedChannel.channel.id
+relatedChannel.role
+@type
+Usage samples
+Here's an example of a request for create a party interaction- the resulting party interaction is
+123.
+Request
+POST /partyInteraction
+Content-Type: application/json
+{
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+    },
+    "description": "Visit to store",
+    "reason": "The user wanted to buy TV and internet plan",
+    "direction": "inbounds",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+
+
+         }
+    ],
+    "interactionItem": [
+        {
+            "id": "5678",
+            "reason": "The user signed up to new TV bundle and paid the decoder",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "item": 
+            {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" :
+                 {
+                    "id": "30001",
+                    "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+                    "name": "Product Order illustration sample by reference",
+                    "@referredType": "ProductOrder",
+                    "@type":"EntityRef"
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "1212",
+            "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json", 
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+                        }
+
+
+                     ] 
+                  
+                }
+                
+            }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+                    "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+    "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+            {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+    ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+            "id": "121",
+
+
+             "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note "
+        }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+    ]
+}
+Response
+201
+{
+    "id": "123",
+    "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+    },
+    "description": "Visit to store",
+    "reason": "The user wanted to buy TV and internet plan",
+    "status": "ongoing",
+    "statusChangeDate": "2020-10-02T11:53:21.789Z",
+    "direction": "inbounds",
+    "creationDate": "2020-10-02T11:37:08.013Z",
+    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type": "PartyRef",
+                "@referredType": "Individual"
+
+
+             }
+        }
+    ],
+    "interactionItem": [
+        {
+            "id": "5678",
+            "reason": "The user signed up to new TV bundle and paid the decoder",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "item": 
+            {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" :
+                 {
+                    "id": "30001",
+                    "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+                    "name": "Product Order illustration sample by reference",
+                    "@referredType": "ProductOrder",
+                    "@type":"EntityRef"
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "1212",
+            "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json", 
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+
+
+                         }
+                    ] 
+                  
+                }
+                
+            }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+                    "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+    "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+            {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+    ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+
+
+             "id": "121",
+            "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note"
+        }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+    ]
+}
+Updates partially a PartyInteraction
+PATCH /partyInteraction/{id}?fields=…
+Description
+This operation allows partial updates of a PartyInteraction entity. Support of json/merge
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/
+html/rfc5789) is optiona. Note: If the update operation yields to the creation of sub-resources
+or relationships, the same rules concerning mandatory sub-resource attributes and default
+value settings in the POST operation applies to the PATCH operation. Hence these tables
+are not repeated here.
+Patchable and Non Patchable Attributes
+Non Patchable Attributes
+Rule
+creationDate
+direction
+href
+id
+statusChangeDate
+@baseType
+@baseType is immutable
+@schemaLocation
+@schemaLocation is immutable
+@type
+@type is immutable
+Patchable Attributes
+Rule
+attachment
+description
+externalIdentifier
+interactionDate
+
+
+ 
+Patchable Attributes
+Rule
+interactionItem
+interactionRelationship
+lastUpdate
+note
+reason
+relatedChannel
+relatedParty
+status
+Usage samples
+Here's an example of a request for update a party interaction description- updated party
+interaction is 123.This example illustrating patch application json. When PATCH is
+implemeted merge syntaxt is mandatory
+Request
+PATCH /partyInteraction/123
+Content-Type: application/json
+{
+    "@type": "PartyInteraction",
+    "description": "Visit to store and buy TV"
+    
+}
+Response
+200
+{
+    "id": "123",
+    "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+    },
+    "description": "Visit to store and buy TV",
+    "reason": "The user wanted to buy TV and internet plan",
+    "status": "ongoing",
+    "statusChangeDate": "2020-10-02T11:53:21.789Z",
+    "direction": "inbounds",
+    "creationDate": "2020-10-02T11:37:08.013Z",
+    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+
+
+              {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type": "PArtyRef",
+                "@referredType": "Individual"
+            }
+        }
+    ],
+    "interactionItem": [
+        {
+            "id": "5678",
+            "reason": "The user signed up to new TV bundle and paid the decoder",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "item": 
+            {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" :
+                 {
+                    "id": "30001",
+                    "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+                    "name": "Product Order illustration sample by reference",
+                    "@referredType": "ProductOrder",
+                    "@type":"EntityRef"
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "1212",
+            "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+
+
+                 "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json", 
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+                        }
+                    ] 
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+                    "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+    "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+            {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+
+
+     ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+            "id": "121",
+            "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note"
+        }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+    ]
+}
+Here's an example of a request for update a party interaction description- updated party
+interaction is 123.This example illustrating patch patch merge. When PATCH is implemeted
+merge syntaxt is mandatory
+Request
+PATCH /partyInteraction/123
+Content-Type: application/merge-patch+json
+{
+    "@type": "PartyInteraction",
+    "description": "Visit to store and buy TV"
+    
+}
+Response
+200
+{
+
+
+     "id": "123",
+    "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+    },
+    "description": "Visit to store and buy TV",
+    "reason": "The user wanted to buy TV and internet plan",
+    "status": "ongoing",
+    "statusChangeDate": "2020-10-02T11:53:21.789Z",
+    "direction": "inbounds",
+    "creationDate": "2020-10-02T11:37:08.013Z",
+    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type": "PArtyRef",
+                "@referredType": "Individual"
+            }
+        }
+    ],
+    "interactionItem": [
+        {
+            "id": "5678",
+            "reason": "The user signed up to new TV bundle and paid the decoder",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "item": 
+            {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" :
+                 {
+                    "id": "30001",
+                    "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+
+
+                     "name": "Product Order illustration sample by reference",
+                    "@referredType": "ProductOrder",
+                    "@type":"EntityRef"
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "1212",
+            "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json", 
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+                        }
+                    ] 
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+
+
+                     "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+    "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+            {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+    ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+            "id": "121",
+            "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note"
+        }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+    ]
+}
+Here's an example of a request for update a party interaction description- updated party
+interaction is 123. This example illustrating json patch json
+Request
+
+
+ 
+PATCH /partyInteraction/123
+Content-Type: application/json-patch+json
+[
+    {"op":"replace",
+      "path": "/description",
+      "value": "Visit to store and buy TV"
+      }
+  ]
+Response
+200
+{
+    "id": "123",
+    "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+    },
+    "description": "Visit to store and buy TV",
+    "reason": "The user wanted to buy TV and internet plan",
+    "status": "ongoing",
+    "statusChangeDate": "2020-10-02T11:53:21.789Z",
+    "direction": "inbounds",
+    "creationDate": "2020-10-02T11:37:08.013Z",
+    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+            }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type": "PArtyRef",
+                "@referredType": "Individual"
+            }
+        }
+    ],
+    "interactionItem": [
+        {
+
+
+             "id": "5678",
+            "reason": "The user signed up to new TV bundle and paid the decoder",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+            "item": 
+            {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" :
+                 {
+                    "id": "30001",
+                    "href":
+"https://host:port/productOrderingManagement/5/productOrder/30001",
+                    "name": "Product Order illustration sample by reference",
+                    "@referredType": "ProductOrder",
+                    "@type":"EntityRef"
+                    
+                }
+                
+            }
+        },
+        {
+            "id": "1212",
+            "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json", 
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+                        }
+                    ] 
+                  
+                }
+                
+
+
+             }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+                    "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+    "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+            {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+    ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+            "id": "121",
+            "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note"
+
+
+         }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+    ]
+}
+Here's an example of a request for remove a party interaction item (id=5678) from party
+interaction is 123. This example illustrating json patch query json
+Request
+PATCH /partyInteraction/123
+Content-Type: application/json-patch-query+json
+[
+    {"op":"delete",
+      "path": "/interactionItem?id=5678"
+      }
+  ]
+Response
+200
+{
+    "id": "123",
+    "href": "https://host:port/partyInteraction/v5/partyInteraction/123",
+    "@type": "PartyInteraction",
+    "interactionDate": {
+        "startDateTime": "2020-10-02T11:36:18.758Z",
+        "endDateTime": "2020-10-02T11:53:21.789Z"
+    },
+    "description": "Visit to store and buy TV",
+    "reason": "The user wanted to buy TV and internet plan",
+    "status": "ongoing",
+    "statusChangeDate": "2020-10-02T11:53:21.789Z",
+    "direction": "inbounds",
+    "creationDate": "2020-10-02T11:37:08.013Z",
+    "lastUpdateDate": "2020-11-02T11:37:08.013Z",
+    "relatedParty": [
+        {
+            "role": "user",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "999",
+                "href": "https://host:port/partyManagement/v5/individual/999",
+                "name": "John Doe",
+                "@type" : "PartyRef",
+                "@referredType": "Individual"
+
+
+             }
+        },
+        {
+            "role": "agent",
+            "@type": "RelatedPartyOrPartyRole",
+            "partyOrPartyRole":
+             {
+                "id": "888",
+                "href": "https://host:port/partyManagement/v5/individual/888",
+                "name": "Rian Muray",
+                "@type": "PArtyRef",
+                "@referredType": "Individual"
+            }
+        }
+    ],
+    "interactionItem": [
+        {
+            "id": "1212",
+            "reason": "The user is purchasing unlimited internet plan",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:59:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+              },
+            "resolution": "Product order is created",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : 
+                {
+                    "id": "88",
+                    "href":
+"https://host:port/productOrderingManagement/v5/productOrder/88",
+                    "@type": "ProductOrder",
+                    "@schemaLocation": "https://mycsp.com:8080/tmf-
+api/schema/Resource/ProductOrder.schema.json", 
+                    "productOrderItem": [
+                        {
+                            "id": "13219", 
+                            "action": "add",
+                            "productOffering": {
+                                "id": "2445",
+                                "name": "Unlimited Internet Plus",
+                                "@type": "ProductOfferingRef",
+                                "@referredType": "ProductOrder"
+                            }
+                        }
+                    ] 
+                  
+                }
+                
+            }
+        },
+        {
+            "id": "9999",
+            "reason": "The user paid the decoder in the store with credit card",
+            "@type": "InteractionItem",
+            "itemDate": {
+                "endDateTime": "2020-10-02T11:56:01.895Z",
+                "startDateTime": "2020-10-02T11:50:01.895Z"
+
+
+               },
+            "resolution": "TODO",
+            "creationDate": "2020-10-02T11:50:01.895Z",
+            "item": {
+                "role": "interaction",
+                "@type": "RelatedEntityRefOrValue",
+                "entity" : {
+                    "id": "666",
+                    "href": "https://host:port/paymentManagement/5/payment/666",
+                    "name": "TV bundle plus decoder payment",
+                    "@type" :"EntityRef",
+                    "@referredType": "Payment"
+                }
+                
+            }
+        }
+    ],
+    "relatedChannel": [
+        {
+            "role": "interaction creation",
+            "@type" :"RelatedChannel",
+            "channel": 
+            {
+                "id": "555",
+                "name": "Madrid Gran Store",
+                "@type": "ChannelRef"
+            }
+            
+        }
+    ],
+    "attachment": [
+        {
+            "id": "111222444",
+            "href":
+"https://host:port/partyInteraction/5/partyInteraction/123/attachment/111222444",
+            "name": "Some cool attachment",
+            "@type": "AttachmentRef",
+            "description": "blahblahblah",
+            "attachmentType": "receipt",
+            "mimeType": "application/pdf",
+            "size": {
+                "amount": 321321,
+                "units": "KB"
+              },
+            "URL": "https://whereverthpdfis.com"
+        }
+    ],
+    "note": [
+        {
+            "id": "121",
+            "text": "loren ipsum ...",
+            "author": "John Doe",
+            "date": "2020-10-02T11:36:18.758Z",
+            "@type" :"Note"
+        }
+    ],
+    "interactionRelationship": [
+        {
+            "id": "1034",
+            "href": "https://host:port/partyInteraction/v5/partyInteraction/1034",
+            "@type": "InteractionRelationship",
+            "relationshipType": "parentInteraction"
+        }
+
+
+     ]
+}
+Deletes a PartyInteraction
+DELETE /partyInteraction/{id}
+Description
+This operation deletes a PartyInteraction entity.
+Usage samples
+Here's an example of a request to delete party interaction
+Request
+DELETE /partyInteraction/123
+Content-Type: application/json
+Response
+204
+
+
+ API NOTIFICATIONS
+For every single of operation on the entities use the following templates and provide sample
+REST notification POST calls.
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in
+the REST Guidelines reproduced below.
+Register listener
+POST /hub
+Description
+Sets the communication endpoint address the service instance must use to deliver
+information about its health state, execution state, failures and metrics. Subsequent POST
+calls will be rejected by the service if it does not support multiple listeners. In this case
+DELETE /api/hub/{id} must be called before an endpoint can be created again.
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 409 if request is not successful.
+Usage Samples
+Here’s an example of a request for registering a listener.
+Request
+POST /api/hub
+Accept: application/json
+{
+    "callback": "http://in.listener.com"
+}
+Response
+201
+Content-Type: application/json
+Location: /api/hub/42
+{
+    "id":"42",
+    "callback": "http://in.listener.com",
+    "query":""
+}
+
+
+ 
+Unregister listener
+DELETE /hub/{id}
+Description
+Clears the communication endpoint address that was set by creating the Hub..
+Behavior
+Returns HTTP/1.1 status code 204 if the request was successful.
+Returns HTTP/1.1 status code 404 if the resource is not found.
+Usage Samples
+Here’s an example of a request for un-registering a listener.
+Request
+DELETE /api/hub/42
+Accept: application/json
+Response
+204
+Publish Event to listener
+POST /client/listener
+Description
+Clears the communication endpoint address that was set by creating the Hub.
+Provides to a registered listener the description of the event that was raised. The
+/client/listener url is the callback url passed when registering the listener.
+Behavior
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.
+Usage Samples
+Here’s an example of a notification received by the listener. In this example “EVENT TYPE”
+should be replaced by one of the notification types supported by this API (see Notification
+resources Models section) and EVENT BODY refers to the data structure of the given
+notification type.
+Request
+
+
+ 
+POST /client/listener
+Accept: application/json
+{
+    "event": {
+        EVENT BODY
+    },
+    "eventType": "EVENT_TYPE"
+}
+Response
+201
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST
+Design Guidelines.
+
+
+ Acknowledgements
+Version History
+Version Number
+Date
+Release led by:
+Description
+1.0
+11/10/2017
+Guillermo Martínez del
+Camino Telefónica
+guillermo.martinezdelcami
+no@telefonica.com
+First Release of Draft Version of the
+Document.
+2.0
+24-Apr-2018
+Guillermo Martínez del
+Camino
+Renamed UserInteraction to
+PartyInteraction and added multiple
+modifications
+2.0.1
+29-Jun-2018
+Adrienne Walcott
+Formatting/style edits prior to R18
+publishing.
+2.0.2
+10-Sep-2018
+Adrienne Walcott
+Updated to reflect TM Forum
+Approved Status
+4.0.0
+8-Apr-20
+Jacob Avraham
+Update version to reflect schema-
+driven api
+5.0.0
+4-Jun-23
+Jacob Avraham
+jacoba@amdocs.com
+Update version to algin with v5
+guideline
+Contributors to Document
+Contributor
+Comment
+Guillermo Martínez del Camino Telefónica
+guillermo.martinezdelcamino@telefonica.com
+Jacob Avraham, Amdocs
+jacoba@amdocs.com
+Deepesh Jakkal, Amdocs
+deepesh.jakkal@amdocs.com
+
+

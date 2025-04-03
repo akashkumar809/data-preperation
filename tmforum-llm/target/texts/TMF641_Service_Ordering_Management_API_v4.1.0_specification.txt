@@ -1,0 +1,2777 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Service Ordering Management API 
+User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF641 
+Team Approved Date: 07-Dec-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.1.1 
+IPR Mode: RAND 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 2 of 66 
+NOTICE 
+Copyright © TM Forum 2021. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that 
+comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, 
+and distributed, in whole or in part, without restriction of any kind, provided that the above copyright 
+notice and this section are included on all such copies and derivative works. However, this document itself 
+may not be modified in any way, including by removing the copyright notice or references to TM FORUM, 
+except as needed for the purpose of developing any document or deliverable produced by a TM FORUM 
+Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in the TM FORUM 
+IPR Policy, must be followed) or as required to translate it into languages other than English. 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its 
+successors or assigns. 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM 
+DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY 
+THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that 
+would necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify 
+the TM FORUM Team Administrator and provide an indication of its willingness to grant patent licenses to 
+such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project 
+Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims 
+in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this 
+TM FORUM Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims 
+any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that 
+might be claimed to pertain to the implementation or use of the technology described in this TM FORUM 
+Standards Final Deliverable or the extent to which any license under such rights might or might not be 
+available; neither does it represent that it has made any effort to identify any such rights. Information on 
+TM FORUM's procedures with respect to rights in any document or deliverable produced by a TM FORUM 
+Collaboration Project Team can be found on the TM FORUM website. Copies of claims of rights made 
+available for publication and any assurances of licenses to be made available, or the result of an attempt 
+made to obtain a general license or permission for the use of such proprietary rights by implementers or 
+users of this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM Team 
+Administrator. TM FORUM makes no representation that any information or list of intellectual property 
+rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims. 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 3 of 66 
+ 
+Direct inquiries to the TM Forum office: 
+181 New Road, Suite 304 
+Parsippany, NJ 07054 USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 998 7916 
+TM Forum Web Page: www.tmforum.org 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 4 of 66 
+Table of Contents 
+NOTICE ………………………………………………………………………………………………………………………………………………………………….2 
+Table of Contents…………………………………………………………………………………………………………………………………………………..4 
+List of Tables…………………………………………………………………………………………………………………………………………………….6 
+Introduction……………………………………………………………………………………………………………………………………………………………7 
+SAMPLE USE CASES…………………………………………………………………………………………………………………………………………………8 
+Support of polymorphism and extension …………………………………………………………………………………………………………………9 
+RESOURCE MODEL…………………………………………………………………………………………………………………………………………………10 
+Managed Entity and Task Resource Models ............................................................................................................ 10 
+Service Order resource ......................................................................................................................................... 10 
+Cancel Service Order resource .............................................................................................................................. 28 
+Lifecycle of Service ................................................................................................................................................... 34 
+Notification Resource Models .................................................................................................................................. 36 
+Service Order Create Event ................................................................................................................................... 37 
+Service Order Attribute Value Change Event ........................................................................................................ 38 
+Service Order State Change Event ........................................................................................................................ 38 
+Service Order Delete Event ................................................................................................................................... 38 
+Service Order Information Required Event ........................................................................................................... 39 
+Service Order Milestone Event ............................................................................................................................. 39 
+Service Order Jeopardy Event ............................................................................................................................... 40 
+Cancel Service Order Create Event ....................................................................................................................... 40 
+Cancel Service Order State Change Event ............................................................................................................. 40 
+Cancel Service Order Information Required Event ............................................................................................... 41 
+API OPERATIONS…………………………………………………………………………………………………………………………………………………….42 
+Operations on Service Order .................................................................................................................................... 42 
+List service orders ................................................................................................................................................. 42 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 5 of 66 
+Retrieve service order ........................................................................................................................................... 43 
+Create service order ............................................................................................................................................. 47 
+Patch service order ............................................................................................................................................... 50 
+Delete service order .............................................................................................................................................. 56 
+Operations on Cancel Service Order ........................................................................................................................ 56 
+List cancel service orders ...................................................................................................................................... 56 
+Retrieve cancel service order ................................................................................................................................ 57 
+Create cancel service order .................................................................................................................................. 58 
+API NOTIFICATIONS…………………………………………………………………………………………………………………………………………………61 
+Register listener ....................................................................................................................................................... 61 
+Unregister listener ................................................................................................................................................... 63 
+Publish Event to listener .......................................................................................................................................... 63 
+Acknowledgements…………………………………………………………………………………………………………………………………………………65 
+Document  History ................................................................................................................................................... 65 
+Version History ..................................................................................................................................................... 65 
+Release History ..................................................................................................................................................... 66 
+Contributors to Document ....................................................................................................................................... 66 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 6 of 66 
+ List of Tables 
+N/A 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 7 of 66 
+Introduction 
+The following document is the specification of the REST API for Service Order Management. It includes the model 
+definition as well as all available operations. Possible actions are creating, updating and retrieving Service Orders 
+(including filtering). The specification covers also a task-based resource to request Service Order Cancellation. 
+The following Assumptions were considered in the development of this document: 
+- 
+The Order Management system has access to a catalog system 
+- 
+A service order will describe a list of service order items. 
+- 
+A service order item references an action on an existing or future service. 
+- 
+By service we designed Customer-Facing Service (CFS) as well as Resource Facing Service (RFS). 
+From a component perspective, a service order should be available 
+• 
+from a Service Orchestration Component (and it could mix CFS and RFS) 
+• 
+from an Infrastructure Control & Management component (and it would have only RFS) 
+Service ordering API performs the following operations 
+…on Service Order: 
+• 
+Retrieval of a service order or a collection of service orders depending on filter criteria 
+• 
+Partial update of a service order (including updating rules) 
+• 
+Creation of a service order (including default values and creation rules) 
+• 
+Deletion of service order (for administration purposes) 
+• 
+Notification of events on service order 
+o service order creation 
+o service order deletion 
+o service order state change 
+o service order value change used to notify that any data in an order has just changed 
+o service order information required used to notify that some data in the order need to be filled / are 
+missing 
+…on CancelServiceOrder: 
+• 
+Retrieval of a service order cancellation request or a collection of service order cancellation requests 
+depending on filter criteria 
+• 
+Creation of a service order cancel request  
+• 
+Notification of events on service order 
+o cancel service Order creation 
+o cancel service Order state change 
+o order information required used to notify that some data in the cancel service order need to be 
+filled / are missing 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 8 of 66 
+SAMPLE USE CASES 
+ 
+We illustrate in this document a multi-items service order covering use-cases:  
+• 
+Item 1: Creation of a very simplified CPE illustrating an object characteristic 
+• 
+Item 2: Modification of an existing service to change a characteristic value and a supporting resource. 
+• 
+Item 3: Creation of a service with feature 
+• 
+Item 4 : Modification of a service order item to switch to inactive an existing service 
+The document also provide an example to a cancel service order request/ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 9 of 66 
+Support of polymorphism and extension  
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities, for instance a TypeAServiceOrder or TypeBServiceOrder inheriting properties from the base ServiceOrder 
+entity. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Design Guidelines v4.0 
+(TMF630) document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+ServiceOrder instances some may be instances of TypeAServiceOrder where other could be instances of 
+TypeBServiceOrder . The @type gives this information. All resources and sub-resources of this API have a @type 
+attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities (like for instance an RelatedParty object) to explicitly 
+denote the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes 
+the class type of the reference itself, such as RelatedParty, and not the class type of the referred object. However, 
+since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 10 of 66 
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Service Order resource 
+Resource model 
+ 
+Field descriptions 
+ServiceOrder fields 
+href 
+A string. Hyperlink to access the order. 
+id 
+A string. ID created on repository side. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 11 of 66 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+cancellationDate 
+A date time (DateTime). Date when the order is cancelled. This is used when order 
+is cancelled. 
+cancellationReason 
+A string. Reason why the order is cancelled. This is used when order is cancelled. 
+category 
+A string. Used to categorize the order, useful for the OM system, such as: 
+Broadband, TVOption. 
+completionDate 
+A date time (DateTime). Effective delivery date amended by the provider. 
+description 
+A string. A free-text description of the service order. 
+errorMessage 
+A list of service order error messages (ServiceOrderErrorMessage [*]). the error(s) 
+cause an order status change. 
+expectedCompletionDate 
+A date time (DateTime). Expected delivery date amended by the provider. 
+externalId 
+A string. ID given by the consumer to facilitate searches. 
+externalReference 
+A list of external references (ExternalReference [*]). External reference of the 
+individual or reference in other system. 
+href 
+A string. Hyperlink to access the order. 
+id 
+A string. ID created on repository side. 
+jeopardyAlert 
+A list of service order jeopardy alerts (ServiceOrderJeopardyAlert [*]). A list of 
+jeopardy alerts related to this order. 
+milestone 
+A list of service order milestones (ServiceOrderMilestone [*]). A list of milestones 
+related to this order. 
+note 
+A list of notes (Note [*]). Extra-information about the order, e.g., useful to add extra 
+delivery information that could be useful for a human process. 
+notificationContact 
+A string. Contact attached to the order to send back information regarding this 
+order. 
+orderDate 
+A date time (DateTime). 
+orderRelationship 
+A list of service order relationships (ServiceOrderRelationship [*]). A list of service 
+orders related to this order (e.g., prerequisite, dependent on). 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 12 of 66 
+priority 
+A string. Can be used by consumers to prioritize orders in a Service Order 
+Management system. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of parties which are involved in this 
+order and the role they are playing. 
+requestedCompletionDate A date time (DateTime). Requested delivery date from the requestor’s perspective. 
+requestedStartDate 
+A date time (DateTime). Order start date wished by the requestor. 
+serviceOrderItem 
+A list of service order items (ServiceOrderItem [*]). A list of service order items to 
+be processed by this order. 
+startDate 
+A date time (DateTime). Date when the order was started for processing. 
+state 
+A service order state type (ServiceOrderStateType). State of the order: described in 
+the state-machine diagram. 
+Characteristic sub-resource 
+Describes a given characteristic of an object or entity through a name/value pair. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+characteristicRelationship A list of characteristic relationships (CharacteristicRelationship [*]). Another 
+Characteristic that is related to the current Characteristic;. 
+id 
+A string. Unique identifier of the characteristic. 
+name 
+A string. Name of the characteristic. 
+value 
+An any (Any). The value of the characteristic. 
+valueType 
+A string. Data type of the value of the characteristic. 
+CharacteristicRelationship sub-resource 
+Another Characteristic that is related to the current Characteristic;. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. Unique identifier of the characteristic. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 13 of 66 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+relationshipType 
+A string. The type of relationship. 
+ExternalReference sub-resource 
+External reference of the individual or reference in other system. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+externalReferenceType A string. Type of the external reference. 
+name 
+A string. External reference name. 
+Feature sub-resource 
+Configuration feature. 
+constraint 
+A list of constraint references (ConstraintRef [*]). This is a list of feature constraints. 
+featureCharacteristic 
+A list of characteristics (Characteristic [1..*]). This is a list of Characteristics for a 
+particular feature. 
+featureRelationship 
+A list of feature relationships (FeatureRelationship [*]). Configuration feature. 
+id 
+A string. Unique identifier of the feature. 
+isBundle 
+A boolean. True if this is a feature group. Default is false. 
+isEnabled 
+A boolean. True if this feature is enabled. Default is true. 
+name 
+A string. This is the name for the feature. 
+FeatureRelationship sub-resource 
+Configuration feature. 
+id 
+A string. Unique identifier of the target feature. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 14 of 66 
+name 
+A string. This is the name of the target feature. 
+relationshipType 
+A string. This is the type of the feature relationship. 
+validFor 
+A time period. The period for which this feature relationship is valid. 
+Note sub-resource 
+Extra information about a given entity. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+author 
+A string. Author of the note. 
+date 
+A date time (DateTime). Date of the note. 
+id 
+A string. Identifier of the note within its containing entity. 
+text 
+A string. Text of the note. 
+RelatedEntityRefOrValue sub-resource 
+A reference to an entity, where the type of the entity is not known in advance. A related entity defines an entity 
+described by reference or by value linked to a specific entity. The polymorphic attributes @type, @schemaLocation 
+& @referredType are related to the Entity and not the RelatedEntityRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+A string. Reference of the related entity. 
+id 
+A string. Unique identifier of a related entity. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. 
+RelatedParty sub-resource 
+Related Party reference. A related party defines party or party role linked to a specific entity. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 15 of 66 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+RelatedPlaceRefOrValue sub-resource 
+Related Entity reference. A related place defines a place described by reference or by value linked to a specific 
+entity. The polymorphic attributes @type, @schemaLocation & @referredType are related to the place entity and 
+not the RelatedPlaceRefOrValue class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. 
+RelatedServiceOrderItem sub-resource 
+RelatedServiceOrderItem (a ServiceOrder item) .The service order item which triggered service 
+creation/change/termination. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 16 of 66 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+itemAction 
+An order item action type (OrderItemActionType). Action of the order item for this 
+service. 
+itemId 
+A string. Identifier of the order item where the service was managed. 
+role 
+A string. role of the service order item for this service. 
+serviceOrderHref 
+A string. Reference of the related entity. 
+serviceOrderId 
+A string. Unique identifier of a related entity. 
+ServiceOrderErrorMessage sub-resource 
+A ServiceOrderErrorMessage represents an error that causes a status change in a service order. 
+code 
+A string. error code. 
+message 
+A string. More details and corrective actions related to the error. 
+reason 
+A string. Explanation of the reason for the error. 
+referenceError 
+An uri (Uri). URI of documentation describing the error. 
+status 
+A string. error code extension like sys-ABC-2001. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+serviceOrderItem 
+A list of service order item references (ServiceOrderItemRef [*]). A list of order item 
+references corresponded to this error. 
+timestamp 
+A date time (DateTime). Date when the error happened. 
+ServiceOrderItem sub-resource 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 17 of 66 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+action 
+An order item action type (OrderItemActionType). The action to be carried out 
+on the Service. Can be add, modify, delete, noChange. 
+appointment 
+An appointment reference (AppointmentRef). An appointment that was set up 
+with a related party for this order item. 
+errorMessage 
+A list of service order item error messages (ServiceOrderItemErrorMessage [*]). 
+the error(s) cause an order item status change. 
+id 
+A string. Identifier of the individual line item. 
+quantity 
+An integer. Quantity ordered. 
+service 
+A service ref or value (ServiceRefOrValue). The Service to be acted on by the 
+order item. 
+serviceOrderItem 
+A list of service order items (ServiceOrderItem [*]). A list of order items 
+embedded to this order item. 
+serviceOrderItemRelationship A list of service order item relationships (ServiceOrderItemRelationship [*]). A 
+list of order items related to this order item. 
+state 
+A service order item state type (ServiceOrderItemStateType). State of the order 
+item: described in the state machine diagram. This is the requested state. 
+ServiceOrderItemErrorMessage sub-resource 
+AServiceOrderItemErrorMessage represents an error that causes a status change in a service order item. 
+code 
+A string. error code. 
+message 
+A string. More details and corrective actions related to the error. 
+reason 
+A string. Explanation of the reason for the error. 
+referenceError 
+An uri (Uri). URI of documentation describing the error. 
+status 
+A string. error code extension like sys-ABC-2001. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 18 of 66 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+timestamp 
+A date time (DateTime). Date when the error happened. 
+ServiceOrderItemRelationship sub-resource 
+Linked service order item to the one containing this attribute. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+orderItem 
+A service order item reference (ServiceOrderItemRef). A service order item in 
+relationship with this order item. 
+relationshipType 
+A string. The type of related order item, can be: dependency if the order item needs 
+to be not started until another order item is complete. 
+ServiceOrderJeopardyAlert sub-resource 
+A ServiceOrderJeopardyAlert represents a predicted exception during a service order processing that would bring 
+risk to complete successfully the order. 
+alertDate 
+A date time (DateTime). A date time( DateTime). The date that the alert issued. 
+exception 
+A string. The exception associated with this jeopardy alert. 
+id 
+A string. identifier of the JeopardyAlert. 
+jeopardyType 
+A string. A string represents the type of jeopardy/risk like Normal, Hazard, Critical, ... 
+message 
+A string. A string represents the message of the alert. 
+name 
+A string. A string used to give a name to the jeopardy alert. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+serviceOrderItem 
+A list of service order item references (ServiceOrderItemRef [*]). A list of order item 
+references corresponded to this alert. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 19 of 66 
+ServiceOrderMilestone sub-resource 
+ServiceOrderMilestone represents an action or event marking a significant change or stage in processing of a 
+service order. 
+description 
+A string. free-text description of the Milestone. 
+id 
+A string. identifier of the Milestone. 
+message 
+A string. A string represents the message of the milestone. 
+milestoneDate 
+A date time (DateTime). A date time( DateTime). The date that the milestone 
+happens. 
+name 
+A string. A string used to give a name to the milestone. 
+status 
+A string. The milestone status. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+serviceOrderItem 
+A list of service order item references (ServiceOrderItemRef [*]). A list of order item 
+references corresponded to this milestone. 
+ServiceOrderRelationship sub-resource 
+Linked service order to the one containing this attribute. 
+href 
+A string. A hyperlink to the related order. 
+id 
+A string. The id of the related order. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The entity type of the related order. 
+relationshipType 
+A string. The type of related order, such as: [dependency] if the order needs to be [not 
+started] until another order item is complete (a service order in this case) or [cross-
+ref] to keep track of the source order (a productOrder). 
+ServiceRefOrValue sub-resource 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 20 of 66 
+A Service to be created defined by value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the Service entity and not the RelatedServiceRefOrValue class 
+itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the service. 
+href 
+A string. Reference of the service. 
+id 
+A string. Unique identifier of the service. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+category 
+A string. Is it a customer facing or resource facing service. 
+description 
+A string. Free-text description of the service. 
+endDate 
+A date time (DateTime). Date when the service ends. 
+hasStarted 
+A boolean. If TRUE, this Service has already been started. 
+isBundle 
+A boolean. If true, the service is a ServiceBundle which regroup a service hierachy. If 
+false, the service is an 'atomic' service (hierachy leaf). 
+isServiceEnabled 
+A boolean. If FALSE and hasStarted is FALSE, this particular Service has NOT been 
+enabled for use - if FALSE and hasStarted is TRUE then the service has failed. 
+isStateful 
+A boolean. If TRUE, this Service can be changed without affecting any other services. 
+serviceDate 
+A string. Date when the service was created (whatever its status). 
+serviceType 
+A string. Business type of the service. 
+startDate 
+A date time (DateTime). Date when the service starts. 
+startMode 
+A string. This attribute is an enumerated integer that indicates how the Service is 
+started, such as: 0: Unknown; 1: Automatically by the managed environment; 2: 
+Automatically by the owning device; 3: Manually by the Provider of the Service; 4: 
+Manually by a Customer of the Provider; 5: Any of the above. 
+feature 
+A list of features (Feature [*]). A list of features associated with this service. 
+note 
+A list of notes (Note [*]). A list of notes made on this service. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 21 of 66 
+place 
+A list of related place ref or values (RelatedPlaceRefOrValue [*]). A list of places (Place 
+[*]). Used to define a place useful for the service (for example a geographical place 
+where the service is installed). 
+relatedEntity 
+A list of related entity ref or values (RelatedEntityRefOrValue [*]). A list of related  
+entity in relationship with this service. 
+relatedParty 
+A list of related parties (RelatedParty [*]). A list of related party references 
+(RelatedParty [*]). A related party defines party or party role linked to a specific 
+entity. 
+serviceCharacteristic 
+A list of characteristics (Characteristic [*]). A list of characteristics that characterize 
+this service (ServiceCharacteristic [*]). 
+serviceOrderItem 
+A list of related service order items (RelatedServiceOrderItem [*]). A list of service 
+order items related to this service. 
+serviceRelationship 
+A list of service relationships (ServiceRelationship [*]). A list of service relationships 
+(ServiceRelationship [*]). Describes links with other service(s) in the inventory. 
+serviceSpecification 
+A service specification reference (ServiceSpecificationRef). The specification from 
+which this service was instantiated. 
+state 
+A service state type (ServiceStateType). The life cycle state of the service, such as 
+designed, reserved, active, etc... 
+supportingResource 
+A list of resource references (ResourceRef [*]). A list of supporting resources 
+(SupportingResource [*]).Note: only Service of type RFS can be associated with 
+Resources. 
+supportingService 
+A list of service ref or values (ServiceRefOrValue [*]). A list of supporting services 
+(SupportingService [*]). A collection of services that support this service (bundling, 
+link CFS to RFS). 
+ServiceRelationship sub-resource 
+ 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes 
+and relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 22 of 66 
+relationshipType 
+A string. 
+service 
+A service ref or value (ServiceRefOrValue). A Service to be created defined by 
+value or existing defined by reference. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the Service entity and not 
+the RelatedServiceRefOrValue class itself. 
+serviceRelationshipCharacteristic A list of characteristics (Characteristic [*]). Describes a given characteristic of 
+an object or entity through a name/value pair. 
+AppointmentRef relationship 
+Refers an appointment, such as a Customer presentation or internal meeting or site visit. 
+href 
+A string. The reference of the appointment. 
+id 
+A string. The identifier of the referred appointment. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+description 
+A string. An explanatory text regarding the appointment made with a party. 
+ConstraintRef relationship 
+Constraint reference. The Constraint resource represents a policy/rule applied to an entity or entity spec. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+version 
+A string. constraint version. 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 23 of 66 
+ResourceRef relationship 
+ 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+ServiceOrderItemRef relationship 
+ 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+itemId 
+A string. Identifier of the line item. 
+serviceOrderHref 
+An uri (Uri). Link to the order to which this item belongs to. 
+serviceOrderId 
+A string. Identifier of the order that this item belongs to. 
+ServiceSpecificationRef relationship 
+Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 24 of 66 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+version 
+A string. Service specification version. 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceOrder' resource object. 
+{ 
+    "id": "42", 
+    "href": "http://serverlocation:port/serviceOrdering/v4/serviceOrder/42", 
+    "externalId": "BSS747", 
+    "priority": "1", 
+    "description": "Service order description", 
+    "category": "TMF resource illustration", 
+    "state": "InProgress", 
+    "orderDate": "2020-08-27T09:37:40.508Z", 
+    "completionDate": "", 
+    "requestedStartDate": "2020-08-31T09:37:40.508Z", 
+    "requestedCompletionDate": "2020-08-31T09:37:40.508Z", 
+    "expectedCompletionDate": "2020-08-31T09:37:40.508Z", 
+    "startDate": "2020-08-31T09:37:40.508Z", 
+    "@type": "ServiceOrder", 
+    "note": [ 
+        { 
+            "date": "2020-08-27T09:37:40.508Z", 
+            "id": "1", 
+            "author": "Harvey Poupon", 
+            "text": "Some text" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "456", 
+            "href": "http://serverlocation:port/partyManagement/v4/party/456", 
+            "role": "requester", 
+            "name": "Jean Pontus", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "jeopardyAlert": [ 
+        { 
+            "id": "144", 
+            "alertDate": "2020-08-27T23:17:45.450Z", 
+            "exception": "Order Item Completion is in Jeopardy", 
+            "jeopardyType": "Raised", 
+            "message": "Order Item Completion is in Jeopardy", 
+            "name": "Order Item Completion", 
+            "serviceOrderItem": [ 
+                { 
+                    "itemId": "1", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 25 of 66 
+                    "serviceOrderHref": "http://serverlocation:port/serviceOrdering/v4/serviceOrder/42", 
+                    "serviceOrderId": "42" 
+                } 
+            ], 
+            "@type": "ServiceOrderJeopardyAlert" 
+        } 
+    ], 
+    "milestone": [ 
+        { 
+            "id": "143", 
+            "description": "Port Allocation", 
+            "message": "Port Allocation", 
+            "milestoneDate": "2020-08-27T23:17:45.450Z", 
+            "name": "Port Allocation", 
+            "status": "Completed", 
+            "serviceOrderItem": [ 
+                { 
+                    "itemId": "2", 
+                    "serviceOrderHref": "http://serverlocation:port/serviceOrdering/v4/serviceOrder/42", 
+                    "serviceOrderId": "42" 
+                } 
+            ], 
+            "@type": "ServiceOrderMilestone" 
+        } 
+    ], 
+    "serviceOrderItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "state": "InProgress", 
+            "service": { 
+                "@type": "Service", 
+                "state": "active", 
+                "serviceType": "CFS", 
+                "serviceCharacteristic": [ 
+                    { 
+                        "id": "452-gh6", 
+                        "name": "vCPE", 
+                        "valueType": "object", 
+                        "value": { 
+                            "@type": "vCPE", 
+                            "@schemaLocation": 
+"http://nbi/api/v4/serviceSpecification/ONAPvCPE_Spec/specificationInputSchema", 
+                            "vCPE_IP": "193.218.236.21", 
+                            "MaxTxRate": 300, 
+                            "TransmitPower": "11 dBm", 
+                            "maxTream": "OFF" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "@type": "ONAPServiceSpecificationRef", 
+                    "@schemaLocation": "http://my.schema/ONAPServiceSpecificationRef.json", 
+                    "id": "ONAPvCPE_Spec", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 26 of 66 
+                    "href": "http://../serviceSpecification/ONAPvCPE_Spec", 
+                    "name": "vCPE", 
+                    "version": "1", 
+                    "invariantUUID": "456-852-357", 
+                    "toscaModelURL": "http//..." 
+                } 
+            }, 
+            "errorMessage": [ 
+                { 
+                    "code": "500", 
+                    "message": "Resource Fallout", 
+                    "reason": "IP address not available", 
+                    "referenceError": "http://serverlocation:port/serviceOrdering/v4/errorMessage/500", 
+                    "status": "ERROR-003", 
+                    "timestamp": "2020-08-27T23:17:45.450Z", 
+                    "@type": "ServiceOrderItemErrorMessage" 
+                } 
+            ], 
+            "@type": "ServiceOrderItem" 
+        }, 
+        { 
+            "id": "2", 
+            "action": "modify", 
+            "state": "InProgress", 
+            "service": { 
+                "id": "456", 
+                "@type": "Service", 
+                "href": "http://serverlocation:port/serviceInventoryManagement/v4/service/456", 
+                "state": "active", 
+                "serviceType": "CFS", 
+                "serviceCharacteristic": [ 
+                    { 
+                        "id": "452-gh6", 
+                        "valueType": "string", 
+                        "name": "InputPort", 
+                        "value": "456/7" 
+                    } 
+                ], 
+                "supportingResource": [ 
+                    { 
+                        "id": "3456_DFG5-H690", 
+                        "href": "http://...", 
+                        "@referredType": "CloudResource" 
+                    } 
+                ] 
+            }, 
+            "@type": "ServiceOrderItem" 
+        }, 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "state": "acknowledged", 
+            "service": { 
+                "state": "active", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 27 of 66 
+                "serviceType": "CFS", 
+                "@type": "Service", 
+                "serviceRelationship": [ 
+                    { 
+                        "relationshipType": "reliesOn", 
+                        "service": { 
+                            "href": "https://.../serviceManagement/v4/service/45", 
+                            "id": "45" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "id": "48", 
+                    "href": "http//..../48", 
+                    "name": "genericDataService48", 
+                    "version": "2" 
+                }, 
+                "feature": [ 
+                    { 
+                        "id": "Feat1", 
+                        "isEnabled": true, 
+                        "name": "DataDownload", 
+                        "@type": "Feature", 
+                        "featureCharacteritic": [ 
+                            { 
+                                "name": "VolumeCapped", 
+                                "id": "444", 
+                                "value": true, 
+                                "valueType": "boolean" 
+                            } 
+                        ] 
+                    } 
+                ] 
+            }, 
+            "@type": "ServiceOrderItem" 
+        }, 
+        { 
+            "id": "4", 
+            "action": "modify", 
+            "state": "acknowledged", 
+            "service": { 
+                "id": "12", 
+                "href": "http://serverlocation:port/serviceInventoryManagement/v4/service/12", 
+                "state": "inactive" 
+            }, 
+            "@type": "ServiceOrderItem" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 28 of 66 
+Cancel Service Order resource 
+Request for cancellation an existing Service order. 
+Resource model 
+ 
+Lifecycle 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 29 of 66 
+ 
+Field descriptions 
+CancelServiceOrder fields 
+cancellationReason 
+A string. Reason why the order is cancelled. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 30 of 66 
+effectiveCancellationDate 
+A date time (DateTime). Date when the order is cancelled. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+requestedCancellationDate A date time (DateTime). Date when the submitter wants the order to be cancelled. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+completionMessage 
+A string. an optional message describing the completion of the task if it is done as 
+expected or it is denied for a reason (like order in a state of PoNR). 
+errorMessage 
+An error message (ErrorMessage). the error(s) cause the termination of 
+cancelServiceOrder (in TerminatedWithError state). 
+serviceOrder 
+A service order reference (ServiceOrderRef). Useful to understand the which was 
+the Service order through which the service was instantiated in the service 
+inventory. 
+state 
+A task state type (TaskStateType). Tracks the lifecycle status of the cancellation 
+request, such as Acknowledged, Rejected, InProgress, Pending and so on. 
+ErrorMessage sub-resource 
+represents an Error. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+code 
+A string. error code. 
+message 
+A string. More details and corrective actions related to the error. 
+reason 
+A string. Explanation of the reason for the error. 
+referenceError 
+An uri (Uri). URI of documentation describing the error. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 31 of 66 
+status 
+A string. error code extension like sys-ABC-2001. 
+ServiceOrderRef relationship 
+Service Order reference. Useful to understand the which was the Service order through which the service was 
+instantiated in the service inventory. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related service order. 
+href 
+An uri (Uri). Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelServiceOrder' resource object. 
+{ 
+    "id": "789-fsds5-kjp", 
+    "href": "https://host:port/serviceOrdering/v4/cancelServiceOrder/789-fsds5-kjp", 
+    "cancellationReason": "Duplicate service order", 
+    "effectiveCancellationDate": "2020-08-27T12:58:35.489Z", 
+    "requestedCancellationDate": "2020-08-27T12:56:21.931Z", 
+    "serviceOrder": { 
+        "id": "45f-98f-ss45", 
+        "href": "https://host:port/serviceOrdering/v4/serviceOrder/45f-98f-ss45", 
+        "@referredType": "ServiceOrder" 
+    }, 
+    "state": "done", 
+    "@type": "CancelServiceOrder" 
+} 
+ 
+A Service Order is a type of order which can be used to describe a group of operations on service – one service order 
+item per service. An action at the level of the service order item describe the operation to be done on a service (add, 
+changer, terminate for example). The service order is triggered from the BSS system in charge of the product order 
+management to the SOM (Service order Management) system that will manage the service fulfillment. 
+Here is the state machine diagram for a Service order. Each order state is described in the following table. 
+Note: Consistence rules are defined between order state & order item state. 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 32 of 66 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 33 of 66 
+ 
+ 
+ServiceOrder & ServiceOrderItem State definition:  
+The following table provides service order state and service order item state description: 
+State 
+Definition 
+Acknowledged 
+The Acknowledged state is when an order/item has been received and 
+has passed surface message validation. 
+Rejected 
+The Rejected state is where:  
+• 
+Invalid information is provided through the order request (not 
+checked synchronously – like check that a service id provided 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 34 of 66 
+State 
+Definition 
+exist in the inventory and relation service order item action is 
+valid) 
+• 
+The order request fails to meet business rules for ordering 
+Same rules applied for order item. 
+If an order item is rejected the complete service order is rejected. 
+Pending 
+The Pending state is used when an order/item is currently in a waiting 
+stage for an action/activity to be completed before the order/item can 
+progress further, pending order amend or cancel assessment. In 
+situations where Access Seeker action is required, an “information 
+required” notification will be issued on transition into this state.  
+A pending stage can lead into auto cancellation of an order/item, if no 
+action is taken. 
+InProgress 
+The in Progress state is where an order Item has passed the Order check 
+successfully and service delivery has started. 
+ 
+For the order at least one order item is inProgress 
+Held 
+The Held state is used when an order/item cannot be progressed due to 
+an issue. Service provided has temporarily delayed completing an 
+order/item to resolve an infrastructure shortfall to facilitate supply of 
+order. Upon resolution of the issue, the order/item will continue to 
+progress. 
+AssessingCancellation 
+Following a cancel request, the SP is assessing if cancel can be done for 
+the order/item (or if the Service Order has reached PONR). If cancellation 
+request is not accepted after assessment the order will return in Held or 
+Pending or InProgress state. 
+PendingCancellation 
+Once a cancel order has been accepted by SP, it could in some UC take 
+time to effectively cancel the order/item. During this time when accepted 
+cancellation is effectively processed we use Pending Cancellation. 
+Cancelled 
+The Cancelled state is where an In-Flight Order/item has been successfully 
+cancelled. 
+Completed 
+The Completed state is where an item has complete provision, and the 
+service is now active. 
+For an order if all order items are completed 
+Failed 
+Order item as not a successful delivery completion. The service is not 
+delivered, and the order item failed. 
+All Order items have failed which results in the entire Order has Failed. 
+Partial 
+Some Order items have failed, and some have succeeded so the entire 
+Order is in a Partial state. This provides support for partial Failure of an 
+Order (or a service order item with ‘embedded’ service order item) 
+ 
+Lifecycle of Service 
+Here is the state machine diagram for a Service: 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 35 of 66 
+ 
+The following table provided service state explanation: 
+A service is in state… 
+when the Service Component Activation Interface shall support the 
+following operations 
+feasabilityChecked 
+The service component OS is requested to determine whether the 
+necessary resources are available and sufficient for the installation of a 
+given service. 
+It should be noted that this is just an initial feasibility check and no RFS is 
+created. 
+designed 
+The Service Component OS is requested to design the service. This could be 
+used to allocate resources, but nothing is supposed to be reserved. 
+reserved 
+The Service Component OS is requested to reserve a resource, or a set of 
+resources, required for a service. This situation allows for the requesting OS 
+to determine whether the underlying resources are available and reserve 
+them in order to support a service (an RFS). 
+As a result of the reservation request, a service is instantiated & reserved. 
+inactive 
+The service is deactivated - The Resource Facing service is deactivated and 
+thus is no longer available for service. It remains allocated to the CFS that is 
+managed by the high level service activation OS 
+active 
+The service component OS is requested to activate a given resource facing 
+service such that the component is fully available and active as part of the 
+CFS. 
+When this request is complete, all RFS component shall be in active state 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 36 of 66 
+terminated 
+The service is ‘logically deleted’. The resource facing service is deleted and 
+thus allocated from the CFS. All associated resources are freed and made 
+available for service to other users. 
+ 
+Note: when action ‘no change’ is used we did not expect any state change. 
+CancelOrder State definition:  
+State 
+Definition 
+Accepted 
+The accepted state is where a CancelOrder request has been received and has passed 
+message and basic business validations. Everything should be updatable in this state 
+InProgress 
+The InProgress state is when the CancelOrder is currently in the hands of server side to 
+assess cancellation request. 
+TerminatedWith
+Error 
+The CancelOrder could not be correctly completed by Service Order component. It did not 
+mean that the cancel request is denied – it means that the assessment was not done 
+Done 
+CancelOrder assessment has been done. The Order has been cancelled or keep it as is if 
+cancel request denied (for example, the order is in point Of No Return (PoNR). 
+ 
+ 
+Notification Resource Models 
+10 notifications are defined for this API 
+Notifications related to ServiceOrder: 
+    - ServiceOrderCreateEvent 
+    - ServiceOrderAttributeValueChangeEvent 
+    - ServiceOrderStateChangeEvent 
+    - ServiceOrderDeleteEvent 
+    - ServiceOrderInformationRequiredEvent 
+    - ServiceOrderMilestoneEvent 
+    - ServiceOrderJeopardyEvent 
+Notifications related to CancelServiceOrder: 
+    - CancelServiceOrderCreateEvent 
+    - CancelServiceOrderStateChangeEvent 
+    - CancelServiceOrderInformationRequiredEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 37 of 66 
+ 
+Service Order Create Event 
+Notification ServiceOrderCreateEvent case for resource ServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceOrderCreateEvent' notification event object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceOrderCreateEvent", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 38 of 66 
+     "event": { 
+        "serviceOrder" :  
+            {-- SEE ServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Order Attribute Value Change Event 
+Notification ServiceOrderAttributeValueChangeEvent case for resource ServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceOrderAttributeValueChangeEvent' 
+notification event object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceOrderAttributeValueChangeEvent", 
+     "event": { 
+        "serviceOrder" :  
+            {-- SEE ServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Order State Change Event 
+Notification ServiceOrderStateChangeEvent case for resource ServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceOrderStateChangeEvent' notification event 
+object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceOrderStateChangeEvent", 
+     "event": { 
+        "serviceOrder" :  
+            {-- SEE ServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Order Delete Event 
+Notification ServiceOrderDeleteEvent case for resource ServiceOrder 
+Json representation sample 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 39 of 66 
+We provide below the json representation of an example of a 'ServiceOrderDeleteEvent' notification event object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceOrderDeleteEvent", 
+     "event": { 
+        "serviceOrder" :  
+            {-- SEE ServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Order Information Required Event 
+Notification ServiceOrderInformationRequiredEvent case for resource ServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceOrderInformationRequiredEvent' notification 
+event object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceOrderInformationRequiredEvent", 
+     "event": { 
+        "serviceOrder" :  
+            {-- SEE ServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Service Order Milestone Event 
+Notification ServiceOrderMilestoneEvent case for resource ServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceOrderMilestoneEvent' notification event 
+object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceOrderMilestoneEvent", 
+     "event": { 
+        "serviceOrder" :  
+            {-- SEE ServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 40 of 66 
+Service Order Jeopardy Event 
+Notification ServiceOrderJeopardyEvent case for resource ServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'ServiceOrderJeopardyEvent' notification event 
+object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"ServiceOrderJeopardyEvent", 
+     "event": { 
+        "serviceOrder" :  
+            {-- SEE ServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Cancel Service Order Create Event 
+Notification CancelServiceOrderCreateEvent case for resource CancelServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelServiceOrderCreateEvent' notification event 
+object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelServiceOrderCreateEvent", 
+     "event": { 
+        "cancelServiceOrder" :  
+            {-- SEE CancelServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Cancel Service Order State Change Event 
+Notification CancelServiceOrderStateChangeEvent case for resource CancelServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelServiceOrderStateChangeEvent' notification 
+event object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 41 of 66 
+    "eventType":"CancelServiceOrderStateChangeEvent", 
+     "event": { 
+        "cancelServiceOrder" :  
+            {-- SEE CancelServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Cancel Service Order Information Required Event 
+Notification CancelServiceOrderInformationRequiredEvent case for resource CancelServiceOrder 
+Json representation sample 
+We provide below the json representation of an example of a 'CancelServiceOrderInformationRequiredEvent' 
+notification event object. 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"CancelServiceOrderInformationRequiredEvent", 
+     "event": { 
+        "cancelServiceOrder" :  
+            {-- SEE CancelServiceOrder RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 42 of 66 
+ API OPERATIONS 
+Remember the following Uniform Contract: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET Resource 
+GET must be used to retrieve a 
+representation of a resource. 
+ 
+Create Entity 
+POST Resource 
+POST must be used to create a 
+new resource 
+Partial Update of an Entity 
+PATCH Resource 
+PATCH must be used to partially 
+update a resource 
+Remove an Entity 
+DELETE Resource 
+DELETE must be used to remove 
+a resource 
+Execute an Action on an Entity  
+POST on TASK Resource 
+POST must be used to execute 
+Task Resources 
+Other Request Methods 
+POST on TASK Resource 
+GET and POST must not be used 
+to tunnel other request 
+methods. 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Service Order 
+List service orders 
+  GET /serviceOrder?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 43 of 66 
+This operation list service order entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here's an example of a request for retrieving all the service orders for a given customer that were completed 
+before a specified date. 
+ 
+Request 
+ 
+GET /tmf-
+api/serviceOrdering/v4/serviceOrder?fields=id,href,expectedCompletionDate&state=completed&category=TMFresource
+illustration&completionDate.gt=2020-08-27T09:37:40.508Z 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "6987", 
+        "href": ".../serviceOrdering/v4/serviceOrder/6987", 
+        "expectedCompletionDate": "2020-12-14T14:52:21.823Z" 
+    }, 
+    { 
+        "id": "7412", 
+        "href": ".../serviceOrdering/v4/serviceOrder/7412", 
+        "expectedCompletionDate": "2020-12-14T14:21:31.325Z" 
+    }, 
+    { 
+        "id": "3214", 
+        "href": ".../serviceOrdering/v4/serviceOrder/3214", 
+        "expectedCompletionDate": "2020-12-28T18:08:31.325Z" 
+    }, 
+    { 
+        "id": "6547", 
+        "href": ".../serviceOrdering/v4/serviceOrder/6547", 
+        "expectedCompletionDate": "2020-12-28T10:48:28.325Z" 
+    } 
+] 
+ 
+Retrieve service order 
+  GET /serviceOrder/{id}?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 44 of 66 
+This operation retrieves a service order entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here is a sample of a request for retrieving a ServiceOrder resource based on its id. 
+ 
+Request 
+ 
+GET /tmf-api/serviceOrdering/v4/serviceOrder/43 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "43", 
+    "href": "http://serverlocation:port/serviceOrdering/v4/serviceOrder/43", 
+    "externalId": "BSS747", 
+    "priority": "1", 
+    "description": "Service order description", 
+    "category": "TMF resource illustration", 
+    "state": "acknowledged", 
+    "orderDate": "2020-08-27T09:37:40.508Z", 
+    "completionDate": "", 
+    "requestedStartDate": "2020-08-31T09:37:40.508Z", 
+    "requestedCompletionDate": "2020-08-31T09:37:40.508Z", 
+    "expectedCompletionDate": "2020-08-31T09:37:40.508Z", 
+    "startDate": "2020-08-31T09:37:40.508Z", 
+    "@type": "ServiceOrder", 
+    "note": [ 
+        { 
+            "date": "2020-08-27T09:37:40.508Z", 
+            "id": "1", 
+            "author": "Harvey Poupon", 
+            "text": "Some text" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "456", 
+            "href": "http://serverlocation:port/partyManagement/v4/party/456", 
+            "role": "requester", 
+            "name": "Jean Pontus", 
+            "@referredType": "Individual" 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 45 of 66 
+        } 
+    ], 
+    "serviceOrderItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "state": "acknowledged", 
+            "service": { 
+                "@type": "Service", 
+                "state": "active", 
+                "serviceType": "CFS", 
+                "serviceCharacteristic": [ 
+                    { 
+                        "id": "452-gh6", 
+                        "name": "vCPE", 
+                        "valueType": "object", 
+                        "value": { 
+                            "@type": "JSONSpecification", 
+                            "@schemaLocation": "http://my.schemas/vCPE.schema.json", 
+                            "vCPE_IP": "193.218.236.21", 
+                            "MaxTxRate": 300, 
+                            "TransmitPower": "11 dBm", 
+                            "maxTream": "OFF" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "@type": "ONAPServiceSpecification", 
+                    "@baseType": "ServiceSpecificationRef", 
+                    "@schemaLocation": "http://my.schema/ONAPServiceSpecification.json", 
+                    "id": "12", 
+                    "href": "http://.../serviceSpecification/12", 
+                    "name": "vCPE", 
+                    "version": "1", 
+                    "invariantUUID": "456-852-357", 
+                    "toscaModelURL": "http//...", 
+                    "targetServiceSchema": { 
+                        "@type": "onapJsonScheam", 
+                        "@schemaLocation": "http://nbi/api/v4/serviceSpecification/456-852-357/specificationInputSchema" 
+                    } 
+                } 
+            }, 
+            "@type": "ServiceOrderItem" 
+        }, 
+        { 
+            "id": "2", 
+            "action": "modify", 
+            "state": "acknowledged", 
+            "service": { 
+                "id": "456", 
+                "@type": "Service", 
+                "href": "http://serverlocation:port/serviceInventoryManagement/v4/service/456", 
+                "state": "active", 
+                "serviceType": "CFS", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 46 of 66 
+                "serviceCharacteristic": [ 
+                    { 
+                        "id": "452-gh6", 
+                        "name": "InputPort", 
+                        "valueType": "string", 
+                        "value": "456/7" 
+                    } 
+                ], 
+                "supportingResource": [ 
+                    { 
+                        "id": "3456_DFG5-H690", 
+                        "href": "http://serverlocation:port/resourceInventoryManagement/v4/resource/3456_DFG5-H690", 
+                        "@referredType": "CloudResource" 
+                    } 
+                ] 
+            }, 
+            "@type": "ServiceOrderItem" 
+        }, 
+        { 
+            "id": "3", 
+            "action": "add", 
+            "state": "acknowledged", 
+            "service": { 
+                "state": "active", 
+                "serviceType": "CFS", 
+                "@type": "Service", 
+                "serviceRelationship": [ 
+                    { 
+                        "relationshipType": "reliesOn", 
+                        "service": { 
+                            "href": "https://serverlocation:port/serviceManagement/v4/service/45", 
+                            "id": "45" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "id": "48", 
+                    "href": "http//serverlocation:port/serviceCatalogManagement/v4/serviceSpecification/48", 
+                    "name": "genericDataService48", 
+                    "version": "2" 
+                }, 
+                "feature": [ 
+                    { 
+                        "id": "Feat1", 
+                        "isEnabled": true, 
+                        "name": "DataDownload", 
+                        "@type": "Feature", 
+                        "featureCharacteristic": [ 
+                            { 
+                                "name": "VolumeCapped", 
+                                "value": true, 
+                                "id": "444", 
+                                "valueType": "boolean" 
+                            } 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 47 of 66 
+                        ] 
+                    } 
+                ] 
+            }, 
+            "@type": "ServiceOrderItem" 
+        }, 
+        { 
+            "id": "4", 
+            "action": "modify", 
+            "state": "acknowledged", 
+            "service": { 
+                "id": "12", 
+                "href": "http://serverlocation:port/serviceInventoryManagement/v4/service/12", 
+                "state": "inactive" 
+            }, 
+            "@type": "ServiceOrderItem" 
+        } 
+    ] 
+} 
+ 
+Create service order 
+  POST /serviceOrder 
+Description 
+This operation creates a service order entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a ServiceOrder, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+serviceOrderItem 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+cancellationDate 
+ 
+cancellationReason 
+ 
+category 
+ 
+completionDate 
+ 
+description 
+ 
+errorMessage 
+ 
+expectedCompletionDate 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 48 of 66 
+Non Mandatory Attributes 
+Rule 
+externalId 
+ 
+externalReference 
+ 
+jeopardyAlert 
+ 
+milestone 
+ 
+note 
+ 
+notificationContact 
+ 
+orderDate 
+ 
+orderRelationship 
+ 
+priority 
+ 
+relatedParty 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+startDate 
+ 
+state 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships when 
+creating a ServiceOrder resource. 
+Context 
+Mandatory Sub-Attributes 
+serviceOrderItem 
+id, action, service 
+relatedParty 
+id, @type 
+note 
+text 
+orderRelationship 
+id, relationshipType 
+serviceOrderItem.service.supportingResource 
+id 
+serviceOrderItem.service.serviceCharacteristic 
+name, value 
+serviceOrderItem.serviceOrderItemRelationship 
+relationshipType 
+serviceOrderItem.serviceOrderItemRelationship.orderItem itemId, serviceOrderId 
+serviceOrderItem.appointment 
+id 
+externalReference 
+name 
+serviceOrderItem.service.place 
+role, @type 
+serviceOrderItem.service.relatedEntity 
+role, @type 
+ 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+When creating a service order (post) an order must not have the state, cancellationDate, cancellationReason, 
+completionDate, orderDate fields valued 
+When creating a service order (post) an order item must not have the state field valued 
+In relatedParty, the role is mandatory if the id identified a party - optional if it is a party role. 
+ 
+Usage Samples 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 49 of 66 
+Here is a sample of a request for creating a ServiceOrder resource. We use the ‘fields’ parameter to restrict the 
+numbers of attributes returned in the response. 
+ 
+Request 
+ 
+POST /tmf-api/serviceOrdering/v4/serviceOrder 
+Content-Type: application/json 
+ 
+{ 
+    "externalId": "BSS748", 
+    "priority": "1", 
+    "description": "Service order description", 
+    "category": "TMF resource illustration", 
+    "requestedStartDate": "2020-08-27T09:37:40.508Z", 
+    "requestedCompletionDate": "2020-08-27T09:37:40.508Z", 
+    "@type": "ServiceOrder", 
+    "serviceOrderItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "@type": "ServiceOrderItem", 
+            "service": { 
+                "serviceState": "active", 
+                "type": "CFS", 
+                "serviceCharacteristic": [ 
+                    { 
+                        "name": "vCPE", 
+                        "valueType": "object", 
+                        "value": { 
+                            "@type": "JSONSpecification", 
+                            "@schemaLocation": 
+"http://nbi/api/v4/serviceSpecification/ONAPvCPE_Spec/specificationInputSchema", 
+                            "vCPE_IP": "193.218.236.21", 
+                            "MaxTxRate": 300, 
+                            "TransmitPower": "11 dBm", 
+                            "maxTream": "OFF" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "id": "ONAPvCPE_Spec", 
+                    "href": "http://...:serviceSpecification/ONAPvCPE_Spec", 
+                    "name": "vCPE", 
+                    "version": "1", 
+                    "@type": "vCPE" 
+                } 
+            } 
+        } 
+    ] 
+} 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 50 of 66 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "5351", 
+    "href": "https://host:port/serviceOrder/v4/serviceOrder/5351" 
+} 
+ 
+Patch service order 
+  PATCH /serviceOrder/{id} 
+Description 
+This operation allows partial updates of a service order entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+description 
+ 
+expectedCompletionDate 
+ 
+externalId 
+ 
+externalReference 
+ 
+note 
+ 
+notificationContact 
+ 
+orderRelationship 
+ 
+priority 
+ 
+relatedParty 
+ 
+requestedCompletionDate 
+ 
+requestedStartDate 
+ 
+serviceOrderItem 
+ 
+state 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 51 of 66 
+Non Patchable Attributes 
+Rule 
+orderDate 
+ 
+jeopardyAlert 
+ 
+errorMessage 
+ 
+milestone 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+cancellationDate 
+ 
+cancellationReason 
+ 
+category 
+ 
+completionDate 
+ 
+startDate 
+ 
+ 
+Additional Rules 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+When creating a service order (post) an order must not have the state, cancellationDate, cancellationReason, 
+completionDate, orderDate fields valued 
+When creating a service order (post) an order item must not have the state field valued 
+In relatedParty, the role is mandatory if the id identified a party - optional if it is a party role. 
+ 
+Usage Samples 
+Here's an example of a request for patching a ServiceOrder resource (created via previous POST) with change on 
+following attributes: description, requestedStartDate, requestedCompletionDate, vCPE IP (characteristic) value. 
+ 
+Request 
+ 
+PATCH /tmf-api/serviceOrdering/v4/serviceOrder/42 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "description": "Service order new description updated v2", 
+    "requestedStartDate": "2020-08-27T09:37:40.508Z", 
+    "requestedCompletionDate": "2020-08-27T09:37:40.508Z", 
+    "orderItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "state": "acknowledged", 
+            "service": { 
+                "@type": "Service", 
+                "state": "active", 
+                "serviceType": "CFS", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 52 of 66 
+                "serviceCharacteristic": [ 
+                    { 
+                        "id": "452-gh6", 
+                        "name": "vCPE", 
+                        "valueType": "object", 
+                        "value": { 
+                            "@type": "vCPE", 
+                            "@schemaLocation": 
+"http://nbi/api/v4/serviceSpecification/ONAPvCPE_Spec/specificationInputSchema", 
+                            "vCPE_IP": "193.218.236.26", 
+                            "MaxTxRate": 300, 
+                            "TransmitPower": "11 dBm", 
+                            "maxTream": "OFF" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "@type": "ONAPServiceSpecificationRef", 
+                    "@schemaLocation": "http://my.schema/ONAPServiceSpecificationRef.json", 
+                    "id": "ONAPvCPE_Spec", 
+                    "href": "http://../serviceSpecification/ONAPvCPE_Spec", 
+                    "name": "vCPE", 
+                    "version": "1", 
+                    "invariantUUID": "456-852-357", 
+                    "toscaModelURL": "http//..." 
+                } 
+            }, 
+            "@type": "ServiceOrderItem" 
+        } 
+    ] 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "5351", 
+    "href": "http://serverlocation:port/serviceOrdering/v4/serviceOrder/5351", 
+    "externalId": "BSS747", 
+    "priority": "1", 
+    "category": "TMF resource illustration", 
+    "state": "acknowledged", 
+    "orderDate": "2020-08-27T09:37:40.508Z", 
+    "completionDate": "", 
+    "description": "Service order new description updated v2", 
+    "requestedStartDate": "2020-08-27T09:37:40.508Z", 
+    "requestedCompletionDate": "2020-08-27T09:37:40.508Z", 
+    "expectedCompletionDate": "2020-12-14T09:37:40.508Z", 
+    "startDate": "2020-08-27T09:37:40.508Z", 
+    "@type": "ServiceOrder", 
+    "note": [ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 53 of 66 
+        { 
+            "date": "2020-08-27T09:37:40.508Z", 
+            "author": "Harvey Poupon", 
+            "text": "Some text" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "456", 
+            "href": "http://serverlocation:port/partyManagement/v4/party/456", 
+            "role": "requester", 
+            "name": "Jean Pontus", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "orderItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "state": "acknowledged", 
+            "service": { 
+                "@type": "Service", 
+                "state": "active", 
+                "serviceType": "CFS", 
+                "serviceCharacteristic": [ 
+                    { 
+                        "id": "452-gh6", 
+                        "name": "vCPE", 
+                        "valueType": "object", 
+                        "value": { 
+                            "@type": "vCPE", 
+                            "@schemaLocation": 
+"http://nbi/api/v4/serviceSpecification/ONAPvCPE_Spec/specificationInputSchema", 
+                            "vCPE_IP": "193.218.236.26", 
+                            "MaxTxRate": 300, 
+                            "TransmitPower": "11 dBm", 
+                            "maxTream": "OFF" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "@type": "ONAPServiceSpecificationRef", 
+                    "@schemaLocation": "http://my.schema/ONAPServiceSpecificationRef.json", 
+                    "id": "ONAPvCPE_Spec", 
+                    "href": "http://../serviceSpecification/ONAPvCPE_Spec", 
+                    "name": "vCPE", 
+                    "version": "1", 
+                    "invariantUUID": "456-852-357", 
+                    "toscaModelURL": "http//..." 
+                } 
+            }, 
+            "@type": "ServiceOrderItem" 
+        } 
+    ] 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 54 of 66 
+} 
+ 
+ 
+Here is an example of a request for patching a ServiceOrder resource (created via previous POST) with change on 
+following attributes: description, requestedStartDate, requestedCompletionDate, vCPE IP (characteristic) value. 
+ 
+Request 
+ 
+PATCH /tmf-api/serviceOrdering/v4/serviceOrder/42 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "replace", 
+        "path": "requestedStartDate", 
+        "value": "2020-08-31T09:37:40.508Z" 
+    }, 
+    { 
+        "op": "replace", 
+        "path": "description", 
+        "value": "Service order new description updated v2" 
+    }, 
+    { 
+        "op": "replace", 
+        "path": "requestedCompletionDate", 
+        "value": "2020-08-31T09:37:40.508Z" 
+    }, 
+    { 
+        "op": "replace", 
+        "path": "orderItem/1/service/serviceCharacteristic/value/", 
+        "value": { 
+            "@type": "JSONSpecification", 
+            "@schemaLocation": "http://nbi/api/v4/serviceSpecification/ONAPvCPE_Spec/specificationInputSchema", 
+            "vCPE_IP": "193.218.236.26", 
+            "MaxTxRate": 300, 
+            "TransmitPower": "11 dBm", 
+            "maxTream": "OFF" 
+        } 
+    } 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "5351", 
+    "href": "http://serverlocation:port/serviceOrdering/v4/serviceOrder/5351", 
+    "externalId": "BSS747", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 55 of 66 
+    "priority": "1", 
+    "category": "TMF resource illustration", 
+    "state": "acknowledged", 
+    "orderDate": "2020-08-27T09:37:40.508Z", 
+    "completionDate": "", 
+    "description": "Service order new description updated v2", 
+    "requestedStartDate": "2020-08-27T09:37:40.508Z", 
+    "requestedCompletionDate": "2020-08-27T09:37:40.508Z", 
+    "expectedCompletionDate": "2020-12-14T09:37:40.508Z", 
+    "startDate": "2020-08-27T09:37:40.508Z", 
+    "@type": "ServiceOrder", 
+    "note": [ 
+        { 
+            "date": "2020-08-27T09:37:40.508Z", 
+            "author": "Harvey Poupon", 
+            "text": "Some text" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "456", 
+            "href": "http://serverlocation:port/partyManagement/v4/party/456", 
+            "role": "requester", 
+            "name": "Jean Pontus", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "orderItem": [ 
+        { 
+            "id": "1", 
+            "action": "add", 
+            "state": "acknowledged", 
+            "service": { 
+                "@type": "Service", 
+                "state": "active", 
+                "serviceType": "CFS", 
+                "serviceCharacteristic": [ 
+                    { 
+                        "id": "452-gh6", 
+                        "name": "vCPE", 
+                        "valueType": "object", 
+                        "value": { 
+                            "@type": "vCPE", 
+                            "@schemaLocation": 
+"http://nbi/api/v4/serviceSpecification/ONAPvCPE_Spec/specificationInputSchema", 
+                            "vCPE_IP": "193.218.236.26", 
+                            "MaxTxRate": 300, 
+                            "TransmitPower": "11 dBm", 
+                            "maxTream": "OFF" 
+                        } 
+                    } 
+                ], 
+                "serviceSpecification": { 
+                    "@type": "ONAPServiceSpecificationRef", 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 56 of 66 
+                    "@schemaLocation": "http://my.schema/ONAPServiceSpecificationRef.json", 
+                    "id": "ONAPvCPE_Spec", 
+                    "href": "http://../serviceSpecification/ONAPvCPE_Spec", 
+                    "name": "vCPE", 
+                    "version": "1", 
+                    "invariantUUID": "456-852-357", 
+                    "toscaModelURL": "http//..." 
+                } 
+            }, 
+            "@type": "ServiceOrderItem" 
+        } 
+    ] 
+} 
+ 
+Delete service order 
+  DELETE /serviceOrder/{id} 
+Description 
+This operation deletes a service order entity. 
+ 
+Usage Samples 
+Here's an example of a request for deleting a Service order. 
+ 
+Request 
+ 
+DELETE /tmf-api/serviceOrdering/v4/serviceOrder/47 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+Operations on Cancel Service Order 
+List cancel service orders 
+  GET /cancelServiceOrder?fields=...&{filtering} 
+Description 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 57 of 66 
+This operation list cancel service order entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+Usage Samples 
+Here is an example of a request for retrieving a list of Service order cancel request(s). The given criteria is the 
+cancel request state (done). 
+ 
+Request 
+ 
+GET /tmf-api/serviceOrdering/v4/cancelServiceOrder?fields=id,ServiceOrder.id,ServiceOrder.href&state=done 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "6987", 
+        "serviceOrder": { 
+            "id": "45f-98f-ss45", 
+            "href": "https://host:port/serviceOrdering/v4/serviceOrder/45f-98f-ss45" 
+        } 
+    }, 
+    { 
+        "id": "7412", 
+        "serviceOrder": { 
+            "id": "45f-789-sdre", 
+            "href": "https://host:port/serviceOrdering/v4/serviceOrder/45f-789-sdre" 
+        } 
+    }, 
+    { 
+        "id": "3214", 
+        "serviceOrder": { 
+            "id": "45f-as4-os3f", 
+            "href": "https://host:port/serviceOrdering/v4/serviceOrder/45f-as4-os3f" 
+        } 
+    } 
+] 
+ 
+Retrieve cancel service order 
+  GET /cancelServiceOrder/{id}?fields=...&{filtering} 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 58 of 66 
+Description 
+This operation retrieves a cancel service order entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+Usage Samples 
+Here is an example of a cancel Service order request retrieval. The given criteria is the Service order request cancel 
+id 789-fsds5-kjp. 
+ 
+Request 
+ 
+GET /tmf-api/serviceOrdering/v4/cancelServiceOrder/789-fsds5-kjp 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "789-fsds5-kjp", 
+    "href": "https://host:port/serviceOrdering/v4/cancelserviceOrder/789-fsds5-kjp", 
+    "cancellationReason": "Duplicate service order", 
+    "effectiveCancellationDate": "2020-08-27T09:37:40.508Z", 
+    "requestedCancellationDate": "2020-08-27T09:37:40.508Z", 
+    "serviceOrder": { 
+        "id": "45f-98f-ss45", 
+        "href": "https://host:port/serviceOrdering/v4/serviceOrder/45f-98f-ss45", 
+        "@referredType": "ServiceOrder" 
+    }, 
+    "state": "done", 
+    "@type": "CancelServiceOrder" 
+} 
+ 
+Create cancel service order 
+  POST /cancelServiceOrder 
+Description 
+This operation creates a cancel service order entity. 
+Mandatory and Non Mandatory Attributes 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 59 of 66 
+The following tables provide the list of mandatory and non mandatory attributes when creating a 
+CancelServiceOrder, including any possible rule conditions and applicable default values. Notice that it is up to an 
+implementer to add additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+ServiceOrder 
+ 
+ 
+Non Mandatory Attributes 
+Rule 
+cancellationReason 
+ 
+effectiveCancellationDate 
+ 
+requestedCancellationDate 
+ 
+@baseType 
+ 
+@schemaLocation 
+ 
+@type 
+ 
+completionMessage 
+ 
+errorMessage 
+ 
+serviceOrder 
+ 
+state 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships when 
+creating a CancelServiceOrder resource. 
+Context 
+Mandatory Sub-Attributes 
+ServiceOrder 
+id 
+ 
+The following pre-conditions apply for this operation. 
+Pre-conditions 
+service order id must exist 
+When creating a cancel service order (post) the id, href, effectiveCancellationDate, completionMessage, 
+errorMessage and state fields must not be valued in the request 
+ 
+Usage Samples 
+Here is an example of a request for cancel a Service order  - the resulting Service order cancellation request is 789-
+fsds5-kjp. 
+ 
+Request 
+ 
+POST /tmf-api/serviceOrdering/v4/cancelServiceOrder 
+Content-Type: application/json 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 60 of 66 
+{ 
+    "cancellationReason": "Duplicate service order", 
+    "requestedCancellationDate": "2020-08-27T09:37:40.508Z", 
+    "serviceOrder": { 
+        "id": "45f-98f-ss45", 
+        "@referredType": "ServiceOrder" 
+    }, 
+    "@type": "CancelServiceOrder" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "789-fsds5-kjp", 
+    "href": "https://host:port/serviceOrdering/v4/cancelserviceOrder/789-fsds5-kjp", 
+    "cancellationReason": "Duplicate service order", 
+    "effectiveCancellationDate": "2020-08-27T09:37:41.331Z", 
+    "requestedCancellationDate": "2020-08-27T09:37:40.508Z", 
+    "serviceOrder": { 
+        "id": "45f-98f-ss45", 
+        "href": "https://host:port/serviceOrdering/v4/serviceOrder/45f-98f-ss45", 
+        "@referredType": "ServiceOrder" 
+    }, 
+    "state": "done", 
+    "@type": "CancelServiceOrder" 
+} 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 61 of 66 
+API NOTIFICATIONS 
+For every single of operation on the entities use the following templates and provide sample REST notification POST 
+calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST Guidelines 
+reproduced below. 
+ 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+Usage Samples 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 62 of 66 
+Here is an example of a request for registering a listener. 
+ 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 63 of 66 
+ 
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub.. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the callback 
+url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 64 of 66 
+Usage Samples 
+Here is an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design Guidelines 
+(TMF630). 
+ 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 65 of 66 
+Acknowledgements 
+Document  History 
+Version History 
+Version 
+Number 
+Date 
+Release led by: 
+Description 
+1.0 
+ 
+Pierre Gauthier 
+Andrew Forth 
+August-Wilhelm Jagau 
+First Release of the 
+Document.  
+2.0 
+24-Oct-2016 
+Pierre Gauthier 
+Ludovic Robert 
+Nicoleta Stoica  
+Jean-Luc Tymen  
+Alignment with 
+Guidelines 3.0 
+3.0 
+Dec 2018 
+Pierre Gauthier 
+Ludovic Robert 
+Mariano Belaunde  
+ 
+4.0.0 
+28-May-2020 
+Pierre Gauthier 
+Ludovic Robert 
+ 
+4.0.1 
+20-Jul-2020 
+Adrienne Walcott 
+Updated to reflect TM 
+Forum Approved Status 
+4.1.0 
+07-Dec-2020 
+Kamal Maghsoudlou 
+Added support for order 
+milestone, jeopardy 
+alert, error messages 
+4.1.1 
+15-09-2021 
+Pierre Gauthier 
+ 
+Ludovic Robert 
+Update Service lifecycle 
+ 
+ 
+ 
+
+
+© TM Forum 2021. All Rights Reserved                                                                                        Page 66 of 66 
+Release History 
+Release Status 
+Date  
+Release led by: 
+Description  
+Pre-production 
+28-May-2020 
+Pierre Gauthier 
+Ludovic Robert 
+Added support for order milestone, 
+jeopardy alert, error messages 
+Production 
+20-Jul-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+Pre-production 
+07-Dec-2020 
+Kamal Maghsoudlou 
+Added support for order milestone, 
+jeopardy alert, error messages 
+Production 
+26-Mar-2021 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+ 
+Contributors to Document 
+Abdul Majid Hussain 
+Telstra 
+abdul.majidhussain@team.telstra.com 
+Andrew Forth 
+Amdocs 
+aforth@amdocs.com 
+August-Wilhelm Jagau 
+Ericsson 
+August-wilhelm.jagau@ericsson.com 
+Jean-Luc Tymen 
+Orange 
+jeanluc.tymen@orange.com 
+Kamal Maghsoudlou 
+Ericsson 
+Kamal.maghsoudlou@ericsson.com 
+Ludovic Robert 
+Orange 
+ludovic.robert@orange.com 
+Mariano Belaunde 
+Orange 
+mariano.belaunde@orange.com 
+Nicoleta Stoica 
+Vodafone 
+nicoleta.stoica@vodafone.com 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+ 
+ 
+ 
+
+

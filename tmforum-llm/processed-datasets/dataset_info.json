@@ -2,6 +2,34 @@
   "citation": "",
   "description": "",
   "features": {
+    "tmforumApiId": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "chunkIndex": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "totalChunks": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "apiName": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "title": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "documentType": {
+      "dtype": "string",
+      "_type": "Value"
+    },
     "text": {
       "dtype": "string",
       "_type": "Value"

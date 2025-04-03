@@ -1,0 +1,1347 @@
+ 
+ 
+ 
+TM Forum Specification 
+ 
+ 
+Geographic Site Management API 
+User Guide 
+ 
+ 
+ 
+ 
+ 
+TMF674 
+Team Approved Date: 03-Apr-2020 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 4.0.1 
+IPR Mode: RAND 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 2 of 35
+NOTICE 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works that comment on 
+or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in 
+whole or in part, without restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as required to 
+translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or 
+assigns. 
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS 
+ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would 
+necessarily be infringed by implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM 
+Team Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of 
+ownership of any patent claims that would necessarily be infringed by implementations of this TM FORUM 
+Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do 
+so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might 
+be claimed to pertain to the implementation or use of the technology described in this TM FORUM Standards Final 
+Deliverable or the extent to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM FORUM's procedures with 
+respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be 
+found on the TM FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or permission for the 
+use of such proprietary rights by implementers or users of this TM FORUM Standards Final Deliverable, can be 
+obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or 
+list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential 
+Claims. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 3 of 35
+ 
+Direct inquiries to the TM Forum office: 
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054, USA 
+Tel No. +1 973 944 5100 
+Fax No. +1 973 944 5110 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 4 of 35
+Table of Contents 
+NOTICE ............................................................................................................................................................................ 2 
+Table of Contents ............................................................................................................................................................ 4 
+List of Tables ................................................................................................................................................................... 6 
+Introduction .................................................................................................................................................................... 7 
+Sample Use Cases ........................................................................................................................................................... 9 
+Support of polymorphism and extension patterns ...................................................................................................... 10 
+RESOURCE MODEL ........................................................................................................................................................ 11 
+Managed Entity and Task Resource Models ..................................................................................................... 11 
+Geographic Site resource ...................................................................................................................................... 11 
+Notification Resource Models .............................................................................................................................. 15 
+Geographic Site Create Event ................................................................................................................................ 16 
+Geographic Site Attribute Value Change Event ..................................................................................................... 17 
+Geographic Site Status Change Event ................................................................................................................... 17 
+Geographic Site Delete Event ................................................................................................................................ 17 
+API OPERATIONS ........................................................................................................................................................... 19 
+Operations on Geographic Site ................................................................................................................................. 19 
+List geographic sites .............................................................................................................................................. 19 
+Retrieve geographic site ........................................................................................................................................ 20 
+Create geographic site ........................................................................................................................................... 23 
+Patch geographic site ............................................................................................................................................ 26 
+Delete geographic site ........................................................................................................................................... 31 
+API Notifications .................................................................................................................................................... 31 
+Register listener ........................................................................................................................................................ 31 
+Unregister listener .................................................................................................................................................... 33 
+Publish Event to listener ........................................................................................................................................... 33 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 5 of 35
+Acknowledgements ...................................................................................................................................................... 35 
+Version History ......................................................................................................................................................... 35 
+Release History ......................................................................................................................................................... 35 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 6 of 35
+List of Tables 
+ 
+N/A 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 7 of 35
+Introduction 
+ 
+The following document is the specification of the REST API for Geographic Site management. A geographic site is a 
+specialization of the abstract Place entity (like Geographic Address and Geographic Location).  
+ 
+This specification includes the Geographic site model definition as well as all available operations. Possible actions 
+are creating, updating and retrieving geographic sites.  
+  This API covers the operations to manage (create, read, delete) sites that can be associated to a customer, an 
+account, a service delivery or other entities. 
+This API defines a Site as a convenience class that allows to easily refer to places important to other entities, where 
+a geographic place is the entity that can answer the question “where?”, allowing to determine where things are in 
+relation to the earth's surface, and can be represented either in a textual structured way (geographic address) or as 
+a geometry referred to a spatial reference system (geographic location) 
+This API relates with the following two APIs also covering SID GeographicPlace entity 
+• 
+Geographic Address Management API, specific to manage places defined in a structured textual 
+way (street name, street number …) and validate existence of given address definition. 
+• 
+GeoLocation API specific for management of places defined as a geometry in the spatial reference 
+regarding the surface of the Earth (coordinates …) and the relationship between different geolocations 
+(distance, proximity …) 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 8 of 35
+This API allows the following operations  
+- 
+Create a new site 
+- 
+Partial update of a geographic site  
+- 
+Retrieve a list of sites stored in a server filtered by a given criteria 
+- 
+Retrieve a specific site 
+- 
+Notification of events on a geographic site 
+o geographic site creation 
+o geographic site removal 
+o geographic site status change 
+o geographic site value change used to notify that any data in a geographic site has just changed 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 9 of 35
+Sample Use Cases 
+This section includes a set of main use cases that can be performed with this API. Additional use cases can be 
+generated using the operations and resources defined in this specification. 
+• Create a site in the server and associate a given customer/account to that site. The site definition includes 
+all the address definition (street name, street number…) as well as the type of site it is in the relationship 
+with the customer and the validity period for the relationship  
+• Request a new product order and associate the delivery of any of the products/services in the order to 
+one of the sites that have been associated to a customer/account 
+• A customer creates a new trouble ticket for technical assistance requiring an agent to provide assistance 
+in a specific geographic address, identified as one of the sites allocated to the customer 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 10 of 35
+Support of polymorphism and extension patterns 
+ 
+Support of polymorphic collections and types and schema based extension is provided by means of a list of generic 
+meta-attributes that we describe below. Polymorphism in collections occurs when entities inherit from base 
+entities, for instance a Warehouse and Customer Access inheriting properties from the Geographic Site entity itself 
+inheriting from geographic place. 
+Generic support of polymorphism and pattern extensions is described in the TMF API Guidelines v3.0 Part 2 
+document. 
+The @type attribute provides a way to represent the actual class type of an entity. For example, within a list of 
+Geographic Site (or Geographic place) instances some may be instances of Warehouse where other could be 
+instances of physical store. The @type gives this information. All resources and sub-resources of this API have a 
+@type attributes that can be provided when this is useful. 
+The @referredType can be used within reference entities (like for instance in PlaceRef object) to explicitly denote 
+the actual entity type of the referred class. Notice that in reference entities the @type, when used, denotes the 
+class type of the reference itself, such as WarehouseRef or PhysicalStoreRef, and not the class type of the referred 
+object. However, since reference classes are rarely sub-classed, @type is generally not useful in reference objects. 
+The @schemaLocation property can be used in resources to allow specifying user-defined properties of an Entity or 
+to specify the expected characteristics of an entity. 
+The @baseType attribute gives a way to provide explicitly the base of class of a given resource that has been 
+extended. 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 11 of 35
+RESOURCE MODEL 
+Managed Entity and Task Resource Models 
+Geographic Site resource 
+ 
+Resource model 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 12 of 35
+Field descriptions 
+GeographicSite fields 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+calendar 
+A list of calendar periods (CalendarPeriod [*]). 
+code 
+A string. A code that may be used for some addressing schemes e.g.: [ANSI T1.253-
+1999]. 
+description 
+A string. Text describing additional information regarding the site. 
+place 
+A list of place ref or values (PlaceRefOrValue [*]). A place defines a place described by 
+reference or by value linked to a specific entity. The polymorphic attributes @type, 
+@schemaLocation & @referredType are related to the place entity and not the 
+RelatedPlaceRefOrValue class itself. 
+relatedParty 
+A list of related parties (RelatedParty [*]). Related Entity reference. A related party 
+defines party or party role linked to a specific entity. 
+siteRelationship 
+A list of geographic site relationships (GeographicSiteRelationship [*]). 
+status 
+A string. The condition of the GeographicSite, such as planned, underConstruction, 
+cancelled, active, inactive, former. 
+CalendarPeriod sub-resource 
+ 
+day 
+A string. Day where the calendar status applies (e.g.: monday, mon-to-fri, weekdays, 
+weekend, all week, ...). 
+hourPeriod 
+A list of hour periods (HourPeriod [*]). 
+status 
+A string. Indication of the availability of the site (e.g.: open). 
+timeZone 
+A string. Indication of the timezone applicable to the calendar information (e.g.: Paris, 
+GMT+1). 
+GeographicSiteRelationship sub-resource 
+ 
+href 
+A string. Reference of the related geographic site. 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 13 of 35
+id 
+A string. Unique identifier of the related site entity within the server. 
+relationshipType 
+A string. Type of relationship. 
+role 
+A string. Role of the related site in the relationship. 
+validFor 
+A time period. Validity for the relationship. 
+HourPeriod sub-resource 
+ 
+endHour 
+A string. The time when the status ends applying. 
+startHour 
+A string. The time when the status starts applying. 
+PlaceRefOrValue sub-resource 
+A place defines a place described by reference or by value linked to a specific entity. The polymorphic attributes 
+@type, @schemaLocation & @referredType are related to the place entity and not the RelatedPlaceRefOrValue 
+class itself. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. A user-friendly name for the place, such as [Paris Store], [London Store], 
+[Main Home]. 
+href 
+A string. Unique reference of the place. 
+id 
+A string. Unique identifier of the place. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+RelatedParty sub-resource 
+Related Entity reference. A related party defines party or party role linked to a specific entity. 
+@referredType 
+A string. The actual type of the target instance when needed for disambiguation. 
+name 
+A string. Name of the related entity. 
+href 
+A string. Hyperlink reference. 
+id 
+A string. unique identifier. 
+@baseType 
+A string. When sub-classing, this defines the super-class. 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 14 of 35
+@schemaLocation 
+An uri (Uri). A URI to a JSON-Schema file that defines additional attributes and 
+relationships. 
+@type 
+A string. When sub-classing, this defines the sub-class Extensible name. 
+role 
+A string. Role played by the related party. 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicSite' resource object 
+{ 
+    "id": "sd65-8874", 
+    "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-8874", 
+    "code": "Warehouse", 
+    "description": "Warehouse in Marseille", 
+    "name": "Marseille Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:30 pm", 
+                    "startHour": "6:30 am", 
+                    "@type": "HourPeriod" 
+                } 
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+        { 
+            "id": "9912", 
+            "href": "https://host:port/geographicAddressManagement/v4/geographicAddress/9912", 
+            "@type": "PlaceRef", 
+            "@referredType": "GeographicAddress" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "https://host:port/partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "Warehouse manager", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "siteRelationship": [ 
+        { 
+            "id": "4589-jj65", 
+            "href": "string", 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 15 of 35
+            "relationshipType": "support", 
+            "role": "support site in case of stock shortage", 
+            "validFor": { 
+                "endDateTime": "2019-01-02T09:33:35.749Z", 
+                "startDateTime": "2023-12-31T09:33:35.749Z" 
+            }, 
+            "@type": "SiteRelationship" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+Notification Resource Models 
+ 
+4 notifications are defined for this API 
+Notifications related to GeographicSite: 
+    - GeographicSiteCreateEvent 
+    - GeographicSiteAttributeValueChangeEvent 
+    - GeographicSiteStatusChangeEvent 
+    - GeographicSiteDeleteEvent 
+The notification structure for all notifications in this API follow the pattern depicted by the figure below. 
+A notification event resource (depicted by "SpecificEvent" placeholder) is a sub class of a generic Event structure 
+containing at least an id of the event occurrence (eventId), an event timestamp (eventTime), and the name of the 
+resource (eventType).  
+This notification structure owns an event payload structure ("SpecificEventPayload" placeholder) linked to the 
+resource concerned by the notification using the resource name as access field ("resourceName" placeholder). 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 16 of 35
+ 
+Geographic Site Create Event 
+Notification GeographicSiteCreateEvent case for resource GeographicSite 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicSiteCreateEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeographicSiteCreateEvent", 
+     "event": { 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 17 of 35
+        "geographicSite" :  
+            {-- SEE GeographicSite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Geographic Site Attribute Value Change Event 
+Notification GeographicSiteAttributeValueChangeEvent case for resource GeographicSite 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicSiteAttributeValueChangeEvent' 
+notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeographicSiteAttributeValueChangeEvent", 
+     "event": { 
+        "geographicSite" :  
+            {-- SEE GeographicSite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Geographic Site Status Change Event 
+Notification GeographicSiteStatusChangeEvent case for resource GeographicSite 
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicSiteStatusChangeEvent' notification 
+event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeographicSiteStatusChangeEvent", 
+     "event": { 
+        "geographicSite" :  
+            {-- SEE GeographicSite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+Geographic Site Delete Event 
+Notification GeographicSiteDeleteEvent case for resource GeographicSite 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 18 of 35
+Json representation sample 
+We provide below the json representation of an example of a 'GeographicSiteDeleteEvent' notification event object 
+{ 
+    "eventId":"00001", 
+    "eventTime":"2015-11-16T16:42:25-04:00", 
+    "eventType":"GeographicSiteDeleteEvent", 
+     "event": { 
+        "geographicSite" :  
+            {-- SEE GeographicSite RESOURCE SAMPLE --} 
+    } 
+} 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 19 of 35
+API OPERATIONS 
+Only allowed operations are listed: 
+Operation on Entities 
+Uniform API Operation 
+Description 
+Query Entities 
+GET geographicSite 
+GET must be used to retrieve a 
+representation of a resource. 
+ 
+Create Entity 
+POST geographicSite 
+ 
+POST must be used to create a 
+new geographicSite resource 
+If resource is created code 201 is 
+send back. 
+Partial Update of an Entity 
+PATCH geographicSite 
+PATCH must be used to partially 
+update a resource 
+Remove an Entity 
+DELETE geographicSite 
+DELETE must be used to remove 
+a resource 
+ 
+Filtering and attribute selection rules are described in the TMF REST Design Guidelines. 
+Notifications are also described in a subsequent section. 
+ 
+Operations on Geographic Site 
+List geographic sites 
+  GET /geographicSite?fields=...&{filtering} 
+Description 
+This operation list geographic site entities. 
+Attribute selection is enabled for all first level attributes. 
+Filtering may be available depending on the compliance level supported by an implementation. 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 20 of 35
+Usage Samples 
+Here's an example of a request for retrieving a list of geographic sites. The given criteria is the code (Warehouse) 
+and state (active). 
+ 
+Request 
+ 
+GET /tmf-api/geographicSiteManagement/v4/geographicSite?fields=id,href,name&code=Warehouse&state=active 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+[ 
+    { 
+        "id": "6987", 
+        "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-8874", 
+        "name": "Marseille Warehouse" 
+    }, 
+    { 
+        "id": "7412", 
+        "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-885l", 
+        "name": "Paris Nord Warehouse" 
+    }, 
+    { 
+        "id": "3214", 
+        "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-8814", 
+        "name": "Bordeaux Warehouse" 
+    }, 
+    { 
+        "id": "6547", 
+        "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-547", 
+        "name": "Lille Warehouse" 
+    } 
+] 
+ 
+Retrieve geographic site 
+  GET /geographicSite/{id}?fields=...&{filtering} 
+Description 
+This operation retrieves a geographic site entity. 
+Attribute selection is enabled for all first level attributes. 
+Filtering on sub-resources may be available depending on the compliance level supported by an implementation. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 21 of 35
+Usage Samples 
+Here's an example of a request for retrieving a geographic site which has an address defined by reference (id). The 
+given criteria is the geographic site id sd65-8874. 
+ 
+Request 
+ 
+GET /tmf-api/geographicSiteManagement/v4/geographicSite/sd65-8874 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "sd65-8874", 
+    "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-8874", 
+    "code": "Warehouse", 
+    "description": "Warehouse in Marseille", 
+    "name": "Marseille Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:30 pm", 
+                    "startHour": "6:30 am", 
+                    "@type": "HourPeriod" 
+                } 
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+        { 
+            "id": "9912", 
+            "href": "https://host:port/geographicAddressManagement/v4/geographicAddress/9912", 
+            "@type": "PlaceRef", 
+            "@referredType": "GeographicAddress" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "https://host:port/partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "Warehouse manager", 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 22 of 35
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "siteRelationship": [ 
+        { 
+            "id": "4589-jj65", 
+            "href": "string", 
+            "relationshipType": "support", 
+            "role": "support site in case of stock shortage", 
+            "validFor": { 
+                "endDateTime": "2019-01-02T09:33:35.749Z", 
+                "startDateTime": "2023-12-31T09:33:35.749Z" 
+            }, 
+            "@type": "SiteRelationship" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+ 
+Here's an example of a request for retrieving a geographic site which has an address valued. The given criteria is 
+the geographic site id sd65-4444. 
+ 
+Request 
+ 
+GET /tmf-api/geographicSiteManagement/v4/geographicSite/sd65-4444 
+Accept: application/json 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "sd65-4444", 
+    "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-4444", 
+    "code": "Warehouse", 
+    "description": "Warehouse in Bordeaux", 
+    "name": "Bordeaux Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:45 pm", 
+                    "startHour": "6:15 am", 
+                    "@type": "HourPeriod" 
+                } 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 23 of 35
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+        { 
+            "@type": "GeographicAddress", 
+            "geographicAddress": { 
+                "streetNr": "48", 
+                "streetName": "Kieser", 
+                "streetType": "rue", 
+                "postcode": "33000", 
+                "locality": "Bordeaux", 
+                "city": "Bordeaux", 
+                "stateOrProvince": "Gironde", 
+                "country": "France" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "99", 
+            "href": "https://host:port/partyManagement/v4/individual/99", 
+            "name": "Louise Pontus", 
+            "role": "Warehouse manager", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+Create geographic site 
+  POST /geographicSite 
+Description 
+This operation creates a geographic site entity. 
+Mandatory and Non Mandatory Attributes 
+The following tables provide the list of mandatory and non mandatory attributes when creating a GeographicSite, 
+including any possible rule conditions and applicable default values. Notice that it is up to an implementer to add 
+additional mandatory attributes. 
+Mandatory Attributes 
+Rule 
+ 
+Non Mandatory Attributes 
+Rule 
+name 
+ 
+calendar 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 24 of 35
+Non Mandatory Attributes 
+Rule 
+code 
+ 
+description 
+ 
+place 
+ 
+relatedParty 
+ 
+siteRelationship 
+ 
+status 
+ 
+ 
+Additional Rules 
+The following table provides additional rules indicating mandatory fields in sub-resources or relationships when 
+creating a GeographicSite resource. 
+Context 
+Mandatory Sub-Attributes 
+siteRelationship 
+id, relationshipType 
+relatedParty 
+id, @referredType 
+calendar 
+status 
+place 
+id and @referredType or @type and valued place 
+ 
+Usage Samples 
+Here's an example of a request for creating a geographic site - the resulting geographic site is sd65-8874. 
+ 
+Request 
+ 
+POST /tmf-api/geographicSiteManagement/v4/geographicSite 
+Content-Type: application/json 
+ 
+{ 
+    "code": "Warehouse", 
+    "description": "Warehouse in Bordeaux", 
+    "name": "Bordeaux Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:45 pm", 
+                    "startHour": "6:15 am", 
+                    "@type": "HourPeriod" 
+                } 
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 25 of 35
+        { 
+            "@type": "GeographicAddress", 
+            "geographicAddress": { 
+                "streetNr": "48", 
+                "streetName": "Kieser", 
+                "streetType": "rue", 
+                "postcode": "33000", 
+                "locality": "Bordeaux", 
+                "city": "Bordeaux", 
+                "stateOrProvince": "Gironde", 
+                "country": "France" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "99", 
+            "name": "Louise Pontus", 
+            "role": "Warehouse manager", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+ 
+ 
+Response 
+ 
+201 
+ 
+{ 
+    "id": "sd65-4444", 
+    "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-4444", 
+    "code": "Warehouse", 
+    "description": "Warehouse in Bordeaux", 
+    "name": "Bordeaux Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:45 pm", 
+                    "startHour": "6:15 am", 
+                    "@type": "HourPeriod" 
+                } 
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 26 of 35
+        { 
+            "@type": "GeographicAddress", 
+            "geographicAddress": { 
+                "streetNr": "48", 
+                "streetName": "Kieser", 
+                "streetType": "rue", 
+                "postcode": "33000", 
+                "locality": "Bordeaux", 
+                "city": "Bordeaux", 
+                "stateOrProvince": "Gironde", 
+                "country": "France" 
+            } 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "99", 
+            "href": "https://host:port/partyManagement/v4/individual/99", 
+            "name": "Louise Pontus", 
+            "role": "Warehouse manager", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+Patch geographic site 
+  PATCH /geographicSite/{id} 
+Description 
+This operation allows partial updates of a geographic site entity. Support of json/merge 
+(https://tools.ietf.org/html/rfc7386) is mandatory, support of json/patch (http://tools.ietf.org/html/rfc5789) is 
+optional. 
+Note: If the update operation yields to the creation of sub-resources or relationships, the same rules concerning 
+mandatory sub-resource attributes and default value settings in the POST operation applies to the PATCH 
+operation.  Hence these tables are not repeated here. 
+Patchable and Non Patchable Attributes 
+The tables below provide the list of patchable and non patchable attributes, including constraint rules on their 
+usage. 
+Patchable Attributes 
+Rule 
+name 
+ 
+calendar 
+ 
+code 
+ 
+description 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 27 of 35
+Patchable Attributes 
+Rule 
+place 
+ 
+relatedParty 
+ 
+siteRelationship 
+ 
+status 
+ 
+ 
+Non Patchable Attributes 
+Rule 
+id 
+ 
+href 
+ 
+ 
+Usage Samples 
+Here's an example of a request for updating geographic site sd65-8874 - Change start hour to 6:00 am - the full 
+resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/geographicSiteManagement/v4/geographicSite/sd65-8874 
+Content-Type: application/json-patch+json 
+ 
+[ 
+    { 
+        "op": "replace", 
+        "path": "/calendar/hourPeriod/startHour", 
+        "value": "6:00 am" 
+    } 
+] 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+{ 
+    "id": "sd65-8874", 
+    "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-8874", 
+    "code": "Warehouse", 
+    "description": "Warehouse in Marseille", 
+    "name": "Marseille Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:30 pm", 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 28 of 35
+                    "startHour": "6:00 am", 
+                    "@type": "HourPeriod" 
+                } 
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+        { 
+            "id": "9912", 
+            "href": "https://host:port/geographicAddressManagement/v4/geographicAddress/9912", 
+            "@type": "PlaceRef", 
+            "@referredType": "GeographicAddress" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "https://host:port/partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "Warehouse manager", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "siteRelationship": [ 
+        { 
+            "id": "4589-jj65", 
+            "href": "string", 
+            "relationshipType": "support", 
+            "role": "support site in case of stock shortage", 
+            "validFor": { 
+                "endDateTime": "2019-01-02T09:33:35.749Z", 
+                "startDateTime": "2023-12-31T09:33:35.749Z" 
+            }, 
+            "@type": "SiteRelationship" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+ 
+Here's an example of a request for updating geographic site sd65-8874 - Change start hour to 6:00 am  - the full 
+resource representation is sent in PATCH response 
+ 
+Request 
+ 
+PATCH /tmf-api/geographicSiteManagement/v4/geographicSite/sd65-8874 
+Content-Type: application/merge-patch+json 
+ 
+{ 
+    "id": "sd65-8874", 
+    "code": "Warehouse", 
+    "description": "Warehouse in Marseille", 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 29 of 35
+    "name": "Marseille Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:30 pm", 
+                    "startHour": "6:00 am", 
+                    "@type": "HourPeriod" 
+                } 
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+        { 
+            "id": "9912", 
+            "@type": "PlaceRef", 
+            "@referredType": "GeographicAddress" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "name": "Jean Pontus", 
+            "role": "Warehouse manager", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "siteRelationship": [ 
+        { 
+            "id": "4589-jj65", 
+            "href": "string", 
+            "relationshipType": "support", 
+            "role": "support site in case of stock shortage", 
+            "validFor": { 
+                "endDateTime": "2019-01-02T09:33:35.749Z", 
+                "startDateTime": "2023-12-31T09:33:35.749Z" 
+            }, 
+            "@type": "SiteRelationship" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+ 
+ 
+Response 
+ 
+200 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 30 of 35
+{ 
+    "id": "sd65-8874", 
+    "href": "https://host:port/geographicSiteManagement/v4/geographicSite/sd65-8874", 
+    "code": "Warehouse", 
+    "description": "Warehouse in Marseille", 
+    "name": "Marseille Warehouse", 
+    "status": "active", 
+    "calendar": [ 
+        { 
+            "day": "weeekdays", 
+            "status": "open", 
+            "timeZone": "GMT+1", 
+            "hourPeriod": [ 
+                { 
+                    "endHour": "16:30 pm", 
+                    "startHour": "6:00 am", 
+                    "@type": "HourPeriod" 
+                } 
+            ], 
+            "@type": "Calendar" 
+        } 
+    ], 
+    "place": [ 
+        { 
+            "id": "9912", 
+            "href": "https://host:port/geographicAddressManagement/v4/geographicAddress/9912", 
+            "@type": "PlaceRef", 
+            "@referredType": "GeographicAddress" 
+        } 
+    ], 
+    "relatedParty": [ 
+        { 
+            "id": "45", 
+            "href": "https://host:port/partyManagement/v4/individual/45", 
+            "name": "Jean Pontus", 
+            "role": "Warehouse manager", 
+            "@referredType": "Individual" 
+        } 
+    ], 
+    "siteRelationship": [ 
+        { 
+            "id": "4589-jj65", 
+            "href": "string", 
+            "relationshipType": "support", 
+            "role": "support site in case of stock shortage", 
+            "validFor": { 
+                "endDateTime": "2019-01-02T09:33:35.749Z", 
+                "startDateTime": "2023-12-31T09:33:35.749Z" 
+            }, 
+            "@type": "SiteRelationship" 
+        } 
+    ], 
+    "@type": "GeographicSite" 
+} 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 31 of 35
+Delete geographic site 
+  DELETE /geographicSite/{id} 
+Description 
+This operation deletes a geographic site entity. 
+Usage Samples 
+Here's an example of a request for deleting a geographic site. 
+ 
+Request 
+ 
+DELETE /tmf-api/geographicSiteManagement/v4/geographicSite/sd65-8874 
+ 
+ 
+ 
+Response 
+ 
+204 
+ 
+ 
+ 
+API Notifications 
+For every single of operation on the entities use the following templates and provide sample REST notification POST 
+calls. 
+It is assumed that the Pub/Sub uses the Register and UnRegister mechanisms described in the REST Guidelines 
+reproduced below. 
+Register listener 
+  POST /hub 
+Description 
+Sets the communication endpoint address the service instance must use to deliver information about its health 
+state, execution state, failures and metrics. Subsequent POST calls will be rejected by the service if it does not 
+support multiple listeners. In this case DELETE /api/hub/{id} must be called before an endpoint can be created 
+again. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 409 if request is not successful. 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 32 of 35
+Usage Samples 
+Here's an example of a request for registering a listener. 
+ 
+Request 
+ 
+POST /api/hub 
+Accept: application/json 
+ 
+{"callback": "http://in.listener.com"} 
+ 
+ 
+Response 
+ 
+201 
+Content-Type: application/json 
+Location: /api/hub/42 
+ 
+{"id":"42","callback":"http://in.listener.com","query":null} 
+ 
+ 
+ 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 33 of 35
+Unregister listener 
+  DELETE /hub/{id} 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Behavior 
+Returns HTTP/1.1 status code 204 if the request was successful. 
+Returns HTTP/1.1 status code 404 if the resource is not found. 
+Usage Samples 
+Here's an example of a request for un-registering a listener. 
+ 
+Request 
+ 
+DELETE /api/hub/42 
+Accept: application/json 
+ 
+ 
+Response 
+ 
+204 
+ 
+Publish Event to listener 
+  POST /client/listener 
+Description 
+Clears the communication endpoint address that was set by creating the Hub. 
+Provides to a registered listener the description of the event that was raised. The /client/listener url is the callback 
+url passed when registering the listener. 
+Behavior 
+Returns HTTP/1.1 status code 201 if the service is able to set the configuration.  
+Usage Samples 
+Here's an example of a notification received by the listener. In this example “EVENT TYPE” should be replaced by 
+one of the notification types supported by this API (see Notification resources Models section) and EVENT BODY 
+refers to the data structure of the given notification type. 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 34 of 35
+ 
+Request 
+ 
+POST /client/listener 
+Accept: application/json 
+ 
+{ 
+    "event": {  
+                EVENT BODY  
+            }, 
+    "eventType": "EVENT_TYPE" 
+} 
+ 
+ 
+Response 
+ 
+201 
+ 
+For detailed examples on the general TM Forum notification mechanism, see the TMF REST Design Guidelines. 
+ 
+
+
+© TM Forum 2020. All Rights Reserved
+Page 35 of 35
+Acknowledgements 
+Version History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 1.0.0 
+22/05/2017 
+Pierre Gauthier 
+TM Forum 
+pgauthier@tmforum.org 
+Mariano Belaunde 
+Orange 
+mariano.belaunde@orange.com 
+ 
+Ludovic Robert 
+Orange 
+Ludovic.robert@orange.com 
+First Release of the Document. 
+Version 4.0.0 
+05-Apr-2020 
+P. Gauthier / L.Robert 
+Schema-driven API with polymorphism pattern 
+Following Jira have been integrated: 
+• 
+AP-1074 (partial) 
+Note: the version 4.0 is assigned to all the APIs 
+delivered in the release 19.5 
+4.0.1 
+25-May-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved Status 
+ 
+Release History 
+Release 
+Number 
+Date  
+Release led by: 
+Description  
+Release 17.5 
+ 
+22/05/2017 
+P. Gauthier /  M.Belaunde/ 
+L.Robert  
+ 
+Pre-
+production 
+05-Apr-2020 
+P. Gauthier / L.Robert  
+Version 4.0 of the API REST 
+Note: the version 4.0 is assigned to all the APIs 
+delivered in the release 19.0 
+Production 
+25-May-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+ 
+
+
