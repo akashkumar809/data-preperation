@@ -28,7 +28,7 @@ def add_labels(examples):
     return examples
 
 # Add labels to the dataset
-train_dataset = train_dataset.map(add_labels, batched=True)
+train_dataset = train_dataset.map(add_labels, batched=False)
 
 # Define training arguments
 training_args = TrainingArguments(
