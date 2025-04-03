@@ -4,15 +4,11 @@ import os
 import json
 import pandas as pd
 
-# Define input/output paths
 DATA_PATH = "target/jsonls"
 OUTPUT_DATASET_PATH = "processed-datasets"
 
 
 def load_jsonls():
-    """
-    Load JSONL files from the specified directory.
-    """
     json_files = glob.glob(os.path.join(DATA_PATH, "*.jsonl"))
     data = []
 
@@ -39,20 +35,6 @@ def create_hf_daaset() :
 
     print(f"✅ Dataset saved at {OUTPUT_DATASET_PATH}")
 
-
-# # Read all text files
-# text_files = glob.glob(os.path.join(DATA_PATH, "*.txt"))
-#
-# data = []
-# for file in text_files:
-#     with open(file, "r", encoding="utf-8") as f:
-#         data.append({"text": f.read()})
-#
-# # Convert to Hugging Face dataset and save
-# dataset = Dataset.from_list(data)
-# dataset.save_to_disk(OUTPUT_DATASET_PATH)
-#
-# print(f"✅ Dataset saved at {OUTPUT_DATASET_PATH}")
 
 if __name__ == "__main__":
     create_hf_daaset()
