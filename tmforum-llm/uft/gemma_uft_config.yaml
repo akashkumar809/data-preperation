@@ -1,0 +1,34 @@
+# Configuration for Gemma-3-12b-it UFT with 8-bit quantization
+
+# Data parameters
+data_dir: "../target/jsonls"  # Directory containing JSONL files
+output_dir: "../target/uft/output"  # Directory to save model checkpoints and logs
+
+# Training parameters
+batch_size: 1  # Batch size per GPU
+grad_accum_steps: 8  # Gradient accumulation steps
+epochs: 1  # Number of training epochs
+learning_rate: 2.0e-5  # Learning rate
+weight_decay: 0.01  # Weight decay
+max_seq_length: 2048  # Maximum sequence length
+warmup_steps: 100  # Number of warmup steps
+save_interval: 1000  # Save checkpoint every N steps
+eval_interval: 500  # Evaluate every N steps
+
+# Model parameters
+model_name_or_path: "google/gemma-3-12b-it"  # Model path or name
+hf_token: null  # Hugging Face token, set to your token or use environment variable
+model_cache_dir: "./model_cache"  # Directory to cache downloaded models
+tp_size: 2  # Tensor parallelism size
+pp_size: 1  # Pipeline parallelism size
+
+# Quantization parameters
+quantization: "int8"  # Quantization type (int8 or none)
+
+# TensorBoard parameters
+tensorboard_dir: null  # If null, uses output_dir/tensorboard
+
+# Model download and conversion options
+download_model: true  # Download model from Hugging Face Hub
+convert_to_nemo: true  # Convert HF model to NeMo format
+nemo_model_path: null  # Path to pre-converted NeMo model file if available
