@@ -1,0 +1,9 @@
+nemo-toolkit[all]
+transformers>=4.37.0
+accelerate>=0.25.0
+huggingface_hub>=0.19.0
+torch>=2.0.0
+torchvision
+torchaudio
+omegaconf>=2.3.0
+tensorboard>=2.12.0
