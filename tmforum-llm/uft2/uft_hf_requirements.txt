@@ -1,0 +1,8 @@
+transformers>=4.38.0
+accelerate>=0.27.0
+datasets>=2.14.0
+bitsandbytes>=0.42.0 # Ensure this installs correctly for your Python 3.8 + CUDA (11.8/12.1) combo
+tensorboard
+scipy
+packaging
+huggingface_hub
