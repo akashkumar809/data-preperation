@@ -106,10 +106,10 @@ def main():
     print(f"Loaded {len(sft_dataset)} Q&A pairs.")
 
     # Optional: Split dataset if needed (e.g., 90% train, 10% eval)
-    # sft_dataset = sft_dataset.train_test_split(test_size=0.1)
-    # train_dataset = sft_dataset["train"]
-    # eval_dataset = sft_dataset["test"]
-    train_dataset = sft_dataset # Using all data for training in this example
+    sft_dataset = sft_dataset.train_test_split(test_size=0.05)
+    train_dataset = sft_dataset["train"]
+    eval_dataset = sft_dataset["test"]
+    # train_dataset = sft_dataset # Using all data for training in this example
 
 
     # --- Configure 8-bit Quantization ---
@@ -184,6 +184,8 @@ def main():
         report_to="tensorboard",
         gradient_checkpointing=GRADIENT_CHECKPOINTING,
         gradient_checkpointing_kwargs={'use_reentrant': False} if GRADIENT_CHECKPOINTING else None,
+        evaluation_strategy="steps",    # Evaluate every `eval_steps`
+        eval_steps=50,                  # How often to evaluate (adjust based on dataset size/save_steps)
         # ddp_find_unused_parameters=False, # Uncomment if needed for multi-GPU issues
     )
 
@@ -193,7 +195,7 @@ def main():
         model=model,                      # Pass the PEFT model (with UFT + SFT adapters)
         args=training_args,
         train_dataset=train_dataset,
-        # eval_dataset=eval_dataset,    # Optional: Pass eval dataset
+        eval_dataset=eval_dataset,    # Optional: Pass eval dataset
         tokenizer=tokenizer,
         peft_config=sft_lora_config,      # Pass the SFT config (ensures correct adapter is trained)
         formatting_func=format_instruction, # Function to apply chat template
