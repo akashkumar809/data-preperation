@@ -5,6 +5,7 @@ import torch
 import json # To load the Q&A JSON
 
 from datasets import load_dataset, Dataset # To load JSON and create Dataset object
+print(f"Importing transformers from: {transformers.__file__}")
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
