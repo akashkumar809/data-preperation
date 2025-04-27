@@ -1,0 +1,642 @@
+ 
+TM Forum Technical Specification 
+ 
+ 
+Permissions Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC035 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 27-Aug-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.1.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+
+
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 6 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 7 
+2.4. 
+Functional Framework Functions ....................................................... 7 
+3. 
+TM Forum Open APIs & Events ..................................................................... 9 
+3.1. 
+Exposed APIs .................................................................................... 9 
+3.2. 
+Dependent APIs ............................................................................... 10 
+3.3. 
+Events .............................................................................................. 11 
+4. 
+Machine Readable Component Specification ............................................... 12 
+5. 
+References ................................................................................................... 13 
+5.1. 
+TMF Standards related versions ...................................................... 13 
+5.2. 
+Jira References ................................................................................ 13 
+5.3. 
+Further resources............................................................................. 13 
+6. 
+Administrative Appendix ............................................................................... 14 
+6.1. 
+Document History ............................................................................ 14 
+6.1.1. Version History............................................................................. 14 
+6.1.2. Release History ............................................................................ 14 
+6.2. 
+Acknowledgements .......................................................................... 14 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Party Roles & 
+Permissions 
+Management 
+TMFC035 Party Roles & Permissions 
+Management component aims to 
+manage and expose roles and 
+related permissions. 
+Permissions Management 
+component allows to: 
+• 
+create, modify, and delete 
+permissions. 
+• 
+delegate permissions 
+When a specific role is assigned, a 
+set of permissions is inherited. 
+Party 
+Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for. 
+Identifier 
+Level 
+Business Activity Name 
+Description 
+ 
+ 
+ 
+ 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs)* 
+Party ABE 
+Permission Set Specification BE 
+Permission Set BE 
+Permission BE 
+Party Role BE 
+Party Roles Specification BE 
+Customer Party ABE 
+ 
+Business Partner Party Role 
+ 
+Enterprise Party Role 
+ 
+Market Sales Party Roles ABE 
+  
+Service Party Roles ABE 
+  
+Resource Party Roles ABE 
+  
+  
+  
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified.  
+ 
+ 
+
+
+2.3.  eTOM L2 - SID ABEs links 
+eTOM L2 vS SID ABEs links for this ODA Component.  
+ 
+2.4. Functional Framework Functions 
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+899 
+Single Sign-
+On Access 
+Control 
+Single Sign-On Access Control 
+grant access in cooperation 
+with central Authentication and 
+Authorization functions to 
+secure the most updated 
+security. 
+Identification 
+and 
+Permission 
+Management 
+Identification 
+and 
+Authentication 
+906 
+PKI and 
+Digital 
+Certificates 
+Systems 
+Integration 
+PKI and Digital Certificates 
+Systems  Integration provides 
+integration to Public Key 
+Infrastructure Systems that 
+provides digital certificates, and 
+the support to use public keys 
+and digital certificates. 
+Identification 
+and 
+Permission 
+Management 
+Identification 
+and 
+Authentication 
+1025 
+Application 
+Access 
+Application Access provide 
+access interfaces with 
+authentication and 
+authorization control for the 
+requests and responses related 
+to the application’s 
+functionality, including event 
+logging and usage statistics. 
+Identification 
+and 
+Permission 
+Management 
+Identification 
+and 
+Authentication 
+
+
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+897 
+Building 
+Access 
+Control 
+Building Access Control 
+checks, stops or allow physical 
+access to facilities according to 
+access roles and rules. 
+Identification 
+and 
+Permission 
+Management 
+Permission 
+Control 
+900 
+Authorization 
+Control 
+Management 
+Authorization Control 
+Management sets and 
+administrates the Role and 
+Rule based access to 
+functions. 
+Identification 
+and 
+Permission 
+Management 
+Permission 
+Control 
+898 
+Application 
+Security 
+Management 
+Application Security 
+Management administrates the 
+roles and rules that applies to 
+getting the right to use an 
+application. 
+Identification 
+and 
+Permission 
+Management 
+Permission 
+Definition 
+260 
+Anonymous 
+User Account 
+Creation 
+Anonymous User Account 
+Creation provides account 
+creation for anonymous user 
+account, either through external 
+customer self empowered 
+fulfillment function or internal 
+customer support access. 
+Identification 
+and 
+Permission 
+Management 
+Digital Identity 
+Management 
+1181 
+Party Role 
+Assignment 
+ n/a 
+Identification 
+and 
+Permission 
+Management 
+Role and 
+Permission 
+Assignment / 
+Configuration 
+1182 
+Permission 
+Perimeter 
+Configuration 
+ n/a 
+Identification 
+and 
+Permission 
+Management 
+Role and 
+Permission 
+Assignment / 
+Configuration 
+ 
+ 
+ 
+
+
+3. TM Forum Open APIs & Events 
+ 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the  component 
+could require the usage of this set of required APIs.  
+• 
+List of  Events (generated & consumed ) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+3.1. Exposed APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+Operations 
+TMF672 User Role 
+Permission 
+Management  
+4 
+Mandatory 
+GET Permission 
+(Permission, 
+UserRole) 
+GET/id Permission 
+POST Permission 
+PATCH Permission 
+DELETE Permission 
+GET UserRole 
+GET/id UserRole 
+
+
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+Operations 
+POST UserRole 
+PATCH UserRole 
+DELETE UserRole 
+TMF669 Party Role 
+Management 
+4 
+Mandatory 
+GET partyRole 
+GET/id partyRole 
+POST partyRole 
+PATCH partyRole 
+DELETE partyRole 
+TMF701 Process Flow 
+4 
+Optional 
+n/a 
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation potentially used by the product 
+catalog component: 
+ 
+ 
+ 
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Operations 
+Rationales 
+TMF632 Party 
+Management 
+4 
+Mandatory 
+GET 
+induvidual / 
+organization 
+GET/ID 
+induvidual / 
+organization 
+All roles and 
+identities need 
+to be accosiated 
+with a valid and 
+current Party 
+data object. 
+TMF701 Process Flow 4 
+Optional 
+na 
+ 
+
+
+3.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+ 
+ 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component table for the machine-readable component specification 
+file for this component. 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+23.5 / 24.0 
+eTOM 
+23.5 / 24.0 
+Functional Framework  
+23.5 / 24.0 
+ 
+5.2. Jira References 
+5.3. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions. 
+ 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+11 Jan 2023 
+Matteo Destino  
+Initial draft for Party Role and 
+Permissions Management 
+Component  
+1.0.0 
+ 
+Amaia White  
+Final edits prior to publication 
+1.0.1 
+25 Jul 2023 
+Ian Turkington 
+No content changed, simply a 
+layout change to match template 3. 
+1.1.0 
+27 Aug 2024  
+Hugo Vaughan 
+Links to Frameworks confirmed for 
+23.5. TMF688 removed from core 
+specification. 
+1.1.0  
+06 Sep 2024  
+Amaia White  
+Final edits prior to publication of 
+v1.1.0  
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+14 Jun 2023 
+Amaia White  
+Initial release of document  
+Pre-production 
+17-Jul-2023 
+Adrienne Walcott 
+Updated to Member Evaluated 
+status 
+Pre-production 
+14 Aug 2023 
+Amaia White  
+New release v1.0.1  
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  06 Sep 2024  
+Amaia White  
+New release 1.1.0  
+Production 
+01-Nov-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+6.2. Acknowledgements 
+This document was prepared by the members of the TM Forum Component and 
+Canvas project team: 
+Team Member (@mention) 
+Company 
+Role* 
+Matteo Destino  
+Accenture  
+Editor  
+Gaetano Biancardi  
+Accenture  
+Reviewer 
+Emmanuel A. Otchere   
+Huawei  
+Additional Input  
+
+
+Team Member (@mention) 
+Company 
+Role* 
+Dave Milham  
+TM Forum  
+Additonal Input  
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Addtional Input  
+Ian Turkington  
+TM Forum  
+Additional Input  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

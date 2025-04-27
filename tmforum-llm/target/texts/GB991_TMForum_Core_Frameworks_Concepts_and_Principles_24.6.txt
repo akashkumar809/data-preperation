@@ -1,0 +1,1967 @@
+ 
+TM Forum Guidebook 
+ 
+ 
+ 
+TM Forum Core Frameworks 
+Concepts and Principles 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+GB991 
+ 
+Maturity Level: General Availability (GA) 
+Team Approved Date: 18-Dec-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Suitable for Conformance 
+Version 24.6.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+Notice 
+Copyright © TM Forum 2025. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are in fact Essential Claims
+
+
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+Executive Summary ............................................................................................... 7 
+Introduction ............................................................................................................ 8 
+1. 
+CONCEPTS AND DEFINITIONS ................................................................... 9 
+1.1. 
+CONTEXTS ....................................................................................... 9 
+1.1.1. HORIZONTAL CONTEXT (DOMAINS) .......................................... 9 
+1.1.1.1. 
+Market and Sales Domain ................................................................ 10 
+1.1.1.2. 
+Product Domain ............................................................................... 10 
+1.1.1.3. 
+Customer Domain ............................................................................ 10 
+1.1.1.4. 
+Service Domain ............................................................................... 10 
+1.1.1.5. 
+Resource Domain ............................................................................ 10 
+1.1.1.6. 
+Business Partner Domain ................................................................ 10 
+1.1.1.7. 
+Enterprise Domain ........................................................................... 11 
+1.1.1.8. 
+Shared Domain ................................................................................ 11 
+1.1.1.9. 
+Patterns Domain .............................................................................. 11 
+1.1.1.10. 
+Integration Domain ....................................................................... 11 
+1.1.2. VERTICAL CONTEXT (LIFECYCLE STAGE) .............................. 11 
+1.1.2.1. 
+Vertical Context Area (Lifecycle Area) .............................................. 11 
+1.1.2.2. 
+Vertical Context Stage (Lifecycle Stage) .......................................... 11 
+Strategy-to-Readiness Lifecycle context area .............................................. 12 
+Operations Lifecycle context area................................................................ 13 
+1.2. 
+BUSINESS CAPABILITY MAP......................................................... 14 
+1.3. 
+BUSINESS PROCESS FRAMEWORK ............................................ 14 
+1.3.1. Purpose ....................................................................................... 14 
+1.3.2. Scope .......................................................................................... 14 
+1.3.2.1. 
+Core Process ................................................................................... 15 
+1.3.2.2. 
+Enabling Process ............................................................................. 15 
+1.3.2.3. 
+Supporting Process .......................................................................... 15 
+1.3.3. Conceptual View .......................................................................... 15 
+1.3.4. Other Concepts ............................................................................ 16 
+1.3.4.1. 
+Business Process Model (Workflow) ................................................ 16 
+1.4. 
+INFORMATION FRAMEWORK ....................................................... 16 
+1.4.1. Purpose ....................................................................................... 16 
+1.4.2. Scope .......................................................................................... 16 
+
+
+1.4.2.2. 
+Business Entity ................................................................................ 17 
+1.4.2.3. 
+Attribute ........................................................................................... 17 
+1.4.2.4. 
+Relationship ..................................................................................... 17 
+1.4.3. Conceptual view ........................................................................... 17 
+1.5. 
+FUNCTIONAL FRAMEWORK ......................................................... 18 
+1.5.1. Intended Uses .............................................................................. 18 
+1.5.2. Scope .......................................................................................... 18 
+1.5.2.1. 
+Functions ......................................................................................... 18 
+1.5.2.2. 
+Aggregate Functions ........................................................................ 18 
+Aggregate Function Level 1 ......................................................................... 19 
+Aggregate Function Level 2 ......................................................................... 19 
+1.5.3. Conceptual view ........................................................................... 19 
+1.6. 
+METRICS ........................................................................................ 19 
+2. 
+PRINCIPLES ................................................................................................ 20 
+2.1. 
+Shared ............................................................................................. 20 
+2.2. 
+Framework Specific ......................................................................... 21 
+2.2.1. Business Capability ...................................................................... 21 
+2.2.2. Business Process Framework ...................................................... 21 
+2.2.3. Information Framework (Kevin/Cecile- September 7) ................... 26 
+2.2.4. Functional Framework .................................................................. 28 
+2.2.5. Metrics ......................................................................................... 31 
+3. 
+THE FRAMEWORKS ................................................................................... 32 
+3.1. 
+Business Process Framework .......................................................... 32 
+3.2. 
+Information Framework .................................................................... 34 
+3.3. 
+Functional Framework ..................................................................... 35 
+4. 
+METHODOLOGY ......................................................................................... 37 
+4.1. 
+Business Process Modelling methodology ....................................... 37 
+4.2. 
+Information Modelling methodology ................................................. 39 
+4.3. 
+Functional Framework  Modelling methodology ............................... 39 
+5. 
+META MODELs ............................................................................................ 40 
+5.1. 
+Business Process Framework and Information Framework .............. 41 
+5.2. 
+Business Process and Functional Architecture ................................ 41 
+5.3. 
+Information Framework and Functional Framework ......................... 41 
+5.4. 
+Business Process Framework and Metrics ...................................... 41 
+6. 
+Administrative Appendix ............................................................................... 42 
+6 1
+Abo t this doc ment
+42
+
+
+6.2.1. Version History............................................................................. 42 
+6.2.2. Release History ............................................................................ 44 
+6.3. 
+Acknowledgments ............................................................................ 45 
+ 
+ 
+ 
+ 
+
+
+Executive Summary 
+This Core Framework Concepts and Principles document sets the guidelines and best 
+practices that help an enterprise  design, plan, implement, and govern the organization 
+of its core building blocks. The structure of the document consists of four main 
+sections: Concepts, Principles, Frameworks (Models) and Methods. 
+Key concepts defined and described here provide the general ideas formalizing the 
+Open Digital Architecture (ODA). The principles established can help manage an 
+organization's enterprise architecture, with architectural assets such as the Business 
+Process Framework (eTOM), Information Framework (SID), Functional Framework 
+(FF) and Metrics etc.  These assets are pivotal to manage and operationalize the 
+enterprise. Methods break down of the complex running of an enterprise into best 
+practices, while the Models provide relational representation of the core business 
+blocks. Altogether, the Framework provides the supporting "beams" to enable an 
+organization to function according to an enterprise architecture blueprint, 
+This document can be used as a business analysis tool with variations applied to 
+different businesses (e.g. Service Provider). It can also be helpful when clarifying 
+concepts to organize ideas. By leveraging a solid framework, as described in this 
+document, the reader is able to capture "realistically" core business concepts of an 
+organization and do this in a way that is tried and proven. 
+ 
+ 
+
+
+Introduction 
+The key concepts described in this document provide a common language and 
+understanding for the architect, other associates and business stakeholders. The 
+foundational CONTEXTS are used to establish the enterprise's building blocks. These 
+building blocks are fundamental to the Open Digital Framework (ODF) as they define 
+key concepts that are used throughout ODF. The core frameworks that make up the 
+TM Forum ODF, include the Business Process Framework (aka eTOM), the 
+Information Framework (aka as SID), and the Functional Framework (derived from the 
+previous TAM). 
+The key principles provide the rules and guidelines that govern the application of key 
+concepts in the Open Digital Framework. The rules are designed to reflect the values 
+and goals of a digital organization, while providing direction and guidance for decision-
+making. These principles help to ensure consistency, alignment, and coherence across 
+any architecture that aspires to align with the Open Digital Architecture (ODA).  
+The section on method or methodology establish the processes and techniques that 
+help an enterprise architect leverage the Open Digital Framework. They provide a 
+structured and systematic approach to identify, analyze, design, and communicate the 
+architecture. These methods or methodologies are here to help ensure quality, 
+efficiency, and effectiveness of the target architecture of the organization.  
+Models are the representations and artifacts that help the enterprise architect, design, 
+document and communicate the architecture. In TM Forum, the Master Open Digital 
+Architecture (MODA) is the definitive reference for ODA which provides the context and 
+visualization of the structure, behavior, and relationships of the ODA business objects 
+(architectural elements). Models help to ensure clarity, purpose, completeness and 
+consistency of the architecture as they evolve through a maturation process which 
+improves its reliability for TM Forum members.  
+The adoption of the TM Forum core frameworks has the benefit of providing alignment 
+with key industry standards and common ontology, in support of the enterprise's 
+strategic and business goals. This can help boost both business and technical 
+capabilities. All principles described in this document provide a foundational ground for 
+the development of the enterprise's governance, rules and policies. 
+ 
+ 
+ 
+
+
+1. CONCEPTS AND DEFINITIONS 
+1.1. CONTEXTS 
+Contexts provide an overarching structure for the frameworks for the classification and 
+grouping of all business objects and architectural artifacts. There are two types of 
+contexts; 1) Horizontal Contexts commonly known as "Domains", and 2) Vertical 
+Contexts. 
+Not all domains and vertical contexts are present in each of the frameworks  
+1.1.1. 
+HORIZONTAL CONTEXT (DOMAINS) 
+Horizontal contexts are commonly known as Domains are of two kinds 1. Business 
+Domains (shown in color in the diagram below) and 2. Non-Business Domains. 
+The Business Domains represent areas of operations for delivery and management of 
+the business. 
+The Non-Business Domains represent collections of common objects and technical 
+functions supporting the business areas. 
+ 
+ 
+ 
+ 
+Figure 1-1 Core Frameworks Domains 
+
+
+The Market & Sales Domain represents roles, information and activities pertaining to 
+marketing and leading to selling. The domain addresses market and sales strategy, 
+capability delivery, lifecycle management and support of parties (e.g. individuals / 
+organizations and things ) that move through the stages of selling (e.g., contact / lead / 
+prospect). 
+Marketing and Sales are two distinct and yet interconnected concepts in an enterprise 
+with Marketing creating awareness, generating leads and building relationships with 
+parties in the marketplace, and Sales focused on closing deals and generating 
+revenue.  
+1.1.1.2.  Product Domain 
+The Product domain represents roles, activities, information and functions carried out 
+by parties (e.g., individuals / organizations and things) playing roles that are involved in 
+the strategic planning, definition, development and operational aspects of Products that 
+are conceived and offered for marketing and sales by the Service Provider.   
+1.1.1.3.  Customer Domain 
+The Customer domain represents roles, activities, information and functions carried out 
+by parties (e.g., individuals / organizations) playing roles that are involved in the 
+management of and all types of contact with customers as they acquire, use, pay for 
+and are supported for goods and services (i.e., products) that they obtain from an 
+enterprise. Activities include: Strategy to Readiness (e.g., customer strategies, 
+capabilities, customer lifecycle management) and Operations (e.g., customer 
+relationship management , data, privacy, interactions, communications, orders, 
+accounts, balances, service level agreements (SLAs), training, problems, cases, 
+invoices, payments, disputes, collections, loyalty, performance, usage statistics, 
+analytics and support). 
+1.1.1.4.  Service Domain 
+The Service domain represents roles, activities, information and functions carried out 
+by parties (e.g., individuals / organizations) playing  roles that are involved in the 
+strategic planning, definition, development, and operational aspects of Services that 
+are used to realize Product offerings to the market. Activities include management of: 
+strategies, capabilities, lifecycles, catalogs, inventories, installations, activations, 
+problems, performance, guiding, mediation, usage statistics and support of customer-
+facing services that are offered to customers and resource-facing services that are 
+presented to resources by an enterprise. 
+1.1.1.5.  Resource Domain 
+The Resource domain represents roles, activities, information and functions carried out 
+by parties (e.g., individuals / organizations) playing roles that are involved in the 
+strategic planning, definition, development and operational aspects of Resources (e.g., 
+functions, applications, computing, networking and storage) that represent the 
+infrastructure of an enterprise that are used to realize Services. Activities include 
+management of strategies, capabilities, lifecycles, catalogs, inventories, topologies, 
+installations, activations, alarms, problems, performance, mediation, usage statistics 
+and support of Resources that are managed by an enterprise. 
+1.1.1.6.  Business Partner Domain 
+The Business Partner domain represents roles, activities, information and functions 
+carried out by parties (e.g., individuals / organizations) playing roles that are involved in 
+the strategic planning, definition, development, operational aspects and all types of 
+contact with Business Partners (e.g., Suppliers, Partners, etc.) with which an enterprise 
+collaborates in order to operate their business. Activities include management of 
+Business Partner: strategies, capabilities, value propositions, relationships, profiles, 
+d t
+i
+it
+i t
+ti
+i
+ti
+t
+d
+t
+d
+
+
+agreements (SLAs), training, problems, cases, invoices, payments, revenues, disputes, 
+collections, loyalty, performance, usage statistics, analytics and support of Business 
+Partners as they supply, acquire, use, support, purchase, pay for and are supported for 
+goods and services (products) that they provide and / or obtain from an enterprise. 
+1.1.1.7.  Enterprise Domain 
+The Enterprise domain represents roles, activities, information and functions that are 
+required to run and support a business. These concepts focus on both the setting and 
+achieving of strategic corporate goals and objectives, as well as providing those 
+support services that are required throughout an Enterprise. These concepts are 
+sometimes considered to be the corporate functions and/or processes (e.g., Financial 
+Management, Human Resources Management processes, etc.). Since Enterprise 
+Management is aimed at general support within the Enterprise, they may interface as 
+needed with almost every other process in the Enterprise, be they operational, 
+strategy, infrastructure or product processes. 
+1.1.1.8. Shared Domain 
+The Shared domain is a specialized domain that is formalized for use in the Information 
+Framework (SID) and the Functional Framework. This special domain represents 
+information, functions and metrics that are not “owned by” any particular domain and 
+are referenced or utilized from two or more other domains.  
+1.1.1.9. Patterns Domain 
+The Pattern domain is a specialized domain that is formalized for use in the Information 
+Framework. It contains abstract ABEs not directly usable. These patterns need to be 
+sub-classed to be used. 
+1.1.1.10. Integration Domain 
+The integration domain represents business-agnostic roles, information and activities 
+(e.g., infrastructure, middleware, protocols) that support the integration and 
+implementation of ODF concepts (e.g., business entities, business processes, 
+functions, logical applications, interfaces, metrics, etc.). 
+1.1.2. 
+VERTICAL CONTEXT (LIFECYCLE STAGE) 
+Development, Implementation and Operation of business entities and business 
+artifacts related to the respective horizontal contexts. 
+1.1.2.1. Vertical Context Area (Lifecycle Area) 
+Vertical Context Area provide a classification of vertical contexts mostly relevant to the 
+Business Process Framework (eTOM) and the Functional Framework; they represent a 
+separation of concerns by dividing the enterprise lifecycle in two parts; 1) Strategy-to-
+Readiness (includes 'Strategy Management', 'Capability Management', 'Business Value 
+Development' and a shared part of 'Operations Readiness & Support'), and 2) 
+Operations (includes a shared part of 'Operations Readiness & Support', 'Fulfillment', 
+'Assurance', and 'Billing'). 
+1.1.2.2. Vertical Context Stage (Lifecycle Stage) 
+Vertical Context Stage provide a classification of vertical contexts as a means to further 
+group them according to the two parts of the enterprise lifecycle, as described 
+previously. 
+ 
+
+
+ 
+ 
+Figure 1-2 Core Frameworks Contexts with Domains overlaid 
+Strategy-to-Readiness Lifecycle context area  
+Reference to section 1.1.2.1, the Strategy-to-Readiness Lifecycle context area 
+represent the grouping of the lifecycle Context Stages: Strategy Management, 
+Capability Management, Business Value Development, and part of Operations 
+Readiness & Support. (see Figure 1.1).  
+Strategy-to-Readiness" area identifies the business processes that can help 
+organizations prepare for engagement with their markets. It includes transformation 
+that readies people, processes and technology/platforms for operations. 
+ 
+Strategy Management 
+The Strategy Management vertical is a lifecycle stage that focuses on business objects 
+that generate and manage specific business strategies, gain business buy-in, track 
+effectiveness of the strategies, and optimize strategy required. 
+Strategy Management is focused on the analysis and generation of strategies in 
+support of all development and operations within the enterprise while establishing 
+business commitment within the enterprise. 
+Capability Management 
+The Capability Management vertical is a lifecycle stage that focuses on the 
+development and deployment of capabilities including all infrastructures for the delivery 
+of products and services as well as support infrastructures and all business enablers. 
+Framework artifacts in this vertical grouping identify requirements, design and develop 
+new or enhanced capabilities and monitor their performance to adjust as required. 
+ 
+ 
+
+
+The Business Value Development vertical grouping focuses on the definition, planning, 
+design and implementation of value propositions and business promoting 
+concepts/assets in the enterprise’s business portfolio. 
+Frameworks artifacts in this vertical grouping create products, services, resources, 
+business partner catalog information, sales and marketing campaigns and material and 
+process Operations feedback to adjusts as required for Lifecycle management. 
+Operations Lifecycle context area  
+The Operations context area groups the lifecycle context stages: Fulfillment, 
+Assurance, Billing, and part of Operations Readiness & Support. 
+The Operations context area includes all the artifacts and building blocks that support 
+customer operations, as well those that enable direct interactions with the customer. 
+Such artifacts include both day-to-day and operations readiness and support. The 
+“FAB” (or "OFAB") verticals in Operations are sometimes referred to as Customer 
+Operations processes. 
+ Operations Readiness & Support 
+Operations Readiness & Support lifecycle stage is responsible for ensuring operational 
+readiness and support of Fulfillment, Assurance and Billing. 
+ Fulfillment 
+Fulfillment lifecycle stage is responsible for initiation, instantiation and fulfillment of 
+customer requests. 
+Frameworks artifacts in this vertical grouping initiate fulfillment actions and convert 
+requests (customer or business) into orders, to be delivered using the value offerings 
+from the enterprise’s portfolio. This includes creation of instances of relevant artifacts in 
+all domains necessary for the delivery of the value offerings. 
+ Assurance 
+This vertical context is responsible for running operations along with monitoring, 
+measuring, analyzing and correcting to ensure the best performance, including Quality 
+of Service.  Frameworks artifacts in this vertical context perform continuous status and 
+performance monitoring of ongoing operations. They collect performance data and 
+analyze them to identify potential problems and apply preventive and corrective 
+maintenance without impacting the customer. 
+The Assurance activities receive trouble reports and take necessary actions to ensure 
+timely corrections. 
+The Assurance activities ensure that overall performance and quality meets service 
+level agreements, metric goals (KPIs) as well as reporting. 
+ Billing 
+This vertical context is responsible for translating business activities into revenue.  
+Framework artifacts in this vertical context perform collection of appropriate usage 
+records to determine charging and production of timely and accurate bills and supports 
+payment of services and operation-related cost accounting. 
+They provide pre-bill usage information and are processing customer payments and 
+performing payment collections. 
+ 
+ 
+
+
+1.2. BUSINESS CAPABILITY MAP 
+(FUTURE WORK) 
+1.3. BUSINESS PROCESS FRAMEWORK 
+The Business Process Framework is a reference framework or model for the definition, 
+classification and decomposition of Service Provider business process abstractions. A 
+business process abstraction is a generalization of actual context-specific business 
+processes.  So, rather than describing the process as it exists at company A or 
+company B, or in one part of an organization versus another, the abstraction describes 
+the essence of the process, and as such it can be used to "categorize" any or all of 
+those context-specific processes that match the description. 
+For more than 20 years, the TM Forum has developed the Business Process 
+Framework in collaboration with its members, and has achieved industry-wide 
+recognition, from the highest conceptual concepts, to the detailed process 
+decomposition, taking into account real-world experience in the design, implementation 
+and management of business processes in a service provider's environment and 
+operations. It represents an ontology of business activities without prejudice to specific 
+business process models or workflows realized in the context of specific enterprise 
+strategies and market dynamics. 
+1.3.1. 
+Purpose 
+The purpose of the Business Process Framework is to provide a standard process 
+structure, terminology, and classification scheme for business processes in an 
+enterprise. It offers an enterprise-wide discipline for the development of business 
+processes that assure a consistent and reusable repository of processes in business 
+process models.  
+As a framework, it serves as a tool for discussion and agreement between providers 
+and consumers which encourage clear definitions, convergence and understanding of: 
+• 
+Business requirements 
+• 
+Information agreements 
+• 
+Application contracts; and 
+• 
+shared data model specifications (exchanges between applications or 
+systems)  
+TM Forum BPF is a cross-industry process view that presents a common ontology for 
+equipment suppliers, applications builders and integrators to define, build and operate 
+systems and solution. 
+1.3.2. 
+Scope 
+TM Forum Business Process Framework recognizes the different types of business 
+processes in an enterprise. The scope of the Business Process Framework covers the 
+three broad categorization of an enterprise business processes  - Core, Enabling and 
+Supporting (also categorized in other ontologies as Operational, Management and 
+Supporting respectively.) 
+ 
+ 
+
+
+1.3.2.1. Core Process 
+Core Process is a business process that constitute the core business and create the 
+primary value stream of an enterprise. They are strategically important to the 
+enterprise, and derive from the core competency of the business the enterprise is 
+involved in -like taking and delivering orders from customers, defining and delivering 
+products and services etc.   
+1.3.2.2. Enabling Process 
+Enabling Process, also known as management processes, is a business process that 
+sets direction, like monitoring performance and executing plans for the enterprise.  
+1.3.2.3. Supporting Process  
+Support process is a business process that services the basic functions of the 
+organization, like accounting, technical support, human resource etc.  
+1.3.3. 
+Conceptual View 
+The conceptual view below shows the decomposition structure for a business process, 
+from the top level to lower levels. At the highest level of representation is the "Business 
+Process". The decomposition of the "Business Process" in directly supporting 
+"Business Activity" starts at the level 3.     
+ 
+Figure 1-3 Conceptional organization of TM Forum Business Process 
+ 
+ 
+
+
+1.3.4.1. Business Process Model (Workflow) 
+A business process model is a graphical representation of a business process or 
+workflow and its related sub-processes. It defines the ways in which operations are 
+carried out to accomplish the intended objectives of an organization. Business process 
+modeling is the graphical representation of a company’s business processes or 
+workflows. This is usually done through different graphing methods, such as the 
+flowchart, data-flow diagram, etc. 
+Refer to Section 4 in this document for more information about the methodologies 
+used. See specific examples of Business Process Models in GB921F and GB921E 
+where examples showcasing specific uses of Business Process Framework ontology to 
+establish business process models that show E2E workflows depicting for "product 
+management" and "order management" etc. 
+1.4. INFORMATION FRAMEWORK 
+The Information Framework is an abstract but formal / defined representation of 
+business entities including their properties and relationships  that can be performed on 
+them. A business entity is a thing of interest to the business, while its attributes are 
+facts describe the entity. The formal definitions provide a business-oriented perspective 
+to the information and data with a relationship between information and data 
+representing interests between two business entities, or between a business entity and 
+itself.  
+The TM Forum Information Framework provides an industry reference for 
+representation of concepts and the relationships, constraints, rules, and operations to 
+specify information semantics for a chosen domain of discourse. It typically specifies 
+relations between kinds of things but may also include relations with individual things.  
+1.4.1. 
+Purpose 
+TM Forum Information Framework provides sharable, stable, and organized structure 
+of information requirements or knowledge for domain contexts. As a framework, it 
+serves the purpose of providing an enterprise with information definitions along with 
+underlying relations between information exchanged by business processes. 
+In combination with the Business Process Framework, the Information Framework 
+offers a way to explain ‘how’ things are intended to fit together to meet a given 
+business need.   
+1.4.2. 
+Scope 
+The scope of the TM Forum Information Framework is to: 
+• 
+Establish an enterprises approach to Information management and 
+governance. This includes the aggregating closely related business entities, 
+and governing the relationships between business entities.   
+• 
+Describe the holistic approach to managing information 
+created/read/updated/deleted by business processes through roles and metrics 
+to transform information into business asset 
+• 
+Standardize the grouping of business entities into Aggregate Business Entities 
+• 
+Formalize Relationship between Business Entities 
+
+
+y
+y
+business entities 
+ 
+1.4.2.1. Aggregate Business Entity 
+An Aggregate Business Entity (ABE) is a well-defined set of information and operations 
+that characterize a highly cohesive, loosely coupled set of business entities.  
+In information modeling, an ABE is a way to further partition DOMAIN by grouping related 
+Business Entities  (BEs) together. ABE can contain other ABE  or BE and can be 
+considered as sub-domains. A given domain can contain anything from a few to over 
+15 ABEs. 
+1.4.2.2. Business Entity 
+A Business Entity represents something of interest to the business that may be 
+tangible things (such as a Customer), active things (such as a Customer Order), or 
+conceptual things (such as a Customer Account).  Business entities are characterized 
+by attributes and participate in relationships with other business entities. Business 
+entity instances typically move through a well-defined life cycle.  
+1.4.2.3. Attribute 
+An attribute is a fact that describes a business entity. 
+1.4.2.4. Relationship 
+A relationship is an association of business interest between two business entities, or 
+between a business entity and itself. 
+ 
+1.4.3. 
+Conceptual view  
+At the highest level, the Information Framework is structured according to the ODA 
+horizontal contexts (aka domains). Within each domain there is a high degree of 
+cohesion.  Within each domain there is a high degree of cohesion between the 
+identified business entities, and loose coupling between different domains. This 
+enables segmentation of the total business problem and allows resources to be 
+focused on a particular domain of interest. It is envisioned that the use of the resultant 
+business entity definitions within each domain, when used in conjunction with the 
+Business Process Framework, will provide a business view of the shared information. 
+Within each domain, further partitioning of the information is achieved through the 
+identification of Aggregate Business Entities (ABE’s). 
+ 
+ 
+Figure 1-4 Conceptual organization of  Information Framework Framework 
+ 
+
+
+1.5. FUNCTIONAL FRAMEWORK 
+ 
+The Functional Framework is a collection (an ontology) of functions as defined in 
+1.5.2.1  organized in a hierarchical fashion based on functional affinity.   This 
+organization is based on domains, verticals, and aggregate functions (AFs). 
+As the Functional Framework is an ontology, a given function is unique within the 
+Functional Framework.  
+1.5.1. 
+Intended Uses 
+Use by members (service providers, software providers, etc) can include: 
+• 
+Rationalization of systems 
+• 
+Governance 
+• 
+A common language for describing systems and system elements, 
+• 
+Basis for service provider to discuss with a software provider about solutions 
+scope and functional coverage 
+• 
+Organize and rationalize systems elements, including applications, 
+components, APIs, etc. 
+ 
+TMF Use: 
+• 
+Bridge between business-level concepts (Processes, Business Capabilities) 
+and systems-level concepts (API, Components) 
+• 
+Identify and describe the functions that are implemented by each component 
+• 
+Identify gaps and opportunities for coverage in definition of the Open APIs 
+1.5.2. 
+Scope 
+The scope of the functional framework includes anything that the systems supporting 
+the Telecom Industry may need to do. The Functional Framework scope is intended to 
+include functionality of Business Support Systems (BSS), Operational Support 
+Systems (OSS), Enterprise Systems, security and network elements within the 
+Telecommunications industry. This includes the non-business technical aspects. 
+1.5.2.1. Functions 
+ 
+A function is a defined set of action(s) that a system is able to do in support of business 
+or technical needs.  A function is defined as cohesive around a focused 
+purpose.  Functions are typically characterized by action-oriented features, and often 
+focus on elements of information.  Functions are implementation-agnostic (identifying 
+what systems do as opposed to how). 
+1.5.2.2. Aggregate Functions 
+An aggregate function is a cohesive grouping of functions.  The description of each 
+aggregate function should make clear on what basis functions are grouped together 
+within that aggregate function, and should provide sufficient basis to determine whether 
+a given function would belong within or outside of that Aggregate Function. 
+ 
+ 
+
+
+Aggregate Function Level 1 
+Aggregate Functions Level 1 contain Aggregate Functions Level 2 or functions. 
+Aggregate Function Level 2 
+Aggregate Functions Level 2 contain Functions. 
+1.5.3. 
+Conceptual view  
+ 
+ 
+ 
+Figure 1-5 Conceptual organization  of Functional Framework  
+1.6. METRICS 
+(FUTURE WORK) 
+ 
+ 
+
+
+2. PRINCIPLES 
+2.1. Shared  
+S-01 
+One framework organizes all ODA Core objects 
+Statement 
+A shared framework is a common language and structure that enables 
+different parts of the Open Digital Architecture to organize concepts 
+that work together effectively towards same goals, by improving 
+communication and collaboration, and by reducing confusion and 
+misunderstandings. 
+Rationale 
+• 
+Improve communication and collaboration between different 
+parts of the  
+enterprise. 
+• 
+Better decision-making with context based on bounded zones / 
+blocks. 
+• 
+Provide a common language and structure for different 
+foundations of ODA to work together effectively. 
+• 
+Ensure producers and consumers are working towards the 
+same goals with reduced confusion and misunderstandings.  
+Implications 
+• 
+Provide a common language and structure for Open Digital 
+Architecture foundation assets that serve as primitives for 
+enterprises to plan, transform and operate. 
+• 
+Reduce confusion and misunderstandings between different 
+departments or teams, and help to ensure that business 
+objects grouped are altogether supporting same goals. 
+• 
+Improve communication and collaboration between different 
+parts of an enterprise, which can lead to better decision-
+making and more effective problem-solving. 
+ 
+S-02 
+Release and Publication Status  
+Statement 
+The shared release and publication status for all ODA Core assets 
+shall be one of:  
+• 
+Released 
+• 
+Preliminary 
+• 
+Draft 
+• 
+Not Fully Developed 
+Rationale 
+• 
+Applying the same lifecycle statuses across all elements 
+promotes consistency, predictability, and transparency. It 
+allows for better tracking, management, and understanding of 
+the state of each element at any given time. 
+Implications 
+• 
+Ensures that all stakeholders have a clear understanding of the 
+status of each element. 
+
+
+• 
+Facilitates better planning and resource allocation based on 
+the lifecycle status. 
+• 
+Promotes accountability as each status requires specific 
+actions and responsibilities. 
+• 
+Enhances efficiency by standardizing the process of updates 
+and releases. 
+ 
+S-03 
+Business-first understanding 
+Statement 
+All business processes, information models, and software functions 
+shall be designed with simplicity and a business-first approach. They 
+should be easily understandable and directly contribute to the 
+achievement of business goals. 
+Rationale 
+Simplicity leads to better understanding, efficient execution, and easier 
+maintenance. A business-first approach ensures that all processes, 
+models, and functions are aligned with the enterprises objectives and 
+contribute to its success. 
+Implications Keep models simple and understandable by Business first, and then 
+technology personas. This will: 
+• 
+Facilitate clear communication across all levels of the 
+enterprise. 
+• 
+Enhance efficiency by reducing complexity in processes, 
+models, and functions. 
+• 
+Ensure alignment of all operations with the enterprises 
+business goals. 
+• 
+Promotes a culture of simplicity and clarity in the enterprise.  
+ 
+2.2. Framework Specific 
+2.2.1. 
+Business Capability 
+(FUTURE WORK) 
+2.2.2. 
+Business Process Framework 
+BPF-01 
+Nature of the Business Process Framework 
+Statement 
+The Business Process Framework consists of a decomposition 
+structure and taxonomy of process abstractions representing business 
+process elements (i.e. groups of processes, activities and tasks) that a 
+Service Provider needs to manage. 
+Rationale 
+The Business Process Framework is intended to be comprehensive - 
+all of a service  
+provider's processes, activities and tasks should fit within the Business 
+Process Framework. 
+
+
+Implications 
+• 
+The process abstractions of the business process framework 
+are categorizations of the context-specific processes that exist 
+within service providers. 
+The Business Process Framework provides a comprehensive 
+catalog of such process abstractions relevant for a Service 
+Provider. It provides an industry agreed standard consisting of 
+process decomposition structure, terminology, and 
+classification scheme of process elements across multiple 
+levels of decomposition. 
+The process elements of the Business Process Framework can be 
+used to create consistent process flows (however, they are not 
+business process flows themselves) 
+The business drivers for adopting and using the framework can be 
+summarized according to the following: 
+o The need to standardize the language for describing 
+business processes  
+o The need to standardise tasks on which business 
+process flows will be based 
+o The need to understand the elements that make up 
+each business process. 
+o The need to understand the objectives associated with 
+each business processs 
+  
+ 
+ 
+BPF-02 
+Standards for Organizing Business Processes - Naming, 
+Decomposition and Traceability 
+Statement 
+A business process element shall be named and decomposed 
+according to the following pattern or structure. Naming: 
+• 
+Noun verb (for a business process grouping) 
+• 
+Verb noun (for underlying activities and tasks that support the 
+business process) 
+Decomposition:   
+• 
+The Business Process Framework is decomposed from 
+notional Level 0 to more granular levels  
+• 
+The Levels 1, 2, 3 and 4 (and some of levels 5 and 6) are 
+addressed so far.  
+Rationale 
+This prevents any confusion and establishes a unified level setting for 
+business processes. Because the Business Process Framework is a 
+decomposition model, the lower  
+levels of the decomposition can be traced back to the higher levels. 
+As a classification or taxonomy of Process Elements, at Level 0 the 
+elements are classified into S2R (Strategy to Operations) and 
+Operations.  Lower Levels are formed by decomposition with each 
+Process Element occurring once only
+
+
+g
+g
+g
+Decomposition and Traceability 
+Implications 
+• 
+Achieve consistency in naming and decomposition following a 
+consistent pattern 
+• 
+Ensure the goal is implied in the name of the business process 
+with relevance primary stakeholders. 
+• 
+Ensure the name resonates with industry use or advances 
+industry consensus about the primary role the business 
+process plays. 
+ 
+BPF-03 
+Classification of Business Processes 
+Statement 
+All business processes shall be classified as one of the following 
+types: 
+• 
+Core Process 
+• 
+Enabling Process 
+• 
+Supporting Process  
+Rationale 
+Enable organizations to identify important business actions that impact 
+their core business, enabling the management of resources and the 
+efficiency of support.  
+This includes cost reduction and resource allocation. 
+Implications 
+• 
+Enable enterprises to understand and manage business 
+processes more effectively. 
+• 
+Identify levels of importance of business processes and 
+allocate associated resources accordingly. 
+• 
+Help to improve efficiency and reduce costs of operationalizing 
+business processes, while also ensuring that the enterprise is 
+focused on its core business goals. 
+ 
+BPF-04 
+Definition of Business Processes 
+Statement 
+All business processes should be clearly defined in terms of their 
+structure, constituents, roles and purpose.  
+Rationale 
+Enable organizations to ensure their business processes are 
+consistent and complete.  
+Implications 
+• 
+A business process has characteristics that include goals, 
+inputs, outputs and business outcome. 
+• 
+A well identified, scoped and articulated business process must 
+provide clarity on the resources underpinning its activities. 
+• 
+Organizations should be able to realize goals linked to 
+business processes by formalizing them in specific sequence 
+to realize value.  
+ 
+
+
+y
+Statement 
+Each Business Process element should be associated with one (or 
+more) Information Framework ABE(s). 
+Rationale 
+To be consistent, processes must be related to specific information 
+elements.   
+Implications 
+• 
+Business processes do not exist in isolation. Processes require 
+information from other processes, and they in turn provide 
+information to other processes.  
+• 
+Dependencies (or associations) between processes occur 
+when an activity requires information from another activity. 
+Process dependencies are related to the entities and attributes 
+required by the business area.  
+ 
+BPF-06 
+Business Process Ownership 
+Statement 
+A business process shall always have a “Process Owner” who acts as 
+the person or instance that has the highest level of responsibility and 
+decision-making with respect to the process; such person or instance 
+is designated as being accountable for the outcome that results from 
+the execution of the process. 
+Rationale 
+Responsibility can be shared amongst individuals involved in the 
+execution of a particular process, however, accountability–which 
+designates ultimate responsibility and ownership of the process–refers 
+to the unique instance or person who is in charge of the entire 
+process, and therefore accountable for the outcome resulting from the 
+execution of such process, this instance or person is designated as 
+the “accountable” party and it is in general referred to as “the Owner” 
+of the process. 
+Implications 
+• 
+"Shared responsibility is no accountability”;  
+• 
+a business process is always overseen and “groomed” by its 
+owner who is the person or instance ultimately responsible for 
+the outcome of the execution of the process;  
+• 
+failure to designate or have implicitly a process owner or 
+accountable party would result in lack of commitment or 
+accountability in the event that the process is not delivering the 
+expected outcome; likewise, if the process is delivering 
+excellent results, it is most often the process owner (or 
+accountable instance) that gets glorified. 
+ 
+BPF-07 
+Continuously Optimize Business Processes 
+Statement 
+New information systems will be implemented after business 
+processes have been analyzed, simplified or otherwise redesigned as 
+appropriate. 
+Rationale 
+• 
+There is no real “value” in applying technology to old, inefficient 
+business processes. 
+• 
+Core processes will be more streamlined efficient and cost-
+effective
+
+
+y
+• 
+Core processes, activities, tasks and associated business rules 
+will be well understood and documented. 
+• 
+Reduces the total cost of ownership. 
+Implications 
+• 
+Need to have an agreed upon continuous business process 
+improvement activity. 
+• 
+New technology will be applied in conjunction with business 
+process review. 
+• 
+Business processes must be optimized to align with business 
+drivers. 
+• 
+Additional time and resources will have to be invested in 
+analysis early in the systems' lifecycle. 
+• 
+Organizational change will be required to implement 
+reengineered work processes. 
+• 
+May require regulatory or legislative change. 
+ 
+BPF-08 
+A core processes has a unique position in the process framework 
+Statement 
+All Level-2 (L2) business processes have a specific, unique position in 
+the process framework, their position depends on the purpose, nature, 
+and role of the process within the enterprise. As a general rule, each 
+position is determined by the intersection between the vertical 
+grouping and the horizontal domain to which the process belongs in 
+the process framework. In general, L2 process belong to one unique 
+vertical and one unique horizontal domain; however, there are some 
+exceptions in which some L2 processes can span more than one 
+vertical, these are commonly referred to as cross-functional or 
+transversal core processes. 
+Rationale 
+The Business Process Framework was created and evolved from two 
+different but complementary models: 1) An Enterprise Architecture 
+layering model (based on a construct of hierarchical architecture 
+layers) which originated with the early concepts underpinning the TMN 
+model; and 2) An enterprise lifecycle structure consisting of vertical 
+groupings (aka lifecycle stages) which originated in the early concepts 
+associated with the FCAPS model. Such design resulted in a matrix of 
+X and Y positions, each position characterized by a specific couple 
+‘vertical/horizontal’, representing a unique stage in the enterprise 
+lifecycle and a unique horizontal architecture domain; as a general 
+rule, each position hosts several L2 processes, therefore, each L2 
+process belongs to one unique vertical and one unique horizontal 
+domain; however, some L2 processes span more than one vertical, 
+these are referred to as cross-functional or transversal processes, they 
+are considered exceptions to the previous rule, and therefore they are 
+prone to change in the future as the framework continues to evolve. 
+Implications Level-2 (L2) processes play a vital role in the lifecycle of the 
+enterprise, each L2 process represents a grouping of activities and 
+tasks that deliver the intended business outcomes for each part of the 
+enterprise process framework, as such, L2 processes are designed 
+b
+d
+h
+l
+h
+f
+d
+h
+d li
+b
+h
+f
+
+
+which are determined by the position of the process in the framework 
+i.e. vertical grouping(s) and horizontal domain to which the process 
+belongs. In the past, common process models were designed 
+contextless–that is–core processes were monolithic elements 
+decomposed into smaller granularity elements, but without being 
+directly related or mapped to any specific context i.e., didn’t belong to 
+any particular enterprise lifecycle or architecture domain e.g., Product, 
+Service, Resource, etc. The Business Process Framework (eTOM) 
+brought along an innovative classification and modelling of the 
+business processes across the enterprise, by adding horizontal 
+domains and vertical Lifecycle stages which provided a meaningful 
+architectural context. 
+ 
+BPF-09 
+Business Processes lead on architecture requirements 
+Statement 
+Business processes represent an implementation of the business 
+requirements sourced from the organization’s strategy and business 
+intent, as such, business processes embody the required support and 
+full alignment with the business to ensure business operations and 
+their goals are achieved. 
+Rationale 
+Business processes embody the activities and tasks that need to be in 
+place, to enable and support successfully the operation of the 
+enterprise, business processes are in alignment with the goals of the 
+business, as such, they translate business intent and required 
+business capabilities into “implied” functional requirements that are 
+further communicated to the functional, application and technology 
+architectures–as subordinates of the Business Architecture–for 
+implementation and execution through either manual or automated 
+support, or a combination of both. 
+Implications Business processes play a central role in the business architecture, as 
+they define altogether the fabric of activities and tasks that are needed 
+to effectively support and run the business. It is a vital principle to 
+always ensure an optimal alignment between the enterprise business 
+goals, and the capabilities available to support and achieve those 
+goals. 
+2.2.3. 
+Information Framework (Kevin/Cecile- September 7) 
+#INF-01 
+Coupling of ABEs to Business Processes 
+Statement 
+An ABE shall be created by one business process (denoted primary 
+process). 
+If a one-to-one coupling is not achievable, an ABE shall be coupled to 
+associated 
+core processes with clear separation of accountability for information 
+lifecycle management. 
+Rationale 
+A single primary process should manage the complete life cycle of an 
+ABE, creating, updating, and deleting entity instances contained within 
+the ABE. 
+
+
+g
+Implications If there is more than one process creating an ABE, this suggests these 
+are overlapping processes, or the scope of the ABE is too broad. 
+ 
+#INF-05 
+ABEs, Core Entities and Dependent Entities 
+Statement 
+There should be one single core business entity in an ABE in general 
+(there are some exceptions however), in most cases the core entity 
+has the same name as its parent ABE. 
+Rationale 
+A well-defined Aggregate Business Entity (ABE) consists of a set of 
+information that characterizes a highly cohesive, loosely coupled set of 
+business entities, which have loose relationships with items outside 
+the ABE. 
+Implications A core business entity is an entity that is not dependent upon any 
+other entity within the ABE. Likewise, generally, non-core business 
+entities are dependent on the core business entity. And do not need to 
+have an 'ID' attribute, given they can be reached by navigation from 
+the core business entity. 
+ 
+#INF-06 
+Principles for ABE Placement in Shared Domain versus Patterns 
+Domain 
+Statement 
+ABEs and related BEs will be placed in Shared when: 
+1. One or more "Core" Business Entities are "Concrete", AND 
+2. Business Entities must be used in more than one domain 
+without modification or subclassing (e.g. - Party) 
+A core entity is a main entity (not a subclass) 
+ABEs and related BEs will be placed in the Patterns Domain when: 
+1. All "core" business entities are abstract. 
+2. Business entities, attributes, and/or relationships are inherited 
+by concrete business entities within other ABEs. 
+Rationale 
+To be completed  
+Implications To be completed  
+ 
+#INF-07 
+Principles for ABE Placement in Patterns Domain 
+Statement 
+ABEs and related BEs will be placed in the Patterns Domain when 
+1. All "core" business entities are abstract. 
+2. Business entities, attributes, and/or relationships are inherited 
+by concrete business entities within other ABEs. 
+Rationale 
+To be completed  
+Implications To be completed  
+ 
+
+
+Statement 
+The Information Model is built on the principle of "single 
+inheritance".  Not all business entities need to be "rooted", but a given 
+class/business entity can only inherit from one entity. 
+Notes: 
+• 
+Must verify that this is true 
+• 
+One reason for not doing multiinheritence is because it can be 
+a challenge to 'implement' 
+Rationale 
+To be completed  
+Implications To be completed  
+ 
+#INF-09 
+Association Directionality 
+Statement 
+Within the SID model, an association is assumed to be bi-directional. 
+Rationale 
+To be completed  
+Implications 
+To be completed  
+ 
+#INF-10 
+Ennumerations 
+Statement 
+Generally, the Information model does not use 
+enumerations.   Attributes with some number of given values is 
+handled as follows: 
+• 
+Attribute declared to be of type String 
+• 
+Possible values are specified in the attribute description 
+Rationale 
+To be completed  
+Implications To be completed  
+ 
+2.2.4. 
+Functional Framework  
+Please note! 
+We are currently in the process of redefining the principles of the Functional 
+Framework. This is an iterative process and we plan 
+to remove the current principles and add new one as they are identified discussed and 
+approved to be included. 
+ 
+Previous List of Principles, will be curated in next version: 
+ 
+#FUF-01 
+Nature of the Functional Framework 
+Statement 
+The Functional Framework is a taxonomy of systems* capabilities that 
+are relevant to the ecosystem of communications service providers. 
+
+
+Systems capabilities are what systems are able to provide, defined 
+independent of the context of specific processes, organizations, 
+applications and implementations. 
+*Software and/or hardware 
+Rationale 
+It is the intent that all functions of the Service Provider can be 
+supported by (i.e., are able to fit within) the Functional Framework 
+functions.  
+Each function has a detailed description that reflects its purpose. 
+Implications The Functional Framework is a catalog of functions/functionalities that 
+are relevant for a Service Provider.  
+The Functional Framework specifies functions along with their 
+descriptions and are grouped in alignment with the Business Process 
+Framework process structure.  
+The functions Process Elements are activity-based, and the  
+Business Process Framework is thus an activity-based process 
+decomposition model. 
+ 
+#FUF-02 
+Definition of Functional Framework Functions [TO BE EDITED BY KAJ 
+/ DONE] 
+Statement 
+A function is defined to produce one specified result.  
+Functions are defined at such granularity level that the principle of 
+separation of concerns is considered and when activated the 
+function’s result will be accepted without exceptions. 
+Each Functional Framework functions should be unique for each 
+described functionality. 
+Rationale 
+The functions of the Functional Framework shall be trusted to be 
+unique.  
+The function shall specify a functionality without exceptions.  
+Implications A function specifies the action it will perform.  
+A list of functions can be used to specify a collective functionality of 
+e.g. a component or application, without the risk of conflicting functions 
+or overlapping functionality. 
+ 
+#FUF-03 
+Information Ownership Functions 
+Statement 
+In Domains that are business context specific, (Market_Sales, 
+Customer, Product, Service, Resource and Business Partner) the 
+functions belonging to these domains have a direct responsibility type 
+of relationship (Create, Update and Delete) with Information 
+Framework elements. 
+Functions in the Shared Domain can be used in different contexts, 
+which means that mapping to Information Framework elements will 
+differ depending on where the functions are used. 
+
+
+Rationale 
+A fundamental role of functions is to manage information. Based on 
+the function's purpose it is related to specific information elements.   
+Implications Functions are the primary way to manage information and acts on 
+behalf of processes and other functions to manage the information of 
+their ownership. 
+Functions require information from other functions, and they in turn 
+provide information to other functions, but each function should have 
+unique impact on its related information. 
+ 
+#FUF-04 
+Function Ownership 
+Statement 
+A function shall always have a “Function Owner” that acts as the entity 
+or instance that, from an implementation point of view, is responsible 
+for the direct outcome that results from the execution of the function. 
+Rationale 
+Responsibility can be shared amongst entities or instances of parties 
+involved in the specification and execution of a particular function, 
+however, accountability–which designates utmost responsibility and 
+ownership of the parent process–refers to the unique instance or 
+person who is ultimately liable for the outcome of the process, the 
+process in turn delegates responsibility to the function in charge for the 
+execution of the task(s) involved. Depending on the implementation 
+scenario, the function can be owned by the delegating process itself, 
+or by a different entity or party (e.g., outsourcing scenario). 
+Implications "Shared responsibility is no accountability.” 
+A function is always overseen and “groomed” by its owner who is the 
+person or entity ultimately responsible for the outcome of the 
+execution of the function. If a function owner or accountable party has 
+not been formally specified or designated, the result could be a lack of 
+commitment or accountability in the event that the function is not 
+delivering the expected outcome; likewise, if the function is delivering 
+the expected result, it is the function owner, or the accountable 
+process owner, or both who get credit for the successful outcome. 
+ADD TEXT ON QUALITATIVE ASPECTS 
+#FUF-05 
+Continuously Optimize Functions 
+Statement 
+New functions will be designed and implemented continuously as 
+information systems and technology develop. 
+Functional Framework functions will continuously be analyzed, 
+simplified, or otherwise redesigned as appropriate to follow the 
+development. 
+Rationale 
+For the management of the functionality of a corporate’s system 
+infrastructure the functions must be continuously improved, and the 
+number of functions expanded. 
+Functions will be used or referred to in many systems architectures. 
+To have access to up-to-date function specifications is of great value. 
+
+
+y
+For systems architectures with high flexibility to improve individual 
+functions (e.g., ODA Components) the functional framework and the 
+functions are expected to be updated in a dialog with the industry. 
+For more stable systems the Functional Framework function and the 
+functions are expected to be a source of reference and inspiration.   
+Implications There is a need to have an agreed governance of continuous function 
+improvement activity.  
+New technologies will influence the Functional Framework and its 
+functions. 
+Functions must be optimized to align with business development, 
+architecture development and technology development. 
+Additional time and resources will have to be invested in analysis early  
+in the systems lifecycle. 
+Organizational change will be required to implement reengineered 
+systems with optimized functions. 
+2.2.5. 
+Metrics 
+(FUTURE WORK) 
+ 
+ 
+ 
+
+
+3. THE FRAMEWORKS 
+3.1. Business Process Framework 
+The Business Process Framework (also known as eTOM) is an operating model 
+framework for Communication & Digital Service Providers (CSPs & DSPs) in the 
+communications and digital services industries. The model describes the required 
+business processes of service providers and defines key elements and how they 
+should interact. 
+The Business Process Framework is a standard maintained by the TM Forum, an 
+association for service providers and their ecosystem partners in the communications 
+and digital services industries. It is a hierarchical classification scheme with 
+descriptions of the key business processes required to run a service-focused business. 
+It is also a comprehensive, industry-agreed, multi-layered view of the key business 
+processes required to run an efficient and agile digital enterprise. It provides a common 
+language for use across departments, systems, partners and suppliers, reducing cost 
+and risk of system implementation, integration and procurement. 
+The eTOM's business-oriented view of the enterprise is useful for planners, managers, 
+strategists and others who need to view the enterprise in business terms, without 
+immediate concern for the nature of the way that these business needs are organized 
+or automated within the business. Therefore, eTOM emphasizes issues such as 
+process structure, process components, process interactivity and the business roles 
+and responsibilities to which these relate. 
+The Business Process Framework (eTOM) is a reference framework for categorizing 
+all the business activities that a service provider will use in a structured manner that 
+allows these to be addressed at various levels of detail. The processes are grouped by 
+domains and vertical category context and are decomposed starting from high level 
+core, supporting and enabling processes that depict key activities succeeded by lower 
+level unique task activities. 
+eTOM serves as the blueprint for process direction and provides a reference point for 
+internal process reengineering needs, partnerships, alliances, and general working 
+agreements with other enterprises. 
+
+
+ 
+Figure 3-1: The Level 2 map of the currently published Business Process Framework 
+(Please refer to tmforum.org/moda for an up-to-date view)    
+
+
+3.2. Information Framework 
+The Information Framework (also known as the SID) provides an information/data 
+reference model and a common information/data vocabulary from a business entity 
+perspective.  This 'business view' model uses the concepts of domains and aggregate 
+business entities to categorize business entities, reducing duplication and overlap. 
+Based on data affinity concepts, the categorization scheme is necessarily layered, with 
+each layer identifying in more detail the “things” associated with the immediate parent 
+layer.  
+The Information Framework's business-oriented view of the enterprise is useful for 
+software engineers, data modelers, enterprise architects as well as business architects 
+and strategists due to the fact that an information model identifies the key data entities 
+in business terms, serving as a bridge between the business and technical areas of a 
+business. 
+ 
+Figure 3-2: The currently published High Level Information Framework (Please refer to 
+tmforum.org/moda for an up-to-date view)    
+
+
+3.3. Functional Framework 
+The Functional Framework is a collection of Functions described as automated 
+(computerized) activities, provided for human/machine usage through User Interfaces 
+or machine usage through Integration Services.  
+The Functional Framework Function is defined to produce one specified result. The 
+ambition is that Functional Framework Functions are defined at such granularity level 
+that when activated the resulting outcome will be completely accepted. For Functions 
+with a description listing more than one sub-function all sub-functions are expected to 
+be performed at every activation. 
+The granularity level shall also allow only one Function in the Functional Framework for 
+each described functionality. See the figure below for the current high level map of the 
+Functional Framework Functions.  
+
+
+ 
+ 
+Figure 3-3: The Level 1 map of the currently published Functional Framework (Please 
+refer to tmforum.org/moda for an up-to-date view) 
+ 
+ 
+
+
+4. METHODOLOGY 
+This section outlines methodologies for using the frameworks. While the framework 
+provides a singular and definitive structure with rules, concepts and principles 
+to plan or decide assets for the enterprise's information systems, methodologies for 
+modelling target systems and solutions vary and thus this section will highlight relevant 
+methodologies that the frameworks support.  
+4.1. Business Process Modelling methodology  
+Business Process Modelling (BPM) is a technique to represent, analyze and improve 
+the activities and workflows of an organization. It helps to identify the goals, inputs, 
+outputs, roles, resources, rules and interactions of each process (including activity and 
+tasks). 
+By creating a visual and formal representation of the business processes, modelling 
+enables a better understanding of the current state and the potential for improvement. 
+Modelling also facilitates communication and collaboration amongst the stakeholders, 
+such as managers, employees, customers, suppliers and partners (in an ecosystem 
+management play). 
+Benefits BPM is that it can support the automation, adaptation and governance of the 
+business processes. Automation will use software and/or hardware to perform tasks 
+that would otherwise require human intervention. Automation can increase efficiency, 
+accuracy and consistency of the processes, as well as reduce costs and errors. 
+Adaptation refers to the ability to change or modify the business process models in 
+response to changing needs, demands or opportunities. Adaptation can enhance 
+flexibility, agility and innovation of the organization, as well as enable it respond to/or 
+lead markets. Governance refers to the establishment and enforcement of standards, 
+policies and rules that guide the execution and evaluation of the processes. 
+Governance can ensure quality, compliance and accountability of the organization. 
+To achieve these benefits, business process modelling leverage standardized catalog 
+of processes, activities and tasks very well scoped, named, defined/described and 
+attributed to their goals. To realize these benefits in practice, BPMs require the use of 
+standards that define the syntax, semantics and notation of the business process 
+models. Standards are important because they enable interoperability, compatibility 
+and integration amongst different entities, tools, systems and platforms that support the 
+modelling, execution and monitoring of business processes. Standards also require 
+and ensure consistency, clarity and completeness of the models, as well as facilitate 
+their validation, verification and testing. Some examples of standards for BPMs are 
+Business Process Model and Notation (BPMN), Business Process Execution 
+Language (BPEL) and Unified Modeling Language (UML).  
+• 
+Business Process Modeling Notation (BPMN): This is the most widely used 
+and accepted standard for BPM. It uses a set of graphical elements to depict 
+events, activities, gateways, flows, pools and lanes in a process diagram. 
+BPMN can capture complex and dynamic processes with multiple participants, 
+roles and scenarios. BPMN also supports the execution of process models 
+using Business Process Management Systems (BPMS).   
+
+
+ 
+Figure 3-1 Example of BPMN (reference source:  BPMN 2.0 Business Process 
+Toolbox Pages | Enterprise Architect User Guide (sparxsystems.com)) 
+ 
+• 
+Unified Modeling Language (UML): This is a general-purpose modeling 
+language that can be used for various domains, including software engineering, 
+systems engineering and business analysis. UML offers 14 types of diagrams 
+to model different aspects of a system or process, such as use case diagrams, 
+activity diagrams, sequence diagrams and state machine diagrams. UML is 
+more suitable for modeling the detailed logic and behavior of a process, rather 
+than the overall flow and structure. UML also requires more technical 
+knowledge and skills to use effectively.   
+• 
+Flowchart: This is a simple and intuitive way to model a process using basic 
+shapes and arrows to show the steps and decisions in a workflow. Flowcharts 
+are easy to create and understand, but they have limitations in expressing 
+complex and parallel processes, as well as roles and responsibilities of different 
+actors. Flowcharts are also not standardized, which means they can vary in 
+style and meaning across different contexts and tools.  
+Other models are:  
+• 
+Event-driven Process Chain (EPC): This is a BPM methodology that uses 
+events, functions, connectors, roles and information objects to model a process. 
+EPC focuses on the triggers and outcomes of each process step, rather than 
+the activities themselves. EPC is often used in conjunction with SAP software to 
+design and implement enterprise resource planning (ERP) systems. 
+• 
+Lifecycle Modeling Language (LML): This is a BPM methodology that uses 
+six core elements to model a process: stakeholders, value propositions, 
+actions, measures, decisions and loops. LML emphasizes the value creation 
+and delivery aspects of a process, as well as the feedback loops that enable 
+
+
+collaborative. 
+• 
+Subject-oriented Business Process Management (S-BPM): This is a BPM 
+methodology that uses subjects, messages, states and transitions to model a 
+process. S-BPM views each process participant as an autonomous subject that 
+communicates with other subjects through messages. S-BPM allows for 
+distributed and dynamic process execution, as well as adaptive and agile 
+process design. 
+ 
+TM Forum's BPF provides the standards for identifying the composition of business 
+processes, a common library of tasks and activities performed with objectives that 
+dovetail the overarching goal of a business process, as well as an attempt to organize 
+them into a formalized framework of the Open Digital Framework. Examples of using 
+the TM Forum BPF can be found in GB921B. 
+4.2. Information Modelling methodology 
+The information framework provides a 'data' view of the enterprise.  The SID identifies 
+real-world objects of interest, models them as entities (or classes).  The framework 
+then identifies important class characteristics, or "attributes".   Definitions are provided 
+for both the class and the attributes.   In addition, relationships between these classes 
+are identified and modeled as well. 
+4.3. Functional Framework  Modelling methodology 
+To be added  
+ 
+ 
+ 
+
+
+5. META MODELs 
+This meta-model is the structure of the MODA asset interrelationships as they have 
+been documented in the system-of-record.  It has not been formally ratified, hence we 
+refer to it as "de facto". 
+ 
+ 
+ 
+Figure 2 Surrogate model linking key ODF assets.   
+
+
+5.1. Business Process Framework and Information 
+Framework 
+(FUTURE WORK) 
+5.2. Business Process and Functional Architecture 
+(FUTURE WORK) 
+5.3. Information Framework and Functional Framework 
+(FUTURE WORK)  
+5.4. Business Process Framework and Metrics 
+(FUTURE WORK) 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. About this document 
+This is a TM Forum Guidebook. The guidebook format is used when: 
+The document lays out a ‘core’ part of TM Forum’s approach to automating business 
+processes. Such guidebooks would include the Telecom Operations Map and the 
+Technology Integration Map, but not the detailed specifications that are developed in 
+support of the approach. 
+Information about TM Forum policy, or goals or programs is provided, such as the 
+Strategic Plan or Operating Plan. 
+Information about the marketplace is provided, as in the report on the size of the OSS 
+market. 
+6.2. Document History 
+6.2.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by 
+Description of changes 
+15.5.0 
+Nov 2015 
+Frameworx Team 
+(Editor: Alfred J. 
+Anaya) 
+Initial issue 
+Ongoing merging of Frameworx 
+Concepts & Principles documents from 
+eTOM, SID and TAM 
+15.5.1 
+Nov 2015 
+Alicja Kawecki 
+Updated cover, minor 
+formatting/cosmetic fixes prior to 
+publishing 
+15.5.2 
+Apr 2016 
+Alfred Anaya 
+Updated corrected eTOM L2 view with 
+missing processes in the resource 
+domain. Updated slightly the Acronyms 
+section. 
+16.0 (DRAFT) 
+Apr 2016 
+Alfred Anaya 
+Inserted SID/eTOM mapping section 
+and updated fields and related 
+information accordingly 
+16.0.1 
+8 Jun 2016 
+Alicja Kawecki 
+Updated cover, header; minor cosmetic 
+edits prior to publication for Fx16 
+16.5.0 
+Nov 2016 
+Avi Talmor 
+Updated for Rel 16.5 
+16.5.1 
+23 Nov 2016 
+Alicja Kawecki 
+Minor cosmetic edits prior to publication 
+for Fx16.5 
+17.5.0 
+Nov 2017 
+Avi Talmor 
+Errata and spelling fixes 
+17.5.1 
+09 Jan 2018 
+Adrienne Walcott 
+Formatting/style edits prior to publishing 
+18.0.0 
+June 2018 
+Andrew Greff 
+Updated / added definitions:· Application 
+Application Function Application 
+InterfaceRemoved definition: Business 
+
+
+Number 
+y
+g
+decision)Added Annex A Definitions / 
+Acronyms / Definitions:· ArchiMate· 
+TOGAF· UML Formatting:· Defined 
+repeating headers on all tables Updated 
+diagrams: 6-5 e TOM 10-1 TAM 
+Updated Section 11: Merged 11.11 
+Definitions and 11.12 Application 
+Functions in the Application Framework 
+into Application Function 
+18.0.1 
+June 2018 
+Alfred Anaya-
+Dubernard 
+Updated the following Vertical Process 
+Groupings Process Areas and 
+Enterprise Management Common 
+Processes & Patterns References to 
+Supplier/Partner Domain Process 
+Descriptions Process Flow Diagrams 
+(legacy)· Formatting to A4 size 
+18.0.2 
+06-Jul-2018 
+Adrienne Walcott 
+Formatting/style edits prior to R18 
+publishing 
+18.0.1 
+24-Sep-2018 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+18.5.0 
+03-Dec-2018 
+Cécile 
+Ludwichowski 
+Update SID map and SID / eTOM 
+mapping 
+18.5.1 
+05-Mar-2019 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+19.0.0 
+18-Jun-2019 
+Cécile 
+Ludwichowski 
+Update Domains name / descriptions 
+and SID/eTOM mapping 
+19.5.0 
+02-Dec-2019 
+Dirk Rejahl 
+Updated description of addendum 
+structure.  Team Approved 
+19.5.1 
+24-Feb-2020 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+21.0.0 
+28-May-2021 
+Avi Talmor 
+Updated top level diagram 
+21.0.1 
+12-Jul-2021 
+Avi Talmor 
+Updated to reflect comments received 
+during publishing review cycle 
+21.0.1 
+26-Jul-2021 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+21.5.0 
+26-Nov-2021 
+Avi Talmor Kevin 
+Scaggs 
+Updated eTOM high level diagram, SID 
+high level diagram, removed Frameworx 
+references, and completed minor eTOM 
+section updates. 
+22.0 
+02-Jun-2022 
+Avi Talmor Cecile 
+Ludwichowski A 
+Anaya-Dubernard 
+Adrienne Walcott 
+Kevin Scaggs 
+Updated all content and structure  to 
+align with changes needed to align with 
+ODA, including Functional Framework 
+chapter and deprecate Frameworx, as 
+well as Application Framework. 
+
+
+Number 
+y
+g
+22.5 
+09-Dec-2022 
+Avi Talmor Kevin 
+Scaggs 
+Updates to eTOM, Functional 
+Framework, and SID high level 
+diagrams 
+23.5 
+ 
+Emmanuel A. 
+Otchere 
+Revamped to clarify usability, updated 
+definitions of key concepts for clarity, 
+updated methodology for applying the 
+framework.  
+24.6 
+Dec 2024 
+Avi Talmor 
+New diagrams and changes in the FF 
+part  
+ 
+6.2.2. 
+Release History 
+ReleaseStatus Date Modified 
+Modified by 
+Description of changes  
+15.5.0 
+Nov 2015 
+Frameworx Team 
+(Editor: Alfred 
+Anaya-
+Dubernard) 
+Initial release of document Ongoing 
+merging of Frameworx Concepts & 
+Principles documents from eTOM, SID 
+and TAM 
+16.0.0 
+Apr 2016 
+Frameworx Team 
+(Editor: Alfred 
+Anaya-
+Dubernard) 
+Inserted SID/eTOM mapping section 
+and updated fields and related 
+information accordingly 
+16.5.0 
+Nov 2016 
+Avi Talmor 
+Updated for Rel 16.5 
+17.5.0 
+Nov 2017 
+Avi Talmor 
+Errata and spelling fixes 
+18.0.0 
+June 2018 
+Alfred Anaya-
+Dubernard 
+Updates to align with Fx18 
+18.0.1 
+24-Sep-2018 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+18.5.0 
+03-Dec-2018 
+Cécile 
+Ludwichowski 
+Update SID map and SID / eTOM 
+mapping 
+18.5.1 
+05-Mar-2019 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+19.0 
+10-Jul-2019 
+Cécile 
+Ludwichowski A. 
+Anaya-Dubernard 
+Updated version references, content 
+overhaul for 19.0 including domain 
+names / descriptions, SID/eTOM 
+mapping, diagrams and other graphics 
+and text. 
+19.5 
+02-Dec-2019 
+Dirk Rejahl 
+Updated description of addendum 
+structure 
+21.0 
+8 Jun 2021 
+Avi Talmor 
+Updated top level diagram 
+21.0 
+26-Jul-2021 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+21.5 
+26-Nov-2021 
+Avi Talmor 
+A. Anaya-
+Updated eTOM high level diagram, SID 
+high level diagram, removed Frameworx 
+
+
+y
+g
+Dubernard Kevin 
+Scaggs 
+references, and completed minor eTOM 
+section updates. 
+21.5 
+21-Jan-2022 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+22.0 
+02-Jun-2022 
+Avi Talmor Cecile 
+Ludwichowski A 
+Anaya-Dubernard 
+Adrienne Walcott 
+Kevin Scaggs 
+Updated all content and structure  to 
+align with changes needed to align with 
+ODA, including Functional Framework 
+chapter and deprecate Frameworx, as 
+well as Application Framework 
+22.5 
+09-Dec-2022 
+Avi Talmor Kevin 
+Scaggs 
+Updates to eTOM, Functional 
+Framework, and SID high level 
+diagrams 
+22.5 
+13-Feb-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+23.5 
+ 
+Emmauel A. 
+Otchere, A 
+Anaya-Dubernard, 
+Avi Talmor 
+Overhauled structure, with revamped 
+scope and content to read as a true 
+principles and concept document.  
+24.6 
+Dec 2024  
+Avi Talmor 
+New diagrams and changes in the FF 
+part  
+24.6 
+07-Mar-2025 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+6.3. Acknowledgments 
+This document, TMF GB991 Core Frameworks Concepts and Principles, is a genuinely 
+collaborative effort. The TM Forum would like to thank the following people for 
+contributing their time and expertise to the production of this document: 
+• 
+Emmanuel A. Otchere, Huawei 
+• 
+Jean Marie Magueur, Orange 
+• 
+Eric Aranow AT&T 
+• 
+Coleen Casper, AT&T 
+• 
+Johan Snyman, CSGI 
+• 
+Viviane Cohen, Amdocs 
+• 
+Cécile Ludwichowski, Orange 
+• 
+A. Anaya-Dubernard 
+• 
+Kaj Jonasson, Applied BSS 
+• 
+Alfred Anaya-Dubernard 
+• 
+Kevin Scaggs 
+• 
+Avi Talmor  
+
+

@@ -1,0 +1,677 @@
+On this page:
+Notice
+1. Overview
+2. eTOM Processes and SID Data Entities
+2.1. eTOM business activities
+2.2. SID ABEs
+2.3. eTOM L2 - SID ABEs links
+2.4. Functional Framework Functions
+3. TM Forum Open APIs & Events
+3.1. Exposed APIs
+3.2. Dependant APIs
+3.3. Events
+4. Machine Readable Component Specification
+5. References
+5.1. TMF Standards related versions
+5.2. Jira References
+5.2.1. Functional Framework
+5.2.2. API
+5.2.3. ODA Components
+5.2.4. Further resources
+6. Administrative Appendix
+6.1. Document History
+6.1.1. Version History
+6.1.2. Release History
+6.1.3. Acknowledgments
+Notice
+Copyright © TM Forum 2025. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in 
+its implementation may be prepared, copied, published, and distributed, in whole or in part, without restriction of any kind, provided that the above 
+copyright notice and this section are included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any document or deliverable 
+produced by a TM FORUM Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in the 
+ mu
+TM FORUM IPR Policy
+st be followed) or as required to translate it into languages other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY 
+OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would necessarily be infringed by 
+implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide an indication of its 
+willingness to grant patent licenses to such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable.
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of ownership of any patent claims that would 
+necessarily be infringed by implementations of this TM FORUM Standards Final Deliverable by a patent holder that is not willing to provide a license to 
+such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do so.
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the 
+implementation or use of the technology described in this TM FORUM Standards Final Deliverable or the extent to which any license under such rights 
+might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on TM FORUM's 
+procedures with respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be found on the TM 
+FORUM website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an 
+attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this TM FORUM Standards 
+Final Deliverable, can be obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or list of 
+intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
+Direct inquiries to the TM Forum office:
+
+
+Parsippany, NJ 07054 USA
+Tel No. +1 862 227 1648
+TM Forum Web Page: www.tmforum.org
+Maturity Level: General availability (GA)
+Team Approved Date: 10-Dec-2024 
+Release Status: Production
+Approval Status: TM Forum Approved
+Version: 2.1.0 
+IPR Mode: RAND
+1. Overview
+Component 
+Name
+ID
+Description
+ODA 
+Function 
+Block
+ 
+Resource
+Inventory
+TMF
+C012
+Resource Inventory component is responsible for accounting for resources (all inputs - including stock, parts, assets, production components 
+etc.) that are owned and/or held for allocation and/or use by the organization.
+Resource Inventory component has functionality that includes inventory items creation, inventory organization, inventory search or filter, 
+inventory monitoring and tracking, inventory control (organization, re-stock management etc.) and inventory auditing.
+The minimum check to be performed at inventory items creation or update is the global consistency with related Resource Catalog information.
+Production
+2. eTOM Processes and SID Data Entities
+2.1. eTOM business activities
+eTOM business activities this ODA Component is responsible for:
+Identifier
+Level
+Business 
+Activity 
+Name
+Description
+1.5.4
+L2
+Resource 
+Support 
+Readiness
+Manage resource infrastructure to ensure that appropriate application, computing and network resources are available and ready to support 
+the Fulfillment, Assurance and Billing processes in instantiating and managing resource instances, and for monitoring and reporting on the 
+capabilities and costs of the individual FAB processes.
+1.5.4.5
+L3
+Manage 
+Establish, manage and administer the enterprise's resource inventory, as embodied in the Resource Inventory Database, and monitor and 
+
+
+2.2. SID ABEs
+SID ABEs this ODA Component is responsible for:
+SID ABE Level 1
+SID ABE Level 2 (or set of BEs)
+Resource ABE
+Logical Resource ABE, Physical Resource ABE, Compound Resource ABE
+2.3. eTOM L2 - SID ABEs links
+2.4. Functional Framework Functions
+ 
+Function 
+ID
+Function 
+Name
+Function Description
+Aggregate 
+Functions 
+Level 1
+Aggregate 
+Functions 
+Level 2
+426
+Physical 
+Implementati
+on 
+Information 
+Capturing
+Physical Implementation Information Capturing provide levels of implementation details that tactical planning does not 
+need to specify, such as duct routes and the frame appearances of device ports.
+Resource 
+Management
+Resource 
+Repository 
+Management
+442
+Network 
+Overviews 
+Presentation
+Network Overviews Presentation provides a more generalized view of the network than found in resource 
+management.
+Resource 
+Management
+Resource 
+Repository 
+Management
+471
+Resource 
+Repository 
+Updating
+Resource Repository Updating function entails update of the resource Repository based on a provided collection of 
+updates. The expectation is that the Repository is updated as requested, but no other side-effects are expected (e.g., 
+creating an Sub Network Connection (SNC) in the network). This is a key point concerning this capability. The 
+Repository update request can involve addition (new object), modification (change to an existing object) or deletion 
+(removal of an object).
+Resource 
+Management
+Resource 
+Repository 
+Management
+453
+Resource 
+Configuration
+Change 
+Logging
+Resource Configuration Change Logging - Collects and Records the history of configuration changes
+Resource 
+Management
+Resource 
+Repository 
+Management
+454
+Resource 
+Configuration
+Management
+Resource Configuration Management  provides configuration database and management of the configurations of the 
+individual resources
+Resource 
+Management
+Resource 
+Repository 
+Management
+456
+Resource 
+Topology  Ve
+rification
+Resource Topology  Verification work with the Inventory Management functions to ensure that the topology reflected 
+in its database is in sync with that in the Inventory Management Systems
+Resource 
+Management
+Resource 
+Repository 
+Management
+
+
+Creation
+resources (e.g., particular types of managed elements and equipments) and associated technologies.
+470
+Resource 
+Inventory 
+Retrieval
+This function allows for client operations support (service assurance and billing systems) to retrieve part or all of the 
+resource inventory known to the target OSS. This feature may allow the following selection criteria:
+• retrieval of a specified set of one or more sub-trees
+• exclusion or inclusion of specified object types from the selected sub-tree
+• further filtering based on attribute matching
+• retrieval of only the object instances that have been modified after a provided date and time
+• For the selected objects, this feature may allow the client operations support (service assurance and billing systems) 
+to specify what specific attributes and relationships shall be returned. This (the attributes and relationships to be 
+returned) would be the same for all objects of the same type.
+Resource 
+Management
+Resource 
+Repository 
+Management
+471
+Resource 
+Inventory 
+Updating
+Resource Inventory Updating function entails update of the resource inventory based on a provided collection of 
+updates. The expectation is that the inventory is updated as requested, but no other side effects are expected (e.g., 
+creating a Sub Network Connection (SNC) in the network). This is a key point concerning this capability. The inventory 
+update request can involve addition (new object), modification (change to an existing object) or deletion (removal of 
+an object).
+Resource 
+Management
+Resource 
+Repository 
+Management
+472
+Resource 
+Inventory 
+Update 
+Notification
+Resource Inventory Update Notification function entails the generation of inventory update notifications based on 
+changes to the inventory:  Notifications concerning object creation, object deletion and attribute value changes to 
+other systems.
+• Single Entity Notifications – in this variation of the feature, each notification pertains to only one entity, e.g., an 
+equipment instance
+• Multi-entity Notifications – in this variation of the feature, a single notification may report on inventory changes for 
+multiple entities.
+• Notification Suppression – in this variation of the feature, each notification pertains to only one entity.
+Resource 
+Management
+Resource 
+Repository 
+Management
+562
+Voucher 
+Reporting
+Voucher Reporting function for querying and reporting of voucher related data
+Resource 
+Management
+Resource 
+Repository 
+Management
+564
+Voucher 
+Life Cycle 
+Management
+Voucher Life Cycle Management including activation, locking, expiration and maintenance of purchased 
+vouchers.
+Resource 
+Management
+Resource 
+Repository 
+Management
+738
+Resource 
+Data 
+Inventory 
+Synchronizati
+on
+Resource Data Inventory Synchronization is the function that ensure OSS Inventory data generated in each function is 
+available to other functions as required.
+Resource 
+Management
+Resource 
+Repository 
+Management
+436
+Number 
+Aging
+Manages the aging of numbers before they can be re-assigned.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+437
+Number 
+Assigning
+Number Assigning manages the assignment of numbers for usage.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+439
+Number 
+Searching
+Number Searching provides the means to search the number inventory.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+440
+Number 
+Tracking and 
+Reporting
+Provides functionality to track numbers and perform number reporting.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+743
+Number 
+Portability 
+Orchestration
+Number Portability Orchestration is a communication mechanism that ensures the Resource Number orders activation 
+according to a criteria set, allowing in this way the correct execution of orders.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+744
+Number 
+Portability 
+Risk & 
+Effectiveness
+Management
+Number Portability Risk & Effectiveness Management for determine of threats, risks and control of fulfillment, in order 
+to comply with the execution of all Resource Number Portability orders.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+745
+Number 
+Portability 
+Validation
+Number Portability Validation can perform calculations that determine whether the information received is reliable, 
+safe and contains the minimum information required during implementation, enabling with this the Resource Number 
+Portability orders rejection for those who do not comply with the defined criteria.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+1062
+Number 
+Acquisition
+Number Acquisition manages the capturing of numbers for the number inventory.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+1249
+Number 
+Porting
+Number Porting implements the changes to transfer the management of a number from one Service Provider to 
+another, and on request provides status on the implementation of the changes.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+
+
+Management
+435
+Number 
+Inventory 
+Establishing
+Number Inventory Establishing manages the establishment of a number inventory.
+Resource 
+Management
+Regulated 
+Logical 
+Resources 
+Management
+3. TM Forum Open APIs & Events
+The following part covers the APIs and Events; This part is split in 3:
+List of 
+ - This is the list of APIs available from this component.
+Exposed APIs
+List of
+ - In order to satisfy the provided API, the  component could require the usage of this set of required APIs.
+ Dependent APIs
+List of  
+ (
+ - The events which the component may generate are listed in this section along with a list of the 
+Events generated & consumed )
+events which it may consume. Since there is a possibility of multiple sources and receivers for each defined event.
+3.1. Exposed APIs
+The following diagram illustrates API/Resource/Operation: 
+API ID
+API Name
+API Version
+Mandatory / Optional
+Resource
+Operation
+TMF639
+TMF639 Resource Inventory
+4
+Mandatory
+resource
+GET
+GET /ID
+POST
+PATCH
+DELETE
+TMF688
+TMF688 Event
+4
+Optional
+listener
+POST
+hub
+POST
+DELETE
+TMF701
+TMF701 Process Flow
+4
+Optional
+processFlow
+GET
+GET /ID
+POST
+DELETE
+taskFlow
+GET
+GET /ID
+PATCH
+3.2. Dependant APIs
+The following diagram illustrates API/Resource/Operation potentially used by the resource inventory
+:
+ component
+
+
+API ID
+API Name
+API Version
+Mandatory / Optional
+Resource
+Operations
+Rationales
+TMF634
+Resource Catalog Management
+4.1
+Mandatory
+resourceSpecification
+Get
+get /ID
+consistency check.
+
+
+TMF632
+Party Management
+4
+Optional
+induvidual / organization
+Get
+get /ID
+TMF673
+Geographic Address Management
+4
+Optional
+geographicAddress
+Get
+get /ID
+geographicSubAddress
+Get
+get /ID
+TMF674
+Geographic Site Management
+4
+Optional
+geographicSite
+Get
+get /ID
+TMF675
+Geographic Location
+4
+Optional
+geographicLocation
+Get
+get /ID
+TMF672
+User Roles And Permissions
+4
+Optional
+permission
+Get
+get /ID
+TMF639
+Resource Inventory Management
+4
+Optional
+resource
+Get
+get /ID
+Post,
+Patch
+Delete
+TMF688
+Event
+4
+Optional
+event
+Get, Post
+3.3. Events
+The following diagram illustrates the Events which the component may publish and the Events that the component may subscribe to and then may 
+receive. Both lists are derived from the APIs listed in the preceding sections.
+4. Machine Readable Component Specification
+Refer to the ODA Component Map on the TM Forum website  for the machine-readable component specification files for this component.  
+5. References
+5.1.  TMF Standards related versions
+Standard
+Version(s)
+SID
+23.5
+eTOM
+23.5
+Functional Framework 
+23.5
+5.2.  Jira References
+5.2.1. Functional Framework
+ - 
+ 
+ 
+ISA-416
+Getting issue details...
+STATUS
+ Harmonize as much as possible functions related to Product, Service and Resource 
+Inventory
+ - 
+ 
+ 
+ISA-417
+Getting issue details...
+STATUS
+ Review functions 465, 466 and 564 in Resource Inventory Mgt sub-domains as they are 
+not related to such an inventory
+
+
+5.2.3. ODA Components
+ Add a new Resource Topology Management component in the component inventory
+ - 
+ 
+ 
+TAC-342
+Getting issue details...
+STATUS
+5.2.4. Further resources
+This component is involved in the following use cases described in IG1228 How to use ODA - Using Open APIs to realize Use Cases:
+6. Administrative Appendix
+6.1.  Document History
+6.1.1. Version History
+Version 
+Number
+Date 
+Modified
+Modified by:
+Description of changes
+1.0.0
+31 May 2022  
+Kamal Maghsoudlou Sylvie 
+Demarest
+Initial release
+1.0.1
+25 Jul 2023  
+Ian Turkington
+No content changed, simply a layout change to match template 3. Separated the YAML files to a managed 
+repository.
+1.0.1
+14 Aug 2023 
+Amaia White 
+Final edits prior to publication 
+2.0.0
+30 Apr 2024 
+Gaetano Biancardi 
+Updated Component Template
+Removed Resource Pool Management API from exposed list 
+Aligned to Frameworks 23.5
+Removed TMF688 Event Management (from exposed and dependant API)
+Removed TMF672 User Roles and Permissions from dependant API 
+2.0.0
+12 Jul 2024 
+Amaia White 
+Final edits prior to publication 
+2.1.0
+18 Nov 2024 
+Gaetano Biancardi 
+API version, only major version to be specified
+Dependant api, following APIs moved from mandatory to optional (correction of diagram typo):
+TMF673
+TMF674
+6.1.2. Release History
+Release Status
+Date Modified
+Modified by:
+Description of changes
+Pre-production
+31 May 2022 
+Goutham Babu
+Initial release
+Production
+22-Jul-2022
+Adrienne Walcott 
+Updated to reflect TM Forum Approved status
+Pre-production
+14-Aug-2023
+Amaia White 
+New release v1.0.1 
+Production
+06-Oct-2023
+Adrienne Walcott
+Updated to reflect TM Forum Approved status
+Pre-production
+12-Jul-2024 
+Amaia White 
+New release v2.0.0
+Production
+30-Aug-2024
+Adrienne Walcott
+Updated to reflect TM Forum Approved status
+6.1.3. Acknowledgments
+This document was prepared by the members of the TM Forum Component and Canvas project team:
+ 
+Team Member (@mention)
+Company
+Role*
+ 
+Kamal Maghsoudlou
+Ericsson 
+Editor 
+Sylvie Demarest 
+Orange 
+Reviewer 
+Hugo Vaughan (TM Forum) 
+TM Forum 
+Additional Input 
+I
+T
+ki
+t
+TM F
+Additi
+l I
+t
+
+
+©  TM Forum 2025. All Rights Reserved.
+
+

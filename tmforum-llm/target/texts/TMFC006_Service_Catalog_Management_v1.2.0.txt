@@ -1,0 +1,1044 @@
+ 
+TM Forum Technical Specification 
+ 
+ 
+ 
+Service Catalog Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC006 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 26-Nov-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.2.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 7 
+2.1. 
+eTOM business activities ................................................................... 7 
+2.2. 
+SID ABEs ........................................................................................... 8 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 8 
+2.4. 
+Functional Framework Functions ....................................................... 9 
+3. 
+TM Forum Open APIs & Events ................................................................... 12 
+3.1. 
+Exposed APIs .................................................................................. 12 
+3.2. 
+Dependent APIs ............................................................................... 15 
+3.3. 
+Events .............................................................................................. 17 
+4. 
+Machine Readable Component Specification ............................................... 18 
+5. 
+References ................................................................................................... 19 
+5.1. 
+TMF Standards related versions ...................................................... 19 
+5.2. 
+Further resources............................................................................. 19 
+6. 
+Administrative Appendix ............................................................................... 20 
+6.1. 
+Document History ............................................................................ 20 
+6.1.1. Version History............................................................................. 20 
+6.1.2. Release History ............................................................................ 20 
+6.1.3. Acknowledgments ........................................................................ 21 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Service 
+Catalog 
+Management 
+TMFC006 Service Catalog Management component is 
+responsible for organizing the collection of 
+service specifications that identify and define 
+all requirements of a service that can be 
+performed. 
+Service Catalog Management component 
+has the functionality that enable present a 
+customer-facing view so users are able to 
+search and select services they need, as 
+well as a technical view to enable define and 
+setup what's needed to deliver service 
+specifications (Customer Facing Service 
+Specifications (CFSSs) and Resource 
+Facing Service Specifications (RFSSs)) 
+contained in the service catalog. 
+Service Catalog Management component 
+has functionalities that include creation of 
+new service specifications, managing service 
+specifications, administering the lifecycle of 
+services, describing relationships between 
+service specification attributes, reporting on 
+service specification and their changes, and 
+facilitating easy and systematic indexing and 
+access to services, as well as facilitate 
+automating the service delivery process. 
+Production 
+ 
+ 
+
+
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for: 
+Identifier Level Business 
+Activity Name 
+Description 
+1.4.13 
+L2 
+Service Catalog 
+Lifecycle 
+Management 
+Catalog Lifecycle Management business process covers a 
+set of business activities that enable manage the lifecycle 
+of an organizations catalog from design to build according 
+to defined requirements. 
+1.4.14 
+L2 
+Service Catalog 
+Operational 
+Readiness 
+Management 
+Service Catalog Operational Readiness Management 
+business process establishes and administers the support 
+needed to operationalize Service catalogs for ongoing 
+day-to-day business needs. 
+1.4.15 
+L2 
+Service Catalog 
+Content 
+Management 
+Service Catalog Content Management business process 
+define and provide the business activities that support the 
+day-to-day operations of Service Catalogs in order to 
+realize the business operations goals. 
+1.4.16 
+L2 
+Service Catalog 
+Planning 
+Management 
+Service Catalog Planning Management business process 
+covers a set of business activities that understand and 
+enable establish the plan to define, design and 
+operationalize a catalog in order to meet the needs and 
+objectives of Service cataloging. 
+The Service Catalog Planning Management business 
+process ensure that the organization is able to identify the 
+most appropriate scheme and goal for it catalog. It 
+includes designing the Catalog plan and developing the 
+specification according to Service management 
+requirement. 
+1.4.19 
+L2 
+Service 
+Specification 
+Management 
+Service Specification Management business process 
+leverages captured service requirements to develop, 
+master, analyze, and update documented standard 
+conditions that must be satisfied by service design and/or 
+delivery. 
+Service Specifications Management can result in 
+establishing, in a centralized way, technical (know-how) 
+standards. 
+Such standards provide the organization with a means to 
+control and approve the values and inputs of service 
+specification through structure, review, approval and 
+distribution processes to stakeholders and suppliers. 
+1.4.3 
+L2 
+Service 
+Specification 
+Service SpecificationDevelopment & Retirement 
+processes are project oriented in that they develop and 
+deliver new or enhanced service types. These processes 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+Development & 
+Retirement 
+include process and procedure implementation, systems 
+changes and customer documentation. They also 
+undertake rollout and testing of the service type, capacity 
+management and costing of the service type. It ensures 
+the ability of the enterprise to deliver service types 
+according to requirements. 
+1.4.3.4 
+L3 
+Develop 
+Detailed Service 
+Specifications 
+The Develop Detailed Service Specifications processes 
+develop and document the detailed service-related 
+technical and operational specifications, and customer 
+manuals. These processes develop and document the 
+required service features, the specific underpinning 
+resource requirements and selections, the specific 
+operational, and quality requirements and support 
+activities, any service specific data required for the 
+systems and network infrastructure as agreed through the 
+Develop New Service Business Proposal processes.  The 
+Develop Detailed Product Specifications processes 
+provide input to these specifications. The processes 
+ensure that all detailed specifications are produced and 
+appropriately documented. Additionally the processes 
+ensure that the documentation is captured in an 
+appropriate enterprise repository. 
+2.2.  SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs)* 
+Service Specification ABE 
+ 
+Service Performance ABE 
+Service Level Spec ABE 
+Service Performance ABE 
+Service Performance Specification ABE 
+Service Usage ABE 
+ServiceUsageSpec BE 
+Service Configuration ABE 
+ServiceConfigSpec BE 
+ 
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified. 
+2.3.  eTOM L2 - SID ABEs links 
+eTOM L2 vS SID ABEs links for this ODA Component.: 
+
+
+ 
+2.4. Functional Framework Functions 
+Please note, these Functions were changed in GB1033, but 
+ ISA-996 - Master Data 
+Management has repurposed catalog related functions :  Has been raised to review 
+this. 
+Functional Framework 23.5 mapping draft: 
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+897 
+Building 
+Access 
+Control 
+Building Access Control checks, 
+stops or allow physical access to 
+facilities according to access roles 
+and rules. 
+Identification 
+and 
+Permission 
+Management 
+Permission 
+Control 
+900 
+Authorization 
+Control 
+Management 
+Authorization Control Function 
+controls permissions according to 
+roles and related rules. 
+It consists in evaluating if a requester 
+is granted the permission to act by 
+providing the required evidence. The 
+evidence corresponds to the 
+condition specified for each right (for 
+instance keying the correct password 
+to use a specific mailbox). If the 
+action is protected via a right which is 
+assigned (possibly via a role) to a 
+person then the person has to be 
+identified to retrieve their rights and 
+verify if the request to act can be 
+granted. 
+Identification 
+and 
+Permission 
+Management 
+Permission 
+Control 
+
+
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+995 
+Service Task 
+Item Policy 
+Control 
+Configuration 
+Define and configure the policies 
+which will be implemented during the 
+Service task item lifecycle. 
+Service 
+Specification 
+Development 
+Service 
+Specification 
+Design 
+1080 
+Service 
+Specification 
+Change 
+Auditing 
+Service Specification Change 
+Auditing manages the implications of 
+Service Specifications changes to 
+determine the consequences of any 
+given change. Customer Facing 
+Service Specifications (CFSSpec) 
+changes may impact other CFSSpec 
+according to relationships and also 
+Product Specification that restrict it. 
+Resources Facing Service 
+Specification (RFSSpec) may impact 
+other RFSSpecs according to 
+relationships and / or CFSSpecs it 
+realizes. 
+The function logs Service 
+Specifications changes and supports 
+the analysis of relationships between 
+Service Specifications. 
+In addition, it tracks the history of 
+changes in an easy and accessible 
+manner. 
+Service 
+Specification 
+Development 
+Service 
+Specification 
+Design 
+1081 
+Service 
+Specification 
+Repository 
+Management 
+Service Specification Repository 
+Management is able to create, modify 
+and delete Service Specification and 
+related entities such as Service 
+Usage Specification. 
+This includes the ability to manage 
+the state of an entity during its 
+lifecycle (e.g. planned, deployed, in 
+operation, replaced by, locked). 
+It includes Service Specifications 
+retrieval, integrity rules check and 
+versioning management. 
+It also provides Product Specification 
+and Offering views adapted to the 
+different roles. 
+Service 
+Specification 
+Development 
+Service 
+Specification 
+Design 
+1084 
+Know-How 
+Specification 
+Design 
+Know-How Specification Design 
+provides the means to describe the 
+Customer Facing Service 
+Specifications including constraints, 
+characteristics, and types of usages. 
+Service 
+Specification 
+Development 
+Service 
+Specification 
+Design 
+
+
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+It also identifies Technical Solutions 
+usable for the Kow-How and rules to 
+find the Technical Solution. 
+1085 
+Technical 
+Solution 
+Design 
+Technical Solution Design provides 
+the means to describe Resource 
+Facing Service Specifications (a.k.a. 
+RFSSpec) including constraints, 
+characteristics and types of usages. 
+It also identifies Resource 
+Specifications used for each 
+Technical Solution Specification 
+(a.k.a. RFSSpec). 
+Service 
+Specification 
+Development 
+Service 
+Specification 
+Design 
+1086 
+Service 
+Specification 
+to Supplier 
+Product 
+Specification 
+Relationship 
+Design 
+Service Specification to Supplier 
+Product Specification Relationship 
+Design identifies, when know-how, 
+technical solutions or part of it are not 
+realized by the CSP, the Supplier 
+Product Specification used to 
+implement and corresponding rules. 
+Service 
+Specification 
+Development 
+Service 
+Specification 
+Design 
+1135 
+Technical 
+Solution 
+Policy Design 
+The Technical Solution Policy 
+Management Function enables to 
+define, and to check consistency of, 
+potentially complex rules to automate 
+the choice of the technical solution 
+(CFS Spec) for a know-how (RFS 
+Spec) or parts of the technical 
+solution. 
+Criteria can be of various nature and 
+combined: 
+• 
+geographical 
+• 
+depending on the chosen 
+characteristics values of the 
+know-how 
+• 
+depending on other products / 
+know-hows of the customer 
+installed or ordered 
+• 
+depending on the current state of 
+Service Platforms, Network 
+equipment (occupation rate, load 
+balancing, etc.) 
+• 
+depending on Supplier/Partner 
+contracts (volume discounts, 
+etc.) 
+• 
+etc. 
+Service 
+Specification 
+Development 
+Technical 
+Solution 
+Policy 
+Management 
+ 
+ 
+
+
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 4: 
+ 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the  component 
+could require the usage of this set of required APIs.  
+• 
+List of  Events (generated & consumed ) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+3.1. Exposed APIs 
+The following diagram illustrates API/Resource/Operation:  
+
+
+ 
+ 
+ 
+
+
+ 
+API ID 
+API Name 
+API 
+Versio
+n 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+TMF633 
+Service 
+Catalog 
+Management 
+4 
+Mandatory 
+catalog 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+TMF633 
+Service 
+Catalog 
+Management 
+4 
+Mandatory 
+category 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+TMF633 
+Service 
+Catalog 
+Management 
+4 
+Mandatory 
+serviceSpecification 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+TMF633 
+Service 
+Catalog 
+Management 
+4 
+Mandatory 
+serviceCandidate 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+TMF633 
+Service 
+Catalog 
+Management 
+4 
+Mandatory 
+exportJob 
+GET 
+GET /ID 
+POST 
+DELETE 
+TMF633 
+Service 
+Catalog 
+Management 
+4 
+Mandatory 
+importJob 
+GET 
+GET /ID 
+POST 
+DELETE 
+TMF657 
+Service 
+Quality 
+Management 
+4 
+Optional 
+serviceLevelSpecification 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+
+
+API ID 
+API Name 
+API 
+Versio
+n 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+TMF657 
+Service 
+Quality 
+Management 
+4 
+Optional 
+serviceLevelObjective 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+TMF657 
+Service 
+Quality 
+Management 
+4 
+Optional 
+serviceLevelSpecParame
+ter 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+TMF701 
+Process Flow 
+Management 
+4 
+Optional 
+processFlow 
+GET 
+GET /ID 
+POST 
+DELETE 
+TMF701 
+Process Flow 
+Management 
+4 
+Optional 
+taskFlow 
+GET 
+GET /ID 
+PATCH 
+TMF688 
+Event 
+Management 
+API 
+4 
+Optional 
+listener 
+POST 
+TMF688 
+Event 
+Management 
+API 
+4 
+Optional 
+hub 
+POST 
+DELETE 
+ 
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation potentially used by the service 
+catalog component: 
+
+
+ 
+ 
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+Rationale 
+TMF634 
+Resource 
+Catalog 
+Managem
+ent 
+4 
+Optional 
+resourceSpecifica
+tion 
+GET 
+GET /ID 
+n/a 
+TMF669 
+Party Role 
+Managem
+ent 
+4 
+Optional 
+partyRole 
+GET 
+GET /ID 
+n/a 
+TMF632 
+Party 
+4 
+Optional 
+induvidual 
+GET 
+GET /ID 
+n/a 
+TMF632 
+Party 
+4 
+Optional 
+organization 
+GET 
+GET /ID 
+n/a 
+TMF662 
+Entity 
+Catalog 
+Managem
+ent 
+4 
+Optional 
+entitySpecification 
+GET 
+GET /ID 
+n/a 
+TMF662 
+Entity 
+Catalog 
+Managem
+ent 
+4 
+Optional 
+associationSpecifi
+cation 
+GET 
+GET /ID 
+n/a 
+TMF672 
+User Role 
+Permissio
+n 
+4 
+Optional 
+permission 
+GET 
+GET /ID 
+n/a 
+TMF688 
+Event 
+Managem
+ent API 
+4 
+Optional 
+event 
+GET 
+GET /ID 
+n/a 
+ 
+
+
+3.3.  Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+ 
+ 
+The type of event could be: 
+• 
+Create : a new resource has been created (following a POST). 
+• 
+Delete: an existing resource has been deleted. 
+• 
+AttributeValueChange or Change: an attribute from the resource has changed - 
+event structure allows to pinpoint the attribute. 
+• 
+InformationRequired: an attribute should be valued for the resource preventing 
+to follow nominal lifecycle - event structure allows to pinpoint the attribute. 
+• 
+StateChange: resource state has changed. 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component table for the machine-readable component specification 
+file for this component. 
+ 
+ 
+
+
+5. References 
+5.1.  TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+23.5 
+eTOM 
+23.5 
+Functional Framework  
+23.5 
+ 
+5.2. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions. 
+2. TMF633 Service Catalog Management API User Guide v4.0.0 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+ Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+29 Mar 2022   
+Kamal 
+Maghsoudlou 
+Gaetano Biancardi 
+Sylvie Demarest 
+Final edits prior to publication 
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+Separated the YAML files to a 
+managed repository. 
+1.0.1  
+14 Aug 2023  
+Amaia white  
+Final edits prior to publication  
+1.1.0 
+03 May 2024  
+Amaia White  
+Final edits prior to publication  
+1.2.0 
+12 Nov 2024  
+Gaetano Biancardi  
+• 
+TMF688, removed from the 
+core specification, moved to 
+supporting functions 
+• 
+TMF672, removed from the 
+core specification, moved to 
+supporting functions 
+• 
+ API version, only major version 
+to be specified 
+1.2.0 
+26 Nov 2024  
+Amaia White  
+Final edits prior to publication  
+6.1.2. 
+  Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+29-Mar-2022  
+Goutham Babu  
+Initial release 
+Production 
+20-May-2022 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+Pre-production 
+14-Aug-2023 
+Amaia White  
+New release 1.0.1  
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+Pre-production 
+02-May-2024 
+Hugo Vaughan 
+Ver 1.1.0 alignment to Frameworks 
+23.5 
+Service Test descoped to enable the 
+definition of an additional Component 
+Pre-production 
+02-May-2024 
+Amaia White 
+New release 1.1.0 
+
+
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Production 
+28-Jun-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+Pre-production 
+26-Nov-2024 
+Amaia White  
+New release 1.2.0 
+Production 
+07-Mar-2025 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+6.1.3. 
+Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Elisabeth Andersson  
+Matrixx 
+Editor  
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Additional Input  
+Gaetano Biancardi  
+Accenture  
+Additional Input  
+Sylvie Demarest  
+Orange  
+Additional Input  
+Ian Turkington  
+TM Forum 
+Additonal Input  
+ 
+
+

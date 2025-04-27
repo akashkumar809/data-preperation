@@ -1,0 +1,912 @@
+ 
+ 
+TM Forum Technical Specification 
+ 
+ 
+ 
+Product Inventory 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC005 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 02-Jul-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.0.2 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+
+
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 7 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 7 
+2.4. 
+Functional Framework Functions ....................................................... 7 
+3. 
+TM Forum Open APIs & Events ................................................................... 12 
+3.1. 
+Exposed APIs .................................................................................. 12 
+3.2. 
+Dependent APIs ............................................................................... 14 
+3.3. 
+Events .............................................................................................. 17 
+4. 
+Machine Readable Component Specification ............................................... 18 
+5. 
+References ................................................................................................... 19 
+5.1. 
+TMF Standards related versions ...................................................... 19 
+5.2. 
+Jira References ................................................................................ 19 
+5.2.1. Further resources ......................................................................... 19 
+6. 
+Administrative Appendix ............................................................................... 20 
+6.1. 
+Document History ............................................................................ 20 
+6.1.1. Version History............................................................................. 20 
+6.1.2. Release History ............................................................................ 20 
+6.2. 
+Acknowledgments ............................................................................ 20 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Product 
+Inventory 
+TMFC005 Product  Inventory component is 
+responsible for storage and exposure of 
+products that are assigned to and used 
+by Parties. Product Inventory items 
+can correspond to product offering or 
+product specification levels of the 
+Product Catalog, with their related 
+configuration information and 
+product prices (one time and 
+recurring) and alterations. 
+Product Inventory component has 
+functionality that enables inventory items 
+creation, inventory organization, 
+inventory search or filter, inventory 
+monitoring and tracking, inventory 
+control and inventory auditing. 
+The minimum check to be performed at 
+inventory items creation or update is the 
+global consistency with related Product 
+Catalog information. 
+Core 
+Commerce 
+Management 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for: 
+Identifier 
+Level 
+Business 
+Activity Name 
+Description 
+1.2.11 
+L2 
+Product Inventory 
+Management 
+Product Inventory Management is responsible to 
+establish, manage and administer the 
+enterprise's product inventory, as embodied in 
+the Product Inventory repository, and monitor 
+and report on the usage and access to the 
+product inventory, and the quality of the 
+information maintained in it. 
+1.1.19 
+L2 
+Loyalty Program 
+Management 
+Define all aspects of a loyalty program, such as 
+requirements and objectives of a loyalty program, 
+determine the benefits to participants. Develop a 
+program, prototype it, test it, rollout/launch it, 
+amend and evaluate it, and terminate it when it is 
+no longer viable for an enterprise. 
+Manage all operational aspects of running a 
+loyalty program. Enable parties to become a 
+members of a program, earn currency and 
+rewards, and redeem currency. Manage a loyalty 
+program account, leave a program, and provide 
+operational reports. 
+1.1.19.2 
+L3 
+Loyalty Program 
+Operation 
+Manage all operational aspects of running a 
+loyalty program. Enable parties to become a 
+members of a program, earn currency and 
+rewards, and redeem currency. Manage a loyalty 
+program account, leave a program, and provide 
+operational reports. 
+1.1.19.2.5 
+L4 
+Manage Loyalty 
+Program Account 
+Update a loyalty program account and make 
+changes to loyalty program participant 
+information. Expire, reinstate, transfer in/out, 
+adjust, a loyalty participant's account currency. 
+Prepare and send a loyalty program 
+communication to a participant or for internal use 
+by an enterprise. 
+1.1.19.2.7 
+L4 
+Provide Loyalty 
+Program 
+Operation Report 
+Generate a loyalty program operation report, 
+such as various loyalty program status reports, 
+trend analysis, and reports that identify 
+suspected abuse of a loyalty program. 
+ 
+
+
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs) 
+Product 
+ 
+Loyalty 
+Loyalty Program 
+2.3. eTOM L2 - SID ABEs links 
+ 
+ 
+2.4. Functional Framework Functions 
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 1 
+Aggregate 
+Function Level 
+2 
+180 
+Assigned Products 
+Maintenance 
+Assigned Products 
+Maintenance permits 
+defining and update : 
+- product 
+characteristics 
+- links with the related 
+service or resource 
+(handsets, SIM cards, 
+...) needed to deliver 
+the product, ... 
+ProductRepository 
+Management 
+ProductInventory 
+Repository 
+Management 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 1 
+Aggregate 
+Function Level 
+2 
+197 
+Customer Product 
+Storage 
+Customer Product 
+Storage provides the 
+functionality necessary 
+to store and make 
+available the Products./ 
+services presently 
+being used by the 
+customer. 
+This function allows: 
+• to instantiate or 
+update offers and 
+products ordered by 
+the customer, 
+whatever their type 
+(network product, 
+bundle, device, …) or 
+their marketing mode 
+(rented, sold, …), with 
+their configuration, 
+their tariffs and 
+discounts, and their 
+status (initialized with 
+a creation order) 
+• to update Products 
+status 
+• to search and read 
+Offer and Product 
+installed base 
+(subscribed offers, 
+configuration of 
+installed products, 
+installed tariffs and 
+discount, statuses, 
+…). 
+ProductRepository 
+Management 
+ProductInventory 
+Repository 
+Management 
+198 
+Customer Loyalty 
+Score Balance 
+Management 
+Customer Loyalty 
+Score Balance 
+Management function 
+calculates the score 
+according to 
+accumulation/decrease 
+rules. When a 
+customer subscribes to 
+the loyalty program 
+with more than one 
+SIM or other ‘traffic 
+objects’, the Score 
+Management 
+accumulates the points 
+into a single balance. 
+The loyalty score could 
+ProductRepository 
+Management 
+Loyalty Account 
+Management 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 1 
+Aggregate 
+Function Level 
+2 
+decrease for one of the 
+following events: prize 
+purchase, points expiry 
+or points deletion by 
+Call Centre. The 
+functionality may also 
+include the 
+visualization of Score 
+details (date, 
+description event type, 
+points, final score) via 
+different contact 
+Channels (e.g. via 
+Web, IVR, Call Centre). 
+237 
+Customer Loyalty 
+Communication 
+Customer Loyalty 
+Communication 
+function sends 
+information related to 
+Loyalty Programs 
+(Point Balance, Prize 
+Request status, 
+renewed Loyalty Code) 
+to external components 
+in push and pull 
+modes. 
+ProductRepository 
+Management 
+Loyalty Account 
+Management 
+361 
+Contract 
+Implementation Pro
+duct Agreement 
+Implementation 
+Contract 
+Implementation 
+function provide 
+functionality pertaining 
+to the implementation 
+of the contract across 
+fulfillment, assurance, 
+and billing. 
+Product Agreement 
+Implementation 
+function provides 
+functionality 
+pertaining to the 
+implementation of the 
+Product Agreement 
+(a.k.a. contract) 
+across fulfillment, 
+assurance, and billing 
+according to Product 
+Agreement 
+Specification. 
+A Product Agreement 
+represents the 
+approval by the 
+Customer and the 
+ProductRepository 
+Management 
+ProductInventory 
+Agreement 
+Management 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 1 
+Aggregate 
+Function Level 
+2 
+Vendor of all term or 
+conditions of a 
+ProductOffering. 
+362 
+Contract Searching 
+Contract Searching 
+function provides the 
+ability to search for 
+customer contracts 
+based on meta-data 
+and to search text 
+strings within contracts 
+and view customer's 
+existing and previous 
+contracts, 
+Product 
+Repository 
+Management 
+Product 
+Inventory 
+Management 
+363 
+Contract Storage 
+Product 
+Agreement 
+Storage 
+Contract Storage 
+provides the central 
+repository for contract 
+storage as well as the 
+associated contract 
+meta-data. This data 
+can be mined for 
+Campaigns and Lead 
+Generation. 
+Product Agreement 
+Storage provides 
+functionality 
+necessary to store 
+and make available 
+the Product 
+Agreements. 
+This function allows: 
+• to instantiate or 
+update Product 
+Agreement approved 
+by the customer with 
+their party involved, 
+their configuration, 
+their approvals and 
+their status, 
+• to update Product 
+Agreements status, 
+• to search and read 
+Product Agreements. 
+ProductRepository 
+Management 
+ProductInventory 
+Agreement 
+Management 
+1201 
+Product 
+Configuration 
+Check 
+Product 
+Configuration Check 
+Function Checks for 
+each Product 
+submitted if all 
+Product configuration 
+rules have been 
+Product 
+Management 
+Product 
+Repository 
+Management 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 1 
+Aggregate 
+Function Level 
+2 
+respected such as 
+prerequisite, 
+incompatibility rules 
+between 
+ProductSpecifications 
+or mandatory 
+characteristics. 
+ 
+ 
+ 
+
+
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component. 
+• 
+List of Dependent APIs - In order to satisfy the provided API, the  component 
+could require the usage of this set of required APIs. 
+• 
+List of  Events (generated & consumed ) - The events which the component 
+may generate are listed in this section along with a list of the events which it 
+may consume. Since there is a possibility of multiple sources and receivers for 
+each defined event. 
+3.1. Exposed APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+Resource 
+Operations 
+TMF637 Product Inventory 
+Management 
+4 
+Mandatory 
+Product 
+GET 
+GET /ID 
+POST 
+PATCH 
+DELETE 
+TMF688 Event Management 
+4 
+Optional 
+listener 
+POST 
+ 
+ 
+ 
+ 
+hub 
+POST 
+DELETE 
+TMF701 Process Flow 
+Management 
+4 
+Optional 
+processFlow GET 
+GET /ID 
+POST 
+
+
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+Resource 
+Operations 
+DELETE 
+ 
+ 
+ 
+ 
+taskFlow 
+GET 
+GET /ID 
+PATCH 
+ 
+ 
+ 
+
+
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+
+
+API ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+TMF666 Account 
+Management 
+4 
+Optional 
+billingAccount 
+Get 
+Get /id 
+TMF669 Party Role 
+Management 
+4 
+Optional 
+partyRole 
+Get 
+Get /id 
+TMF632 Party 
+4 
+Optional 
+individual 
+Get 
+Get /id 
+ 
+ 
+ 
+ 
+organization 
+Get 
+Get /id 
+TMF672 User Roles And 
+Permissions 
+4 
+Optional 
+permission 
+Get 
+Get /id 
+TMF673 Geographic Address 
+Management 
+4 
+Optional 
+geographicAddress 
+Get 
+Get /id 
+ 
+ 
+ 
+ 
+geographicSubAddress Get 
+Get /id 
+TMF674 Geographic Site 
+Management 
+4 
+Optional 
+geographicSite 
+Get 
+Get /id 
+TMF675 Geographic 
+Location 
+4 
+Optional 
+geographicLocation 
+Get 
+Get /id 
+TMF651 Agreement 
+Management 
+4 
+Optional 
+agreement 
+Get 
+Get /id 
+TMF639 Resource Inventory 
+Management 
+4 
+Optional 
+resource 
+Get 
+Get /id 
+TMF638 Service Inventory 
+Management 
+4 
+Optional 
+service 
+Get 
+Get /id 
+TMF620 Product Catalog 
+Management 
+4 
+Mandatory 
+productSpecification 
+Get 
+Get /id 
+ 
+ 
+ 
+ 
+productOffering 
+Get 
+Get /id 
+ 
+ 
+ 
+ 
+productOfferingPrice 
+Get 
+Get /id 
+TMF622 Product Ordering 
+4 
+Optional 
+productOrder 
+Get 
+Get /id 
+TMF637 Product Inventory 
+4 
+Optional 
+product 
+Get 
+Get /id 
+Post 
+
+
+API ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+Patch 
+Delete 
+TMF688 Event Management 
+4 
+Optional 
+event 
+Get 
+Get /id 
+ 
+ 
+ 
+
+
+3.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Map on the TM Forum website  for the machine-
+readable component specification files for this component. 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+23.5 
+eTOM 
+23.5 
+Functional Framework  
+23.5 
+5.2. Jira References 
+5.2.1. 
+Further resources 
+This component is involved in the following use cases described in IG1228 How to use 
+ODA - Using Open APIs to realize Use Cases 
+ 
+ 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1.  Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+31 May 2022   
+Kamal 
+Maghsoudlou 
+Sylvie Demarest 
+Final edits prior to publication 
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+Separated the YAML files to a 
+managed repository. 
+1.0.1  
+14 Aug 2023  
+Amaia White  
+Final edits prior to publication  
+1.0.2 
+11 Jun 2024  
+Sylvie Demarest  
+Updated Component Template 
+Aligned to Frameworks 23.5 
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+31 May 2022  
+Goutham Babu 
+Initial release 
+Production 
+22-Jul-2022 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+Pre-production 
+14-Aug-2023 
+Amaia White  
+New release 1.0.1  
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+Pre-Production 
+12-Jul-2024 
+Amaia White  
+New release 1.0.2  
+Production 
+30-Aug-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+6.2. Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Kamal Maghsoudlou  
+Ericsson  
+Editor  
+Sylvie Demarest  
+Orange  
+Editor  
+Ian Turkington  
+TM Forum  
+Additional Input  
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Additional Input  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+
+

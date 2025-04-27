@@ -1,0 +1,1880 @@
+ 
+TM Forum Technical Specification 
+ 
+ 
+ 
+Product Order Capture & 
+Validation 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC002 
+ 
+Maturity Level: General Availability (GA) 
+Team Approved Date: 26-Nov-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 2.1.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 7 
+2.1. 
+eTOM business activities ................................................................... 7 
+2.2. 
+SID ABEs ......................................................................................... 10 
+2.3. 
+eTOM L2 - SID ABEs links ............................................................... 10 
+2.4. 
+Functional Framework Functions ..................................................... 12 
+3. 
+TM Forum Open APIs & Events ................................................................... 22 
+3.1. 
+Exposed APIs .................................................................................. 22 
+3.2. 
+Dependent APIs ............................................................................... 24 
+3.3. 
+Events .............................................................................................. 28 
+4. 
+Machine Readable Component Specification ............................................... 29 
+5. 
+References ................................................................................................... 30 
+5.1. 
+TMF Standards related versions ...................................................... 30 
+5.2. 
+Jira References ................................................................................ 30 
+5.2.1. eTOM ........................................................................................... 30 
+5.2.2. SID ............................................................................................... 30 
+5.2.3. Functional Framework .................................................................. 30 
+5.2.4. API ............................................................................................... 30 
+5.2.5. Further resources ......................................................................... 31 
+6. 
+Administrative Appendix ............................................................................... 32 
+6.1. 
+Document History ............................................................................ 32 
+6.1.1. Version History............................................................................. 32 
+6.1.2. Release History ............................................................................ 32 
+6.1.3. Acknowledgments ........................................................................ 33 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Product Order 
+Capture and 
+Validation 
+TMFC002 Addresses the means of capturing what a 
+customer wants to order, based on the CSP 
+Product Catalog. 
+This component permits to choose the 
+configuration of the product offerings and 
+products desired, to provide a quote, to check the 
+eligibility of the customer order, and to complete 
+it with information needed such as the related 
+parties or associated the billing account and the 
+delivery appointment if needed. 
+This component is globally in charge of these 
+quote management, order capture and validation 
+steps, using dedicated components (e.g., 
+Product Configurator, Service Qualification, Party 
+Mgt) when needed. 
+After the delivery of the customer product order 
+items, this component is also in charge of the 
+commercial closure of the order. It includes 
+update of the Product Inventory (status and 
+starting/end date of tariffs and discounts) and 
+potential commercial rules control (e.g., receipt of 
+the contract document signed by the customer) 
+Core 
+Commerce 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for are: 
+Identifier Level Business 
+Activity Name 
+Description 
+1.1.9 
+L2 
+Selling 
+Responsible for managing prospective 
+customers, for qualifying and educating 
+customers, and matching customer 
+expectations 
+Managing prospective parties with whom an 
+enterprise may do business, such as 
+potential existing or new customers and 
+partners, for qualifying and educating them, 
+and ensuring their expectations are met. 
+1.1.9.2 L3 
+Develop Sales 
+Proposal 
+Develop a sales proposal to respond to the 
+customer’s requirements 
+Develop a sales proposal to respond to a 
+sales prospect's requirements. 
+1.1.9.5 L3 
+Negotiate 
+Sales/Contract 
+Close the sale with terms that are 
+understood by the customer and are mutually 
+agreeable to both the customer and the 
+service provider. 
+Close the sale with terms that are 
+understood by the sales prospect, which now 
+becomes a customer or some other partythat 
+make an enterprise's offerings to the market, 
+such as a partner, and are mutually 
+agreeable to both the customer or party and 
+an enterprise. 
+1.2.9 
+L2 
+Product Offering 
+Purchasing 
+Make an inbound/outbound purchase of one 
+or more product offerings, change an offering 
+being purchased, review an entire purchase, 
+and other processes that manage the 
+lifecycle of a purchase of one or more 
+product offerings. 
+1.2.27 
+L2 
+Product Order 
+Management 
+Product Order Management business 
+direct and control processes that capture, 
+track, fulfil, deliver and close product 
+order requests.  
+Product Order Management begins with 
+the capture of a product order request 
+based on a party (Customer, Business 
+Partner, Employee etc.), and processes, 
+tracks and reports the products from 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+order capture to  fulfillment, shipping the 
+order, and managing cancellation and 
+returns. 
+1.2.27.1 L3 
+Manage 
+Product Order 
+Capture 
+Manage Product Order Capture business 
+activity direct and control the creation of 
+product orders, validate product orders 
+against feasibility and/or availability 
+checks, and ensure product orders are 
+complete for onward business 
+processing. 
+Manage Product Order Capture assures 
+for completeness, the Product Order 
+requirements needed for successfully 
+processing, delivering and managing 
+returns of orders. 
+1.2.27.4 L3 
+Manage 
+Product Order 
+Cancellation 
+Manage Product Order Cancellation 
+business activity directs and controls the 
+product order cancellation requests. 
+1.2.27.5 L3 
+Manage 
+Product Order 
+Management 
+Reports 
+Manage Product Order Management 
+Reports business activity directs and 
+controls monitoring of product order 
+management activities, notify product 
+order management status and reporting 
+product order management activities.  
+1.3.3 
+L2 
+Customer Order 
+Handling 
+Customer Order 
+Processing 
+Management 
+Responsible for accepting and issuing 
+orders. 
+Customer Order Processing Management 
+business process directs and controls all 
+activities that operationally realize orders 
+for customer.  
+Customer Order Processing Management 
+assures the capture, processing, 
+fulfillment, "shipping", delivery and 
+reporting of customer orders from 
+feasibility assessment, purchasing, 
+payment, fulfillment and follow up with 
+the customer for closure. 
+1.3.3.1 
+L3 
+Determine 
+Customer Order 
+Feasibility 
+Check the availability and/or the feasibility of 
+providing and supporting standard and 
+customized product offerings where specified 
+to a customer. 
+1.3.3.2 
+L3 
+Authorize Credit 
+Assess a customer's credit worthiness in 
+support of managing customer risk and 
+company exposure to bad debt 
+1.3.3.4 
+L3 
+Complete 
+Customer Order 
+Manage customer information and 
+interactions after customer contracts or 
+associated service orders have been 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+finalized and during the order completion 
+phase 
+1.3.3.5 
+L3 
+Issue Customer 
+Orders 
+Issue Correct and complete customer orders 
+1.3.3.6 
+L3 
+Report Customer 
+Order Handling 
+Monitor the status of customer orders, 
+provide notifications of any changes, and 
+provide management reports 
+1.3.3.7 
+L3 
+Close Customer 
+Order 
+Close a customer order when the customer 
+provisioning activities have been completed. 
+Monitor the status of all open customer 
+orders and recognize that a customer order 
+is ready to be closed when the status is 
+changed to completed. 
+1.3.3.8 
+L3 
+Manage Order 
+Fallout 
+This process defines tasks involved in 
+handling fallouts (exceptions) generated in 
+the order fulfillment lifecycle. It deals with 
+identifying, assigning, managing, monitoring, 
+and reporting order fallouts. 
+1.3.3.10 L3 
+Manage 
+Customer Order 
+Placement 
+Manage Customer Order Placement 
+business activity directs and controls the 
+capture of information to enable create 
+customer order, change customer order 
+and validate customer order based on 
+ordering information from customer. 
+1.3.3.15 L3 
+Manage 
+Customer Order 
+Completion 
+Manage Customer Order Completion 
+business activity controls activities to 
+confirm that an order has been 
+successfully delivered/shipped to the 
+customer. 
+1.3.3.16 L3 
+Manage 
+Customer Order 
+Management 
+Report 
+Manage Customer Order Management 
+Report business activity provides detailed 
+account of Customer Order Management 
+activities, representing state and status of 
+customer orders across the customer 
+order lifecycle.  
+Manage Customer Order Management 
+Report provides monitoring, tracking and 
+customer order status 
+updates/notification as needed to all 
+stakeholders linked to the customer 
+ordering and fulfillment activities. 
+1.3.3.17 L3 
+Manage 
+Customer Order 
+Closure 
+Manage Customer Order Closure 
+business activity ensures that customer 
+has confirmed the delivery of a completed 
+customer order.  
+Manage Customer Order Closure 
+business activity closes-the-loop of 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+between the Customer Order Completion 
+process and the confirmation by the 
+Customer. This business activity includes 
+tasks to communicate and confirm 
+delivery to customer; cancellation of any 
+open line items in the customer order; 
+and reports the customer order 
+completion to related stakeholders. 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for are: 
+SID ABE 
+Level 1 
+SID ABE L1 Definition 
+SID ABE Level 2 (or 
+set of BEs) 
+SID ABE 
+L2 
+Definition 
+Customer 
+Product 
+Order 
+Handles single customer 
+orders and the various types 
+thereof, such as regulated 
+and non-regulated orders. 
+Orders ProductOfferings and 
+concerns Products 
+SalesQuote 
+ShoppingCart 
+CustomerProductOrder 
+ 
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified.  
+Note: The Product Order Capture & Validation component will also trigger creation and 
+update of Product but this information is managed by a dedicated component 
+TMFC005 - Product Inventory. 
+2.3. eTOM L2 - SID ABEs links 
+  
+ 
+
+
+ 
+
+
+TM Forum 2024. All Rights Reserved.                                                                                                                                                                              
+ 
+2.4. Functional Framework Functions 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+16 
+Fallout Automated 
+Correction 
+Fallout Automated Correction function tries to automatically fix 
+fallouts in workflows before they go to a human for handling. 
+This includes a Fallout Rules Engine that provides the capability to 
+handling various errors or error types based on built rules. These 
+rules can facilitate autocorrection, correction assistance, placement 
+of errors in the appropriate queues for manual handling, as well as 
+access to various systems. 
+Fa
+Ma
+17 
+Fallout Correction 
+Information 
+Collection 
+Fallout Correction Information Collection collects relevant 
+information for errors or situations that cannot be handled via 
+Fallout Auto Correction. The intent is to reduce the time required 
+by the technician in diagnosing and fixing the fallout. 
+Fa
+Ma
+18 
+Fallout 
+Management to 
+Fulfillment 
+Application 
+Accessing 
+Fallout Management to Fulfillment Application Accessing function 
+provides a variety of tools to facilitate Fallout Management access 
+to other applications and repositories to facilitate proper Fallout 
+Management.  This can include various general access techniques 
+such as messaging, publish and subscribe, etc. as well as specific 
+APIs and contracts to perform specific queries or updates to 
+various applications or repositories within the fulfillment domain. 
+Fa
+Ma
+19 
+Fallout Manual 
+Correction Queuing 
+Fallout Manual Correction Queuing function provides the required 
+functionality to place error fallout into appropriate queues to be 
+handled via various staff or workgroups assigned to handle or fix 
+the various types of fallout that occurs during the fulfillment 
+process. This includes the ability to create and configure queues, 
+Fa
+Ma
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 13 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+route errors to the appropriate queues, as well as the ability for 
+staff to access and address the various fallout instances within the 
+queues. 
+20 
+Fallout Notification 
+Fallout Notification function provides the means to alert people or 
+workgroups of some fallout situation. This can be done via a 
+number of means, including email, paging, (Fallout management 
+interface bus) etc. This function is done via business rules. 
+Fa
+Ma
+21 
+Fallout 
+Orchestration 
+The Fallout Orchestration function provides workflow and 
+orchestration capability across Fallout Management. 
+Fa
+Ma
+22 
+Fallout Reporting 
+Fallout Reporting provides various reports regarding Fallout 
+Management, including statistics on fallout per various times 
+periods (per hour, week, month, etc.) as well as information about 
+specific fallout. 
+Fa
+Ma
+23 
+Fallout Dashboard 
+System Log-in 
+Accessing 
+Fallout Dashboard System Log-in Accessing provides auto logon 
+capability into various applications needed to analyze and fix fallout 
+Fa
+Ma
+24 
+Pre-populated 
+Fallout Information 
+Presentation 
+Pre-populated Fallout Information Presentation automatically 
+position the analyzer on appropriate screens pre-populated with 
+information about the order(s) that's subject for fallout handling. 
+Fa
+Ma
+120 
+Customer Order 
+Capturing 
+Customer Order Capturing provides access to Order capture and 
+negotiation capabilities or receives the captured Customer Order 
+data from channels. Takes care of persistence using Customer 
+Order Lifecycle Management. Including support of contract 
+printing, integration with a locally installed cash management/cash 
+register and a retail inventory system for order completion and 
+ordered product versioning. 
+Pro
+Co
+Ac
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 14 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+172 
+Customer Order 
+Reporting 
+Customer Order Reporting function provides front end support for 
+Business, Financial and Operational reporting and analyzing of the 
+ordering activities. 
+Cu
+Ma
+174 
+Ordering Customer 
+Order Error 
+Resolution Support 
+Ordering Customer Order Error Resolution Support provides to 
+view pool of orders resulted in error or stuck orders and enable the 
+Customer Support to act accordingly(e.g., resend the request, 
+notify the user with recommended action) 
+For example, a configuration incompatibility with functional or 
+commercial constraint, product unavailability according to the 
+configuration may trigger the resend of the request or notify 
+the user with recommended action. 
+Cu
+Ma
+175 
+Customer Support 
+Jeopardy 
+Notification 
+Customer Support Jeopardy Notification provide to view 
+jeopardy notifications queue and enable the Customer 
+Support to act accordingly (e.g. notify customer on due date 
+delay). 
+Cu
+Ma
+176 
+Customer Order 
+Capturing Access 
+Customer Order Capturing Access provides front end support for 
+the Customer Order Capturing functions defined by the order 
+management. 
+Fu
+Int
+Ma
+177 
+Customer Order 
+Take-over 
+Management 
+Customer Order Take-over Management provides an ability to take 
+over governance of orders handled by other channels (e.g., self-
+service) amend and relinquish while preserving all the captured 
+data. 
+Cu
+Ma
+178 
+Customer Order 
+Administration 
+Customer Order Administration provide to view all outstanding 
+orders, progress and history displays 
+Cu
+Ma
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 15 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+181 
+Product Order Data 
+Collection 
+Product Order Data Collection provides an aid in verification and 
+issuance of a complete and valid customer order. This function 
+checks delivery address, link with a payment, a billing 
+account, a certified holder, etc. 
+Cu
+Ma
+204 
+Customer 
+OrderCompletion E
+ntry Finalization 
+The Customer OrderCompletion Entry Finalization function 
+enablescompletion and finalization of the Customer Order with 
+collection of Customer Data or installed base data according to the 
+Catalog. It allows to complete the configuration element not 
+necessary for the quotation. The complements could also concern 
+links with actors, dates, address, billing account. 
+Cu
+Ma
+205 
+Customer Order 
+Eligibility Validation 
+Customer Order Eligibility Validation function validates that the 
+Offer & products specified on the Customer Order, are eligible from 
+a commercial and functional point of view. 
+It includes: 
+• Commercial Eligibility with commercial compatibility with the 
+already customer installed Offers 
+• Functional Eligibility with the customer's already installed 
+Products. 
+• Customer Credit Eligibility check, considering the payment history 
+and the credit scores for a Customer, only the predictive credit 
+score for a Prospective Customer. 
+The technical feasibility is covered by the Service Availability 
+function. 
+Cu
+Ma
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 16 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+• 
+Commercial Eligibility with commercial compatibility 
+with the already customer installed Products 
+(corresponding to ProductOffering) 
+• 
+Functional Eligibility with the customer's already 
+installed Products (corresponding to 
+ProductSpecification). 
+208 
+Customer Order 
+Change 
+Management 
+Customer Order Change Management amend pending order 
+resulted from customer change requests or provisioning system 
+limitation and revalidate the order. 
+Cu
+Ma
+209 
+Customer Order 
+Cancellation 
+Customer Order Cancellation can optionally support Cancel for 
+order completed by Service Order Management (this capability is 
+dependent on the Service Order Management system’s ability to 
+roll back service provisioning). This function assesses the 
+feasibility of order cancellation and the potential charge to the 
+customer. If the cancellation is confirmed, it proceeds with the 
+cancellation. 
+Cu
+Ma
+211 
+Customer Order 
+Activity Supervision 
+Customer Order Activity Supervision governs the control of the 
+order amongst the ordering channels. This allows keeping the 
+order data consistency, sharing the order data among order 
+application channels, and alternating the control between them. 
+ Cu
+Ma
+212 
+Customer Order 
+Versioning 
+Customer Order Versioning maintains order versioning including 
+Tracking & Logging of the changes made to a purchased product. 
+ Cu
+Ma
+213 
+Pending Customer 
+Orders 
+Maintenance 
+Pending Customer Orders Maintenance saves the order/quote for 
+future processing (in case the customer is not sure if they want to 
+go through with the order at this point) 
+ Cu
+Ma
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 17 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+217 
+Customer Order 
+Establishment 
+Tracking 
+Customer Order Establishment Tracking provides the functionality 
+necessary to track and manage the distributed requests 
+decomposed by Customer Order Distribution.This capability needs 
+to be provided in both an ability to query in real time and a 
+publish/subscribe mechanism to enable the use of the information 
+wherever required. 
+ Cu
+Ma
+236 
+Customer Loyalty 
+SubscriptionManag
+ement 
+Configuration 
+Customer Loyalty SubscriptionManagement Configuration 
+function manages information for subscription and deactivation to 
+a Loyalty program.Subscription management  includes: 
+- checking customer requirements 
+- assigning one or more subgroups to which the customer belongs 
+- assigning welcome points & send welcome messages 
+- generate the unique Loyalty-identifier 
+Loyalty Subscription Management can assign multiple traffic 
+channels to loyalty subscriptions (sim-cards, PBX, Call Data 
+Network etc.) 
+Pro
+Co
+Ac
+259 
+External Call Center 
+Access 
+External Call Center Access provides access to call center self-
+empowered fulfillment function providing an internet technology 
+driven interface for the customer to undertake a variety of 
+fulfillment functions directly for themselves. 
+Cu
+Ma
+262 
+Product 
+Availability 
+Checking 1  
+Product Availability Checking function provide an internet 
+technology driven interface for the customer to undertake a 
+product availability check. 
+E.g., that the product offering is active for sales, the 
+equipment(s) specified in the customer order are on stock. 
+Cu
+Ma
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 18 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+272 
+Order Status 
+Viewing 
+Order Status Viewing provides self-empowered fulfillment function 
+of an internet technology driven interface for the customer to 
+undertake Order status enquiry. 
+Cu
+Ma
+277 
+Shopping Cart 
+Purchasing Access 
+Shopping Cart Purchasing Access function provide an internet 
+technology driven interface to the customer to undertake self-
+service purchase. 
+Cu
+Ma
+317 
+Product Availability 
+Area Checking 
+Product Availability Area Checking checks if CSP marketed 
+products are availability in the customer area 
+ 
+343 
+Mass Transaction 
+Ordering 
+Mass Transaction Ordering feed function of new orders. For bulk 
+sales by e.g., affiliates and corporate customer self-empowered 
+fulfillment provided e.g., by an internet technology driven interface 
+for bulk ordering. 
+Pro
+Co
+Ac
+359 
+Contract and SLA 
+creation 
+Contract and SLA Creation provides contract generation as well as 
+appropriate service level agreements (SLAs) generation 
+ 
+366 
+Customer Order 
+Management 
+Customer Order Management provides an online access function 
+to specific orders, to be used for management, monitoring and 
+tracking for customer support and external agents for Upgrade of 
+customer’s products/services. 
+Cu
+Ma
+379 
+Product 
+Customization 
+Offering 
+Management 
+Product Customization Offering Management provides the 
+necessary functionality to manage the customer personalized 
+proposals, taking into account the customer location, needs, 
+current products, as well as the service provider's products, sales 
+emphasis and targets, etc. 
+Sa
+387 
+Sales Metrics 
+Calculation 
+Sales Metrics Calculation provides sales metrics calculation 
+according to pre-defined metrics rules 
+  
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 19 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+388 
+Sales Order 
+Reporting 
+Sales Order Reporting provides reporting of order handoff. 
+Sa
+716 
+Order Data 
+Enrichment 
+Order Data Enrichment function acquire missing order data from 
+surrounding systems (often values taken from catalogs and 
+inventories, billing, fraud, etc.) or from external 3rd party systems 
+(like country's common address or credit check system). 
+Cu
+Ma
+717 
+Calculated Order 
+Data Enrichment  
+Calculated Order Data Enrichment calculates missing order data 
+values on-the-fly from existing data and ordering rules. E.g., 
+Contract end dates, Discounted period, etc. 
+Cu
+Ma
+718 
+Customer Order 
+Validation 
+Customer Order Validation Function ensures that the qualified 
+order is valid in any moment of order lifecycle, usually as data 
+become available. Validation ensures early fallout which is less 
+costly than encountering errors in later stages of order handling. 
+Cu
+Ma
+719 
+Customer Order 
+Storage 
+The Customer Order Storage function stores the valid and 
+complete customer orders into an appropriate data storage. 
+Cu
+Ma
+720 
+Customer Order 
+Searching 
+Customer Order Searching function makes the customer orders 
+available to other applications. 
+  
+727 
+Product Offer to 
+Customer 
+Verification 2 
+Product Offer to Customer Verification enables and verifies 
+the configuration of the commercial offer chosen by the 
+customer. 
+The configuration consist of technical, functional, and 
+commercial prerequisites and preferences. 
+Cu
+Ma
+756 
+Fallout Rule Based 
+Error Correction 
+Fallout Rule Based Error Correction function provides the 
+capability to handle various errors or error types based on pre-
+Fa
+Ma
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 20 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+defined rules. These rules can facilitate autocorrection, correction 
+assistance, placement of errors in the appropriate queues for 
+manual handling, as well as access to various systems via the 
+Fallout Interface Bus. 
+934 
+Sales Negotiation 
+Support 
+Sales Negotiation Support provides support for negotiating the sale 
+by providing multiple quotations as needed, taking into account the 
+customer data, customer qualification, and offers made. 
+Functionality includes access to products, product pricing, 
+scheduling of appointments if a dispatch is necessary, etc. 
+Sales Negotiation generatesan order or service request. 
+A Customer order request. 
+Customer order request generation – send solution design details 
+to update proposal product order in Customer Order Management 
+systems 
+Service order request generation – send solution design details to 
+update service order in Service Order Management systems (after 
+customer agreement – part of handoff to fulfillment) 
+Sa
+Ma
+1063 
+Sales Quote 
+Management 
+Sales Quote Management creates and manages quotes, including 
+internal approval. 
+Sa
+Ma
+1071 
+Customer Credit 
+Eligibility 
+Validation 
+Customer Credit Eligibility Validation function checks the 
+Customer Credit Eligibility, considering the payment history 
+and the credit scores for a Customer, only the predictive 
+credit score for a Prospective Customer. 
+Cu
+Ma
+1109 
+Customer Order 
+Quote Calculation 
+Customer Order Quote Calculation Function enables the 
+elaboration of an estimate, including configuration, pricing 
+and feasibility elements, thanks to the specific configuration, 
+Cu
+Ma
+
+
+© TM Forum 2024. All Rights Reserved.                                                                                   Page 21 of 33 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Ag
+Fu
+eligibility and valuation functions, identifying the various 
+relevant interlocutors (through the Sales Interlocutors 
+Management function), the scenarios to be realized and the 
+lot. 
+1110 
+Customer Order 
+Quote Creation 
+Customer Order Quote Materialization Function materializes 
+via a document and/or associated to a simplified identification 
+mean (QR code, bar code) to ease later interactions and 
+identification of the quotation, and sent to the customer. 
+Cu
+Ma
+1123 
+Product Order 
+Initialization 
+The Product Order Initialization Function creates the Product 
+Order and initializes it with the operations and default 
+configuration on the mandatory products of the selected offer, 
+or target offer in case of migration. 
+Pr
+Co
+Ac
+1200 
+Customer Loyalty 
+Subscription 
+Activation 
+Customer Loyalty Subscription Activation function manages 
+Loyalty programs activation and deactivation. It includes  
+- assigning one or more subgroups to which the customer 
+belongs 
+- assigning welcome points & send welcome messages  
+- generate the unique Loyalty-identifier 
+Pr
+Co
+Ac
+1325 
+Customer Order 
+Distribution 
+Customer Order Distribution function enables distributing 
+finalized customer orders to any parties and systems that 
+need the order information and/or the notification that the 
+order has been finalized. 
+Cu
+Ma
+1 TMFC027 Product Configurator covers the part related to Product Catalog rules checking. Only stock contr
+Product Order Capture & Validation. 
+2 TMFC027 Product Configurator covers the part related to Product Catalog rules checking at commercial an
+technical eligibility controls are triggered by TMFC002 Product Order Capture & Validation.
+
+
+f
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component. 
+• 
+List of Dependent APIs - In order to satisfy the provided API, the component 
+could require the usage of this set of required APIs. 
+• 
+List of Events (generated & consumed ) - The events which the component 
+may generate are listed in this section along with a list of the events which it 
+may consume. Since there is a possibility of multiple sources and receivers for 
+each defined event. 
+3.1. Exposed APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+ 
+
+
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+Resource 
+Operations 
+TMF622 Product 
+Ordering 
+Management 
+4 
+Mandatory 
+productOrder 
+GET 
+GET /id 
+POST 
+PATCH 
+DELETE 
+  
+  
+  
+  
+cancelProductOrder GET 
+GET /id 
+POST 
+TMF648 Quote 
+Management 
+4 
+Optional 
+quote 
+GET 
+GET /id 
+POST 
+PATCH 
+DELETE 
+TMF663 Shopping Cart 
+Management 
+4 
+Optional 
+shoppingCart 
+GET 
+GET /id 
+POST 
+PATCH 
+DELETE 
+TMF688 TMF688 Event 
+  
+Optional 
+  
+  
+TMF701 Process Flow 
+Management 
+4 
+Optional 
+processFlow 
+GET 
+GET /id 
+POST 
+DELETE 
+  
+  
+  
+  
+taskFlow 
+GET 
+GET /id 
+PATCH 
+ 
+ 
+ 
+
+
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+ 
+
+
+ 
+The APIs called by this component and provided by other components are: 
+API 
+ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+Rationales 
+TMF6
+20 
+Product 
+Catalog 
+Managem
+ent 
+v4 
+Mandatory 
+productCategory 
+Get, Get 
+/id 
+minimum 
+consistency 
+check 
+ 
+ 
+ 
+ 
+productOffering 
+Get, Get 
+/id 
+ 
+ 
+ 
+ 
+ 
+productOfferingPrice 
+Get, Get 
+/id 
+ 
+ 
+ 
+ 
+ 
+productSpecification 
+Get, Get 
+/id 
+ 
+TMF6
+29 
+Customer 
+Managem
+ent 
+v4 
+Optional 
+ 
+Get 
+ 
+TMF6
+32 
+Party 
+Managem
+ent 
+v4 
+Optional 
+individual 
+Get, Get 
+/id 
+ 
+ 
+ 
+ 
+ 
+organization 
+Get, Get 
+/id 
+ 
+TMF6
+37 
+Product 
+Inventory 
+Managem
+ent 
+v4 
+Mandatory 
+product 
+Get, Get 
+/id, Post, 
+Patch 
+minimum 
+consistency 
+check (case 
+of update of 
+an existing 
+product) 
+TMF6
+38 
+Service 
+Inventory 
+Managem
+ent  
+v4 
+Optional 
+service 
+Get, Get 
+/id 
+ 
+TMF6
+39 
+Resource 
+Inventory 
+Managem
+ent  
+v4 
+Optional 
+resource 
+Get, Get 
+/id 
+ 
+TMF6
+45 
+Service 
+Qualificatio
+n 
+Managem
+ent 
+v4 
+Optional 
+checkServiceQualific
+ation 
+Get, Get 
+/id, Post, 
+Patch 
+ 
+ 
+ 
+ 
+ 
+queryServiceQualifica
+tion 
+Get, Get 
+/id, Post, 
+Patch 
+ 
+TMF6
+46 
+Appointme
+nt 
+v4 
+Optional 
+appointment 
+Get, Get 
+/id, Post, 
+ 
+
+
+API 
+ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+Rationales 
+Managem
+ent 
+Patch, 
+Delete 
+ 
+ 
+ 
+ 
+searchTimeSlot 
+Get, Get 
+/id, Post, 
+Patch, 
+Delete 
+ 
+TMF6
+51 
+Agreement v4 
+Optional 
+agreement 
+Get, Get 
+/id 
+ 
+TMF6
+66 
+Account 
+Managem
+ent 
+v4 
+Optional 
+billingAccount 
+Get, Get 
+/id 
+ 
+TMF6
+69 
+Party Role 
+Managem
+ent 
+v4 
+Optional 
+partyRole 
+Get, Get 
+/id 
+ 
+TMF6
+72 
+TMF672 
+User Role 
+Permission 
+API 
+ 
+Optional 
+ 
+Get 
+ 
+TMF6
+73 
+Geographi
+c Address 
+Managem
+ent 
+v4 
+Optional 
+geographicAddress 
+Get, Get 
+/id 
+ 
+ 
+ 
+ 
+ 
+geographicSubAddre
+ss 
+Get, Get 
+/id 
+ 
+ 
+ 
+ 
+ 
+geographicAddressV
+alidation 
+Get, Get 
+/id, Post, 
+Patch 
+ 
+TMF6
+74 
+Geographi
+c Site 
+Managem
+ent 
+v4 
+Optional 
+geographicSite 
+Get, Get 
+/id 
+ 
+TMF6
+76 
+Payment 
+Managem
+ent 
+v4 
+Optional 
+payment 
+Get, Get 
+/id 
+ 
+TMF6
+79 
+Product 
+Offering 
+Qualificatio
+n 
+Managem
+ent 
+v4 
+Optional 
+productOfferingQualifi
+cation 
+Get, Get 
+/id, Post, 
+Patch 
+ 
+TMF6
+83 
+Party 
+Interaction 
+Mgt 
+v4 
+Optional 
+partyInteraction 
+Get, Get 
+/id 
+ 
+TMF6
+85 
+Resource 
+Pool 
+ 
+Optional 
+ 
+Get, Post, 
+Patch 
+ 
+
+
+API 
+ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Resource 
+Operation 
+Rationales 
+Managem
+ent 
+TMF6
+87 
+Stock 
+Managem
+ent 
+v4 
+Optional 
+checkProductStock 
+Get, Get 
+/id, Post, 
+Delete 
+ 
+ 
+ 
+ 
+ 
+queryProductStock 
+Get, Get 
+/id, Post, 
+Delete 
+ 
+ 
+ 
+ 
+ 
+reserveProductStock 
+Get, Get 
+/id, Post, 
+Delete 
+ 
+ 
+ 
+ 
+ 
+productStock 
+Get, Get 
+/id 
+ 
+TMF6
+88 
+TMF688 
+Event 
+v4 
+Optional 
+ 
+Get, Post 
+ 
+TMF7
+01 
+Process 
+Flow 
+Managem
+ent 
+v4 
+Optional 
+processFlow 
+Get, Get 
+/id, Post, 
+Patch 
+ 
+ 
+ 
+ 
+ 
+taskFlow 
+Get, Get 
+/id, Post, 
+Patch 
+ 
+TMF7
+16 
+Resource 
+Reservati
+on 
+v4 
+Optional 
+resourceReservation 
+Get, Get 
+/id, Post, 
+Patch, 
+Delete 
+ 
+  
+  
+  
+  
+cancelResourceRese
+rvation 
+Get, Get 
+/id, Post 
+ 
+TMF7
+60 
+Product 
+Configura
+tion 
+Managem
+ent 
+v5 
+Optional 
+checkProductConfigu
+ration 
+Get, Get 
+/id, Post 
+ 
+  
+  
+  
+  
+queryProductConfigur
+ation 
+Get, Get 
+/id, Post 
+ 
+ 
+NOTE: Geographic Location Management API (TMF675) is available in preview 
+version. As soon as the interface will be published it will be added to the table. 
+NOTE: new API TMF716 Resource Reservation v4 taken into account to replace 
+TMF685 Resource Pool Management. 
+
+
+3.3. Events 
+The diagram illustrates the Events which the component publishes and the Events that 
+the component subscribes to and then receives. Both lists are derived from the APIs 
+listed in the preceding sections. 
+The type of event could be: 
+• 
+Create: a new resource has been created (following a POST). 
+• 
+Delete: an existing resource has been deleted. 
+• 
+AttributeValueChange: an attribute from the resource has changed - event 
+structure allows to pinpoint the attribute. 
+• 
+InformationRequired: an attribute should be valued for the resource preventing 
+to follow nominal lifecycle - event structure allows to pinpoint the attribute. 
+• 
+StateChange: resource state has changed. 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Map on the TM Forum website for the machine-readable 
+component specification files for this component. 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+24.0 
+eTOM 
+24.0 
+Functional Framework  
+24.0 
+5.2. Jira References 
+ 
+5.2.1. 
+eTOM 
+• 
+Review L2 1.2.9 - Product Offering Purchasing and clarify L3 definitions and 
+inbound / outbound terminology + Delete L3 1.2.9.8 - Report Product Offering 
+Purchase as redundant with 1.3.3.6 - Report Customer Order Handling and 
+1.6.8.6 - Report Business Partner Orders 
+• 
+Review L3 1.3.3.4 - Complete Customer Order definition as it mixed customer 
+information, customer contracts and service orders. And review L3 1.3.3.7 - 
+Close Customer Order definition and clarify close/complete terminology and link 
+with 1.3.3.4 - Complete Customer Order (do we need 2 L3 ?). 
+• 
+1.3.3.8 - Manage Order Fallout: as this L3 is shared by POCV and POOM 
+components (to be consistent with Functional Framework mapping), clarify 
+which type of fallout need to be managed during the order delivery 
+orchestration (at POOM level) and which need to be managed at Product Order 
+Capture and Follow-Up level (by POCV). 
+5.2.2. 
+SID 
+5.2.3. 
+Functional Framework 
+These updates need to be studied for R22.0 or R22.5 
+• 
+Function 204 - Customer Order Completion: rename the function "Customer 
+Order Entry Finalization" as "completion" is confusing here 
+• 
+Function 269 - Installation Preference Configuration: review the definition of this 
+function or delete it (why limited to installation ? Why a dedicated function to 
+provide an interface for the customer to capture a set of information ?) 
+• 
+Add function(s) to describe the closure step of the customer order. 
+• 
+Function 934 - Sales Negotiation Support: review definition and delete part 
+related to service order generation. 
+5.2.4. 
+API 
+• 
+How can we trigger the Product Configurator for configuration ? Refer to JIRA 
+detailed in Product Configurator specifications 
+
+
+• 
+How can we evaluate Customer Credit (refer to Function 205 for definition) : 
+can this check be added in TMF696 - Risk Management API ? 
+ AP-6002 - 
+TMF696 - create real Task resource(s)  BACKLOG  
+• 
+How can we manage/represent mass operations in general, and mass 
+transaction ordering in particular ? 
+5.2.5. 
+Further resources 
+This component is involved in use cases described in IG1228 How to use ODA - Using 
+Open APIs to realize Use Cases: 
+ 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+29 Mar 2022 
+Gaetano 
+Biancardi , 
+Anastasios 
+Sarantis , Sylvie 
+Demarest 
+Emmanuel A. 
+Otchere 
+First version of document  
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+Separated the YAML files to a 
+managed repository. 
+2.0.1 
+19 Aug 2024  
+Sylvie Demarest  
+Updated Component Template 
+Aligned to Frameworks 23.5 
+Add of TMF760 Product 
+Configuration Management as 
+dependent API. 
+TMF685 Resource Reservation Pool 
+API replaced by TMF716 Resource 
+Reservation API as dependent API 
+2.0.1  
+06 Sep 2024  
+Amaia White  
+Final edits prior to publication  
+2.1.0 
+12 Nov 2024  
+Gaetano 
+Biancardi  
+• 
+API version, only major 
+version to be specified 
+2.1.0 
+26 Nov 2024  
+Amaia White  
+Final edits prior to publication  
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+29 Mar 2022  
+Goutham Babu 
+Initial release 
+Production 
+20-May-2022 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+Pre-production 
+14 Aug 2023  
+Amaia White  
+New release 1.0.1  
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  26 Nov 2024  
+Amaia White  
+New release 2.1.0  
+
+
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Production 
+07-Mar-2025 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+6.1.3. 
+Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Gaetano Biancardi  
+Accenture 
+Reviewer  
+Anastasios Sarantis  
+Vodafone 
+Reviewer  
+Sylvie Demarest 
+Orange  
+Editor  
+Elisabeth Andersson   
+Matrixx 
+Reviewer  
+Emmanuel A. Otchere  
+Huawey 
+Additional Input 
+Ian Turkington  
+TM Forum 
+Additional Input 
+Hugo Vaughan (TM Forum)  
+TM Forum 
+Additional Input 
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+
+

@@ -1,0 +1,975 @@
+ 
+TM Forum Technical Specification 
+ 
+ 
+Agreement Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC039 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 27-Aug-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.1.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+
+
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 6 
+2.3. 
+Functional Framework Functions ....................................................... 8 
+3. 
+TMF OPEN APIs & events ........................................................................... 12 
+3.1. 
+Exposed APIs .................................................................................. 12 
+3.2. 
+Dependent APIs ............................................................................... 13 
+3.3. 
+Events .............................................................................................. 15 
+4. 
+Machine Readable Component Specification ............................................... 16 
+5. 
+References ................................................................................................... 17 
+5.1. 
+TMF Standards related versions ...................................................... 17 
+5.2. 
+Jira References ................................................................................ 17 
+5.3. 
+Further resources............................................................................. 17 
+6. 
+Administrative Appendix ............................................................................... 18 
+6.1. 
+Document History ............................................................................ 18 
+6.1.1. Version History............................................................................. 18 
+6.1.2. Release History ............................................................................ 19 
+6.1.3. Acknowledgments ........................................................................ 19 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Agreement 
+Management 
+TMFC039 Agreement Management component is 
+responsible for creating, storing, editing, 
+and tracking agreed arrangements with 
+related terms and conditions over a 
+lifecycle. The component manages 
+offers, records acceptance, and 
+associated considerations and 
+intentions to establish agreements as 
+legally binding. 
+As well this components provides 
+workfows and templates that facilitates 
+collaboration, communication, and 
+negotiation of agreements between 
+parties, and administers the specificities 
+related to translate agreements into 
+contracts, when it is required. It 
+provides a secure storage, version 
+control, compliance management, and 
+renewal notifications for agreements. 
+Party 
+Management 
+ 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this component is responsible for are: 
+Identifier Level Business 
+Activity Name 
+Description 
+1.6.5 
+L2 
+Party 
+Agreement 
+Management 
+Party Agreement Management manages all 
+aspects of agreements with parties, including 
+customers.  Agreements include: 
+• 
+Purchasing agreements for products, 
+services, and resources that meet the 
+enterprise’s needs 
+• 
+On-boarding agreements for a Party's 
+offerings 
+• 
+Service Level Agreements with one or 
+more other parties 
+• 
+Agreements to use a Party as a sales 
+channel 
+• 
+Reusable template agreements that 
+can be used to create any of the 
+above. 
+1.7.14 
+L2 
+Enterprise 
+Governance 
+Enterprise Governance business process 
+manage activities that ensure accountability 
+and control of the strategic direction of  the 
+organization.  
+1.7.14.5 
+L3 
+Manage 
+Contract 
+Manage Contract business activity is in charge 
+of managing agreements, from their creation 
+through to their execution by chosen party, as 
+well as the termination of contracts. 
+Manage Contract business activity cover tasks 
+that include managing contract creation, 
+execution of contracts, analysis of contracts to 
+maximize operational and financial 
+performance and reducing financial risk. 
+2.2. SID ABEs 
+SID ABEs this component is responsible for are: 
+
+
+SID ABE 
+Level 1 
+SID ABE L1 Definition 
+SID ABE Level 2 
+(or set of BEs) 
+SID ABE L2 Definition 
+Agreement 
+ABE 
+One form of business 
+interaction in which Parties 
+(for example, Service 
+Providers or Customers) 
+engage is an agreement. An 
+agreement is a contract or 
+arrangement, either written 
+or verbal and sometimes 
+enforceable by law, such as 
+a service level agreement or 
+a customer price agreement. 
+An agreement involves a 
+number of other business 
+entities, such as Products, 
+Services, and/or 
+Resources.  
+Agreement 
+A type of 
+BusinessInteraction that 
+represents a contract or 
+arrangement, either written 
+or verbal and sometimes 
+enforceable by law. 
+AgreementItem 
+The purpose for an 
+Agreement expressed in 
+terms of a Product, Service, 
+Resource, and/or their 
+respective specifications, 
+inherited from 
+BusinessInteractionItem. 
+AgreementTermO
+rCondition 
+Aspects of the Agreement 
+not formally specified 
+elsewhere in the Agreement 
+and that cannot be captured 
+elsewhere in a formal 
+notation, or automatically 
+monitored and require a 
+more human level of 
+management. 
+AgreementAuthori
+zation 
+BusinessParticpant 
+responsible for approving an 
+Agreement. 
+AgreementApprov
+al 
+A group of 
+AgreementAuthorizations 
+required from the 
+BusinessParticipants 
+involved in the Agreement. 
+ 
+eTOM L2 - SID ABEs links 
+ 
+
+
+ 
+ 
+2.3. Functional Framework Functions 
+Function 
+ID 
+Function Name Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+1026 
+Partner 
+Collaboration 
+Constraints 
+Collection 
+Partner Collaboration 
+Constraints Collection function 
+collect external and internal 
+constraints that can impact a 
+partner collaboration. The 
+partner strategy definition is 
+impacted by various factors, 
+like partner’s geographical 
+location, governmental 
+regulatory, product and 
+services offered etc. The 
+function also provides 
+capability to consider security 
+and financial risks, 
+environmental and legal issues 
+and existing agreements etc.  
+Purchasing 
+Strategy 
+Management 
+Purchasing 
+Strategy 
+Definition 
+1045 
+Partner 
+Agreement 
+Tracking 
+Partner Agreement Tracking 
+function keeps the association 
+of the partner product offerings 
+with the agreements and tracks 
+anomalies for single products 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+
+
+Function 
+ID 
+Function Name Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+or group of products of the 
+partner.  
+1043 
+Partner 
+Agreement 
+Storage and 
+Searching 
+Partner Agreement Storage 
+and Searching function provide 
+the ability to view Partner's 
+existing agreements, search for 
+partner agreements based on 
+meta-data and to search text 
+strings within agreements. The 
+data can also be mined for 
+partner strategy, negotiation, 
+workflow, and interaction 
+purposes. 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+1044 
+Partner 
+Agreement 
+Implementation 
+Agreement Implementation 
+function provides support for 
+the implementation of the 
+agreement’s terms and 
+conditions to be used by 
+related organizations during 
+operations. 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+1042 
+Partner 
+Agreement 
+Creation 
+Partner Agreement Creation 
+function provide the 
+functionality to automate the 
+creation of an agreement 
+based on templates or from 
+scratch. The function allows us 
+to create and maintain 
+predefined agreement options 
+and templates with terms and 
+conditions (e.g., pricing 
+information, payment clauses, 
+legal texts, etc.) for different 
+purposes and services.  
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+1180 
+Customer 
+Framework 
+Agreement 
+Approval  
+Customer Framework 
+Agreement Approval Function 
+manages all approval of Party 
+Roles involved in the 
+Framework Agreement 
+(Customer Roles as well as 
+CSP roles). 
+Sales 
+Management 
+Framework 
+Agreement 
+Management 
+1179 
+Customer 
+Framework 
+Agreement 
+Definition  
+The Customer Framework 
+Agreement Definition Function 
+consists in defining the 
+agreement that describes the 
+commitments and company 
+features valid for associated 
+customer orders. 
+Sales 
+Management 
+Framework 
+Agreement 
+Management 
+
+
+Function 
+ID 
+Function Name Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+It defines a subset of catalog 
+offers and products which will 
+be marketed to a customer with 
+particular conditions 
+(configurations of product, 
+rates, discounts, SLA such as 
+availability rate, restoration time 
+guaranties, and associated 
+penalties for the CSP). 
+363 
+Product 
+Agreement 
+Storage 
+Product Agreement Storage 
+provides functionality 
+necessary to store and make 
+available the Product 
+Agreements. 
+This function allows: 
+• 
+to instantiate or update 
+Product Agreement 
+approved by the customer 
+with their party involved, 
+their configuration, their 
+approvals and their status, 
+• 
+to update Product 
+Agreements status, 
+• 
+to search and read Product 
+Agreements. 
+Product 
+Agreement 
+Management 
+Product 
+Agreement 
+Storage 
+361 
+Product 
+Agreement 
+Implementation 
+Product Agreement 
+Implementation function 
+provides functionality pertaining 
+to the implementation of the 
+Product Agreement (a.k.a. 
+contract) across fulfillment, 
+assurance, and billing 
+according to Product 
+Agreement Specification. 
+A Product Agreement 
+represents the approval by the 
+Customer and the Vendor of all 
+term or conditions of a 
+ProductOffering. 
+Product 
+Management 
+Product 
+Agreement 
+Implementation 
+653 
+Contract 
+Management 
+Contract Management, 
+including establishment, 
+modification, and termination. 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+1042 
+Partner 
+Agreement 
+Creation 
+Partner Agreement Creation 
+function provides the 
+functionality to automate the 
+creation of an agreement 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+
+
+Function 
+ID 
+Function Name Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+based on templates or from 
+scratch. The function allows to 
+create and maintain predefined 
+agreement options and 
+templates with terms and 
+conditions (e.g., pricing 
+information, payment clauses, 
+legal texts, etc.) for different 
+purposes and services. 
+1043 
+Partner 
+Agreement 
+Storage and 
+Searching  
+Partner Agreement Storage 
+and Searching function 
+provides the ability to view 
+Partner's existing agreements, 
+search for partner agreements 
+based on meta-data and to 
+search text strings within 
+agreements. The data can also 
+be mined for partner strategy, 
+negotiation, workflow and 
+interaction purposes. 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+1044 
+Partner 
+Agreement 
+Implementation  
+Agreement Implementation 
+function provides support for 
+the implementation of the 
+agreement’s terms and 
+conditions to be used by 
+related organizations during 
+operations. 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+1045 
+Partner 
+Agreement 
+Tracking  
+Partner Agreement Tracking 
+function keeps the association 
+of the partner product offerings 
+with the agreements and tracks 
+anomalies for single products 
+or group of products of the 
+partner. 
+Business 
+Partner 
+Management 
+Business 
+Partner 
+Agreement 
+Management 
+ 
+ 
+ 
+
+
+3. TMF OPEN APIs & events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the  component 
+could require the usage of this set of required APIs.  
+• 
+List of  Events (generated & consumed ) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+3.1. Exposed APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+API ID 
+API Name 
+Mandatory / 
+Optional 
+Operations 
+TMF651 Agreement 
+Management API 
+Mandatory 
+agreement: 
+- GET 
+- GET/id 
+- POST 
+- PATCH/id 
+- DELETE/id 
+agreementSpecification: 
+- GET 
+- GET/id 
+- POST 
+- PATCH/id 
+- DELETE/id 
+
+
+API ID 
+API Name 
+Mandatory / 
+Optional 
+Operations 
+TMF669 Process Flow 
+Management API 
+Optional 
+processFlow: 
+- POST 
+- GET 
+- GET /id 
+- DELETE 
+taskFlow: 
+- PATCH 
+- GET 
+- GET /id 
+TMF688 Event 
+Optional 
+n/a 
+NOTE: "Resources Model coverage" element has been added to the table 
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+ 
+
+
+ 
+The APIs called by this component and provided by other components are: 
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Operation 
+Rationale 
+TMF632 Party 
+Management 
+API 
+Mandatory 
+individual: 
+- GET 
+- GET/id 
+organization: 
+- GET 
+- GET/id 
+From TMF651_Agreement 
+resource schema, where 
+Agreement vs 
+RelatedPArty relationship 
+is listed as 1,..* 
+TMF672 User Roles & 
+Permissions 
+Mandatory 
+get 
+  
+TMF669 Party Role 
+Management 
+API 
+Optional 
+partyRole: 
+- GET 
+- GET/id 
+n/a 
+TMF620 Product 
+Catalog 
+Management 
+API 
+Optional 
+productOffering: 
+- GET 
+- GET/id 
+productOfferingPrice: 
+- GET 
+- GET/id 
+n/a 
+TMF637 Product 
+Inventory 
+API 
+Optional 
+product: 
+- GET 
+- GET/id 
+n/a 
+TMF667 Document 
+Management 
+API 
+Optional 
+document: 
+- GET 
+- GET/id 
+n/a 
+TMF701 Process 
+Flow 
+Management 
+API 
+Optional 
+processFlow: 
+- POST 
+- GET 
+- GET /id 
+- DELETE 
+taskFlow: 
+- PATCH 
+- GET 
+- GET /id 
+n/a 
+TMF688 Event 
+Optional 
+get 
+  
+ 
+ 
+ 
+
+
+3.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+  
+ 
+  
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component table for the machine-readable component specification 
+file for this component. 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+23.5 
+eTOM 
+23.5 
+Functional Framework  
+23.5 
+ 
+5.2. Jira References 
+5.3. Further resources 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+13-Jun-2023 
+Matteo Destino  
+Initial draft for Rights and 
+Permissions component, with eTOM, 
+SID and Open API mapping 
+1.0.0 
+ 
+Amaia White  
+Final edits prior to publication 
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+Separated the YAML files to a 
+managed repository. 
+1.0.1 
+14 Aug 2023  
+Amaia White  
+Final edits prior to publication 
+1.1.0 
+27 Aug 2024  
+Gaetano 
+Biancardi  
+New Component template applied 
+Exposed API: removed: TMF688 
+Event Management  
+Dependant API:  removed: TMF688 
+Event Management  
+Functional Frameweorl Function, 
+following functions added: 
+• 
+Customer Framework 
+Agreement Approval 1180 
+• 
+Customer Framework 
+Agreement Definition 1179 
+• 
+Product Agreement Storage 
+363 
+• 
+Product Agreement 
+Implementation 361 
+• 
+Contract Management 653 
+• 
+Partner Agreement Creation 
+1042 
+• 
+Partner Agreement Storage 
+and Searching 1043 
+• 
+Partner Agreement 
+Implementation 1044 
+• 
+Partner Agreement Tracking 
+1045 
+
+
+6.1.2. 
+ Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+13-Jun-2023  
+Amaia White  
+Initial release of document  
+Pre-production 
+17-Jul-2023 
+Adrienne Walcott 
+Updated to Member Evaluated 
+status 
+Pre-production 
+14-Aug-2023 
+Amaia White  
+New release of document 
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  06-Sept-2024 
+Amaia White  
+New release of document  
+Production 
+01-Nov-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+ 
+6.1.3. 
+Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Matteo Destino  
+Accenture  
+Editor  
+Cecile Ludwichowski  
+Orange  
+Additional Input  
+Emmanuel A. Otchere  
+Huawei 
+Additional Input  
+Gaetano Biancardi  
+Accenture  
+Reviewer 
+Sylvie Demarest  
+Orange  
+Reviewer  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

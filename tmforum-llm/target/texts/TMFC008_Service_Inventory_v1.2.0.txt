@@ -1,0 +1,787 @@
+ 
+TM Forum Technical Specification 
+ 
+ 
+ 
+Service Inventory 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC008 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 26-Nov-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.2.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes SID Data Entities and Functional Framework Functions ..... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 6 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 6 
+2.4. 
+Functional Framework Functions ....................................................... 7 
+3. 
+TMF OPEN APIs & Events ........................................................................... 10 
+3.1. 
+Exposed APIs .................................................................................. 10 
+3.2. 
+Dependant APIs ............................................................................... 11 
+3.3. 
+Events .............................................................................................. 13 
+4. 
+Machine Readable Component Specification ............................................... 14 
+5. 
+References ................................................................................................... 15 
+5.1. 
+TMF Standards related versions ...................................................... 15 
+5.2. 
+Jira References ................................................................................ 15 
+5.2.1. Functional Framework .................................................................. 15 
+5.3. 
+Further resources............................................................................. 15 
+6. 
+Administrative Appendix ............................................................................... 16 
+6.1. 
+Document History ............................................................................ 16 
+6.1.1. Version History............................................................................. 16 
+6.1.2. Release History ............................................................................ 16 
+6.1.3. Acknowledgments ........................................................................ 17 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA Function 
+Block 
+Service 
+Inventory 
+TMFC008 Service Inventory component is responsible for 
+storage and exposure of CFS (Customer 
+Facing Service) that are associated to Product 
+Inventory items. It is also responsible for RFS 
+(Resource Facing Service) definition, mapping 
+between CFS and RFS and mapping with 
+infrastructure/network resources. 
+Service Inventory component has functionality 
+that enables inventory items creation, inventory 
+organization, inventory search or filter, 
+inventory monitoring and tracking, inventory 
+control and inventory auditing. 
+The minimum check to be performed at 
+inventory items creation or update is the global 
+consistency with related Service Catalog 
+information. 
+Production 
+ 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for: 
+Identifier Level Business 
+Activity 
+Name 
+Description 
+1.4.4 
+L2 
+Service 
+Support 
+Readiness 
+Manage service infrastructure, ensuring that the 
+appropriate service capacity is available and 
+ready to support the SM&O Fulfillment, 
+Assurance and Billing processes 
+1.4.4.1 L3 
+Manage 
+Service 
+Inventory 
+Establish, manage and administer the 
+enterprise's service inventory, as embodied in the 
+Service Inventory Database, and monitor and 
+report on the usage and access to the service 
+inventory, and the quality of the data maintained 
+in it. 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs) 
+Service ABE 
+ 
+2.3. eTOM L2 - SID ABEs links 
+ 
+
+
+ 
+ 
+ 
+2.4. Functional Framework Functions 
+ 
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Functions Level 1 
+Aggregate 
+Functions Level 2 
+576 
+Service Data 
+Retrieval 
+Service Data Retrieval 
+provides retrieval of 
+appropriate inventory 
+data for example in the 
+context of service end to 
+end testing. 
+Service 
+Management 
+Service Repository 
+Management 
+593 
+ServiceInventory 
+Repository 
+Updating 
+ServiceInventory 
+Repository Updating 
+updates information in the 
+service inventory 
+according to the 
+configuration of specific 
+services 
+Service 
+Management 
+ServiceInventory 
+Repository 
+Management 
+628 
+Service to 
+Resource 
+Relationship 
+Management 
+Service to Resource 
+Relationship Management 
+provides Creation, Update 
+and Deletion of the 
+relations of stand-alone 
+physical or logical 
+resources whose 
+assignment is critical to 
+service's fulfillment, and 
+Service 
+Management 
+ServiceInventory 
+Repository 
+Management 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Functions Level 1 
+Aggregate 
+Functions Level 2 
+whose tracking is critical to 
+service operations, 
+assurance, and billing, as 
+well as, resources, which 
+represent a larger resource 
+structure supporting the 
+service, often referred to 
+as an Access Point. 
+629 
+Service to 
+Resource 
+Relationship 
+Synchronization 
+Service to Resource 
+Relationship 
+Synchronization function 
+entails reconciliation of the 
+data in a Service Inventory 
+Management system with 
+inventory discovered from 
+other sources and 
+synchronizes mismatched 
+service inventory records. 
+Service 
+Management 
+ServiceInventory 
+Repository 
+Management 
+630 
+Service-
+Resource 
+Relationship 
+Management 
+Notifications 
+Service-Resource 
+Relationship Management 
+Notifications; Notification of 
+Service-Resource 
+Relationship Management 
+actions to relevant 
+stakeholders 
+Service 
+Management 
+Service Reporting 
+Service Repository 
+Management 
+964 
+Onboarded 
+Service 
+Integration 
+Configuration 
+Onboarded Service 
+Integration Configuration 
+function will configure 
+the on boarded service 
+and the relevant systems 
+to establish integration 
+automatically, when 
+requested. There are 
+several system services 
+in the infrastructure that 
+needs to be aware and 
+integrated with the new 
+service. 
+Service 
+Management 
+Service Repository 
+Management 
+965 
+Service Instance 
+Lifecycle 
+Management 
+Service Instance Lifecycle 
+Management function will 
+control the starting of new 
+instances and closing of 
+instances of a service as 
+well as other activity states 
+of the service instances. 
+Software based Services’ 
+performance and 
+availability may be 
+controlled by managing 
+multiple instances of the 
+Service 
+Management 
+ServiceInventory 
+Repository 
+Management 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Functions Level 1 
+Aggregate 
+Functions Level 2 
+service with multiple states 
+of activity. 
+1344 
+Service 
+Topology 
+Discovery 
+Service Topology 
+Discovery function 
+provides the required 
+capability to discover 
+how resources (e.g. 
+network) are related to 
+each other in providing a 
+service. 
+Service 
+Management 
+Service Repository 
+Management 
+  
+ 
+ 
+
+
+3. TMF OPEN APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the  component 
+could require the usage of this set of required APIs. 
+• 
+List of  Events (generated & consumed ) - The events which the component 
+may generate are listed in this section along with a list of the events which it 
+may consume. Since there is a possibility of multiple sources and receivers for 
+each defined event. 
+3.1. Exposed APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+Resource 
+Operations 
+TMF638 Service Inventory 
+Management 
+4 
+Mandatory 
+service 
+Get 
+Get /ID 
+POST 
+PATCH 
+DELETE 
+TMF701 Process Flow 
+4 
+Optional 
+processFlow 
+Get 
+Get /ID 
+POST 
+DELETE 
+ 
+ 
+ 
+ 
+taskFlow 
+Get 
+Get /ID 
+PATCH 
+TMF688 Event 
+4 
+Optional 
+listener 
+POST 
+ 
+ 
+4 
+ 
+hub 
+POST 
+DELETE 
+
+
+3.2. Dependent APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+ 
+ 
+
+
+API ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Resources 
+Operations 
+TMF63
+9 
+Resource 
+Inventory 
+Management 
+4 
+Optional 
+resource 
+Get 
+Get /ID 
+TMF66
+9 
+Party Role 
+Management 
+4 
+Optional 
+partyRole 
+Get 
+Get /ID 
+TMF63
+2 
+Party 
+Management 
+4 
+Optional 
+induvidual / 
+organization 
+Get 
+Get /ID 
+TMF67
+2 
+User Roles 
+Permission 
+4 
+Optional 
+permission 
+Get 
+Get /ID 
+TMF67
+3 
+Geographic Addr
+ess Management 
+4 
+Optional 
+geographicAddress 
+Get 
+Get /ID 
+ 
+ 
+ 
+ 
+geographicSubAddr
+ess 
+Get 
+Get /ID 
+TMF67
+4 
+Geographic Site 
+Management 
+4 
+Optional 
+geographicSite 
+Get 
+Get /ID 
+TMF67
+5 
+Geographic 
+Location 
+4 
+Optional 
+geographicLocation 
+Get 
+Get /ID 
+TMF63
+3 
+Service Catalog 
+Management 
+4 
+Mandatory 
+serviceSpecification 
+Get 
+Get /ID 
+TMF64
+1 
+Service Ordering 
+4 
+Optional 
+serviceOrder 
+Get 
+Get /ID 
+TMF63
+8 
+Service Inventory 
+Management 
+4 
+Optional 
+service 
+Get 
+Get /ID, 
+Post, Patch, 
+Delete 
+TMF68
+8 
+Event 
+4 
+Optional 
+event 
+Get 
+Get /ID, 
+Post 
+ 
+ 
+ 
+
+
+3.3. Events 
+The following diagram illustrates the Events which the component may publish and the 
+Events that the component may subscribe to and then may receive. Both lists are 
+derived from the APIs listed in the preceding sections. 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Map on the TM Forum website  for the machine-
+readable component specification files for this component.  
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+ 
+Standard 
+Version(s) 
+SID 
+23.5 
+eTOM 
+23.5 
+Functional Framework  
+23.5 
+5.2. Jira References 
+5.2.1. 
+Functional Framework 
+• 
+ ISA-416 - Harmonize functions related to Product, Service and Resource 
+Inventories  BACKLOG Harmonize as much as possible functions related to 
+Product, Service and Resource Inventory  (this is under review)  
+• 
+ ISA-996 - Master Data Management has repurposed catalog related 
+functions  BACKLOG  
+As part of reviewing the Product, Service and Resource Catalogs to align with the 
+updates to the Functional Framework, we realized that a lot of functions have either 
+been removed or been re-purposed by Master Data Management.  
+Due to this, we had to make a decision to remove all these functions from the 
+Components:  
+• 
+Removed deleted unclassified functions  (1,2,5,7,9,10, 12,14,15) 
+• 
+Removed functions that used to be related to Catalog management but now 
+have been re-purposed by Master Data Management ((3,4, 6,11,13) 
+Our concern is that we may be missing functions for the catalog due to re-use of 
+Master Data Management.  
+5.3. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions. 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1.  Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+31 May 2022   
+Kamal 
+Maghsoudlou 
+Sylvie Demarest 
+Initial release 
+1.0.1 
+27 Jul 2023  
+Ian Turkington  
+No content changed, simply a layout 
+change to match template 3. 
+1.0.1  
+15 Aug 2023  
+Amaia White  
+Final updates before publication  
+1.1.0 
+14 May 2024  
+Hugo Vaughan 
+(TM Forum) 
+Sylvie Demarest  
+• 
+Updated to latest template 
+• 
+Aligned with 23.5 SID, eTOM 
+and Functional Framework 
+1.1.0  
+12 Jul 2024  
+Amaia White  
+Final Updates before publication  
+1.2.0 
+12 Nov 2024  
+Gaetano 
+Biancardi  
+• 
+TMF688, removed from the 
+core specification, moved to 
+supporting functions 
+• 
+TMF672, removed from the 
+core specification, moved to 
+supporting functions 
+• 
+ API version, only major version 
+to be specified 
+1.2.0 
+26 Nov 2024  
+Amaia White  
+Final updates before publication  
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+31 May 2022  
+Goutham Babu 
+Initial release 
+Production 
+22-Jul-2022 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+Pre-production 
+15-Aug-2023 
+Amaia White  
+new release v1.0.1  
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production 
+12-Jul-2024 
+Amaia White  
+New release 1.1.0  
+Production 
+30-Aug-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production 
+26-Nov-2024 
+Amaia white 
+New release 1.2.0  
+
+
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Production 
+07-Mar-2025 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+6.1.3. 
+Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Kamal Maghsoudlou  
+Ericsson  
+Editor 
+Sylvie Demarest  
+Orange 
+Additional Input  
+Ian Turkington  
+TM Forum  
+Additional Input  
+Hugo Vaughan (TM Forum)  
+TM Forum 
+Additional Input  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

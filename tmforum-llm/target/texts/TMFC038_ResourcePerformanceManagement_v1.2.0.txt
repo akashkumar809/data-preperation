@@ -1,0 +1,1182 @@
+ 
+TM Forum Component 
+ 
+ 
+ 
+Resource Performance 
+Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC038 
+ 
+Maturity Level: General Availability (GA) 
+Team Approved Date: Dec-17-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.2.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2025. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ......................................................................................... 12 
+2.3. 
+eTOM L2 - SID ABEs links ............................................................... 12 
+2.4. 
+Functional Framework Functions ..................................................... 13 
+3. 
+TM Forum Open APIs & Events ................................................................... 15 
+3.1. 
+Exposed APIs .................................................................................. 15 
+3.2. 
+Dependent APIs ............................................................................... 18 
+3.3. 
+Events .............................................................................................. 20 
+4. 
+Machine Readable Component Specification ............................................... 22 
+5. 
+References ................................................................................................... 23 
+5.1. 
+TMF Standards related versions ...................................................... 23 
+5.2. 
+Further resources............................................................................. 23 
+6. 
+Administrative Appendix ............................................................................... 24 
+6.1. 
+Document History ............................................................................ 24 
+6.1.1. Version History............................................................................. 24 
+6.1.2. Release History ............................................................................ 24 
+6.2. 
+Acknowledgements .......................................................................... 25 
+ 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+1. TAC-208 IG1171 (update) Component Definition to v4.0.0 and incorporate 
+IG1245 Principles to Define ODA Components 
+2. [TAC-250] IG 1171 Improvements Some observations & recommendations. - 
+TM Forum JIRA 
+3. [TAC-214] Interface Standardization needs all 3 stages of process to be 
+developed - TM Forum JIRA 
+4. [TAC-226] Overview - TM Forum JIRA 
+5. ODA-846  Summary of ODA component Template enhancements for 14th Sep 
+Review 
+ 
+Component 
+Name 
+ID 
+Description 
+ODA Function 
+Block 
+Resource 
+Performance 
+Management 
+TMFC038 Resource Performance 
+Management will collect, monitor, 
+analyze, and report on the 
+performance of the service 
+provider's resources 
+Intelligence 
+Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+<Note to not be inserted onto ODA Component specifications: If a new ABE is 
+required, but it does not yet exist in SID. Then you should include a textual description 
+of the new ABE, and it should be clearly noted that this ABE does not yet exist. In 
+addition a Jira epic should be raised to request the new ABE is added to SID, and the 
+SID team should be consulted. Finally, a decision is required on the feasibility of the 
+component without this ABE. If the ABE is critical then the component specification 
+should not be published until the ABE issue has been resolved. Alternatively if the ABE 
+is not critical, then the specification could continue to publication. The result of this 
+decision should be clearly recorded.> 
+ 
+eTOM business activities this ODA Component is responsible for. 
+Identifier Level Business 
+Activity Name 
+Description 
+1.5.4 
+L2 
+Resource 
+Readiness and 
+Support 
+Resource Readiness & Support processes are 
+responsible for managing resource 
+infrastructure to ensure that appropriate 
+application, computing and network resources 
+are available and ready to support the 
+Fulfillment, Assurance and Billing processes 
+in instantiating and managing resource 
+instances, and for monitoring and reporting on 
+the capabilities and costs of the individual 
+FAB processes. 
+Responsibilities of these processes include 
+but are not limited to: 
+• Supporting the operational introduction of 
+new and/or modified resource infrastructure 
+and conducting operations readiness testing 
+and acceptance; 
+• Managing planned outages; 
+• Managing and ensuring the ongoing quality 
+of the Resource Inventory; 
+• Analyzing availability and performance over 
+time on resources or groups of resources, 
+including trend analysis and forecasting; 
+• Demand balancing in order to maintain 
+resource capacity and performance 
+• Performing proactive maintenance and 
+repair activities; 
+• Establishing and managing the workforce to 
+support the eTOM processes 
+• Managing spares, repairs, warehousing, 
+transport and distribution of resources and 
+consumable goods. 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+• Conducting Vulnerability Management;    
+• Conducting Threat Assessments;         
+• Conducting Risk Assessments;         
+• Conducting Risk Mitigation;              
+• Conducting Secure Configuration Activities 
+1.5.4.2 
+L3 
+Enable 
+Resource 
+Performance 
+Management 
+The responsibilities of the Enable Resource 
+Performance Management processes are 
+twofold - support Resource Performance 
+Management processes by proactively 
+monitoring and assessing resource 
+infrastructure performance, and monitoring, 
+managing and reporting on the capability of 
+the Resource Performance Management 
+processes. 
+Proactive management is undertaken using a 
+range of performance parameters, whether 
+technical, time, economic or process related. 
+The responsibilities of the processes include, 
+but are not limited to: 
+ 
+• Undertaking proactive monitoring regimes of 
+resource infrastructure as required to ensure 
+ongoing performance within agreed 
+parameters over time; 
+• Developing and maintaining a repository of 
+acceptable performance threshold standards 
+for resource instances to support the 
+Resource Performance Management 
+processes; 
+• Undertaking trend analysis, and producing 
+reports, of the performance of resource 
+infrastructure to identify any longer term 
+deterioration; 
+• Monitoring and analyzing the resource 
+instance analyzes produced by the Resource 
+Performance Management processes to 
+identify problems that may be applicable to 
+the resource infrastructure as a whole; 
+• Sourcing details relating to resource instance 
+performance and analysis from the resource 
+inventory to assist in the development of trend 
+analyzes; 
+• Logging the results of the analysis into the 
+resource inventory repository; 
+• Establishing and managing resource 
+performance data collection schedules, 
+including managing the collection of the 
+necessary information from the Resource 
+Data Collection & Distribution processes, to 
+support proactive monitoring and analysis 
+activity, and requests from Resource 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+Performance 
+ 
+Management processes for additional data to 
+support resource instance performance 
+analysis; 
+• Establishing and managing facilities to 
+support management of planned resource 
+infrastructure and resource instance outages; 
+• Establishing, maintaining and managing the 
+testing of resource performance control plans 
+to cater for anticipated resource performance 
+disruptions; 
+• Proactively triggering the instantiation of 
+control plans to manage performance through 
+programmed and/or foreseen potentially 
+disruptive events, i.e. anticipated traffic loads 
+on Xmas day, planned outages, etc.; 
+• Tracking and monitoring of the Resource 
+Performance Management processes and 
+associated costs (including where resource 
+infrastructure is deployed and managed by 
+third parties), and reporting on the capability 
+of the Resource Performance Management 
+processes; 
+• Establishing and managing resource 
+performance notification facilities and lists to 
+support the Resource Performance 
+Management notification and reporting 
+processes 
+• Supporting the Support Service Quality 
+Management process. 
+1.5.9 
+L2 
+Resource 
+Performance 
+Management 
+Resource Performance Management 
+processes encompass managing, tracking, 
+monitoring, analyzing, controlling and 
+reporting on the performance of specific 
+resources. They work with basic information 
+received from the Resource Data Collection & 
+Distribution processes. 
+If the analysis identifies a resource 
+performance violation or a potential service 
+performance violation, information will be 
+passed to Resource Trouble Management 
+and/or Service Quality Management as 
+appropriate. The latter processes are 
+responsible for deciding on and carrying out 
+the appropriate action/response. This may 
+include requests to the Resource 
+Performance Management processes to 
+install controls to optimize the specific 
+resource performance. 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+The Resource Performance Management 
+processes will continue to track the resource 
+performance problem, ensuring that resource 
+performance is restored to a level required to 
+support services. 
+1.5.9.1 
+L3 
+Monitor 
+Resource 
+Performance 
+The objective of the Monitor Resource 
+Performance processes is to monitor received 
+resource performance information and 
+undertake first-in detection. 
+The responsibilities of the processes include, 
+but are not limited to: 
+•Undertaking the role of first in detection by 
+monitoring the received specific resource 
+performance data; 
+•Comparing the received specific resource 
+performance data to performance standards 
+set for each specific resource (available from 
+the Resource Inventory); 
+•Assessing and recording received specific 
+resource performance data which is within 
+tolerance limits for performance standards, 
+and for which continuous monitoring and 
+measuring of specific resource performance is 
+required; 
+•Recording the results of the continuous 
+monitoring for reporting through the Report 
+Resource Performance processes; 
+•Detecting performance threshold violations 
+which represent specific resource failures due 
+to abnormal performance; 
+•Passing information about resource failures 
+due to performance threshold violations to 
+Resource Trouble Management to manage 
+any necessary restoration activity as 
+determined by that process; 
+•Passing information about potential specific 
+service performance degradations arising 
+from specific resource degradations to Service 
+Quality Management to manage any 
+necessary restoration activity as determined 
+by that process; 
+•Detecting performance degradation for 
+specific resources which provide early 
+warning of potential issues; 
+•Forwarding resource performance 
+degradation notifications to other Resource 
+Performance Management processes, which 
+manage activities to restore normal specific 
+resource performance 
+•Logging specific resource performance 
+degradation and violation details within the 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+repository in the Manage Resource Inventory 
+processes to ensure historical records are 
+available to support the needs of other 
+processes. 
+1.5.9.2 
+3 
+Analyze 
+Resource 
+Performance  
+The objective of the Analyze Resource 
+Performance processes is to analyze the 
+information received from the Monitor 
+Resource Performance process to evaluate 
+the performance of a specific resource. 
+The responsibilities of the processes include, 
+but are not limited to: 
+•Undertaking analysis as required on specific 
+resource performance information received 
+from the Monitor Resource Performance 
+processes; 
+•Initiating, modifying and cancelling 
+continuous performance data collection 
+schedules for specific resources required to 
+analyze specific resource 
+performance.  These schedules are 
+established through requests sent to the 
+Enable Resource Data Collection & 
+Distribution  processes; 
+•Determining the root causes of specific 
+resource performance degradations and 
+violations; 
+•Recording the results of the analysis and 
+intermediate updates in the Resource 
+Inventory for historical analysis and for use as 
+required by other processes 
+•Undertaking specific detailed analysis (if the 
+original requested came from Service Quality 
+Management processes) to discover the root 
+cause of service performance degradations 
+that may be arising due to interactions 
+between resource instances, without any 
+specific resource instance having an 
+unacceptable performance in its own right. 
+1.5.9.4 
+3 
+Report 
+Resource 
+Performance 
+The objective of the Report Resource 
+Performance processes is to monitor the 
+status of resource performance degradation 
+reports, provide notifications of any changes 
+and provide management reports. 
+These processes are responsible for 
+continuously monitoring the status of resource 
+performance degradation reports and 
+managing notifications to other processes in 
+the Resource-Ops and other layers, and to 
+other parties registered to receive notifications 
+of any status changes.  Notification lists are 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+managed and maintained by the Enable 
+Resource Performance Management 
+processes. 
+These processes record, analyze and assess 
+the resource performance degradation report 
+status changes to provide management 
+reports and any specialized summaries of the 
+efficiency and effectiveness of the overall 
+Resource Performance Management 
+process.  These specialized summaries could 
+be specific reports required by specific 
+audiences. 
+1.5.9.5 
+3 
+Create 
+Resource 
+Performance 
+Degradation 
+Report 
+The objective of the Create Resource 
+Performance Degradation Report process is 
+to create a new resource performance 
+degradation report, modify existing resource 
+performance degradation reports, and request 
+cancellation of existing resource performance 
+degradation reports.   
+A new resource performance degradation 
+report may be created as a result of specific 
+resource performance notifications 
+undertaken by the Monitor Resource 
+Performance processes, or at the request of 
+analysis undertaken by other Service-Ops or 
+Resource-Ops or party management 
+processes which detect that some form of 
+deterioration or failure has occurred requires 
+an assessment of the specific resource 
+performance. 
+If the resource performance degradation 
+report is created as a result of a notification or 
+request from processes other than Monitor 
+Resource Performance processes, the Create 
+Resource Performance Degradation Report 
+processes are responsible for converting the 
+received information into a form suitable for 
+the Resource Performance Management 
+processes, and for requesting additional 
+information if required. 
+1.5.9,7 
+3 
+Close Resource 
+Performance 
+Degradation 
+Report 
+The objective of the Close Resource 
+Performance Degradation Report processes is 
+to close a resource performance degradation 
+report when the resource performance has 
+been resolved. 
+These processes monitor the status of all 
+open resource performance degradation 
+reports, and recognize that a resource 
+
+
+Identifier Level Business 
+Activity Name 
+Description 
+performance degradation report is ready to be 
+closed when the status is changed to cleared. 
+2.2. SID ABEs 
+<Note not to be inserted into ODA Component specifications: If a new ABE is required, 
+but it does not yet exist in SID. Then you should include a textual description of the 
+new ABE, and it should be clearly noted that this ABE does not yet exist. In addition a 
+Jira epic should be raised to request the new ABE is added to SID, and the SID team 
+should be consulted. Finally, a decision is required on the feasibility of the component 
+without this ABE. If the ABE is critical then the component specification should not be 
+published until the ABE issue has been resolved. Alternatively if the ABE is not critical, 
+then the specification could continue to publication. The result of this decision should 
+be clearly recorded.> 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs)* 
+Resource Performance ABE 
+Resource Performance  
+Performance ABE 
+MeasurementProductionJob 
+Performance ABE 
+AdhocCollection 
+MeasurementCollectionJob 
+Performance ABE 
+Performance Threshold ABE 
+Resource Trouble ABE 
+Alarm ABE 
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified.  
+2.3.  eTOM L2 - SID ABEs links 
+eTOM L2 vS SID ABEs links for this ODA Component.  
+ 
+ 
+
+
+ 
+ 
+2.4. Functional Framework Functions 
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+498 
+Resource 
+Performance 
+Data 
+Analyzing 
+Resource Performance Data 
+Analyzing functions provide the 
+necessary functionality to 
+analyze the performance of the 
+various service provider's 
+resources.  This includes: 
+Analyzing performance data 
+received from Resource 
+Performance Monitoring and 
+historic performance data or 
+system environment data 
+• Notify operations applications 
+for automatic or manual action 
+in case of alarming analysis 
+results. 
+• Determining the root causes 
+of resource performance 
+degradations 
+Resource 
+Performance 
+Management 
+Resource 
+Performance 
+Supervision 
+499 
+Resource 
+Performance 
+Data 
+Aggregation 
+and Trend 
+Analyzing 
+Resource Performance Data 
+Aggregation and Trend 
+Analyzing provides data 
+aggregation and trend analysis 
+in resource performance 
+monitoring 
+Resource 
+Performance 
+Management 
+Resource 
+Performance 
+Supervision 
+
+
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+501 
+Resource 
+Performance 
+Event 
+Correlation 
+Resource Performance Event 
+Correlation provides 
+performance event correlation 
+in resource performance 
+monitoring. 
+Resource 
+Performance 
+Management 
+Resource 
+Performance 
+Supervision 
+502 
+Resouce 
+Performance 
+Data 
+Accumulation 
+Resource Performance Data 
+Accumulation provides 
+performance data accumulation 
+for resource performance 
+monitoring, including real time 
+monitoring data 
+Resource 
+Performance 
+Management 
+Resource 
+Performance 
+Supervision 
+903 
+Anomaly 
+Monitoring 
+Anomaly Monitoring; System 
+and network monitoring activity, 
+determining whether it is 
+normal or anomalous, based on 
+rules, signatures or heuristics. 
+Resource 
+Performance 
+Management 
+Resource 
+Performance 
+Supervision 
+1066 
+Resource 
+Performance 
+Event Filtering 
+Resource Performance Data 
+Accumulation provides 
+performance data accumulation 
+for resource performance 
+monitoring, including real time 
+monitoring data 
+Resource 
+Performance 
+Management 
+Resource 
+Performance 
+Supervision 
+ 
+ 
+ 
+
+
+3. TM Forum Open APIs & Events 
+ 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the component 
+could require the usage of this set of required APIs.  
+• 
+List of Events (generated & consumed) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+ 
+<Note note to be inserted into ODA Component specifications: If a new Open API is 
+required, but it does not yet exist. Then you should include a textual description of the 
+new Open API, and it should be clearly noted that this Open API does not yet exist. In 
+addition, a Jira epic should be raised to request the new Open API is added, and the 
+Open API team should be consulted. Finally, a decision is required on the feasibility of 
+the component without this Open API. If the Open API is critical then the component 
+specification should not be published until the Open API issue has been resolved. 
+Alternatively if the Open API is not critical, then the specification could continue to 
+publication. The result of this decision should be clearly recorded.> 
+3.1. Exposed APIs 
+Following diagram illustrates API/Resource/Operation: 
+
+
+ 
+ 
+API ID API Name 
+API 
+Versi
+on 
+Mandat
+ory / 
+Optiona
+l 
+Operations 
+TMF6
+28 
+TMF628  Perform
+ance 
+Management API 
+4 
+Mandato
+ry 
+measurementCollectionJob: 
+          - POST 
+          - GET 
+          - GET /id 
+          - PATCH /id 
+          - DELETE /id 
+onDemandCollection: 
+          - POST 
+          - GET 
+          - GET /id 
+          - PATCH /id 
+          - DELETE /id 
+      performanceIndicatorGroupSpe
+cification: 
+
+
+API ID API Name 
+API 
+Versi
+on 
+Mandat
+ory / 
+Optiona
+l 
+Operations 
+          - POST 
+          - GET 
+          - GET /id 
+          - PATCH /id 
+          - DELETE /id 
+performanceIndicatorSpecification: 
+          - POST 
+          - GET 
+          - GET /id 
+          - PATCH /id 
+          - DELETE /id 
+      
+trackingRecord: 
+          - GET 
+          - GET /id 
+TMF6
+42 
+TMF642 Alarm 
+Management API 
+4 
+Optional 
+alarm: 
+          - POST 
+          - GET 
+          - GET /id 
+          - PATCH /id 
+          - DELETE /id 
+TMF6
+49 
+TMF649 
+Performance 
+Threshold 
+Management 
+API  
+4 
+Mandato
+ry 
+threshold: 
+          - POST 
+          - GET 
+          - GET /id 
+          - PATCH /id 
+          - DELETE /id 
+thresholdJob: 
+          - POST 
+          - GET 
+          - GET /id 
+          - PATCH /id 
+          - DELETE /id 
+TMF7
+01 
+TMF701 Process 
+Flow 
+4 
+Optional 
+processFlow: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+DELETE /id 
+ 
+taskFlow: 
+• 
+GET 
+• 
+GET /id 
+• 
+PATCH /id 
+
+
+Note: 
+TMF 628 is in the beta version. TMF649 is in the historic table. Both of these need to 
+be upgraded. 
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation potentially used by the product 
+catalog component: 
+ 
+ 
+ 
+
+
+ 
+API ID API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Operations 
+Rationales 
+TMF6
+28 
+TMF628 
+Performance 
+Management 
+API 
+4 
+Optional 
+measurementCollectionJob*: 
+              - POST 
+              - GET 
+              - GET /id 
+              - PATCH /id 
+              - DELETE /id 
+          onDemandCollection*: 
+              - POST 
+              - GET 
+              - GET /id 
+              - PATCH /id 
+              - DELETE /id 
+          performanceIndicatorGro
+upSpecification*: 
+              - POST 
+              - GET 
+              - GET /id 
+              - PATCH /id 
+              - DELETE /id 
+          performanceIndicatorSpe
+cification*: 
+              - POST 
+              - GET 
+              - GET /id 
+              - PATCH /id 
+              - DELETE /id 
+          trackingRecord*: 
+              - GET 
+              - GET /id 
+ 
+TMF6
+34 
+TMF634 
+Resource 
+Catalog 
+Management 
+API 
+4 
+Optional 
+resource: 
+              - GET /id 
+              - GET 
+ 
+TMF6
+39 
+TMF639 
+Resource 
+Inventory 
+Management 
+API 
+4 
+Mandatory 
+resource: 
+              - GET /id 
+              - GET 
+Performance 
+is collected, 
+monitored 
+and reported 
+against a 
+Resource 
+instance that 
+is stored in 
+the Resource 
+inventory. 
+TMF6
+73 
+TMF673 
+Geographic A
+ddress 
+Management  
+4 
+Optional 
+geographicAddress: 
+              - GET 
+              - GET /id 
+geographicSubAddress: 
+ 
+
+
+API ID API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Operations 
+Rationales 
+              - GET 
+              - GET /id 
+TMF6
+74 
+TMF674 
+Geographic 
+Site 
+Management  
+4 
+Optional 
+geographicSite: 
+              - GET 
+              - GET /id 
+ 
+TMF7
+01 
+TMF701 
+Process Flow 
+4 
+Optional 
+processFlow: 
+              - POST 
+              - PATCH 
+              - GET /id 
+              - GET 
+          taskFlow: 
+              - POST 
+              - PATCH 
+              - GET /id 
+              - GET 
+ 
+3.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+
+
+ 
+ 
+ 
+ 
+Note **: Alarm API documentation needs to be updated to include Alarm Create, Alarm 
+Change, Alarm Clear, Alarm Ack 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+TMForum-ODA-Ready-for-publication/1Beta2/TMFC038-
+ResourcePerformanceManagement/TMFC038-
+ResourcePerformanceManagement.yaml at main · tmforum-rand/TMForum-ODA-
+Ready-for-publication (github.com) 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+24.0 
+eTOM 
+24.0 
+Functional Framework  
+24.0 
+ 
+5.2. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions.  
+ 
+ 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+0.0.1 
+18 May 2023 
+Milind Bhagwat 
+First draft 
+1.0.0 
+13 Jun 2023 
+Amaia Whit 
+Finals edit prior to publication 
+1.0.1 
+25 Jul 2023 
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+Separated the YAML files to a 
+managed repository. 
+1.0.1 
+14 Aug 2023 
+Amaia White 
+Final edits prior to publication 
+1.1.0 
+13 Aug 2024 
+Milind Bhagwhat 
+Further edits 
+1.1.0 
+06 Sep 2024 
+Amaia White 
+Final edits prior to publication 
+1.2.0 
+17 Dec 2024 
+Milind Bhagwat 
+Removed Event API from exposed 
+and dependent API list 
+1.2.0 
+27 Dec 2024 
+Rosie Wilson  
+Final edits prior to publication 
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+13-Jun-2023 
+Amaia White 
+Initial release. 
+Pre-production 
+14-Aug-2023 
+Amaia White 
+New release v1.0.1 
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production 
+06-Sept-2024 
+Amaia White 
+New release 1.1.0 
+Production 
+01-Nov-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production 
+18-Dec-2024 
+Rosie Wilson 
+New release 1.2.0 
+Production 
+07-Mar-2025 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+ 
+ 
+ 
+
+
+6.2. Acknowledgements 
+This document was prepared by the members of the TM Forum Component and 
+Canvas project team: 
+Team Member (@mention) 
+Company 
+Role 
+Milind Bhagwat 
+BT 
+Author 
+Gaetano Biancardi 
+Accenture 
+Reviewer 
+Sylvie Demarest 
+Orange 
+Reviewer  
+Hugo Vaughan (TM Forum) 
+TM Forum 
+Additional Inputs 
+Ian Turkington 
+TM Forum 
+Additional Inputs 
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

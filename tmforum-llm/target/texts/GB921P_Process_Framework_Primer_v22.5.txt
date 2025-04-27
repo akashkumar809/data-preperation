@@ -1,0 +1,998 @@
+ 
+ 
+ 
+Core Framework Reference Guide 
+ 
+Business Process Framework 
+(eTOM) 
+ 
+Business Process Framework Primer 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+GB921 Addendum P 
+ 
+Maturity Level: General availability (GA) Team Approved Date:  09-Dec-2022 
+Release Status:  Production 
+Approval Status: TM Forum Approved 
+Suitable for Conformance 
+Version 22.5.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+Notice 
+Copyright © TM Forum 2023. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative 
+works that comment on or otherwise explain it or assist in its implementation may be prepared, 
+copied, published, and distributed, in whole or in part, without restriction of any kind, provided 
+that the above copyright notice and this section are included on all such copies and derivative 
+works. However, this document itself may not be modified in any way, including by removing 
+the copyright notice or references to TM FORUM, except as needed for the purpose of 
+developing any document or deliverable produced by a TM FORUM Collaboration Project 
+Team (in which case the rules applicable to copyrights, as set forth in the TM FORUM IPR 
+Policy, must be followed) or as required to translate it into languages other than English.  
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM 
+or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an "AS IS" basis and TM 
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT 
+INFRINGE 
+ANY 
+OWNERSHIP 
+RIGHTS 
+OR 
+ANY 
+IMPLIED 
+WARRANTIES 
+OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent 
+claims that would necessarily be infringed by implementations of this TM Forum Standards 
+Final Deliverable, to notify the TM FORUM Team Administrator and provide an indication of 
+its willingness to grant patent licenses to such patent claims in a manner consistent with the 
+IPR Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware 
+of a claim of ownership of any patent claims that would necessarily be infringed by 
+implementations of this TM FORUM Standards Final Deliverable by a patent holder that is not 
+willing to provide a license to such patent claims in a manner consistent with the IPR Mode of 
+the TM FORUM Collaboration Project Team that produced this TM FORUM Standards Final 
+Deliverable. TM FORUM may include such claims on its website but disclaims any obligation 
+to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or 
+other rights that might be claimed to pertain to the implementation or use of the technology 
+described in this TM FORUM Standards Final Deliverable or the extent to which any license 
+under such rights might or might not be available; neither does it represent that it has made 
+any effort to identify any such rights. Information on TM FORUM's procedures with respect to 
+rights in any document or deliverable produced by a TM FORUM Collaboration Project Team 
+can be found on the TM FORUM website. Copies of claims of rights made available for 
+publication and any assurances of licenses to be made available, or the result of an attempt 
+made to obtain a general license or permission for the use of such proprietary rights by 
+implementers or users of this TM FORUM Standards Final Deliverable, can be obtained from 
+the TM FORUM Team Administrator. TM FORUM makes no representation that any 
+information or list of intellectual property rights will at any time be complete, or that any claims 
+in such list are, in fact, Essential Claims. 
+ 
+ 
+
+
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054 USA 
+Tel No. +1 862 227 1648 
+TM Forum Web Page: www.TM Forum.org 
+ 
+ 
+ 
+
+
+Table of Contents 
+NOTICE ......................................................................................................................................... 2 
+TABLE OF CONTENTS ..................................................................................................................... 4 
+LIST OF FIGURES ............................................................................................................................ 5 
+EXECUTIVE SUMMARY .................................................................................................................. 6 
+1. 
+WHAT IS THE BUSINESS PROCESS FRAMEWORK? .................................................................... 7 
+2. 
+WHERE DID THE BUSINESS PROCESS FRAMEWORK COME FROM? ........................................... 9 
+3. 
+HOW DOES THE BUSINESS PROCESS FRAMEWORK WORK? ..................................................... 10 
+3.1 DOMAIN DEFINITION .............................................................................................................................. 10 
+3.2 PROCESS DECOMPOSITIONS .................................................................................................................... 10 
+3.3 PROCESS FLOWS ................................................................................................................................... 17 
+4. 
+WHY USE THE BUSINESS PROCESS FRAMEWORK? .................................................................. 22 
+5. 
+WHEN CAN THE BUSINESS PROCESS FRAMEWORK HELP? ....................................................... 23 
+6. 
+WHO IS USING THE BUSINESS PROCESS FRAMEWORK? .......................................................... 24 
+7. 
+SOME IDEAS ON USING THE BUSINESS PROCESS FRAMEWORK ............................................... 25 
+8. 
+ADMINISTRATIVE APPENDIX .................................................................................................. 28 
+8.1 ACKNOWLEDGEMENTS ........................................................................................................................... 28 
+8.2 DOCUMENT HISTORY ............................................................................................................................. 28 
+8.2.1 
+Version History .................................................................................................................. 28 
+8.2.2 
+Release History ................................................................................................................. 29 
+ 
+
+
+List of Figures 
+Figure 1-1: Process Decomposition .................................................................................... 11 
+Figure 1-2: Business Process Framework (eTOM) .............................................................. 12 
+Figure 1-3 : The Business Process Framework Operations (OPS) Processes ...................... 13 
+Figure 1-4 :  Level 2 Operations (OPS) Processes ............................................................... 14 
+Figure 1-5 :  An example of Level 3 Operations (OPS) Processes ....................................... 15 
+Figure 1-6: The Business Process Framework Strategy to Readiness (S2R) Processes ....... 15 
+Figure 1-7:  Level 2 Strategy to Readiness (S2R) Processes ................................................ 16 
+Figure 1-8:  The Business Process Framework Enterprise Domain Processes .................... 17 
+Figure 1-9:  Process Flow (partial example only) ................................................................ 18 
+Figure 1-10:  General Interaction Diagram for Production Order to Acceptance .............. 19 
+Figure 1-11:  Process Interaction Flow Diagram for Production Order to Acceptance ...... 19 
+Figure 1-12:  Process Interaction Flow Diagram for Trouble Ticket-to-Solution 
+(Assurance) ................................................................................................................... 20 
+Figure 1-13:  Process Dynamics Flow Diagram for Trouble Ticket-to-Solution 
+(Assurance) ................................................................................................................... 21 
+ 
+ 
+
+
+Executive Summary 
+This document is an Addendum to the Business Process Framework, (GB921). It assists new readers and 
+users of Business Process Framework by providing an introductory view of some of the concepts, goals, 
+and structure of the Business Process Framework work. 
+It should be read in conjunction with the main GB921 document, and other Addenda (see GB921 Concepts 
+and Principles for details). 
+ 
+ 
+ 
+ 
+
+
+1. 
+What is the Business Process Framework? 
+The Communications and Digital services industry is facing unprecedented churn and the struggle to 
+remain profitable in the face of more competition, higher customer expectations, falling market share and 
+growing price pressures. The industry has a need to clearly define and understand the business processes 
+involved in order to tackle these issues. It also needs to reach a consensus on the common process view 
+for equipment suppliers, applications builders and integrators to build management systems by combining 
+third party and in-house developments. 
+The Business Process Framework (also known as the eTOM) is an ongoing TM Forum initiative to deliver a 
+business process model or framework for use by Communications and Digital services industry. The goal is 
+to set a vision for the industry to enable it to compete successfully through the implementation of business 
+process-driven approaches to managing the enterprise. This includes ensuring integration among all vital 
+enterprise support systems concerned with service delivery and support. 
+The focus of the Business Process Framework is on the business processes used by service providers, the 
+linkages between these processes, the identification of interfaces, and the use of customer, service, 
+resource, supplier/partner and other information by multiple processes. The TM Forum Business Process 
+Framework is a reference framework for categorizing all the business activities that a service provider will 
+use, in a structured manner that allows these to be addressed at various levels of detail. For such 
+companies, it serves as the blueprint for process direction and provides a neutral reference point for 
+internal process reengineering needs, partnerships, alliances, and general working agreements with other 
+providers. For suppliers, the Business Process Framework outlines potential boundaries of software 
+components to align with the customers' needs and highlights the required functions, inputs, and outputs 
+that must be supported by products.  
+A particular strength of the Business Process Framework is that as a foundation  core element in the former 
+Frameworx program , it provided a foundation along with other works underway in the Open Digital 
+Framework (ODF) program, namely the evolution of the Information Framework, the Application 
+Framework along with Open APIs, along with ODA and other TM Forum leading programs. 
+So, the Business Process Framework defines a business-oriented view of the enterprise. This view is useful 
+for planners, managers, strategists, etc., who need to view the enterprise in business terms, without 
+immediate concern for the nature of the way that these business needs are organized or automated within 
+the business. Therefore, the Business Process Framework emphasizes issues such as process structure, 
+process components, process interactivity and the business roles and responsibilities to which these relate. 
+In defining these aspects, the Business Process Framework also provides a basis for setting requirements 
+for system solutions, technical architectures, technology choices and implementation paths, but it is 
+neutral towards the particular way that these requirements are met. 
+Thus, the Business Process Framework can be considered to have two faces: one oriented towards the 
+business, customer, products, etc., and one towards solutions, systems and implementations supporting 
+the business. 
+ 
+ 
+
+
+ 
+It should be recognized that through the TM Forum work, the Business Process Framework represents an 
+industry-consensus on the Service Provider processes, which has been harmonized across the global scene 
+and is based on Member contributions. It is allowable, and indeed expected, that this will mean that the 
+Business Process Framework must be tailored and/or extended for use within an individual company. In 
+particular, the Business Process Framework does not seek to constrain the way that the processes fit into 
+a specific organization. An advantage of this positioning of the Business Process Framework as a 
+framework, rather than a directly-implemented specification, is that differentiation amongst the Business 
+Process Framework users is not restricted, which is vital to allow specialization and competition. In addition, 
+as already mentioned, the Business Process Framework does not fix upon particular routes to 
+implementation and is thus valid in many different environments with varying levels of automation, 
+technology, etc. 
+So, the Business Process Framework is a framework, not a final implementation specification. It will 
+typically be customized and extended by users for their own business needs but provides a vital common 
+reference that is industry recognized and represents de-facto, and now through ITU-T an official standard 
+within and between companies on business process definition. 
+
+
+2. Where did the Business Process Framework 
+come from? 
+Work on business process modeling by the TM Forum (formerly the TeleManagement Forum and the 
+Network Management Forum before then) began in the early 1990’s with the Service Management 
+Automation and Reengineering Team (SMART) that gathered worldwide Service Provider views and 
+distilled an initial Business Process Model. This work grew in the Telecom Operations Map (TOM) 
+during the mid-90’s leading to the stabilization and publication of TOM in its final form towards the 
+end of that decade. 
+The TOM work gained wide industry support, but the scope of the TOM model did not cover the whole 
+of the SP enterprise and only focused on the main Operations processes embodying the traditional 
+telecoms activities around Fulfillment, Assurance and Billing (FAB). Increasingly, the complexities of 
+interworking in the deregulated, competitive telecoms market required a complete enterprise view, 
+and new business demands triggered by the internet and electronic commerce generally, led to a move 
+to expand TOM to address this wider perspective. 
+Thus, eTOM – for enhanced TOM – was initiated as a work program led by TM Forum as we entered 
+the new Millennium. Initial releases of eTOM were provided to TM Forum members during 2001, and 
+then a TM Forum Approved version of eTOM – GB921 v3.0 – was released in mid-2002. This was 
+welcomed and adopted widely, and so further work to cement agreements, incorporate industry 
+feedback, and extend the level of detail described resulted in further intermediate versions and then 
+a new TM Forum Approved version early in 2004. This version – GB921 v4.0 – was also submitted under 
+a liaison agreement to the ITU-T, which acts as the premier world-wide body with a remit under the 
+United Nations for setting international Recommendations in the telecommunications sphere. This 
+eTOM version was adopted by ITU-T in toto and has been published in parallel as their formal 
+Recommendation M.3050, with exact alignment on the content with TM Forum’s GB921 v4.0. 
+In 2009 due to the converging of the Information, Communications and Digital Media industries into 
+what is now considered the Digital Services industry and the widening use of the eTOM, the TM Forum 
+decided to rebrand the eTOM to the Business Process Framework. It was felt this would remove any 
+artificial concerns about using the eTOM in non-telecommunications environments and broaden the 
+uptake and adoption of the Business Process Framework (eTOM). 
+Throughout this history, the Business Process Framework work has benefited from wide involvement 
+from the global telecommunications industry, as well as academia, government agencies, etc. As it has 
+evolved, the core has shown it can stand the test of time, and it is now regarded as the pre-eminent 
+vehicle for expressing and discussing business processes in and around the Service Provider domain. 
+The work continues, with an increasing emphasis now that the Business Process Framework has 
+established a clear and agreed view of the business process framework itself, on applications of the 
+Business Process Framework and guidance to prospective and existing users on how to gain maximum 
+benefit from the Business Process Framework in their own businesses. 
+
+
+3. How does the Business Process Framework 
+work? 
+3.1 Domain definition 
+Since an earlier release of the Business Process Framework (Rel. 14.5), the collaboration team 
+decided to formalize and generalize the notion of domains, in place of the previously existing level 0 
+horizontal process groupings. This allowed us to ensure consistency and sound alignment with the 
+other components of the Frameworx brand (namely SID and TAM). The 7 domains that were 
+recognized (see figure below) were: 
+1. Market & Sales domain 
+2. Customer domain 
+3. Product domain 
+4. Service Domain 
+5. Resource Domain 
+6. Business Partner domain 
+7. Enterprise domain 
+3.2 Process Decompositions 
+Process decomposition is a structured approach to analysis of a business through consideration of 
+the enterprise’s business processes and their internal structure. The basis of the concept is illustrated 
+in Figure 1-1 below. Here we see a representative process element, Process X, which might provide 
+a specific area of capability within an enterprise – say, handling of customer orders, for example. 
+When analyzed, it is decided that the contained functionality, behavior, etc. associated with that 
+process can/should be sub-divided into three lower-level process elements. Note that typically such 
+a “decomposition” is partly evident from the analysis of the detail captured within the process 
+concerned, and partly is the result of design decisions, where judgment is used to make the most 
+appropriate partitioning for the situation under consideration. 
+ 
+ 
+
+
+ 
+ 
+Figure 1-1: Process Decomposition 
+ 
+Each of the decomposed processes, X1, X2 and X3 can be further decomposed – X2 is shown as 
+decomposed into X21 and X22 – and this can be continued – X21 is shown as decomposed into X211 
+and X212. Note that not all “branches” of the decomposition “tree” necessarily led to “leaves” (i.e., 
+final process elements) at the same level of decomposition. This will depend on the scope and 
+content of the processes involved. 
+The process decomposition approach has these general characteristics: 
+• 
+It defines components of a process that perform part of that process 
+• 
+It provides insight into the structure and content of process areas (or groupings) 
+• 
+It reveals finer detail at lower levels, as decomposition proceeds 
+• 
+It can be continued to as many sub-levels as are needed 
+• 
+The aim is to provide a complete analysis of the process under decomposition - i.e., the 
+sum of the components equals the totality of the original process 
+• 
+It represents a static perspective of process 
+• 
+It does not mandate any flow relationship between the process elements 
+Note that the process elements derived through process decomposition may be applied in various 
+ways within process flows. There may be many process flows (representing, say, enterprise-specific 
+applications) that can be built using the common set of process elements specified within the 
+Business Process Framework. There is further discussion on process flows later in this section, 
+including the process flow diagrams that arise and are used in this work. 
+The process decomposition for the Business Process Framework (see Figure 1-2) begins at the 
+Enterprise level and defines business processes in a series of groupings. The Business Process 
+Framework uses hierarchical decomposition to structure the business processes according to which 
+all of the processes of the enterprise are successively decomposed. Process descriptions, inputs and 
+outputs, as well as other key elements are defined. The Business Process Framework represents the 
+whole of a service provider’s enterprise environment. The Framework is defined as generically as 
+possible so that it is organization, technology, and service independent. At the overall conceptual 
+level, the Business Process Framework can be viewed as having the following two major process 
+areas: 
+ 
+ 
+Process X
+-
+Process Element 
+X1
+-
+Process Element 
+X3
+-
+Process Element 
+X2
+-
+Process Element 
+X21
+-
+Process Element 
+X22
+-
+Process Element 
+X211
+-
+Process Element 
+X212
+
+
+ 
+Strategy to Readiness covering planning, capability delivery and lifecycle management 
+Operations covering the core of operational management 
+Figure 1-2: Business Process Framework (eTOM) 
+ 
+The Business Process Framework (see Figure 1-2) shows seven context verticals. These verticals 
+were originally created to represent the various stages that participate in the life cycle of the 
+enterprise from Strategy to Operations; they help classify and qualify processes when decomposing 
+and structuring the Business Process Framework. They are part of the business process map as they 
+represent a set of contextual boundaries for level 2 core processes. Amongst these context verticals 
+(or vertical process groupings as they were previously known), the right side of the Framework 
+represents the Operations process area, which is a collection of operations-centric processes 
+covering Fulfillment, Assurance and Billing & Revenue Management (aka FAB). 
+Operations Readiness & Support (OR&S) is differentiated from FAB processes to highlight the focus 
+on enabling support and automation in FAB, i.e., on-line and immediate support of customers, with 
+OR&S ensuring that the operational environment is in place to ensure the FAB processes are able 
+to operate optimally. Outside of the Operations process area - in the Strategy to Readiness (S2R) 
+process area - the Strategy Management vertical, as well as the Capability Delivery and Lifecycle 
+Management verticals, are differentiated. These are distinct because, unlike Operations, they do 
+not directly support the customer, and are intrinsically different from the Operations processes. 
+With the evolution of the business the sense of time has been compressed with increasing 
+automation, and what used to be short term processes are becoming increasingly closer to real 
+time. 
+ 
+ 
+
+
+The Framework also depicts cross-functional domains as they span horizontally across an 
+enterprise’s internal organization. The horizontal cross-functional process groupings (referred to as 
+domains) in Figure 1-2 distinguish strategy-centric, development-centric processes from 
+operations-centric processes, e.g., Marketing versus Selling, Customer Strategy versus Customer 
+Support, Service Development versus Service Configuration, etc. Amongst these horizontal 
+domains, those on the left (that cross the Strategy Management, Capability Delivery and Lifecycle 
+Management verticals provide the strategy, implement the infrastructure, and define the work in 
+the Operations process area. 
+The Business Process Framework Model graphically illustrates the business processes required for 
+operating service provider enterprises. It lays out these processes first from a high-level 
+perspective, and then drills down to increasingly detailed levels of understanding. The Business 
+Process Framework describes in text what the model describes graphically. 
+ 
+ 
+Figure 1-3 : The Business Process Framework Operations (OPS) Processes 
+ 
+ 
+
+
+The Business Process Framework is structured in two main process areas: Operations (OPS) and 
+Strategy to Readiness (S2R). Each process area consists of more detailed process components and 
+decomposition at levels 1, 2, 3, etc. This hierarchical decomposition enables detail to be defined in a 
+structured way and also allows the Business Process Framework to be adopted at varying levels 
+and/or for different processes. Each process element has a process ID which indicates the process 
+level and degree of detail revealed at that level - the more digits in the process ID, the more granular 
+detail in the process is available. 
+Operations (OPS - see Figure 1-3) is the heart of the Business Process Framework and much of the 
+original TOM work has carried through into OPS (the GB921 documentation provides some insight 
+into the relationship between the TOM and the eTOM). The “FAB” processes (Fulfillment, Assurance, 
+Billing & Revenue Management) provide the core of the Operations area, the horizontal domains 
+(Level 1) namely Market & Sales, Customer, Product, Service, Resource, Business Partner and 
+Enterprise) provide the context for the definition of activity flows. 
+OR&S (Operations Readiness & Support) has been separated from FAB originally to reflect the 
+separation between “front-office”, “Customer-supporting” real-time operations (in FAB) from “back-
+office” near real-time support processes. This split may not apply in some organizations (in which 
+case, the OR&S and FAB processes may be merged) but it is necessary to keep the separation to 
+distinguish their purpose and lifecycle footprint. 
+ 
+
+
+ 
+In Figure 1-4, the OPS area is shown with Level 2 (core) processes visible. Note that a Level 2 process 
+is part of a horizontal domain and typically positioned within one vertical, however, in some cases, a 
+Level 2 process can span across several context verticals (e.g., Resource Data Collection and 
+Distribution). This is because such process belongs to more than one vertical context (e.g., for 
+Resource Data Collection & Distribution), the data collected from the network elements may 
+represent usage data for Billing & Revenue Management but may also support fault handling or 
+performance assessment in Assurance). 
+ 
+Figure 1-5 :  An example of Level 3 Operations (OPS) Processes 
+ 
+This mechanism of decomposition can be extended as required. Figure 1-5 depicts an example of 
+Level 3 process elements within a Level 2 process element – Resource Provisioning. Full descriptions 
+of decompositions to Level 3 for this and other processes are included in the GB921 documentation. 
+ 
+Figure 1-6: The Business Process Framework Strategy to Readiness (S2R) Processes 
+
+
+ 
+ 
+Strategy to Readiness (S2R – see Figure 1-6) has a similar structure to OPS with corresponding vertical 
+and horizontal process groupings. In the verticals, Strategy Management covers the processes 
+involved in developing the enterprise strategy and gaining commitment from the sponsoring 
+organization for this purpose. Capability Delivery covers design and implementation of all 
+foundational capabilities, including technology and infrastructure needed –network and IT 
+infrastructure is probably the most obvious, but also human resources are part of the scope. 
+Lifecycle Management covers the lifecycle of products, services, resources and business partners– 
+note that the Business Process Framework distinguishes Product (as exposed and sold to Customers) 
+from Service (used internally to represent the “technical” part of the product, i.e., excluding 
+commercial aspects such as tariffing, T&Cs, support, etc.) and Resource (physical and non-physical 
+components used to support the service). 
+ 
+Figure 1-7:  Level 2 Strategy to Readiness (S2R) Processes 
+ 
+In Figure 1-7, the S2R area is shown with Level 2 processes visible. As with OPS, domains are 
+positioned on a vertical process grouping. 
+ 
+
+
+ 
+ 
+Figure 1-8:  The Business Process Framework Enterprise Domain Processes 
+The Enterprise Domain (see Figure 1-8) shown above as a hierarchical diagram is typically 
+represented in this view in most process modeling tools supporting the Business Process Framework. 
+The top box is the Enterprise Domain itself (Level 1), the horizontal rows below show Level 2 
+processes elements. 
+3.3 Process Flows 
+Process decompositions provide an essential insight into the process definition and content. To 
+understand further how processes behave, process flows can be developed that examine how some 
+or all of the processes support some larger, “end-to-end” or “through” process view across the 
+enterprise. Such process flows are not constrained to bridge across the entire enterprise – they can 
+have any scope that is considered meaningful and helpful to analyze - but such process flows may 
+also involve a broader area of the enterprise as depicted in specific Business Process Framework 
+documentation (e.g., GB921E). Process flows describe specific scenarios to achieve a specific 
+business purpose. 
+Figure 1-9 shows a portion of a simple process flow, where several Business Process Framework 
+Level 2 OPS processes can be recognized, the linkages between these indicate the nature of the 
+activity. Note that here, as well as in other diagrams in this section, the flows are examples from 
+previous work from an older version of the Process Framework, but the approach and design 
+principles, rather than the specificity of the flows illustrated is what the focus is on. 
+In the following example, a portion of the handling of a customer order is shown. 
+
+
+ 
+Figure 1-9:  Process Flow (partial example only) 
+ 
+The process flow design has these general characteristics: 
+• 
+It analyzes a typical (specific) scenario 
+• 
+It provides insight into the behavior and interaction amongst processes 
+• 
+It chooses to model the flow at an appropriate level of process detail 
+• 
+It can use process decompositions to enhance/refine detail 
+• 
+The aim is to provide only an example of the process flows - i.e., only some of the possible 
+interactions are described in each scenario 
+• 
+Thus, it typically provides a partial view of process behavior (because flows are based on 
+specific scenarios)  
+• 
+It represents a dynamic perspective of processes. 
+ 
+In applying this approach for Business Process Framework process flows, it has been found that several 
+different flow-related diagram types have proved useful, considering the variety of interests (business and 
+technical, high level and detailed design) that needs to be addressed. 
+This is initially a general positioning type of diagram that provides limited insight into the flow but helps focus 
+on the contextual part of the Business Process Framework involved. 
+
+
+ 
+Figure 1-10:  General Interaction Diagram for Production Order to Acceptance 
+ 
+Figure 1-10 shows an example of this diagram - a general process interaction diagram – for a scenario based 
+around Production Order to Acceptance in the Fulfillment vertical that is covered in the GB921E 
+documentation. This shows some of the process interactions that arise for this scenario but does not give any 
+detailed insight at this level into the behavior. It is still useful for a high-level view, though. 
+ 
+Figure 1-11:  Process Interaction Flow Diagram for Production Order to Acceptance 
+ 
+The next diagram type, shown in Figure 1-11, is developed directly from a process analysis and 
+modeling tool (rather than a general drawing software). Here the scope is with Level 2 process 
+elements, but other Levels can be used depending on the detail required. This diagram type positions 
+the processes in relatively the same way as in their representation on the Business Process 
+Framework model diagrams, which helps avoid confusion. Each process only appears once, and so 
+sequencing of the interactions is not explicit in this diagram (shown on process dynamics diagrams 
+later). 
+
+
+Swim lanes  are an important element in this type of workflow diagram. These are functional lanes 
+of partitions of the process flow, which depict typically where the responsibility lies in those process 
+elements with respect to the overall process flow (each swim-lane represents a line of responsibility 
+for the tasks involved in such lane). In this example, the swim lanes have been drawn to represent 
+the four horizontal functional process groupings of the Operations area of the Process Framework, 
+since the scenario involved is focused on the Operations domain. In this arrangement, all the process 
+elements in a specific swim lane in the diagram are components of that horizontal functional process 
+grouping. It should be noted that swim lanes (despite their name) need not be only horizontal, 
+although this is a common choice for clarity, and is the approach used in the Business Process 
+Framework process flow diagrams. 
+The process flow in Figure 1-11 addresses the Production Order to Acceptance stage of Fulfillment 
+(other phases are documented in separate diagrams, for convenience). It begins with the Service 
+Configuration & Activation process. Note that interactions between processes are events and are 
+not intrinsically information transfers. Thus, they can be considered to represent transfer of control.  
+ 
+ 
+Figure 1-12:  Process Interaction Flow Diagram for Trouble Ticket-to-Solution (Assurance) 
+ 
+Figure 1-12 is another example of this diagram type, for the Trouble Ticketing process part of 
+Assurance. It begins with the generation of a trouble ticket request or event, and then tracks the 
+execution flow through Service Problem Management, Resource Trouble Management and the 
+Business Partner domain which may actually be involved in the delivery of the service to the 
+customer. 
+However, even though interactions are labeled in these diagrams, sequencing and dependencies in 
+the flow are still not explicit. For this, a different kind of diagram is needed. 
+
+
+ 
+Figure 1-13:  Process Dynamics Flow Diagram for Trouble Ticket-to-Solution (Assurance) 
+ 
+Figure 1-13 represents a process flow diagram, showing explicitly the dynamics of the process . Each 
+process typically appears several times, each time providing a specific step in the process flow 
+sequence. As different functionality comes into play on each appearance, this diagram can provide 
+insight into the decomposition of the Level 2 process into more granular processes. It shows similar 
+information as the Trouble Ticketing process interaction diagram of Figure 1-12, but it is more 
+elaborate and provides a broader basis for further design. 
+Developing process flows in this way is a valuable source of insight and additional detail to validate 
+process decompositions, and to address specific areas of business priority for the use of the Business 
+Process Framework. 
+The adoption of the Process Framework in no way precludes the adoption of specific best practice 
+workflows such as those available in ITIL® which provides workflow designs according to global IT 
+Service Management standards along with suggested best practices. The value of the Business 
+Process Framework is therefore in delivering reusable, well defined, process components. 
+
+
+4. Why use the Business Process Framework? 
+• 
+The Framework provides a standard structure, terminology and classification scheme for 
+describing business processes and their constituent building blocks. 
+• 
+The Framework supplies a foundation for applying enterprise-wide discipline to the 
+development of business processes. 
+• 
+The Framework provides a basis for understanding and managing portfolios of IT applications 
+in terms of business process requirements. 
+• 
+The Framework enables creation of consistent and high-quality end-to-end process flows, 
+with opportunities for cost and performance improvement, and for re-use of existing 
+processes and systems. 
+• 
+The deployment and adoption of the Framework across the industry increases the likelihood 
+that standard, interoperable, application components will be integration-ready at a lower cost 
+than traditional off-the-shelf or custom-built applications. 
+
+
+5. When can the Business Process Framework 
+help? 
+The Business Process Framework can be adopted and used as a tool for analyzing your organization’s 
+existing processes and for developing new processes. Different processes delivering the same business 
+functionality can be identified, duplication eliminated, gaps revealed, new process design expedited, 
+and variance reduced. The Business Process Framework can prove helpful in assessing the value, cost 
+and performance of individual processes within your organization. 
+ 
+The Business Process Framework can facilitate communication and interactions with suppliers and 
+business partners by identifying and categorizing the processes that are relevant for such interactions. 
+In a similar manner, the Business Process Framework can facilitate the identification of important 
+customer relationship processes and evaluate whether they are functioning as required to meet 
+customer expectations. 
+ 
+
+
+6. Who is using the Business Process Framework? 
+A natural question that arises is where and how the Business Process Framework is being used 
+across the industry and how it is benefiting organizations involved. It is difficult to collect very 
+detailed information about the use and benefits derived from its adoption across the industry, this 
+is due to confidentiality concerns and sensitivity on strategic approach and direction; however, 
+several major organizations have disclosed their position on this matter publicly, and the general 
+interest and adoption of the Business Process Framework has been quite significant over the years 
+and the perception is that the trend is still growing. 
+ 
+The two main groups of Business Process Framework users are (1) Service Providers and (2) 
+Vendors, System Integrators, etc. It is worth noting that it is estimated that there is a much larger 
+number of organizations applying the Process Framework in their businesses, and also a large 
+number of organizations using the Process Framework, who are either not actively involved with 
+the TM Forum, or even unknown to the Forum. 
+ 
+A vital source of insight on users and projects linked with the TM Forum work and related assets 
+is the growing number of available case studies outlining how individual companies have applied 
+the framework. Many of these relate to the Business Process Framework (often using the “eTOM” 
+acronym); some of the case studies can be viewed through the following link: 
+ 
+http://www.tmforum.org/CaseStudies 
+ 
+Another important source is the presentations made at conference events such as Digital 
+Transformation World (see http://www.tmforum.org/Conferences) 
+ 
+Another aspect of Business Process Framework adoption is through other industry bodies that are 
+operating in, or have influence on, the area. For example, the Business Process Framework has 
+been endorsed by ITU-T. This represents a major achievement and establishes the Business 
+Process Framework (eTOM), which has grown already to become a de facto standard, as a formal 
+standard Recommendation (identified as M.3050) through ITU-T with its mandate under the 
+United Nations. 
+ 
+ 
+
+
+7. Some Ideas on Using the Business Process 
+Framework 
+Service Providers 
+1. Assign your technical personnel to review the Business Process Framework and Model, and 
+to present recommendations on adopting it for your enterprise (see www.tmforum.org for 
+download advice). 
+2. Encourage your vendors to understand the Business Process Framework, and. to describe 
+their software applications in relation to the Business Process Framework. 
+3. If you want your company’s view incorporated in future versions of the Business Process 
+Framework, send a representative to participate actively in its ongoing development. 
+Vendors 
+1. Provide references on your software products for customers using the Business Process 
+Framework structure and concepts. 
+2. Assist your customers’ understanding of your software products by explaining your software 
+products in relation to the Business Process Framework. 
+3. Use the Business Process Framework as a guide to help generate product gap analysis, market 
+analysis, competitive analysis, etc. 
+4. Establish and build partnerships to produce more complete solutions for service providers. 
+5. Leverage the Business process framework to deliver reusable, and thus more affordable, 
+solutions and products based on other best practices such as ITIL®, TOGAF®, COBIT® and others. 
+6. To ensure the Business Process Framework accurately reflects how the telecom business 
+operates, send a representative to participate in its ongoing development. 
+Note: Vendors, System Integrators and related companies are generally comprised of common roles. 
+The common roles are shown below with a brief description of each role. These common roles are 
+not prescriptive. Rather, they are provided to illustrate the breadth of the Business Process 
+Framework impact on vendor and system integrator organizational roles. 
+• 
+Senior Management: 
+o Mission & strategy 
+• 
+Business: 
+o Customer, market needs & issues 
+o Portfolio generation & management 
+o Value proposition 
+o Business case development 
+o Partnerships 
+• 
+Marketing: 
+o Market & competitive analysis 
+o Branding, advertising, promotions, etc. 
+o
+Public relations
+
+
+• 
+Sales: 
+o RFQs, RFIs, RFPs, contracts, etc. 
+• 
+Finance: 
+o Revenue & cost forecasting 
+o Order to cash, billing, etc. 
+• 
+Systems Engineering: 
+o Research and Design 
+o System design: architecture, interfaces, etc. 
+o Technology, etc. roadmaps 
+• 
+Development Engineering: 
+o Hardware, software, services products and solutions 
+• 
+Test: 
+o System, product, field, compliance, “X-ility” (Availability, Operability, …), etc. testing & 
+certification 
+• 
+Manufacturing: 
+o Supply chain (in) 
+o Warranty, etc. 
+• 
+Deployment: 
+o Supply chain (out) 
+o Delivery & installation 
+o Acceptance test 
+o Field trials, Field problem resolution, MOL 
+ 
+Bringing the Business Process Framework into your Business – Some hints and Suggestions 
+To evaluate and use the Business Process Framework for your own business, it is essential that the 
+ground is prepared so that the goals are clear, and it is possible to assess the impact of this. 
+As a first step, it is important to gain internal commitment and sponsor support for the adoption of 
+the Business Process Framework, since the kind of business process analysis, and possible changes 
+that will result, need buy-in and active participation from those involved. A critical success factor is 
+obtaining senior management recognition and support. 
+It is also critical to identify and assess the area(s) where the Process Framework may bring benefit, 
+and to define success criteria for any trial or pilot use, so that results can be leveraged to build 
+confidence and justify further work. 
+In using the Business Process Framework, it is important to recognize that it provides a ready-made 
+generic business process framework, which may need adapting for your business, and that it is 
+progressively being further developed to lower-level detail. 
+The Business Process Framework can be used directly: 
+• 
+to assist your business partitioning (Process groupings and definitions to define 
+roles and responsibilities within your organization) 
+• 
+to procure solutions from vendors that identify which processes within the 
+P
+F
+k
+b i
+t d
+
+
+• 
+to bring economies of scale 
+• 
+to reduce product development cycles 
+• 
+To facilitate process customization and extension 
+Furthermore, the Process Framework can be adapted and extended to accommodate 
+specific needs in your own area: 
+• 
+use the Process Framework as a baseline 
+• 
+define additional detail and extensions in areas specific to your business 
+• 
+influence ongoing Business Process Framework development work through 
+direct participation 
+o share ideas and gain insight 
+o ensure the Process Framework evolves in line with your needs 
+o maximize the relevance of industry products 
+In extending and customizing the Business Process Framework, a number of strategies can 
+be considered: 
+Bottom-up 
+o Start with your enterprise existing Business Processes definitions 
+o Map existing Business Process flows back to the Business Process 
+Framework 
+o Construct your own decomposition of the Business Process 
+Framework published Business Processes  
+Top down 
+o Decompose the Business Process Framework processes into more 
+granular processes, to expose more detail 
+o Define process flows, to link processes together 
+o Combine decompositions and flows, to describe fully the behavior of 
+each process area 
+o Continue (as required) to lower levels of detail 
+The approach used can be adjusted as convenient in each case. Experience shows there is value in 
+firming up agreement at a given level of decomposition and analysis, before proceeding to develop 
+fully the next level of detail (of course, it may be helpful to “look ahead” a little to ensure that the 
+current level of detail is resilient). 
+
+
+8. Administrative Appendix 
+8.1 Acknowledgements 
+This release of the Business Process Framework is the result of the combined efforts of a large group 
+of individuals from companies all over the world. Most noteworthy is the participation of numerous 
+service providers. The knowledge and commitment in providing contributions and participating in 
+discussions are greatly appreciated. Contributors over the program leading to previous Business 
+Process Framework/eTOM releases were acknowledged in those documents. 
+The team looks forward to continued input and involvement for ongoing work on the Business 
+Process Framework. Thank you for making this the acknowledged, best framework for the 
+Communications and Digital Services industry. 
+See main document (GB921 Concepts and Principles) for other acknowledgements. 
+8.2 Document History 
+8.2.1 
+Version History 
+Version Number 
+Date Modified 
+Modified by: 
+Description of changes 
+eTOM Addendum 
+P NGOSS Version 
+4.5 
+05/04 
+ 
+Launch of this Addendum, packaged as 
+GB921P for this release. 
+Provides an introduction to eTOM and can 
+be used as a primer for the rest of the GB921 
+documents 
+Version 4.6 
+11/04 
+ 
+Minor updates prior to Member Evaluation. 
+Version 4.7 
+06/09 
+ 
+Minor updates to reflect TM Forum 
+Approved status 
+Version 4.8 
+Jan 2010 
+Mike Kelly (with 
+some updates by Ken 
+Dilbeck) 
+Small terminology changes to use “Business 
+Process Framework” and to update 
+diagrams; incorporation of member review 
+comments 
+Version 4.9 
+March 2010 
+Alicja Kawecki 
+Minor cosmetic corrections for web posting 
+Version 4.10 
+April 2011 
+Alicja Kawecki 
+Updated to reflect TM Forum Approved 
+status 
+Version 5.0 
+May 2014 
+Viviane Cohen, Hugo 
+Vaughan 
+Assimilation of the vertical processes as 
+simple groupings, minor edits to reflect 
+changing industry terms and co-solutions. 
+Version 5.0.1 
+May 2014 
+Alicja Kawecki 
+Applied rebranding, updated cover, header, 
+footer & Notice; minor cosmetic edits prior 
+to posting 
+Version 5.0.2 
+June 2014 
+Alicja Kawecki 
+Correction to cover page 
+Version 5.0.3 
+Sep 2014 
+Avi Talmor 
+Correction on p. 12 per Member Evaluation 
+feedback 
+5.0.4 
+Oct 2014 
+Alicja Kawecki 
+Updated cover and Notice to reflect TM 
+
+
+Version Number 
+Date Modified 
+Modified by: 
+Description of changes 
+15.0.0 
+May 2015 
+Viviane Cohen 
+Amendments based on changes to 
+Frameworx  
+15.0.1 
+May 2015 
+Alicja Kawecki 
+Updated cover, header, Notice 
+15.0.2 
+16 December 2015 
+Alicja Kawecki 
+Updated cover, header and Notice to reflect 
+TM Forum Approved status 
+15.0.3 
+06-Jul-2018 
+ 
+Adrienne Walcott 
+Formatting/style edits prior to R18 
+publishing 
+15.0.4 
+24-Sep-2018 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+19.0.0 
+11-Aug-2019 
+Alfred Anaya-
+Dubernard 
+Updates to align with Fx19 and GB991 
+19.0.1 
+17-Oct-2019 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+Status 
+21.0.0 
+28-May-2021 
+Avi Talmor 
+Updated diagrams  
+21.0.1 
+12-Jul-2021 
+Avi Talmor 
+Updated to reflect comments received 
+during publishing review cycle 
+22.5.1 
+09-Mar-2022 
+Alfred Anaya 
+Updated to ensure more clarity, 
+consistency and alignment with ODA and 
+release 21.5 
+8.2.2 
+Release History 
+Release Status 
+Date Modified 
+Modified by: 
+Description of changes 
+8.1 
+Jan 2010 
+Mike Kelly (with 
+some updates by 
+Ken Dilbeck) 
+Small terminology changes to use “Business 
+Process Framework” and to update diagrams; 
+incorporation of member review comments 
+14.0 
+May 2014 
+Hugo Vaughan 
+Assimilation of the vertical processes as simple 
+groupings, minor edits to reflect changing 
+industry terms and co-solutions 
+15.0 
+May 2015 
+Viviane Cohen 
+Amendments based on changes to Frameworx  
+18.0 
+June 2018 
+Alfred Anaya-
+Dubernard 
+Updates to align with Fx18 and GB991 
+18.0.1 
+24-Sep-2018 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum Approved Status 
+19.0 
+22-July-2019 
+Alfred Anaya-
+Dubernard 
+Updates to align with Fx19 and GB991 
+19.0.1 
+17-Oct-2019 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum Approved Status 
+Pre-
+production 
+28-May-2021 
+Avi Talmor 
+Updated diagrams  
+Production 
+22-Jul-2022 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum Approved Status 
+Pre-
+production 
+09-Dec-2022 
+Avi Talmor 
+Updated to Release 22.5 
+Production 
+13-Feb-2023 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum Approved Status 
+ 
+
+

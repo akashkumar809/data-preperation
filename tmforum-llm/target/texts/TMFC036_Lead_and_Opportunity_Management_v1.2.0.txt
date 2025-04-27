@@ -1,0 +1,699 @@
+ 
+TM Forum Component 
+ 
+ 
+Lead and Opportunity 
+Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC036 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 03-Dec-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.2.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2025. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 7 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 7 
+2.4. 
+Functional Framework Functions ....................................................... 8 
+3. 
+TM Forum Open APIs & Events ..................................................................... 9 
+3.1. 
+Exposed APIs .................................................................................... 9 
+3.2. 
+Dependent APIs ............................................................................... 10 
+3.3. 
+Events .............................................................................................. 11 
+4. 
+Machine Readable Component Specification ............................................... 13 
+5. 
+References ................................................................................................... 14 
+5.1. 
+TMF Standards related versions ...................................................... 14 
+5.2. 
+Jira References ................................................................................ 14 
+5.3. 
+Further resources............................................................................. 15 
+6. 
+Administrative Appendix ............................................................................... 16 
+6.1. 
+Document History ............................................................................ 16 
+6.1.1. Version History............................................................................. 16 
+6.1.2. Release History ............................................................................ 16 
+6.2. 
+Acknowledgements .......................................................................... 17 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Lead and 
+Opportunity 
+Management 
+TMFC036 Lead and Opportunity Management 
+provides the necessary functionality 
+during pre-sales stage in terms of: 
+lead and opportunity capture, sales 
+qualification, reporting, sales pipeline 
+management. 
+Party 
+Management 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for. 
+Identifier Level Business Activity 
+Name 
+Description 
+1.1.11 
+2 
+Contact/Lead/Prospect 
+Management 
+Develop the appropriate relationships with 
+contacts, leads, and prospects with the intent 
+to convert them to consumers, such as 
+customers, or providers, such as partners, of 
+an enterprise's offerings. 
+1.1.11.1 
+3 
+Manage Sales Contact 
+Manage all sales contacts between potential 
+or existing parties and the enterprise. 
+1.1.11.2 
+3 
+Manage Sales Lead 
+Collect and administer a sales lead and the 
+associated probabilities of the lead becoming 
+a prospect. 
+1.1.11.3 
+3 
+Manage Sales Prospect 
+Match a sales prospect with the most 
+appropriate products and ensure that a 
+prospect is handled appropriately. 
+1.1.9 
+2 
+Selling 
+Responsible for managing prospective 
+customers, for qualifying and educating 
+customers, and matching customer 
+expectations 
+Managing prospective parties with whom an 
+enterprise may do business, such as 
+potential existing or new customers and 
+partners, for qualifying and educating them, 
+and ensuring their expectations are met. 
+1.1.9.1 
+3 
+Qualify Selling 
+Opportunity 
+Ensure that a sales prospect is qualified in 
+terms of any associated risk and the amount 
+of effort required to achieve a sale. 
+1.1.9.3 
+3 
+Acquire Sales Prospect 
+Data 
+Capture and record all pertinent sales 
+prospect data required for qualifying an 
+opportunity and for the initiation, realization 
+and deployment of the agreed sales 
+proposal. 
+1.1.7 
+2 
+Market Sales Support & 
+Readiness 
+Market Sales Support & Readiness 
+processes ensure the support capability is in 
+place to allow the CRM Fulfillment, 
+Assurance and Billing processes to operate 
+effectively. 
+1.1.7.2 
+3 
+Support Selling 
+Administer and manage the operation of the 
+various sales channels and to ensure that 
+there is capability (for example, information, 
+
+
+Identifier Level Business Activity 
+Name 
+Description 
+materials, systems and resources) to support 
+the Selling processes. 
+1.1.7.5 
+3 
+Manage Sales Accounts 
+Manage the sales accounts assigned to the 
+sales channel on a day-day basis. 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs)* 
+Sales Lead and Opportunity ABE 
+Sales Lead ** 
+ 
+Sales Opportunity ** 
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified.  
+** Sales Lead and Sales Opportunity are currently BEs in Sales Lead and Opportunity 
+ABE Level 1 but refer to SID JIRA asking to create 2 ABEs Level 2. 
+2.3. eTOM L2 - SID ABEs links 
+eTOM L2 vS SID ABEs links for this ODA Component.  
+ 
+ 
+ 
+
+
+2.4. Functional Framework Functions 
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Sub-Domain 
+Functions 
+Level 1 
+Sub-Domain 
+Functions 
+Level 2 
+394 
+Sales Aids 
+Support 
+Sales Aids Support provides job 
+aids functions to access active 
+aids like template or wizard types 
+of context-aware scripting to e.g. 
+aid lead qualification as an 
+example. 
+Sales 
+Management 
+Opportunity 
+Management 
+372 
+Sales 
+Opportunity 
+Management 
+Sales Opportunity Management 
+creates, manages and develop 
+sales opportunities for customers. 
+Sales 
+Management 
+Opportunity 
+Management 
+375 
+Funnel 
+Assigning 
+Funnel Assigning provides the 
+necessary functionality to assign 
+sales personnel to leads within a 
+given funnel/pipeline. 
+Presales 
+Management 
+Sales Lead 
+Management 
+374 
+Funnel 
+Creation 
+Funnel Creation provides the 
+necessary functionality to create a 
+new sales funnel or pipeline 
+Presales 
+Management 
+Sales Lead 
+Management 
+376 
+Funnel Leads 
+Tracking 
+Funnel Leads Tracking provides 
+the necessary functionality to track 
+and manage the funnel process of 
+the various leads and 
+opportunities. 
+Presales 
+Management 
+Sales Lead 
+Management 
+726 
+Sales Lead 
+Capturing 
+Sales Lead Capturing handles the 
+generation of leads. A lead can be 
+generated from many sources and 
+customer interactions including 
+the result of a targeted marketing 
+campaign. Potential customer 
+information is obtained from 
+external sources or from internally 
+generated data. 
+Presales 
+Management 
+Sales Lead 
+Management 
+ 
+ 
+ 
+
+
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the component 
+could require the usage of this set of required APIs.  
+• 
+List of Events (generated & consumed ) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+3.1. Exposed APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+API ID 
+API Name 
+Mandatory / Optional 
+Operations 
+TMF699 
+Sales Management API 
+Mandatory 
+salesLead: 
+- GET 
+- GET /id 
+- POST 
+- PATCH 
+- DELETE 
+salesOpportunity: 
+- GET 
+- GET /id 
+- POST 
+- PATCH 
+- DELETE 
+
+
+API ID 
+API Name 
+Mandatory / Optional 
+Operations 
+TMF701 
+Process Flow Management 
+Optional 
+processFlow: 
+- POST 
+- GET 
+- GET /id 
+- DELETE 
+taskFlow: 
+- PATCH 
+- GET 
+- GET /id 
+TMF688 
+Event Management 
+Optional 
+ 
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+
+
+API ID 
+API Name 
+Mandatory / 
+Optional 
+Operations 
+Rationales 
+TMF632 
+Party Management 
+Optional 
+individual: 
+- GET 
+- GET/id 
+organization: 
+- GET 
+- GET/id 
+n/a 
+TMF620 
+Product Catalog 
+Management 
+Optional 
+productOffering: 
+- GET 
+- GET/id 
+productOfferingPrice: 
+- GET 
+- GET/id 
+n/a 
+TMF651 
+Agreement 
+Management 
+Optional 
+agreement: 
+- GET 
+- GET/id 
+agreementSpecification: 
+- GET 
+- GET/id 
+n/a 
+TMF648 
+Quote 
+Management 
+Optional 
+quote: 
+- GET 
+- GET /id 
+n/a 
+TMF669 
+Party Role 
+Management 
+Optional 
+partyRole: 
+- GET 
+- GET/id 
+n/a 
+TMF701 
+Process Flow 
+Management 
+Optional 
+processFlow: 
+- POST 
+- GET 
+- GET /id 
+- DELETE 
+taskFlow: 
+- PATCH 
+- GET 
+- GET /id 
+n/a 
+TMF688 
+Event Management 
+Optional 
+Get, Get Id 
+ 
+TMF622 
+Product Order 
+Mgmt  
+Optional 
+productOrder: 
+- GET 
+- GET /id 
+n/a 
+3.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+
+
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Directory for the machine-readable component 
+specification file for this component. 
+ 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+24.0 
+eTOM 
+24.0 
+Functional Framework  
+24.0 
+5.2. Jira References 
+eTOM 
+[ISA-710] 1.1.7.4 - Manage Sales Inventory to be reviewed - TM Forum JIRA : As 
+currently defined this inventory mixes information related to Lead and Opportunities 
+Management (sales prospects) and information related to customer orders (actual 
+sales, sales commissions). Do we really need eTOM activities for inventories 
+management ? And if yes the scope here corresponds to historic CRM solutions we 
+need to spilt in smaller pieces. So this L3 needs to be reviewed and at least duplicates 
+entries need to be deleted, and granularity of information managed to be improved. 
+[ISA-711] eTOM 1.1.9 - Selling to be reviewed - TM Forum JIRA: this L2 mixes 
+activities related to Opportunity and Sales Prospects, but also others related to 
+quotation (sales proposal) or product order initialization (cross/Up Sell, negotiate 
+sales/contract). A clearer separation is needed. 
+SID 
+[ISA-712] Sales Lead & Opportunity ABE improvements - TM Forum JIRA :  
+• 
+2 level 2 ABEs could be created for Sales Lead and for Sales Opportunity 
+• 
+a relationship between Sales Lead (resp. Sales Opportunity) and Customer 
+Product Order could be added 
+• 
+a relationship between Sales Opportunity and Agreement could also be added 
+Functional Framework 
+[ISA-713] Functional Fk - review Sales Opportunity Aggregate Function content - TM 
+Forum JIRA : Most of the functions classified in this Aggregate Function are not related 
+to Sales Opportunity but to quotation or customer product order, so they need to be 
+moved - or deleted if duplicates. 
+ 
+ 
+
+
+Open APIs 
+TMF699 Sales Management API: 
+• 
+This API covers Sales Lead and Sales Opportunity management. Sales 
+quotation as announced in the introduction as covered later is in fact already 
+covered (or should be) by TMF648 Quote Management 
+• 
+In the resource model of This API the link between Sales Opportunity and Sales 
+Quote BEs is missing. 
+• 
+This API appears in the Early Adoption page only: we need it to be released 
+soon. 
+5.3. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions.  
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+13 Apr 2023  
+Amaia White  
+Final edits prior to publication  
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+1.0.1 
+15 Aug 2023  
+Amaia White  
+Final edits prior to publication  
+1.1.0 
+05 Aug 2024  
+Gaetano 
+Biancardi  
+Applied new Component Template. 
+Dependant API: removed: TMF688 
+Event Management 
+Exposed API: removed: TMF688 
+Event Management 
+1.1.0  
+06 Sep 2024  
+Amaia White 
+Final edits prior to publication  
+1.2.0 
+18 Nov 2024  
+Gaetano 
+Biancardi  
+• 
+ API version, only major 
+version to be specified 
+1.2.0 
+27 Dec 2024  
+Rosie Wilson  
+Final edits prior to publication 
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+13 Apr 2023  
+Amaia White  
+Initial Release  
+Pre-production 
+15-May-2023 
+Adrienne Walcott 
+Updated to Member Evaluated 
+status. 
+Pre-production  15-Aug-2023 
+Amaia White  
+New release v1.0.1  
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  06-Sept-2024 
+Amaia White  
+New release v1.1.0  
+Production 
+ 
+ 
+ 
+Pre-production 
+27 Dec 2024  
+Rosie Wilson  
+New release v1.2.0 
+Production 
+07-Mar-2025 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+ 
+ 
+ 
+
+
+6.2. Acknowledgements 
+This document was prepared by the members of the TM Forum Component and 
+Canvas project team: 
+Member 
+Company 
+Role* 
+Gaetano Biancardi  
+Accenture  
+Editor  
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Additional Input  
+Ian Turkington  
+TM Forum  
+Additional Input  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

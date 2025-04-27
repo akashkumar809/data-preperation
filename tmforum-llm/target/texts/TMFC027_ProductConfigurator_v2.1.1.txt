@@ -1,0 +1,1211 @@
+ 
+TM Forum Component 
+ 
+ 
+Product Configurator 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC027 
+ 
+Maturity Level: General Availability (GA) 
+Team Approved Date: 10-Dec-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 2.1.1 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2025. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 7 
+2.1. 
+eTOM business activities ................................................................... 7 
+2.2. 
+SID ABEs ........................................................................................... 7 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 8 
+2.4. 
+Functional Framework Functions ....................................................... 8 
+3. 
+TMF OPEN APIs & Events ........................................................................... 13 
+3.1. 
+Exposed APIs .................................................................................. 13 
+3.2. 
+Dependent APIs ............................................................................... 15 
+3.3. 
+Events .............................................................................................. 17 
+4. 
+Machine Readable Component Specification ............................................... 19 
+5. 
+References ................................................................................................... 20 
+5.1. 
+TMF Standards related versions ...................................................... 20 
+5.2. 
+Further resources............................................................................. 20 
+6. 
+Administrative Appendix ............................................................................... 21 
+6.1. 
+Document History ............................................................................ 21 
+6.1.1. Version History............................................................................. 21 
+6.1.2. Release History ............................................................................ 22 
+6.2. 
+Acknowledgements .......................................................................... 22 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA Function 
+Block 
+Product 
+Configurator 
+TMFC027 The Product Configurator aims to provide 
+sales representatives and customers with 
+fast and error-free product qualification and 
+product configuration capabilities across all 
+channels. 
+It uses mostly the Product Catalog and the 
+Product Inventory information, and is able 
+to execute and check all types of Product 
+Catalog policy rules (e.g. packaging rules, 
+commercial pre-requisite rules, pricing 
+rules, consistency rules between 
+characteristic values). It can also use Party 
+related information, such as the age of the 
+customer, or specific contextual 
+information, such as the channel. 
+It can be triggered in contexts such as 
+product order capture, shopping cart or 
+quote management. It supports the Product 
+Order Capture and Validation component 
+(TMFC002) to: 
+• 
+Establish commercial offering 
+eligibility, and to provide alternative 
+product offerings in case of 
+ineligible product offering selection 
+• 
+Leads the configuration of selected 
+eligible product offerings according 
+to the context. Product configuration 
+includes computation of 
+characteristics values, allowed 
+values, bundled and related product 
+offering, pricing and discounts 
+Core Commerce 
+Management 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for: 
+Identifier Level Business 
+Activity Name 
+Description 
+1.2.5 
+L2 
+Product 
+Configuration 
+Management 
+Configuration Management configures or creates a 
+new version of a configuration for an entity, such as 
+a product,service or resource, as defined by a 
+configuration specification. This process also 
+modifies a configuration and values for configuration 
+parameters, and removes a configuration. 
+1.2.5.2 L3 
+Manage Product 
+Configuration 
+Manage Product Configuration business activity is in 
+charge of creating, maintaining, controlling, 
+changing and reporting Product Configuration 
+according to Product Configuration Plans. 
+Manage Product Configuration will establish and 
+maintaining consistency of a product's performance, 
+functional, and physical attributes within the limits 
+defined by product requirements, product design, 
+and operational information throughout the Products 
+Lifecycle. 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE 
+Level 1 
+SID ABE L1 Definition 
+SID ABE Level 2 
+(or set of BEs)* 
+SID ABE L2 
+Definition 
+Product 
+Configurati
+on 
+A Product Configuration (also referred to 
+as a Product Profile) defines how a 
+Product operates or functions. 
+A Product Configuration may contain one 
+or more parts, and each part may contain 
+zero or more fields. Each field may have 
+attributes that are statically or dynamically 
+defined. Some of these fields have fixed 
+values, while others provide values from 
+which a choice or choices can be made 
+(e.g. using the EntitySpec/Entity and/or 
+CharacteristicSpec/CharacteristicValue 
+patterns) 1 
+ProductConfigurati
+on 
+A 
+representati
+on of how a 
+Product 
+operates or 
+functions in 
+terms of 
+characteristi
+cs and 
+related 
+Product(s). 
+
+
+1 As in GB922 Product v23.0 document the definition of the ABE Product Configuration 
+is a copy of the Configuration ABE pattern defined in GB922 Common v23.0, it is here 
+adapted to the product level only. 
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified.  
+2.3. eTOM L2 - SID ABEs links 
+ 
+ 
+ 
+2.4. Functional Framework Functions 
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+55 
+Price & Discount 
+Calculation 
+Price and Discount 
+Calculation applies 
+pricing and discounting 
+rules and algorithms in 
+the context of the 
+assembled information 
+concerning Products (i.e. 
+instances of Product). 
+Rating and 
+Follow up 
+Tariff 
+Calculation 
+and Rating 
+182 
+Inter Product 
+Dependency 
+Identification 
+Inter-Product 
+Dependency 
+Identification identifies 
+product dependencies, 
+binds new order to 
+purchased product or 
+point to the dependent 
+product required 
+Product 
+Configuration 
+& Activation 
+Offer and 
+Product 
+Configuration 
+
+
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+205 
+Customer Order 
+Eligibility 
+Validation 
+Customer Order Eligibility 
+Validation function 
+validates that the Offer & 
+products specified on the 
+Customer Order, are 
+eligible from a 
+commercial and 
+functional point of view. 
+It includes: 
+• Commercial Eligibility 
+with commercial 
+compatibility with the 
+already customer 
+installed Offers 
+• Functional Eligibility 
+with the customer's 
+already installed 
+Products (corresponding 
+to ProductSpecification). 
+Customer 
+Order 
+Management 
+Customer 
+Order 
+Eligibility 
+Validation 
+207 
+Offer and Product 
+Configuration 
+The Offer and Product 
+Configuration function 
+enables the configuration 
+of the commercial offer 
+chosen by the customer. 
+The configuration 
+recovers the choice of an 
+option, the choice of the 
+characteristics values for 
+the Product Specification 
+including installation 
+preferences... 
+It can be based on 
+product configurator 
+using a rule engine. 
+It can be used at the 
+same time by Selling, 
+Order Establishment or 
+Develop Sales Proposal 
+Business activities. 
+Product 
+Configuration 
+& Activation 
+Offer and 
+Product 
+Configuration 
+262 
+Product Availability 
+Checking 1  
+Product Availability 
+Checking function 
+provide an internet 
+technology driven 
+interface for the customer 
+to undertake a product 
+availability check. 
+E.g., that the product 
+offering is active for 
+Customer 
+Order 
+Management 
+Customer 
+Order 
+Eligibility 
+Validation 
+
+
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+sales, the equipment(s) 
+specified in the customer 
+order are on stock. 
+274 
+Quote Price 
+Support Access 
+Quote Price Support 
+Access provides self 
+empowered fulfillment 
+function to provide an 
+internet technology 
+driven interface for the 
+customer to get a 
+Quotation price. 
+Customer 
+Order 
+Management 
+Fulfillment 
+Integration 
+Management 
+ 
+Customer 
+Order 
+Quotation 
+Customer 
+Fulfillment 
+Access 
+Management 
+278 
+Customer SLA 
+Preferences 
+Capturing 
+Customer SLA 
+Preferences Capturing 
+captures the customer's 
+SLA preferences e.g., as 
+part of the fulfillment. 
+Product 
+Configuration 
+& Activation 
+Offer and 
+Product 
+Configuration 
+300 
+Discount 
+Calculation 
+Discounts Calculation 
+determines charge 
+discounts based on 
+pricing plan; including 
+discounts on recurring, 
+one time, and usage 
+charges. 
+Discounts may be 
+applied at different levels 
+such as cross product, 
+cross location, or cross 
+customer (all customers 
+that are part of a given 
+group plan – some 
+affiliation). The discounts 
+can be apportioned 
+across multiple events. 
+Rating and 
+Follow up 
+Tariff 
+Calculation 
+and Rating 
+320 
+Customer 
+Product Proposal 
+Creation 
+Customer Product 
+Proposal Creation 
+proposes according to 
+what the customer 
+presently has as part of 
+what can be further 
+provided to the customer 
+including bundling, 
+product proposals, etc. 
+Product 
+Configuration 
+& Activation 
+Offer and 
+Product 
+Configuration 
+379 
+Product 
+Customization 
+Offering 
+Management 
+Product Customization 
+Offering Management 
+provides the necessary 
+functionality to manage 
+the customer 
+personalized proposals, 
+Sales 
+Management 
+Opportunity 
+Management 
+
+
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+taking into account the 
+customer location, 
+needs, current products, 
+as well as the service 
+provider's products, sales 
+emphasis and targets, 
+etc. 
+727 
+Product Offer to 
+Customer 
+Verification 2 
+Product Offer to 
+Customer Verification 
+enables and verifies the 
+configuration of the 
+commercial offer chosen 
+by the customer. 
+The configuration consist 
+of technical, functional, 
+and commercial 
+prerequisites and 
+preferences. 
+Customer 
+Order 
+Management 
+Customer 
+Order 
+Eligibility 
+Validation 
+928 
+Solution Design 
+Creation 
+Solution Design Creation 
+function 
+combine/configure the 
+emerged solution based 
+on the existing solution, 
+planned changes and 
+newly designed features 
+(e.g., for site connectivity 
+services) 
+Selecting relevant 
+Products and Services 
+from Catalog – Browse 
+and select entries from a 
+catalog that might be 
+relevant to the set of 
+captured requirements 
+into the design. 
+Sales 
+Management 
+Opportunity 
+Management 
+930 
+Automatic Solution 
+Validation 
+Obtains configuration 
+constraints from the 
+catalog and validates the 
+correctness of the design 
+against them. 
+Sales 
+Management 
+Opportunity 
+Management 
+931 
+Solution Pricing 
+The Solution Pricing 
+function is concerned 
+with assuring that the 
+designs are priced 
+consistent with pricing 
+used for billing. The 
+common product catalog 
+provides an initial price 
+Sales 
+Management 
+Opportunity 
+Management 
+
+
+Function 
+ID 
+Functional 
+Framework 
+Function 
+Function Description 
+Aggregate 
+Function 
+Level 1 
+Aggregate 
+Function 
+Level 2 
+base for the components 
+that are in the solution 
+vs. the existing 
+configuration at the 
+customer location. 
+932 
+Calculation Rules 
+Retrieval 
+Calculation Rules 
+Retrieval function gives 
+support for tariffication 
+rules including 
+discounting rules. 
+It supports that 
+discounting rules and 
+guidelines are provided 
+as to standard levels of 
+discounts/promotions 
+that can be provided to 
+the customer. Special 
+discount arrangements 
+can be obtained by 
+following an escalation 
+process. There is 
+workflow functionality to 
+help manage discount 
+escalation. 
+Sales 
+Management 
+Opportunity 
+Management 
+933 
+Price/Cost 
+Optimization  
+ 
+Price Optimization  
+ 
+ 
+Price Optimization 
+enables sales to 
+effectively evaluate the 
+customer, generate 
+recommendations for 
+price decreases and 
+increases, and set 
+negotiation guidelines 
+based on our cost. This 
+includes the application 
+of non-standard pricing. 
+Sales 
+Management 
+Opportunity 
+Management 
+1 TMFC027 Product Configurator covers the part related to Product Catalog rules 
+checking. Stock control part is done by TMFC002 Product Order Capture & Validation 
+2 TMFC027 Product Configurator covers the part related to Product Catalog rules 
+checking at commercial and functional eligibility levels. Technical eligibility controls are 
+triggered by TMFC002 Product Order Capture & Validation 
+ 
+ 
+
+
+3.  TMF OPEN APIs & Events 
+ 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the component 
+could require the usage of this set of required APIs.  
+• 
+List of Events (generated & consumed ) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+3.1. Exposed APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+API ID 
+API 
+Name 
+API 
+Vers
+ion 
+Manda
+tory / 
+Option
+al 
+Operations 
+TMF679 
+Product 
+Offering 
+Qualifica
+tion 
+V4 
+Mandat
+ory 
+productOfferingQu
+alification: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+
+
+API ID 
+API 
+Name 
+API 
+Vers
+ion 
+Manda
+tory / 
+Option
+al 
+Operations 
+TMF760 
+Product 
+Configur
+ation 
+V5 
+Mandat
+ory 
+checkProductQual
+ification: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+ 
+queryProductQuali
+fication: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+TMF688https://raw.githubusercont
+ent.com/tmforum-apis/TMF688-
+Event/master/TMF688-Event-
+v4.0.0.swagger.json 
+Event 
+V4.0.
+0 
+Option
+al 
+listener: 
+• 
+POST 
+ 
+hub: 
+• 
+POST 
+• 
+DELETE 
+TMF701 
+Process 
+Flow 
+V4.0.
+0 
+Option
+al 
+processFlow: 
+• 
+POST 
+• 
+GET 
+• 
+GET /id 
+• 
+DELETE 
+ 
+taskFlow: 
+• 
+GET 
+• 
+GET /id 
+• 
+PATCH 
+ 
+ 
+ 
+
+
+3.2. Dependent APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+
+
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Operations 
+Rationales 
+TMF637 Product 
+Inventory 
+Management 
+API 
+Mandatory 
+product: 
+- GET 
+- GET /id 
+Check required to 
+verify any product 
+inventory related to 
+the party. 
+TMF620 Product 
+Catalog 
+Management 
+API 
+Mandatory 
+catalog: 
+- GET 
+- GET /id 
+category: 
+- GET 
+- GET /id 
+productOffering: 
+- GET 
+- GET /id 
+productOfferingPrice: 
+- GET 
+- GET /id 
+productSpecification: 
+- GET 
+- GET /id 
+Product configuration 
+must rely on product 
+catalog information. 
+TMF622 Product 
+Ordering 
+Management 
+API 
+Mandatory 
+productOrder: 
+- GET 
+- GET /id 
+Product configurator 
+must produce a 
+product order. 
+TMF632 Party 
+Management 
+API 
+Optional 
+individual: 
+- GET 
+- GET /id 
+organization: 
+- GET 
+- GET /id 
+n/a 
+TMF662 Entity Catalog 
+Management 
+API 
+Optional 
+entityCatalog: 
+- GET 
+- GET /id 
+n/a 
+TMF666 Account 
+Management 
+API 
+Optional 
+billingAccount: 
+- GET 
+- GET /id 
+n/a 
+TMF669 Party Role 
+Management 
+API 
+Optional 
+partyRole: 
+- GET 
+- GET /id 
+n/a 
+TMF672 User Roles 
+Permissions 
+Optional 
+permission: 
+- GET 
+- GET /id 
+userRole: 
+- GET 
+- GET /id 
+n/a 
+TMF673 Geographic 
+Address 
+Optional 
+geographicAddress: 
+- GET 
+- GET /id 
+geographicSubAddress: 
+n/a 
+
+
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Operations 
+Rationales 
+Management 
+API 
+- GET 
+- GET /id 
+TMF674 Geographic 
+Site 
+Management 
+API 
+Optional 
+geographicSite: 
+- GET 
+- GET /id 
+n/a 
+TMF688 Event 
+Optional 
+event: 
+- GET 
+- GET /id 
+n/a 
+TMF701 Process Flow 
+Optional 
+processFlow: 
+- POST 
+- GET 
+- GET /id 
+- DELETE 
+taskFlow: 
+- PATCH 
+- GET 
+- GET /id 
+n/a 
+TMF921 Intent 
+Management 
+API 
+Optional 
+intent: 
+- GET 
+- GET /id 
+n/a 
+ 
+NOTE: Geographic Location Management API (TMF675) is available in Beta version. 
+As soon as the interface will be published it will be added to the table and to the 
+overview. 
+3.3. Events  
+The diagram illustrates the Events which the component publishes and the Events that 
+the component subscribes to and then receives. Both lists are derived from the APIs 
+listed in the preceding sections. 
+The type of event could be: 
+• 
+Create : a new resource has been created (following a POST). 
+• 
+Delete: an existing resource has been deleted. 
+• 
+AttributeValueChange: an attribute from the resource has changed - event 
+structure allows to pinpoint the attribute. 
+• 
+InformationRequired: an attribute should be valued for the resource preventing 
+to follow nominal lifecycle - event structure allows to pinpoint the attribute. 
+• 
+StateChange: resource state has changed. 
+ 
+
+
+ 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component table for the machine-readable component specification 
+file for this component. 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+24.0 
+eTOM 
+24.0 
+Functional Framework  
+24.0 
+ 
+5.2. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions. 
+ 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+29 Mar 2022 
+Gaetano 
+Biancardi, 
+Anastasios 
+Sarantis, Sylvie 
+Demarest 
+Matteo Destino 
+Emmanuel A. 
+Otchere 
+Final edits prior to publication 
+1.0.1 
+27 Jul 2023  
+Ian Turkington  
+No content changed, simply a layout 
+change to match template 3. 
+Separated the YAML files to a 
+managed repository. 
+1.0.1 
+ 15 Aug 2023 
+ 
+Amaia White  
+Final edits prior to publication  
+2.0.0 
+10 Nov 2023 
+Sylvie Demarest  
+Add of TMF760 Product 
+Configuration as exposed API. Check 
+of dependent APIs. 
+Improvement of the component 
+description, and update of the 
+mapping to Frameworks 23.0 
+2.1.0 
+24 Jun 2024  
+Gaetano 
+Biancardi  
+• 
+Updated to latest component 
+template 
+• 
+Updated to odf V23.5 
+Exposed API, removed: 
+• 
+TMF688 Event Mgmt 
+• 
+TMF672 User Roles and 
+Permissions  
+ 
+ 
+Dependant API, removed 
+• 
+TMF688 Event Mgmt 
+2.1.1 
+18 Nov 2024  
+Gaetano 
+Biancardi  
+• 
+API version, only major 
+version to be specified 
+2.1.1 
+27 Dec 2024  
+Rosie Wilson  
+Final Edits Prior to Publication 
+
+
+6.1.2. 
+Release History 
+Release 
+Status 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+Pre-
+production 
+29 Mar 2022  
+Goutham 
+Babu 
+Initial release 
+Pre-
+production  
+15 Aug 2023  
+Amaia White  
+new release 1.0.1  
+Production 
+06-Oct-2023 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-
+production 
+20 Dec 2023  
+Amaia White  
+New release 2.0.0  
+Production 
+09-Feb-2024 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-
+Production  
+12 Jul 2024  
+Amaia White  
+New release 2.1.0  
+Production 
+30-Aug-2024 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-
+Production 
+27 Dec 2024  
+Rosie Wilson 
+New release 2.1.1 
+Production 
+07-Mar-2025 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum 
+Approved status 
+6.2. Acknowledgements 
+This document was prepared by the members of the TM Forum Component and 
+Canvas project team: 
+Member 
+Company 
+Role* 
+Gaetano Biancardi  
+Accenture 
+Editor  
+Anastasios Sarantis  
+Vodafone 
+Reviewer  
+Sylvie Demarest 
+Orange  
+Editor  
+Matteo Destino  
+Accenture  
+Reviewer  
+Emmanuel A. Otchere  
+Huawei 
+Reviewer 
+Ian Turkington  
+TM Forum  
+Additional Input  
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Additional Input  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+
+

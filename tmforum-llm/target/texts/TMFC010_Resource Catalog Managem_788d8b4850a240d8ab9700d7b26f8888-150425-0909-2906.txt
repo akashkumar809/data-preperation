@@ -1,0 +1,581 @@
+On this page:
+Notice
+1. Overview
+2. eTOM Processes, SID Data Entities and Functional Framework Functions
+2.1. eTOM business activities
+2.2. SID ABEs
+2.3. eTOM L2 - SID ABEs links
+2.4. Functional Framework Functions
+3. TM Forum Open APIs & Events
+3.1. Exposed APIs
+3.2. Dependent APIs
+3.3. Events
+4. Machine Readable Component Specification
+5. References
+5.1. TMF Standards related versions
+5.2. Jira References
+5.2.1. Open API
+5.2.2. Functional Framework
+5.3. Further resources
+6. Administrative Appendix
+6.1. Document History
+6.1.1. Version History
+6.1.2. Release History
+6.2. Acknowledgements
+Notice
+Copyright © TM Forum 2025. All Rights Reserved.
+This document and translations of it may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in 
+its implementation may be prepared, copied, published, and distributed, in whole or in part, without restriction of any kind, provided that the above 
+copyright notice and this section are included on all such copies and derivative works. However, this document itself may not be modified in any way, 
+including by removing the copyright notice or references to TM FORUM, except as needed for the purpose of developing any document or deliverable 
+produced by a TM FORUM Collaboration Project Team (in which case the rules applicable to copyrights, as set forth in the 
+ mu
+TM FORUM IPR Policy
+st be followed) or as required to translate it into languages other than English.
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its successors or assigns.
+This document and the information contained herein is provided on an "AS IS" basis and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY 
+OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims that would necessarily be infringed by 
+implementations of this TM Forum Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide an indication of its 
+willingness to grant patent licenses to such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable.
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a claim of ownership of any patent claims that would 
+necessarily be infringed by implementations of this TM FORUM Standards Final Deliverable by a patent holder that is not willing to provide a license to 
+such patent claims in a manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM FORUM 
+Standards Final Deliverable. TM FORUM may include such claims on its website but disclaims any obligation to do so.
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the 
+implementation or use of the technology described in this TM FORUM Standards Final Deliverable or the extent to which any license under such rights 
+might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on TM FORUM's 
+procedures with respect to rights in any document or deliverable produced by a TM FORUM Collaboration Project Team can be found on the TM 
+FORUM website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an 
+attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this TM FORUM Standards 
+Final Deliverable, can be obtained from the TM FORUM Team Administrator. TM FORUM makes no representation that any information or list of 
+intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.
+Direct inquiries to the TM Forum office:
+181 New Road, Suite 304
+Parsippany, NJ 07054 USA
+Tel No. +1 862 227 1648
+
+
+Release Status: Production
+Approval Status: TM Forum Approved
+Version: 1.3.0
+IPR Mode: RAND
+1. Overview
+Compon
+ent Name
+ID
+Description
+ODA 
+Funct
+ion 
+Block
+Resource
+Catalog 
+Manage
+ment
+T
+M
+F
+C
+0
+10
+Resource Catalog Management component is responsible for organizing the collection of 
+ specifications that identify and define all 
+resource
+requirements for a resource.
+Resource Catalog Management component has the functionality that enable presenting a customer-facing 
+ users are able to browse 
+view so
+and select resource they need, as well as a technical view to enable define and setup resources contained in the resource catalog.
+Additional functionalities include capturing specifications of new resource specifications, managing resources (registering assets and 
+), administering the lifecycle of resources, describing relationships 
+components and identifying and mapping connections/relationships
+between resources, reporting on resources and changes to their 
+, and facilitating easy access to 
+ and 
+ 
+.
+attributes
+identify
+assign resources
+Produ
+ction
+2. eTOM Processes, SID Data Entities and Functional Framework 
+Functions
+2.1. eTOM business activities
+eTOM business activities this ODA Component is responsible for.
+Id
+e
+nt
+ifi
+er
+L
+e
+v
+el
+Business
+Activity 
+Name
+Description
+1.
+5.
+15
+L2
+Resource 
+Catalog 
+Lifecycle 
+Managem
+ent
+Catalog Lifecycle Management business process covers a set of business activities that enable manage the lifecycle of an organizations catalog from design to build 
+according to defined requirements.
+Catalog Lifecycle Management proves the overarching governance to manage all the stages in the realization and operationalization of the Product/Service
+/Resource Catalog in support of the organizations business goals.
+
+
+al 
+Readines
+s 
+Managem
+ent
+1.
+5.
+17
+L2
+Resource 
+Catalog 
+Content 
+Managem
+ent
+Resource Catalog Content Management business process define and provide the business activities that support the day-to-day operations of Resource Catalogs in 
+order to realize the business operations goals.
+Resource Catalog Content Management business processes include administering the Resource Catalog instance in production, maintaining catalog entries, 
+assuring catalogs, managing catalog access, managing entry lifecycle through versioning, handling catalog entity entry and changes, supporting distribution of 
+catalogs as needed, and supporting user-facing activities.
+1.
+5.
+18
+L2
+Resource 
+Catalog 
+Planning 
+Managem
+ent
+Resource Catalog Planning Management business process covers a set of business activities that understand and enable establish the plan to define, design and 
+operationalize a catalog in order to meet the needs and objectives of Resource cataloging.
+The Resource Catalog Planning Management business process ensure that the organization is able to identify the most appropriate scheme and goal for it catalog. It 
+includes designing the Catalog plan and developing the specification according to Resource management requirement.
+1.
+5.
+19
+L2
+Resource 
+Specificati
+on 
+Managem
+ent
+Resource Specification Management business process leverages captured resource requirements to develop, master, analyze, and update documented standard 
+conditions that must be satisfied by a resource design and/or delivery.
+Resource Specifications Management can result in establishing in a centralized way, technical (know-how) standards. Such standards provide the organization with 
+a means to control and approve the values and inputs of specification through structure, review, approval and distribution processes to stakeholders and suppliers.
+1.
+5.3
+L2
+Resource 
+Specificati
+on 
+Developm
+ent & 
+Retireme
+nt
+Resource SpecificationDevelopment & Retirement processes develop new, or enhance existing technologies and associated resource types, so that new Products 
+are available to be sold to customers. They use the capability definition or requirements defined by Resource Strategy & Planning They also decide whether to 
+acquire resources from outside, taking into account the overall business policy in that respect. These processes also retire or remove technology and associated 
+resource types, which are no longer required by the enterprise.
+Resource types may be built, or in some cases leased from other parties. To ensure the most efficient and effective solution can be used, negotiations on network 
+level agreements with other parties are paramount for both building and leasing.
+These processes interact strongly with Product and Engaged Party Development processes.
+1.
+5.
+3.4
+L3
+Develop 
+Detailed 
+Resource 
+Specificati
+ons
+The Develop Detailed Resource Specifications processes develop and document the detailed resource-related technical, performance and operational 
+specifications, and manuals. These processes develop and document the required resource features, the specific technology requirements and selections, the 
+specific operational, performance and quality requirements and support activities, any resource specific data required for the systems and network infrastructure. 
+The Develop Detailed Resource Specifications processes provide input to these specifications. The processes ensure that all detailed specifications are produced 
+and appropriately documented. Additionally the processes ensure that the documentation is captured in an appropriate enterprise repository.
+2.2. SID ABEs
+SID ABEs this ODA Component is responsible for:
+SID ABE Level 1
+*
+SID ABE Level 2 (or set of BEs)
+Resource Specification ABE
+Resource Performance ABE
+Resource Performance Specification BE
+Resource Usage ABE
+ResourceUsageSpec BE
+Resource Configuration ABE
+ResourceConfigSpec BE
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must be implemented, else the L2 SID ABE Level is specified. 
+2.3.  eTOM L2 - SID ABEs links
+eTOM L2 
+ SID ABEs links for this ODA Component. 
+vS
+
+
+2.4. Functional Framework Functions
+Fu
+nc
+tio
+n 
+ID
+Function Name
+Function Description
+Aggregate 
+Function 
+1
+Level 
+Aggregate 
+Function Level
+2
+737 Resource Capability 
+Specification Management
+This function involves the creation, editing, storage and retrieval of capability specifications. The capability 
+specifications represent the general, common and invariant characteristics of resource that may be realized in more 
+than one type of specific resource. Examples of capability are Layer2, Data, radio and Transport.
+Resource 
+Capability 
+Manageme
+nt
+Resource 
+Specification 
+Capability 
+Development
+467 Resource Data 
+Transformation/Parsing 
+Rules Configuration
+Resource Data Transformation/Parsing Rules Configuration provides tools to set up and maintain resource data 
+parsing rules
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+951 Resource Catalog 
+Entities  Management
+Resource Catalog Entities  Management  identifies resource entities in a common Catalog Management from the 
+Common Domain, or identifies a specific instance of a Catalog Management  for resource entities  
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+996 Resource Task Item Policy 
+Control Configuration
+Defines and configures the policies which will be implemented during the Resource task item lifecycle.
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+10
+83
+Resource Specification 
+Repository Management
+Resource Specification Repository Management is able to create, modify and delete Resource Specification.
+This includes the ability to manage the state of an entity during its lifecycle (e.g. planned, deployed, in operation, 
+replaced by locked).
+It includes Resource Specifications retrieval, integrity rules check and versioning management.
+It also provides Product Specification and Offering views adapted to the different roles.
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+10
+88
+Resource Specification to 
+Supplier Product 
+Specification Relationship 
+Design
+Resource Specification to Supplier Product Specification Relationship Design identifies, when it corresponds to 
+equipment rented to a Supplier  (devices, network equipments, hardware &amp; software, etc).
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+10
+89
+Resource Specification 
+Action Skill Design
+Resource Specification Action Skill Design manages the links to the Skill catalog to identify for each type of resource, 
+or of Action on a resource, which type of skill is necessary to make the intervention.
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+10
+82
+Resource Specification 
+Change Auditing
+Resource Specification Change Auditing manages the implications of Resource Specifications changes to determine 
+the consequences of any given change. Resource Specifications changes may impact other Resource Specifications 
+and Resource Facing Service Specit supports
+The function logs Resource Specifications changes and supports the analysis of relationships between Resource 
+Specifications. 
+In addition, it tracks the history of changes in an easy and accessible manner.
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+10
+64
+Logical and Software 
+Resources Designing
+Logical and Software Resources Designing supports physical, logical, and software design of resources including 
+definition of configuration variables and initial parameters.
+Resource 
+Specificatio
+n 
+Manageme
+nt
+Resource 
+Specification 
+Development
+
+
+It includes resource types that as a Service Provider we don't own or commercialize (ex: mobile phones used by our 
+customers).
+Manageme
+nt
+3. TM Forum Open APIs & Events
+The following part covers the APIs and Events; This part is split in 3:
+List of 
+ - This is the list of APIs available from this component. 
+Exposed APIs
+List of
+ - In order to satisfy the provided API, the  component could require the usage of this set of required APIs.
+ Dependent APIs
+List of  
+ (
+ - The events which the component may generate is listed in this section along with a list of the 
+Events generated & consumed )
+events which it may consume. Since there is a possibility of multiple 
+ receivers for each defined event.
+sources and
+3.1. Exposed APIs
+Following diagram illustrates API/Resource/Operation:
+
+
+TMF634
+Resource Catalog Management
+4
+Mandatory
+resourceCatalog: POST, PATCH, GET, GET /id, DELETE
+resourceCategory: POST, PATCH, GET, GET /id, DELETE
+resourceSpecification: POST, PATCH, GET, GET /id, DELETE
+resourceCandidate: POST, PATCH, GET, GET /id, DELETE
+exportJob: POST, GET, GET /id, DELETE
+importJob: POST, GET, GET /id, DELETE
+TMF701
+Process Flow Management
+4
+Optional
+processFlow: POST, GET, GET /id, DELETE
+taskflow: PATCH, GET, GET /id
+3.2. Dependent APIs
+Following diagram illustrates API/Resource/Operation potentially used by the resource catalog component:
+API ID
+API Name
+API Version
+Mandatory / Optional
+Operations
+TMF634
+Resource Catalog Management
+4
+Optional
+resourceCatalog: GET, GET /id
+resourceCategory: POST, PATCH, GET, GET /id, DELETE
+resourceSpecification: POST, PATCH, GET, GET /id, DELETE
+resourceCandidate: POST, PATCH, GET, GET /id, DELETE
+exportJob: POST, GET, DELETE
+importJob: POST, GET, DELETE
+
+
+TMF662
+Entity Catalog Management
+4
+Optional
+entitySpecification: GET, GET /id
+associationSpecififaction: GET, GET /id
+3.3. Events
+The diagram illustrates the Events which the component may publish and the Events that the component may subscribe to and then may receive. 
+Both lists are derived from the APIs listed in the preceding sections.
+4. Machine Readable Component Specification
+Refer to the ODA Component table for the machine-readable component specification file for this component.
+5. References
+5.1. TMF Standards related versions
+Standard
+Version(s)
+
+
+1.  
+Functional Framework 
+23.5
+5.2. Jira References
+5.2.1. Open API
+ - 
+ 
+ 
+AP-4088
+Getting issue details...
+STATUS
+The UsageSpecification is described in the Catalog Management components – at product, service, and resource levels.
+As part of the Resource Catalog Component specification, the question has arisen around the need to assess the addition of a ResourceUsage API 
+with both ResourceUsage & ResourceUsagSpecification (feedback from Ludovic Robert and Kamal Maghsoudlou). This will be similar to the resource 
+level like TMF727 (ServiceUsage)  is for the service level. This is consistent with the SID ABE (resourceUsage & resourceUsageSpec).
+5.2.2.  Functional Framework
+ - 
+ 
+ 
+ISA-996
+Getting issue details...
+STATUS
+As part of reviewing the Product, Service and Resource Catalogs to align with the updates to the Functional Framework, we realized that a lot of 
+functions have either been removed or been re-purposed by Master Data Management. 
+Due to this, we had to make a decision to remove all these functions from the Components: 
+Removed deleted unclassified functions  (1,2,5,7,9,10, 12,14,15)
+Removed functions that used to be related to Catalog management but now have been re-purposed by Master Data Management ((3,4, 
+6,11,13)
+Our concern is that we may be missing functions for the catalog due to re-use of Master Data Management. 
+5.3. Further resources
+IG1228: please refer to IG1228 for defined use cases with ODA components interactions. 
+6. Administrative Appendix
+6.1. Document History
+6.1.1. Version History
+Version 
+Number
+Date 
+Modified
+Modified by:
+Description of changes
+1.0.0
+05-Aug-2022
+Kamal Maghsoudlou 
+ 
+Gaetano Biancardi
+Sylvie Demarest
+Final edits prior to publication
+1.1.0
+06-Oct-2022
+Elisabeth Andersson 
+Added support for federated catalogs and minor fixes.
+1.1.1
+27 Jul 2023
+ 
+Ian Turkington
+No content changed, simply a layout change to match template 3. Separated the YAML files to a managed 
+repository.
+1.1.1 
+14-Aug-2023
+Amaia White 
+Final edits prior to publication 
+1.2.0
+19 Apr 2024 
+Elisabeth Andersson 
+Update to latest template
+Aligned with 23.5 SID and eTOM - remove of Resource Test specification BE and process (to be 
+managed by Resource Test Mgt) 
+Updated with Funcional Frameworks 23.5
+Added new functions under lvl2 Resource Specification Development (1064, 1082, 1083, 1087, 
+1088,1089)
+Updated the descriptoin of function 996 under lvl2 Resource Specification Development
+Removed deleted unclassified functions  (1,2,5,7,9,10, 12,14,15)
+Removed functions that used to be related to Catalog managment but now have been re-purposed 
+by Master Data Management ((3,4, 6,11,13)
+1.2.0
+30 Apr 2024 
+Amaia White 
+Final edits prior to publication 
+
+
+Removed the minor versions fo all APIs as per template
+ 
+6.1.2. Release History
+Release Status
+Date Modified
+Modified by:
+Description of changes
+Pre-production
+05-Aug-2022
+Goutham Babu 
+Initial release
+Pre-production
+07-Oct-2022
+Alan Pope
+Version 1.1.0
+Pre-production 
+14-Aug-2023
+Amaia White 
+Verson 1.1.1 
+Production
+06-Oct-2023
+Adrienne Walcott
+Updated to reflect TM Forum Approved status
+Pre-production
+30-Apr-2024
+Amaia White 
+Version 1.2.0 
+Production
+28-Jun-2024
+Adrienne Walcott
+Updated to reflect TM Forum Approved status
+6.2. Acknowledgements
+This document was prepared by the members of the TM Forum Component and Canvas project team:
+Member
+Company
+Role*
+Elisabeth Andersson 
+MATRIXX
+Editor 
+Hugo Vaughan (TM Forum) 
+TM Forum 
+Additional Input 
+Ian Turkington 
+TM Forum 
+Additional Input 
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, Additional Input, Reviewer
+5
+©  TM Forum 202. All Rights Reserved.
+
+

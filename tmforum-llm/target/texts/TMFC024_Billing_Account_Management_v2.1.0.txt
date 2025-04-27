@@ -1,0 +1,746 @@
+ 
+TM Forum Component 
+ 
+ 
+Billing Account Management  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC024 
+ 
+Maturity Level: General Availability (GA) 
+Team Approved Date: 03-Dec-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 2.1.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 6 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 6 
+2.4. 
+Functional Framework Functions ....................................................... 7 
+3. 
+TM Forum Open APIs & Events ..................................................................... 9 
+3.1. 
+Exposed APIs .................................................................................... 9 
+3.2. 
+Dependent APIs ............................................................................... 11 
+3.3. 
+Events .............................................................................................. 12 
+4. 
+Machine Readable Component Specification ............................................... 13 
+5. 
+References ................................................................................................... 14 
+5.1. 
+TMF Standards related versions ...................................................... 14 
+5.2. 
+Jira References ................................................................................ 14 
+5.3. 
+Further resources............................................................................. 14 
+6. 
+Administrative Appendix ............................................................................... 15 
+6.1. 
+Document History ............................................................................ 15 
+6.1.1. Version History............................................................................. 15 
+6.1.2. Release History ............................................................................ 16 
+6.2. 
+Acknowledgments ............................................................................ 16 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Billing Account 
+Management 
+TMFC024 The billing account management component 
+aims to provide all the needed functionalities 
+to create, configure and modify billing 
+accounts. 
+BAM component has the goal to support and 
+handle the following capabilities/ 
+functionalities. 
+• 
+Set-up/ creation of Billing account 
+• 
+Associate payment plan(s) 
+• 
+Associate payment method(s) - 
+optional 
+• 
+Account taxes/ fees exception 
+management 
+• 
+Define account associations 
+• 
+Provide account balance details 
+• 
+Set-up Billing contacts 
+• 
+Set-up Billing preferences (e.g., bill 
+cycle frequency, invoice media type, 
+invoice template option, etc.) 
+Party 
+Management 
+ 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for: 
+Identifier Level Business Activity 
+Name 
+Description 
+1.3.10 
+L2 
+CustomerBill 
+Payments & 
+Receivables 
+Management 
+Ensure that enterprise revenue is 
+collected through pre-established 
+collection channels and put in place 
+procedures to recover past due 
+payments. 
+1.3.10.1 
+L3 
+Manage Customer 
+Billing Account 
+Ensure effective management of the 
+customer’s billing account as it relates to 
+the products purchased and consumed 
+throughout the appropriate billing cycle. 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs) 
+Customer Billing Account 
+Customer Billing Account 
+2.3. eTOM L2 - SID ABEs links 
+ 
+ 
+
+
+ 
+ 
+2.4. Functional Framework Functions 
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Sub-Domain 
+Functions 
+Level 1 
+Sub-Domain 
+Functions 
+Level 2 
+77 
+Billing 
+Account 
+Information 
+Configuration 
+Billing Account Information 
+Configuration updates specific 
+billing account information such 
+as customer bill periods, bill 
+media options, etc. 
+Invoice 
+Management 
+Billing Account 
+Administration 
+73 
+Billing 
+Account 
+Reporting 
+Billing Account Reporting; 
+Grouping 
+charges/statement/accounts for 
+the purpose of creating a report 
+Invoice 
+Management 
+ 
+Billing Account 
+Administration 
+76 
+Billing 
+Account 
+Structure 
+Configuration 
+Billing Account Structure 
+Configuration modifies billing 
+accounts based on various 
+account constructs. 
+Invoice 
+Management 
+ 
+Billing Account 
+Administration 
+75 
+Billing 
+Accounts 
+Creation 
+Billing Accounts Creation 
+provides the ability to create 
+billing accounts based on 
+various account constructs. 
+Account creation can also be 
+automated with orders received 
+Invoice 
+Management 
+ 
+Billing Account 
+Administration 
+248 
+Customer 
+Billing 
+Customer Billing Hierarchies 
+Management provide an internet 
+technology driven interface to 
+undertake billing functions 
+Invoice 
+Management 
+ 
+Billing Account 
+Administration 
+
+
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Sub-Domain 
+Functions 
+Level 1 
+Sub-Domain 
+Functions 
+Level 2 
+Hierarchies 
+Management 
+directly for management of 
+hierarchies driven billing 
+operations for e.g. corporate 
+customers 
+ 
+ 
+ 
+
+
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the component 
+could require the usage of this set of required APIs.  
+• 
+List of Events (generated & consumed) - The events which the component 
+may generate are listed in this section along with a list of the events which it 
+may consume. Since there is a possibility of multiple sources and receivers for 
+each defined event. 
+3.1. Exposed APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+API ID 
+API Name 
+Mandatory / 
+Optional 
+Operations 
+TMF666 Account Management 
+Mandatory 
+billingAccount: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+
+
+API ID 
+API Name 
+Mandatory / 
+Optional 
+Operations 
+billingCycleSpecification: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+ 
+billFormat: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+billPresentationMedia: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+TMF688 Event Management 
+Optional 
+processFlow: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+DELETE 
+taskFlow: 
+• 
+GET 
+• 
+GET /id 
+• 
+POST 
+• 
+DELETE 
+TMF701 Process Flow 
+Management 
+Optional 
+listener: 
+• 
+POST 
+hub: 
+• 
+POST 
+• 
+DELETE 
+
+
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Operation 
+Rationale 
+TMF632 Party Management 
+Mandatory 
+      - individual: 
+        - GET 
+        - GET /id 
+      - 
+organization: 
+        - GET 
+        - GET /id 
+Billing 
+Account must 
+be related to 
+at least one 
+Party 
+TMF669 Party Role 
+Management 
+Mandatory 
+      - partyRole: 
+        - GET 
+        - GET /id 
+Party Role 
+access based 
+control 
+TMF672 UserRolesPermissions 
+Mandatory 
+Get 
+ 
+TMF670 Payment Method 
+Management 
+Optional 
+      - 
+paymentMethod: 
+        - GET 
+        - GET /id 
+  
+TMF676 Payment Management 
+Optional 
+      - payment: 
+        - GET 
+        - GET /id 
+  
+TMF701 Process Flow 
+Management 
+Optional 
+      - 
+processFlow: 
+        - POST 
+        - GET 
+  
+
+
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Operation 
+Rationale 
+        - GET /id 
+        - PATCH 
+TMF688 Event Management 
+Optional 
+Get 
+  
+ 
+3.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+ 
+ 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Directory for the machine-readable component 
+specification file for this component. 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+24.0 
+eTOM 
+24.0 
+Functional Framework  
+24.0 
+5.2. Jira References 
+N/A 
+5.3. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions.  
+Key 
+Summary 
+Created 
+Updated 
+Assignee 
+Reporter Status 
+Resolution 
+TAC-123 
+TMFC024 
+Billing 
+Account 
+Managemen
+t v1.0.0 
+May 25, 
+2021 
+Dec 09, 
+2022 
+Matteo 
+Destino 
+Gaetano 
+Biancardi 
+ DONE  
+Done 
+1 issue 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+This section records the changes between this and the previous document version as it 
+is edited by the team concerned. Note: this is an incremental number which does not 
+have to match the release number and used for change control purposes only. 
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+07-Dec-
+2022 
+Matteo 
+Destino 
+Final edits prior to publication 
+1.1.0 
+28-Mar-
+2023 
+Gaetano 
+Biancardi 
+Sylvie 
+Demarest  
+Alignment to ODF 22.5 
+Minor changes on dependent APIs and 
+events 
+1.1.1 
+25 Jul 
+2023  
+Ian 
+Turkington 
+No content changed, simply a layout change 
+to match template 3. Separated the YAML 
+files to a managed repository. 
+1.1.1  
+15 Aug 
+2023  
+Amaia white  
+Final edits prior to publication  
+2.0.0 
+16 Apr 
+2024  
+Gaetano 
+Biancardi   
+• 
+eTOM: "Customer Bill Payments & 
+Receivables Management" business 
+activity L2 renamed into 
+"Customer  Receivables 
+Management" 
+• 
+Machine readable specification: 
+corrected to set dependent API 
+TMF670 and TMF676 as optional 
+2.0.0 
+30 Apr 
+2024  
+Amaia White  
+Final edits prior to publication  
+2.1.0 
+18 Nov 
+2024  
+Gaetano 
+Biancardi  
+• 
+TMF688, removed from the core 
+specification, moved to supporting 
+functions 
+• 
+TMF672, removed from the core 
+specification, moved to supporting 
+functions 
+• 
+ API version, only major version to be 
+specified 
+2.1.0 
+24 Dec 
+2024  
+Rosie 
+Wilson  
+Final edits prior to publication 
+
+
+6.1.2. 
+Release History 
+Release 
+Status 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+Pre-
+production 
+07-Dec-2022 Matteo 
+Destino 
+Initial release of document 
+Pre-
+production  
+13-Apr-2023 
+Amaia White  
+Final edits prior to publication  
+Pre-
+production 
+15-may-
+2023 
+Adrienne 
+Walcott 
+Updated to Member Evaluated 
+status. 
+Pre-
+production 
+15-Aug-2023 Amaia White  
+Final edits prior to publication  
+Pre-
+production 
+15-may-
+2023 
+Adrienne 
+Walcott 
+Updated to Member Evaluation 
+Pre-
+production  
+30-Apr-2024 
+Amaia White  
+Final edits prior to publication  
+Production 
+28-Jun-2024 
+Adrienne 
+Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-
+production 
+24-Dec-2024 Rosie Wilson 
+Final edits prior to publication of 
+2.1.0 
+Production 
+07-Mar-2025 Adrienne 
+Walcott 
+Updated to reflect TM Forum 
+Approved status 
+6.2. Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Matteo Destino  
+Accenture 
+Editor 
+Gaetano Biancardi  
+Accenture 
+Reviewer  
+Sylvie Demarest  
+Orange  
+Reviewer 
+Ian Turkington  
+TM Forum  
+Additional Inputs  
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Additional Inputs  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

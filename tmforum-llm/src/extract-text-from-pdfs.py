@@ -143,5 +143,5 @@ def process_directory(input_dir):
 
 
 if __name__ == "__main__":
-    input_dir = "/Users/AkashKumar/D0cuments/docs/tmforum/apiuserguides"  # Replace with your PDF file path
+    input_dir = "/Users/AkashKumar/D0cuments/docs/tmforum"  # Replace with your PDF file path
     process_directory(input_dir)

@@ -1,0 +1,719 @@
+ 
+TM Forum Technical Specifications 
+ 
+ 
+ 
+ 
+Service Qualification 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC009 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 02-Jul-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.1.0 
+IPR Mode: RAND 
+
+
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+
+
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 3 
+Table of Contents .................................................................................................. 5 
+1. 
+Overview ........................................................................................................ 6 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 8 
+2.1. 
+eTOM business activities ................................................................... 8 
+2.2. 
+SID ABEs ........................................................................................... 9 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 9 
+2.4. 
+Functional Framework Functions ..................................................... 10 
+3. 
+TM Forum Open APIs & Events ................................................................... 11 
+3.1. 
+Exposed APIs .................................................................................. 11 
+3.2. 
+Dependent APIs ............................................................................... 12 
+3.3. 
+Events .............................................................................................. 14 
+4. 
+Machine Readable Component Specification ............................................... 15 
+5. 
+References ................................................................................................... 16 
+5.1. 
+TMF Standards related Versions ...................................................... 16 
+5.2. 
+eTOM............................................................................................... 16 
+5.3. 
+SID .................................................................................................. 16 
+5.4. 
+Functional Framework ..................................................................... 16 
+5.5. 
+API ................................................................................................... 17 
+5.6. 
+Further resources............................................................................. 17 
+6. 
+Administrative Appendix ............................................................................... 18 
+6.1. 
+Document History ............................................................................ 18 
+6.1.1. Version History............................................................................. 18 
+6.1.2. Release History ............................................................................ 18 
+6.2. 
+Acknowledgments ............................................................................ 18 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Service 
+Qualification 
+TMFC009 Service Qualification component is responsible 
+for checking and validating the availability of a 
+service according to specified and configured 
+business rules. It must identify at least one 
+technical solution (RFSspec) available to deliver 
+the service (CFSspec) and check the availability 
+of all the resources types involved in this 
+technical solution. No resources are allocated 
+during Service Qualification. 
+Service Qualification component has functionality 
+that include checking service feasibility status 
+and publishing or reporting service qualification 
+result, but also calculated service delivery due 
+date and identified need of an appointment at the 
+customer site. 
+Service Qualification can also be in charge of the 
+cost calculation of the technical solution 
+identified, when it cannot be determined at 
+catalog design time (complex B2B services). This 
+information will be used as an input to price 
+calculation. 
+Production 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for: 
+Identifier Level Business 
+Activity Name 
+Description 
+1.4.5 
+L2 
+Service 
+Configuration 
+& Activation 
+Service Configuration & Activation processes 
+encompass allocation, implementation, configuration, 
+activation and testing of specific services to meet 
+customer requirements, or in response to requests 
+from other processes to alleviate specific service 
+capacity shortfalls, availability concerns or failure 
+conditions.  Where included in the service provider 
+offering, these processes extend to cover customer 
+premises equipment. 
+Responsibilities of the Service Configuration & 
+Activation processes include, but are not limited to: 
+• Verifying whether specific service designs 
+sought by customers are feasible as part of pre-
+order feasibility checks; 
+• Allocating the appropriate specific service 
+parameters to support service orders or requests 
+from other processes; 
+• Reserving specific service parameters (if required 
+by the business rules) for a given period of time until 
+the initiating customer order is confirmed, or until the 
+reservation period expires (if applicable); 
+• Implementing, configuring and activating specific 
+services, as appropriate; 
+• Testing the specific services to ensure the service is 
+working correctly; 
+• Recovery of specific services; 
+• Updating of the Service Inventory Database to 
+reflect that the specific service has been allocated, 
+modified or recovered; 
+• Assigning and tracking service provisioning 
+activities; 
+• Managing service provisioning jeopardy conditions 
+• Reporting progress on service orders to other 
+processes. 
+? 
+? 
+? 
+no L3 to cover standard availability/feasibility 
+checks 
+
+
+ 
+Note: refer to JIRA section and the need to identify a new Service Availability 
+Check/Assessment activity at Service level, as part of L2 Service Configuration & 
+Activation 
+Note: previously identified processes at Resource level didn't exist anymore in eTOM 
+23.5 and no equivalent has been found. A new Jira ticket is created. 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs) 
+ 
+ 
+ 
+Note: refer to JIRA section and the need to create a Service Qualification BE. 
+2.3. eTOM L2 - SID ABEs links 
+ 
+ 
+ 
+
+
+2.4. Functional Framework Functions 
+ 
+Function 
+ID 
+Function 
+Name 
+Function Description 
+Aggregate 
+Functions 
+Level 1 
+Aggregate 
+Functions 
+Level 2 
+319 
+Service 
+Feasibility 
+Checking 
+Service Feasibility Checking 
+provides checking based on the 
+customer service location, service 
+feasibility checks are done to 
+assure the offering can actually be 
+provided to the customer. This 
+implies that the customer location 
+is clearly established. Service 
+feasibility checks are conducted 
+via contract with the Service Order 
+Management function. 
+Service 
+Order 
+Management 
+Service 
+Availability 
+586 
+Service 
+Availability 
+Validation 
+Service Availability Validation 
+function validates that the service 
+or services specified on the 
+service order are available at the 
+specified customer/service 
+location and feasible from a 
+network point of view. 
+Service 
+Order 
+Management 
+Service 
+Availability 
+571 
+Service 
+Delivery 
+Due Date 
+Calculation 
+Service Delivery Due Date 
+Calculation functions calculates 
+the service delivery due date 
+using network capacity, access 
+provider selection and work center 
+intelligence (including workload 
+and capacity). 
+Service 
+Order 
+Management 
+Service 
+Order 
+Initialization 
+Note: refer to JIRA section for improvement in classification and new function required. 
+ 
+ 
+
+
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the  component 
+could require the usage of this set of required APIs.  
+• 
+List of  Events (generated & consumed ) - The events which the component 
+may generate are listed in this section along with a list of the events which it 
+may consume. Since there is a possibility of multiple sources and receivers for 
+each defined event. 
+3.1. Exposed APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+Operations 
+TMF645 TMF645 Service 
+Qualification 
+Management 
+4 
+Mandatory 
+checkServiceQualification 
+• 
+GET 
+• 
+GET /ID 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+TMF645 TMF645 Service 
+Qualification 
+Management 
+4 
+Mandatory 
+queryServiceQualification 
+• 
+GET 
+• 
+GET /ID 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+ 
+
+
+3.2. Dependent APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+ 
+
+
+ 
+API ID 
+API Name 
+API 
+version 
+Mandatory / 
+Optional 
+Operations 
+TMF639 
+Resource Inventory 
+Management 
+4 
+Optional 
+resource 
+• 
+GET 
+• 
+GET/id 
+TMF669 
+Party Role Management 4 
+Optional 
+partyRole 
+• 
+GET 
+• 
+GET/id 
+TMF632 
+Party 
+4 
+Optional 
+individual/organization 
+• 
+GET 
+• 
+GET/id 
+ 
+TMF672 
+User Roles And 
+Permissions 
+4 
+Optional 
+permission 
+• 
+GET 
+• 
+GET/id 
+TMF673 
+Geographic Address 
+Management 
+4 
+Optional 
+geographicAddress 
+• 
+GET 
+• 
+GET/id 
+TMF673 
+Geographic Address 
+Management 
+4 
+Optional 
+geographicSubAddress 
+• 
+GET 
+• 
+GET/id 
+TMF674 
+Geographic Site 
+Management 
+4 
+Optional 
+geographicSite 
+• 
+GET 
+• 
+GET/id 
+TMF675 
+Geographic Location 
+4 
+Optional 
+geographicLocation 
+• 
+GET 
+• 
+GET/id 
+TMF633 
+Service Catalog 
+Management 
+4 
+Mandatory 
+serviceSpec 
+• 
+GET 
+• 
+GET/id 
+TMF633 
+Service Catalog 
+Management 
+4 
+Mandatory 
+serviceCategory 
+• 
+GET 
+• 
+GET/id 
+TMF638 
+Service Inventory 
+Management 
+4 
+Optional 
+service 
+• 
+GET 
+
+
+API ID 
+API Name 
+API 
+version 
+Mandatory / 
+Optional 
+Operations 
+• 
+GET/id 
+TMF688 
+Event Management 
+4 
+Optional 
+event 
+• 
+GET 
+• 
+GET/id 
+TMF634 
+Resource Catalog 
+management 
+4 
+Optional 
+resourceSpecification 
+• 
+GET 
+• 
+GET/id 
+ 
+• 
+GET 
+• 
+GET/id 
+ 
+3.3. Events 
+The following diagram illustrates the Events which the component may publish and the 
+Events that the component may subscribe to and then may receive. Both lists are 
+derived from the APIs listed in the preceding sections. 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Map on the TM Forum website  for the machine-
+readable component specification files for this component.  TM Forum - ODA 
+Component Directory 
+ 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related Versions 
+Standard 
+Version(s) 
+eTOM 
+23.5 
+SID 
+23.5 
+Functional Framework 
+23.5 
+5.2. eTOM 
+• 
+identify a new Service Availability Check/Assessment activity at Service level, 
+as part of L2 Service Configuration & Activation and able to provide all the 
+expected results (feasibility status, service delivery due date,  need of an 
+appointment at customer site, and cost of the technical solution when needed) 
+• 
+restore the Determine Resource Availability activity at Resource level. Initial 
+definition was "This process investigates the ability to be able to satisfy specific 
+service orders as a part of a feasibility check.  Where the Allocate & Install 
+Resource processes are requested by a pre-feasibility resource order, or by the 
+Design Resources processes, these processes determine whether the 
+requested resources are available." 
+5.3. SID 
+• 
+identify a new Service Qualification BE (if we want to register the result of the 
+Service Availability Check/Assessment) 
+5.4. Functional Framework 
+• 
+592 - Service Parameters Reservation should not be classified in Service 
+Availability subdomain level 2, but rather in Service Configuration & Activation / 
+Service Configuration 
+• 
+571 - Service Delivery Due Date calculation should be classified in Service 
+Availability sub-domain level 2 and not in Service Order Initialization 
+• 
+Add a function to calculate the cost of a technical solution, for complex cases 
+when it cannot be done at catalog design time. 
+ 
+ 
+
+
+5.5. API 
+• 
+TMF645 - Service Qualification API: be able to receive as an answer not only 
+the qualification result but also the calculated due date, the need of an 
+appointment and the cost of the solution identified. 
+5.6. Further resources 
+ 
+As listed in https://www.tmforum.org/resources/standard/ig1214-mapping-of-oda-
+components-and-oda-use-cases-v1-0-0/ ,this component is involved in the following 
+use cases described in https://www.tmforum.org/resources/standard/ig1228-how-to-
+use-oda-using-open-apis-to-realize-use-cases-v9-0-0/ : 
+Refer to: UC002, UC003, UC007, UC008 and UC010 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+05-Aug-2022 
+Goutham Babu 
+Final edits prior to publication 
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. Separated 
+the YAML files to a managed repository. 
+1.1.0 
+13 May 2024  
+Gaetano 
+Biancardi  
+Component Template Update 
+odf 23.5 update 
+TMF688 removed from exposed and 
+dependent API 
+1.1.0  
+12 Jul 2024  
+Amaia White  
+Final updates before publication  
+6.1.2. 
+Release History 
+Release 
+Status 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+05-Aug-2022 
+Goutham Babu 
+Initial release of document 
+Pre-production 
+05-Sep-2022 
+Adrienne Walcott 
+Updated to reflect TM Forum Member 
+Evaluated status 
+Pre-production 
+14-Aug-2023 
+Amaia white  
+New release 1.0.1 
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+Pre-Production 
+12-Jul-2024 
+Amaia White  
+New release 1.1.0  
+Production 
+30-Aug-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+6.2. Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Sylvie Demarest 
+Orange 
+Editor 
+Ian Turkington 
+TM Forum 
+Additional Inputs 
+Hugo Vaughan (TM Forum) 
+TM Forum 
+Additional Inputs 
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

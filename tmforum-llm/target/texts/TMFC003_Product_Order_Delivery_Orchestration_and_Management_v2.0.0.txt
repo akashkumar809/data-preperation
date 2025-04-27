@@ -1,0 +1,1172 @@
+ 
+TM Forum Technical Specification 
+ 
+ 
+Product Order Delivery 
+Orchestration and 
+Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC003 
+ 
+Maturity Level: General Availability (GA) 
+Team Approved Date: 11-Mar-2025 
+Release Status: Pre-production  
+Approval Status: Team Approved 
+Version 2.0.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2025. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 3 
+1. 
+Overview ........................................................................................................ 4 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 9 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 9 
+2.4. 
+Functional Framework Functions ..................................................... 11 
+3. 
+TM Forum Open APIs & Events ................................................................... 18 
+3.1. 
+Exposed APIs .................................................................................. 18 
+3.2. 
+Dependent APIs ............................................................................... 19 
+3.3. 
+Events .............................................................................................. 21 
+4. 
+Machine Readable Component Specification ............................................... 22 
+5. 
+References ................................................................................................... 23 
+5.1. 
+TMF Standards related versions ...................................................... 23 
+5.2. 
+Jira References ................................................................................ 23 
+5.2.1. eTOM ........................................................................................... 23 
+5.2.2. SID ............................................................................................... 23 
+5.2.3. Functional Framework .................................................................. 23 
+5.2.4. API ............................................................................................... 24 
+5.2.5. Further resources ......................................................................... 24 
+6. 
+Administrative Appendix ............................................................................... 25 
+6.1. 
+Document History ............................................................................ 25 
+6.1.1. Version History............................................................................. 25 
+6.1.2. Release History ............................................................................ 25 
+6.1.3. Acknowledgments ........................................................................ 26 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Product Order 
+Delivery 
+Orchestration 
+and 
+Management 
+TMFC003 This component is in charge of the 
+orchestration of the delivery of Product Orders 
+(status accepted). 
+Based on the Product specification level of 
+information available in the Product Catalog 
+(ex: prerequisite links between product 
+specifications, links between product and CFS 
+specifications, ...): 
+• 
+it determines in which order the 
+product specification level order items 
+need to be delivered, 
+• 
+and to which CFS (or Resource) 
+specification each ordered product 
+corresponds, 
+• 
+and prepares and addresses each 
+related service (or resource) order to 
+the production system in charge. 
+During the delivery process execution, this 
+component is in charge of the evolution of the 
+status of the product specification level order 
+items, and of the related product items . So, it 
+triggers the updates of the related inventories. 
+Core 
+Commerce 
+Management 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for: 
+Identifier 
+Level Business 
+Activity Name 
+Description 
+1.3.3 
+L2 
+Customer 
+Order Handling 
+Customer 
+Order 
+Processing 
+Management 
+Customer Order Handling processes are responsible 
+for accepting and issuing orders. They deal with pre-
+order feasibility determination, credit authorization, 
+order issuance, order status and tracking, customer 
+update on order activities and customer notification 
+on order completion. 
+Responsibilities of the Order Handling processes 
+include: 
+• 
+Testing the completed offering to ensure it is 
+working correctly; 
+• 
+Updating of the Customer Inventory Database 
+to reflect that the specific product offering has 
+been allocated, modified or cancelled; 
+• 
+Assigning and tracking customer provisioning 
+activities; 
+• 
+Managing customer provisioning jeopardy 
+conditions 
+• 
+Reporting progress on customer orders to 
+customer and other processes. 
+ 
+Customer Order Processing Management 
+business process directs and controls all 
+activities that operationally realize orders for 
+customer.  
+Customer Order Processing Management assures 
+the capture, processing, fulfillment, "shipping", 
+delivery and reporting of customer orders from 
+feasibility assessment, purchasing, payment, 
+fulfillment and follow up with the customer for 
+closure. 
+1.3.3.12 L3 
+Manage 
+Customer 
+Order 
+Fulfillment 
+Manage Customer Order Fulfillment business 
+activity directs and controls all activities that 
+provision and activate orders marked for 
+fulfillment.  
+Manage Customer Order Fulfillment ensure 
+customer orders are organized and arranged 
+
+
+Identifier 
+Level Business 
+Activity Name 
+Description 
+(orchestrated), and tracked to meet committed 
+ordering terms. 
+1.3.3.8 
+1.3.3.12.1 
+L3 L4 Manage 
+Customer Order 
+Fallout 
+This process defines tasks involved in handling 
+fallouts (exceptions) generated in the order fulfillment 
+lifecycle. It deals with identifying, assigning, 
+managing, monitoring and reporting order fallouts 
+Manage Customer Order Fallout business activity 
+controls orders that have failed during the 
+fulfillment stage of a customer order process. 
+1.3.3.9 L3 
+Customer Order 
+Orchestration 
+Customer Order Orchestration ensures customer 
+order provisioning activities are orchestrated, 
+managed and tracked efficiently to meet the agreed 
+committed availability date. 
+1.3.3.13 L3 
+Manage 
+Customer 
+Order Delivery 
+Manage Customer Order Delivery business 
+activity directs and controls activities that deliver 
+orders according to the requirement of the 
+customer. 
+1.2.9 
+L2 
+Product Offering 
+Purchasing 
+Make an inbound/outbound purchase of one or more 
+product offerings, change an offering being 
+purchased, review an entire purchase, and other 
+processes that manage the lifecycle of a purchase of 
+one or more product offerings. 
+1.2.9.5 L3 
+Complete 
+Product Offering 
+Purchase 
+Complete a product offering purchase which may 
+trigger other processes, such as ones that accept 
+payment and deliver the purchased offerings. 
+L4 - 1.2.9.5.3 - Coordinate Product Offering 
+Purchase Provisioning 
+Coordinate any necessary provisioning activities 
+for inbound product offering purchases by 
+generating the service order and resource order 
+creation request(s) to Issue Service Orders and 
+Issue Resource Orders 
+L4 - 1.2.9.5.4 - Initiate Additional Product Offering 
+Purchase(s) 
+Prepare product offering purchases in the form of 
+product offering orders for each product offering 
+fulfilled by another party. 
+1.2.27 
+L2 
+Product Order 
+Management 
+Product Order Management business direct and 
+control processes that capture, track, fulfil, 
+deliver and close product order requests. 
+1.2.27.2 L3 
+Manage 
+Product Order 
+Fulfillment 
+Manage Product Order Fulfillment business 
+activity is responsible for directing and 
+controlling for product orders, the configuration 
+of product order fulfillment steps, managing the 
+product order fulfillment profile, managing the 
+product order picking and packing, managing 
+
+
+Identifier 
+Level Business 
+Activity Name 
+Description 
+product order shipment, managing product order 
+returns, tracking product order fulfillment, and 
+closing fulfillment of product orders. 
+1.2.27.3 L3 
+Manage 
+Product Order 
+Delivery 
+Manage Product Order Delivery business activity 
+directs and controls the activities to validate 
+products in the product order.  
+Manage Product Order Delivery business activity 
+ensures product can be successfully be supplied 
+to consignee of the product order to enable 
+complete the product order process. 
+1.4.5 
+L2 
+Service 
+Configuration & 
+Activation 
+Allocation, implementation, configuration, activation 
+and testing of specific services to meet customer 
+requirements. 
+1.4.5.6 L3 
+Issue Service 
+Order 
+Issue correct and complete service orders. 
+1.4.5.6.1 L4 
+Assess Service 
+Request 
+This process assesses the information contained in 
+the customer order, through a service order request, 
+relating to the purchased product offering, initiating 
+service process or party initiated request, to 
+determine the associated service orders that need to 
+be issued. 
+1.5.6 
+L2 
+Resource 
+Provisioning 
+Allocation, installation, configuration, activation and 
+testing of specific resources to meet the service 
+requirements, or in response to requests from other 
+processes to alleviate specific resource capacity 
+shortfalls, availability concerns or failure conditions. 
+1.5.6.7 L3 
+Issue Resource 
+Order 
+Issue correct and complete resource orders. 
+L4 - 1.5.6.7.1 - Assess Resource Request 
+This process assesses the information contained 
+in the service order, through a resource order 
+request, initiating resource process request or 
+supplier/partner initiated request, to determine the 
+associated resource orders that need to be issued. 
+1.5.5 
+L2 
+Resource Order 
+Management 
+Resource Order Management business process 
+directs and controls ordering, scheduling, and 
+allocation of resources (such as materials, 
+equipment, and personnel) within the business. 
+1.5.5.6 L3 
+Manage 
+Resource Order 
+Capture 
+Manage Resource Order Capture is responsible 
+for directing and controlling the capture and 
+collection of resource orders from internal and 
+external customers. 
+1.5.5.6.1 L4 
+Initiate 
+Resource Order 
+Capture 
+Initiate Resource Order Capture business activity 
+is responsible for the initial activity of capturing 
+and collecting resource orders from internal and 
+external customers. 
+
+
+Identifier 
+Level Business 
+Activity Name 
+Description 
+This business activity begins with the 
+identification of the needed resources, either by a 
+"customer" and facilitating creating the request 
+for the resources. This business activity will 
+gather the necessary information to complete the 
+request order, such as the type and quantity of 
+resources needed, delivery location, and any 
+special instructions. 
+1.6.8 
+L2 
+Business 
+Partner Order 
+Management 
+Track, monitor and report on an order to another 
+Business Partner to ensure that the interactions 
+are in accordance with the agreed commercial 
+agreements with the other Business Partner. 
+1.6.8.5 L3 
+Issue Business 
+Partner Order 
+Generate a correctly formatted and specified 
+Business Partner order and issue this to the 
+selected Business Partner. 
+ 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs) 
+none 
+ 
+ 
+Note: SID doesn't currently describe Orchestration Plan and delivery process to 
+manage at Product Order level. This could be added at least as specialization from 
+Project ABE or Workflow ABE. Refer to JIRA paragraph at the end of the document. 
+2.3. eTOM L2 - SID ABEs links 
+ 
+ 
+
+
+ 
+
+
+TM Forum 2025. All Rights Reserved. .                                                                                                                                                                            
+ 
+2.4. Functional Framework Functions 
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate Fu
+Level 1 
+16 
+Fallout Automated 
+Correction 
+Fallout Automated Correction function tries to 
+automatically fix fallouts in workflows before they 
+go to a human for handling. 
+This includes a Fallout Rules Engine that 
+provides the capability to handling various errors 
+or error types based on built rules. These rules 
+can facilitate autocorrection, correction 
+assistance, placement of errors in the 
+appropriate queues for manual handling, as well 
+as access to various systems. 
+Fallout Manag
+17 
+Fallout Correction 
+Information Collection 
+Fallout Correction Information Collection collects 
+relevant information for errors or situations that 
+cannot be handled via Fallout Auto Correction. 
+The intent is to reduce the time required by the 
+technician in diagnosing and fixing the fallout. 
+Fallout Manag
+18 
+Fallout Management to 
+Fulfillment Application 
+Accessing 
+Fallout Management to Fulfillment Application 
+Accessing function provides a variety of tools to 
+facilitate Fallout Management access to other 
+applications and repositories to facilitate proper 
+Fallout Management.  This can include various 
+general access techniques such as messaging, 
+publish and subscribe, etc. as well as specific 
+APIs and contracts to perform specific queries or 
+Fallout Manag
+
+
+© TM Forum 2025. All Rights Reserved.                                                                                                                                                  
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate Fu
+Level 1 
+updates to various applications or repositories 
+within the fulfillment domain. 
+19 
+Fallout Manual 
+Correction Queuing 
+Fallout Manual Correction Queuing function 
+provides the required functionality to place error 
+fallout into appropriate queues to be handled via 
+various staff or workgroups assigned to handle or 
+fix the various types of fallout that occurs during 
+the fulfillment process. This includes the ability to 
+create and configure queues, route errors to the 
+appropriate queues, as well as the ability for staff 
+to access and address the various fallout 
+instances within the queues. 
+Fallout Manag
+20 
+Fallout Notification 
+Fallout Notification function provides the means 
+to alert people or workgroups of some fallout 
+situation. This can be done via a number of 
+means, including email, paging, (Fallout 
+management interface bus) etc. This function is 
+done via business rules. 
+Fallout Manag
+21 
+Fallout Orchestration 
+The Fallout Orchestration function provides 
+workflow and orchestration capability across 
+Fallout Management. 
+Fallout Manag
+22 
+Fallout Reporting 
+Fallout Reporting provides various reports 
+regarding Fallout Management, including 
+statistics on fallout per various times periods (per 
+hour, week, month, etc) as well as information 
+about specific fallout. 
+Fallout Manag
+
+
+© TM Forum 2025. All Rights Reserved.                                                                                                                                                  
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate Fu
+Level 1 
+23 
+Fallout Dashboard 
+System Log-in 
+Accessing 
+Fallout Dashboard System Log-in Accessing 
+provides auto logon capability into various 
+applications needed to analyze and fix fallout 
+Fallout Manag
+24 
+Pre-populated Fallout 
+Information 
+Presentation 
+Pre-populated Fallout Information Presentation 
+automatically position the analyzer on 
+appropriate screens pre-populated with 
+information about the order(s) that's subject for 
+fallout handling. 
+Fallout Manag
+174 
+Customer Order Error 
+Resolution Support 
+Customer Order Error Resolution Support 
+provides to view pool of orders resulted in error 
+or stuck orders and enable the Customer Support 
+to act accordingly (e.g., resend the request, notify 
+the user with recommended action) 
+Customer Ord
+Management 
+175 
+Customer Support 
+Jeopardy Notification 
+Customer Support Jeopardy Notification provide 
+to view jeopardy notifications queue and enable 
+the Customer Support to act accordingly (e.g., 
+notify customer on due date delay) 
+Customer Ord
+Management 
+723 
+Customer Order Item 
+Decomposition 
+Customer Order Item Decomposition prepares 
+the customer order structure for breakdown into 
+customer order items. 
+ 
+214 
+Customer Order 
+Orchestration 
+The Customer Order Orchestration function 
+provides workflow and orchestration capabilities 
+at the Product Order Item level for a dedicated 
+Customer Order. 
+Customer Order Orchestration function identifies 
+Service Order Items (CFS level) according to 
+Order Items of the Customer Order, sequences 
+Customer Ord
+Management 
+
+
+© TM Forum 2025. All Rights Reserved.                                                                                                                                                  
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate Fu
+Level 1 
+Service Order Items and distributes the Service 
+Order requests to appropriate systems. For 
+example : Service Order Management (SOM), 
+potential 3rd parties, ... 
+This identification of Service Order Items relies 
+on : 
+- the articulation between ProductSpecifications 
+and CFSSpec described in the Catalogue 
+Repository 
+- the articulation between Product Operations 
+and CFS Operations described in the Catalogue 
+Repository 
+- existing installed CFS 
+- the potential rules of choice if several CFS can 
+fit in with the product. 
+Orchestration can take into account : 
+- constraints between Customer Product Order 
+Items inside the Customer Product Order, or 
+successive Customer Orders including 
+modification or cancellation (in-flight changes) 
+- any type of business rules based on information 
+even external to the Customer Product Order. 
+For example : high level of priority for VIP 
+customers 
+
+
+© TM Forum 2025. All Rights Reserved.                                                                                                                                                  
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate Fu
+Level 1 
+-  Triggering of exception process or delivery 
+planning update, depending on Customer 
+Product Order or Service Order events. 
+215 
+Retro-active order 
+orchestration 
+Retro-active Order Orchestration provides 
+submission of a retroactive order with a past 
+effective date (e.g., retroactive price plan 
+change) and the handling of manual intervention 
+requests (for order fallouts). 
+Customer Ord
+Management 
+217 
+Customer Order 
+Establishment 
+Tracking 
+Customer Order Establishment Tracking 
+provides the functionality necessary to track 
+and manage the distributed requests 
+decomposed by Customer Order 
+Orchestration. 
+Customer Ord
+Management 
+342 
+Mass Service/product 
+pre-activation 
+Mass service/product pre-activation function. To 
+prepare for a swift activation at sales affiliate 
+services/products may be pre-activated. 
+Service Config
+Activation 
+743 
+Number Portability 
+Orchestration 
+Number Portability Orchestration communication 
+mechanism that ensures the orders' activation 
+according to criteria set, allowing in this way the 
+correct execution of orders 
+Resource Man
+724 
+Customer Order Work 
+Item Decomposition 
+Customer Order Work Item Decomposition 
+decomposes customer order items into a set 
+of customer order work items. 
+Customer Ord
+Management 
+756 
+Fallout Rule Based 
+Error Correction 
+Fallout Rule Based Error Correction function 
+provides the capability to handle various errors or 
+error types based on pre-defined rules. These 
+rules can facilitate autocorrection, correction 
+Fallout Manag
+
+
+© TM Forum 2025. All Rights Reserved.                                                                                                                                                  
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate Fu
+Level 1 
+assistance, placement of errors in the 
+appropriate queues for manual handling, as well 
+as access to various systems via the Fallout 
+Interface Bus. 
+1070 
+Orchestration 
+Customer Order Error 
+Resolution 
+Orchestration Customer Order Error 
+Resolution provides to view pool of orders 
+resulted in error or stuck orders during 
+orchestration and enable the Customer 
+Support to act accordingly. 
+For example, a delay change because of 
+resource unavailability or appointment not 
+respected may trigger the resend of the 
+request or notify the user with recommended 
+action. 
+Customer Ord
+Management 
+1202 
+Delivery Items 
+Identification 
+The Delivery Items Identification function 
+allows in the context of a customer order to 
+consult catalogs and installed bases to 
+identify what needs to be delivered: Service 
+Specification (CFS Spec) and its 
+configuration, Stock Item, Supplier Product, 
+Work Spec, related to the ordered product. 
+Customer Ord
+Management 
+1203 
+Order Preparation 
+The Order Preparation Function allows in the 
+context of a customer order to prepare a 
+Service Order, Supplier Order, Stock Item 
+Order or Work Order with the necessary 
+information. 
+In the case of a Product associated with an 
+Internal Service (Know-How), this function 
+also allows to:  
+Customer Ord
+Management 
+
+
+© TM Forum 2025. All Rights Reserved.                                                                                                                                                  
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate Fu
+Level 1 
+• check if a corresponding Installed CFS is 
+operational in the Service Installed Base, and 
+so determine the operation at CFS level 
+(creation or modification) 
+• possibly group in the same Service Order 
+several ordered product, based on the same 
+CFS specification, and/or identified to be 
+delivered at the same time by the Customer 
+Order Delivery Orchestration. 
+
+
+f
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component. 
+• 
+List of Dependent APIs - In order to satisfy the provided API, the component 
+could require the usage of this set of required APIs. 
+• 
+List of Events (generated & consumed ) - The events which the component 
+may generate are listed in this section along with a list of the events which it 
+may consume. Since there is a possibility of multiple sources and receivers for 
+each defined event. 
+3.1. Exposed APIs 
+The following diagram illustrates API/Resource/Operation:  
+ 
+ 
+ 
+ 
+API ID 
+API Name 
+Mandatory / Optional 
+Resource 
+Operations 
+TMF701 
+Process Flow 
+Optional 
+processFlow 
+GET 
+GET /id 
+POST 
+DELETE /id 
+  
+  
+ 
+taskFlow 
+GET 
+GET /id 
+PATCH /id 
+TMF688 
+Event 
+Optional 
+  
+  
+ 
+ 
+
+
+3.2. Dependent APIs 
+The following diagram illustrates API/Resource/Operation: 
+ 
+ 
+ 
+
+
+ 
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Resource 
+Operations Rationales 
+TMF620 Product 
+Catalog 
+Management 
+API 
+Mandatory productSpecification 
+GET 
+GET /id 
+as illustrated 
+in IG1228, 
+TMFS004, 
+TMFS008 
+and 
+TMFS014 
+TMF622 Product 
+Ordering 
+Management 
+API 
+Mandatory productOrder 
+GET /id 
+PATCH /id 
+as illustrated 
+in IG1228, 
+TMFS004, 
+TMFS008 
+and 
+TMFS014 
+TMF637 Product 
+Inventory 
+Management 
+API 
+Mandatory product 
+GET 
+GET /id 
+PATCH /id 
+as illustrated 
+in IG1228, 
+TMFS004, 
+TMFS008 
+and 
+TMFS014 
+TMF633 Service 
+Catalog 
+Management 
+API 
+Optional 
+serviceSpecification 
+GET 
+GET /id 
+ 
+TMF638 Service 
+Inventory 
+Management 
+API 
+Optional 
+service 
+GET 
+GET /id 
+ 
+TMF641 Service 
+Ordering 
+Management 
+API 
+Mandatory serviceOrder 
+POST 
+GET /id 
+as illustrated 
+in IG1228, 
+TMFS004, 
+TMFS008 
+and 
+TMFS014 
+TMF634 Resource 
+Catalog 
+Management 
+API 
+Optional 
+resourceSpecification GET 
+GET /id 
+ 
+TMF639 Resource 
+Inventory 
+Management 
+API 
+Optional 
+resource 
+GET 
+GET /id 
+ 
+TMF652 Resource 
+Ordering 
+Management 
+API 
+Optional 
+resourceOrder 
+POST 
+GET /id 
+  
+TMF701 Process 
+Flow 
+Optional 
+processFlow 
+GET 
+  
+
+
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Resource 
+Operations Rationales 
+GET /id 
+POST 
+DELETE 
+/id 
+  
+ 
+ 
+  
+taskFlow 
+GET 
+GET /id 
+PATCH /id 
+  
+TMF688 TMF688 
+Event 
+Optional 
+ 
+ 
+ 
+ 
+3.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Map on the TM Forum website for the machine-readable 
+component specification files for this component. 
+ 
+ 
+ 
+
+
+5. References 
+5.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+23.5 
+eTOM 
+23.5 
+Functional Framework  
+23.5 
+5.2. Jira References 
+5.2.1. 
+eTOM 
+• 
+ ISA-389 - Improve Manage Order Fallout (1.3.3.8) description and 
+decomposition  DONE 1.3.3.8 - Manage Order Fallout: as this L3 is shared by 
+POCV and POOM components (to be consistent with Functional Framework 
+mapping), clarify which type of fallout need to be managed during the order 
+delivery orchestration (at POOM level) and which need to be managed at 
+Product Order Capture and Follow-Up level (by POCV). 
+5.2.2. 
+SID 
+• 
+ ISA-399 - New BEs to describe Orchestration Plan and Delivery 
+Process  BACKLOG Describe Orchestration Plan and delivery process at 
+Product Order level. This could be added at least as specialization from Project 
+ABE. 
+5.2.3. 
+Functional Framework 
+These updates are already integrated in Functional Framework R22.0: 
+• 
+Function 174 - Customer Order Error Resolution Support: review the definition 
+of this function and may be split it in 2 as it is proposed to be mapped to POCV 
+and to POOM 
+• 
+Function 723 - Customer Order Item Decomposition: term "decomposition" in 
+function name or definition doesn't seem appropriate as by definition a product 
+order is built up of order items, according to catalog structure of product 
+offerings and products 
+ 
+The updates need to be studied for R22.0 or R22.5: 
+• 
+ ISA-397 - Split Function 342 - Mass Service/product pre-
+activation  SME REVIEW Function 342 - Mass Service/product pre-activation: 
+need to split this function in 2, one at product level, the other at service level 
+• 
+ ISA-398 - Review Function 743 - Number Portability 
+Orchestration  DONE Function 743 - Number Portability Orchestration: review 
+functions related to Number Portability and clarify which level 
+(product/service/resource) each of them concern and split if necessary. 
+
+
+5.2.4. 
+API 
+• 
+ AP-3664 - Manage Amend Order  DONE - Does POOM need to issue 
+TMF641 PATCH /serviceOrder and TMF652 PATCH /resourceOrder? We 
+cannot think of any scenarios where POOM would need to PATCH a service or 
+resource order. PATCH is certainly applicable to other use cases (e.g., to allow 
+a user with appropriate privileges to add a note). However, order updates due 
+to change in intent should be done through amendments, preferably using a 
+task-based mechanism similar to cancellation requests. For example, an 
+amendment of a product order would result in a new orchestration plan and 
+changes would trickle down to POOM, SOM and ROM as amendment and/or 
+cancellation requests. See also On Revisions. We need Amend task operations 
+for all P/S/R order APIs. 
+5.2.5. 
+Further resources 
+This component is involved in the following use cases described in IG1228 How to use 
+ODA - Using Open APIs to realize Use Cases: 
+ 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1.  Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+29 Mar 2022   
+Gaetano 
+Biancardi , 
+Anastasios 
+Sarantis , Sylvie 
+Demarest 
+Dimitrios 
+Lagkouvardos 
+Final edits prior to publication 
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+1.0.1  
+15 Aug 2023  
+Amaia White  
+Final edits prior to publication  
+1.1.1 
+25 Jun 2024  
+Sylvie Demarest  
+Aligned to Frameworks 23.5 
+Aligned to latest template 
+2.0.0 
+21 Oct 2024 
+Gaetano 
+Biancardi  
+Dependant API: 
+• 
+Correct typo and setting 
+mandatory the following APIs: 
+TMF620 , TMF737 
+2.0.0 
+13 Mar 2025  
+Rosie Wilson  
+Final administrative updates 
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+29 Mar 2022  
+Goutham Babu 
+Initial release 
+Production 
+20-May-2022 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+Pre-production  15-Aug-2023 
+Amaia White  
+New version 1.0.1  
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  12-Jul-2024 
+Amaia White  
+New version 1.1.1 
+Production 
+30-Aug-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  13 Mar 2025  
+Rosie Wilson  
+New version 2.0.0 
+ 
+ 
+ 
+
+
+6.1.3. 
+Acknowledgments 
+ 
+Team Member (@mention) 
+Company 
+Role* 
+Anastasios Sarantis  
+Vodafone  
+Editor  
+Ian Turkington  
+TM Forum  
+Additional Input 
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Additional Input  
+Gaetano Biancardi  
+Accenture 
+Reviewer  
+Sylvie Demarest 
+Orange  
+Editor  
+Dimitrios Lagkouvardos 
+Oracle  
+Reviewer 
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+ 
+
+

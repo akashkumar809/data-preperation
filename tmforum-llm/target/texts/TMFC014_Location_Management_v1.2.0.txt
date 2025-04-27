@@ -1,0 +1,670 @@
+ 
+TM Forum Component 
+ 
+ 
+Location Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC014 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 11-Mar-2025 
+Release Status: Pre-production  
+Approval Status: Team Approved 
+Version 1.2.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 3 
+1. 
+Overview ........................................................................................................ 4 
+2. 
+eTOM Processes, SID Data Entities and Functional Framework Functions .... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 6 
+2.3. 
+eTOM L2 - SID ABEs links ................................................................. 6 
+2.4. 
+Functional Framework Functions ....................................................... 8 
+3. 
+TM Forum Open APIs & Events ..................................................................... 9 
+3.1. 
+Exposed APIs .................................................................................... 9 
+3.2. 
+Dependent APIs ............................................................................... 11 
+3.3. 
+Events .............................................................................................. 12 
+4. 
+Machine Readable Component Specification ............................................... 13 
+5. 
+References ................................................................................................... 14 
+5.1. 
+TMF Standards related versions ...................................................... 14 
+5.2. 
+eTOM............................................................................................... 14 
+5.3. 
+Further Resources ........................................................................... 14 
+6. 
+Administrative Appendix ............................................................................... 15 
+6.1. 
+Document History ............................................................................ 15 
+6.1.1. Version History............................................................................. 15 
+6.1.2. Release History ............................................................................ 15 
+6.1.3. Acknowledgments ........................................................................ 16 
+ 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+ 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Location 
+Management 
+TMFC014 The Location Management Component allows 
+easy reference to geographic places important 
+to other entities, where a geographic place is 
+an entity that can answer the question 
+“where?” . This component could be a facade 
+tool into GIS systems (e.g. Google Maps)  
+Also covers the operations to manage (create, 
+read, delete)  geographic sites that can be 
+associated with a customer, account, service 
+delivery or other entities. 
+And finally gives the capabilities to retrieve 
+/list /validate addresses that are named as 
+structured textual ways of describing how to 
+find a Property in an urban area (country 
+properties are often defined differently). It 
+allows looking data for worldwide addresses 
+through popular GIS systems like Google 
+Maps or government master addresses 
+systems. 
+It can also be used to validate geographic 
+data, to be sure that it corresponds to a real 
+geographic address. 
+Finally, it can be used to look for an address 
+by: searching an area as a start (city, town ), 
+then zooming on the streets of this area, and 
+finally listing all the street segments (numbers) 
+in a street. 
+Production 
+Domain 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes, SID Data Entities and 
+Functional Framework Functions 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for:. 
+Identifier 
+Level 
+Business Activity Name 
+Description 
+none 
+ 
+ 
+ 
+ 
+Note: as no eTOM business activity is currently responsible for Location Management, 
+refer to JIRA paragraph. 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs)* 
+Location ABE 
+Geographic Place ABE 
+ 
+Geographic Location ABE 
+ 
+Geographic Address ABE 
+ 
+Geographic Site ABE 
+ 
+Local Place ABE 
+ 
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified.  
+ 
+2.3. eTOM L2 - SID ABEs links 
+eTOM L2 vS SID ABEs links for this ODA Component.  
+ 
+
+
+ 
+
+
+TM Forum 2025. All Rights Reserved.                                                                                                                                                                              
+ 
+2.4. Functional Framework Functions 
+Function 
+Description 
+ID 
+Domain 
+Ag
+Le
+Location 
+Change 
+History 
+Management 
+Location Change History Management; Tracks all 
+changes of location data, making available attributes 
+according their historical values in certain periods. 
+429 
+Operations 
+Readiness & 
+Support 
+Re
+M
+Pre-formatted 
+Location 
+Information 
+Presentation 
+Pre-formatted Location Information Presentation 
+generates different views for different business cases 
+(e.g. different format of address strings) 
+430 
+Operations 
+Readiness & 
+Support 
+Re
+M
+Location 
+Information 
+Updating 
+Location Information Updating provides means to update 
+the repository with new/updated location information 
+from external sources. 
+431 
+Operations 
+Readiness & 
+Support 
+Re
+M
+Location 
+Information 
+Searching 
+Location Information Searching provide the ability to 
+search for a provided location/address, as part of the 
+Location Management, including the ability to return near 
+matches if an exact match is not found. 
+432 
+Operations 
+Readiness & 
+Support 
+Re
+M
+Location 
+Structure 
+Data 
+Configuration 
+Location Structure Data Configuration provides facilities 
+for creating, modifying, and deleting location structures 
+data according to business rules of Service Providers or 
+national and international location regulations. Also, 
+utilities for defining sets of location attributes, levels and 
+hierarchies should be available. 
+433 
+Operations 
+Readiness & 
+Support 
+Re
+M
+Location 
+Data Integrity 
+Management 
+Location Data Integrity Management provides ability to 
+maintain data integrity in the whole location repository. 
+It’s especially important if there are many external data 
+sources that deliver new addresses for the repository. 
+434 
+Operations 
+Readiness & 
+Support 
+Re
+M
+ 
+
+
+f
+3. TM Forum Open APIs & Events 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component. At 
+this stage we list the APIs, resource and operation we no mention 
+to optionality (in other word no mention about mandatory VS optional resource) 
+• 
+List of Dependent APIs - In order to satisfy the provided API, the component 
+could require the usage of this set of required APIs. At this stage no optionality 
+is defined and none of this 'required' API is listed as 'mandatory' 
+• 
+List of Events (generated & consumed ) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+3.1. Exposed APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+ 
+
+
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Operation 
+TMF673 TMF 673 
+Geographic 
+Address 
+Management 
+API 
+4 
+Mandatory 
+geographicAddressValidation 
+• 
+GET 
+• 
+GET /ID 
+• 
+POST 
+• 
+PATCH 
+TMF673 TMF 673 
+Geographic 
+Address 
+Management 
+API 
+4 
+Mandatory 
+geographicAddress 
+• 
+GET 
+• 
+GET /ID 
+TMF673 TMF 673 
+Geographic 
+Address 
+Management 
+API 
+4 
+Mandatory 
+geographicSubAddress 
+• 
+GET 
+• 
+GET /ID 
+TMF674 TMF 674 
+Geographic Site 
+Management 
+API 
+4 
+Mandatory 
+geographicSite 
+• 
+GET 
+• 
+GET /ID 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+TMF675 TMF675 
+Geographic 
+Location 
+4 
+Mandatory 
+geographicLocation 
+• 
+GET 
+• 
+GET /ID 
+• 
+POST 
+• 
+PATCH 
+• 
+DELETE 
+TMF688 TMF688 Event 
+4 
+Optional 
+listener 
+• 
+POST 
+TMF688 TMF688 Event 
+4 
+Optional 
+hub 
+• 
+POST 
+• 
+DELETE 
+TMF701 TMF701 
+Process Flow 
+Management 
+4 
+Optional 
+processFlow 
+• 
+GET 
+• 
+GET /ID 
+• 
+POST 
+
+
+API ID 
+API Name 
+API 
+Version 
+Mandatory 
+/ Optional 
+Operation 
+• 
+DELETE 
+TMF701 TMF701 
+Process Flow 
+Management 
+4 
+Optional 
+taskFlow 
+• 
+GET /ID 
+• 
+PATCH 
+ 
+3.2. Dependent APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+ 
+ 
+ 
+API ID 
+API Name 
+API 
+Version 
+Mandatory / 
+Optional 
+resource Operations 
+TMF632 TMF632 Party 
+Management 
+4 
+Optional 
+ 
+Individual / 
+organization 
+• 
+GET 
+• 
+GET/id 
+TMF674 TMF674 
+Geographic Site 
+4 
+Optional 
+ 
+geographicSite 
+• 
+GET 
+• 
+GET/id 
+TMF688 TMF688 Event 
+4 
+Optional 
+ 
+event 
+• 
+GET 
+• 
+GET/id 
+ 
+ 
+ 
+
+
+3.3. Events 
+The following diagram illustrates the Events which the component may publish and the 
+Events that the component may subscribe to and then may receive. Both lists are 
+derived from the APIs listed in the preceding sections. 
+ 
+ 
+ 
+ 
+
+
+4. Machine Readable Component Specification 
+Refer to the ODA Component Map on the TM Forum website for the machine-readable 
+component specification files for this component.  TM Forum - ODA Component 
+Directory. 
+ 
+ 
+ 
+
+
+5. References 
+5.1.  TMF Standards related versions 
+ 
+Standard 
+Version(s) 
+SID 
+23.5 
+eTOM 
+23.5 
+Functional Framework  
+23.5 
+5.2. eTOM 
+ISA-559 Enrich eTOM with business activities necessary to manage any type of 
+Location 
+5.3. Further Resources 
+n/a 
+ 
+ 
+ 
+
+
+6. Administrative Appendix 
+6.1. Document History 
+6.1.1. 
+Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+0.1.0 
+28 Jun 2022  
+Gaetano 
+Biancardi , Sylvie 
+Demarest 
+Final edits prior to publication 
+0. 2.0 
+19 Aug 2022  
+Anastasios 
+Sarantis  
+Changes asked from the community . 
+Component description changed 
+according to feedback + Functional 
+framework updates 
+1.0.0 
+07 Dec 2022  
+Goutham Babu 
+Initial release of document 
+1.0.1 
+25 Jul 2023  
+Ian Turkington 
+No content changed, simply a layout 
+change to match template 3. 
+Separated the YAML files to a 
+managed repository 
+1.0.1 
+15 Aug 2023  
+Amaia White  
+Final edits prior to publication  
+1.1.0 
+13 May 2024  
+Hugo Vaughan / 
+Gaetano 
+Biancardi  
+Align to Frameworks 23.5 
+Align to latest template 
+Removed TMF688 from exposed and 
+dependent API 
+1.1.0 
+12 Jul 2024  
+Amaia White  
+Final edits prior to publication  
+1.2.0 
+24 Oct 2024  
+Gaetano 
+Biancardi  
+Exposed API: fixed duplication of 
+TMF674 
+1.2.0 
+14 Mar 2025  
+Rosie Wilson  
+Updated Maturity Level to Beta as 
+confirmed by Gaetano Biancardi 
+as v4 of TMF675 is still in pre view 
+and API  confirmed as Mandatory for 
+this component by Anastasios 
+Sarantis. 
+Final administrative updates 
+6.1.2. 
+Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+07-Dec-23 
+Goutham Babu  
+Initial release of document 
+Pre-production 
+23-Jan-23 
+Adrienne Walcott 
+Updated to member evaluation status 
+Pre-production 
+15-Aug-2023 
+Amaia White  
+New release 1.0.1  
+
+
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Production 
+06-Oct-2023 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  12-Jul-2024 
+Amaia White  
+New release 1.1.0  
+Production 
+30-Aug-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved status 
+Pre-production  14 Mar 2025  
+Rosie Wilson  
+New release 1.2.0  
+6.1.3. 
+Acknowledgments 
+Team Member (@mention) 
+Company 
+Role* 
+Anastasios Sarantis  
+Vodafone  
+Editor  
+Sylvie Demarest  
+Orange 
+Reviewer 
+Ian Turkington  
+TM Forum  
+Additional Input  
+Hugo Vaughan (TM Forum)  
+TM Forum  
+Additional Input  
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+ 
+
+

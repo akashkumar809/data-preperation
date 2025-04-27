@@ -1,0 +1,987 @@
+ 
+TM Forum Technical Specification 
+ 
+ 
+Product Usage Management 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+TMFC040 
+ 
+Maturity Level: General availability (GA) 
+Team Approved Date: 05-Nov-2024 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Version 1.1.0 
+IPR Mode: RAND 
+ 
+ 
+ 
+
+
+ 
+Notice 
+Copyright © TM Forum 2024. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and 
+derivative works that comment on or otherwise explain it or assist in its implementation 
+may be prepared, copied, published, and distributed, in whole or in part, without 
+restriction of any kind, provided that the above copyright notice and this section are 
+included on all such copies and derivative works. However, this document itself may 
+not be modified in any way, including by removing the copyright notice or references to 
+TM FORUM, except as needed for the purpose of developing any document or 
+deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be 
+followed) or as required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM 
+FORUM or its successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis 
+and TM FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE 
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has 
+patent claims that would necessarily be infringed by implementations of this TM Forum 
+Standards Final Deliverable, to notify the TM FORUM Team Administrator and provide 
+an indication of its willingness to grant patent licenses to such patent claims in a 
+manner consistent with the IPR Mode of the TM FORUM Collaboration Project Team 
+that produced this deliverable. 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is 
+aware of a claim of ownership of any patent claims that would necessarily be infringed 
+by implementations of this TM FORUM Standards Final Deliverable by a patent holder 
+that is not willing to provide a license to such patent claims in a manner consistent with 
+the IPR Mode of the TM FORUM Collaboration Project Team that produced this TM 
+FORUM Standards Final Deliverable. TM FORUM may include such claims on its 
+website but disclaims any obligation to do so. 
+TM FORUM takes no position regarding the validity or scope of any intellectual 
+property or other rights that might be claimed to pertain to the implementation or use of 
+the technology described in this TM FORUM Standards Final Deliverable or the extent 
+to which any license under such rights might or might not be available; neither does it 
+represent that it has made any effort to identify any such rights. Information on TM 
+FORUM's procedures with respect to rights in any document or deliverable produced 
+by a TM FORUM Collaboration Project Team can be found on the TM FORUM 
+website. Copies of claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made to obtain a general 
+license or permission for the use of such proprietary rights by implementers or users of 
+this TM FORUM Standards Final Deliverable, can be obtained from the TM FORUM 
+Team Administrator. TM FORUM makes no representation that any information or list 
+of intellectual property rights will at any time be complete, or that any claims in such list 
+are, in fact, Essential Claims. 
+
+
+ 
+Direct inquiries to the TM Forum office:  
+ 
+181 New Road, Suite 304 
+Parsippany, NJ 07054, USA 
+Tel No.  +1 862 227 1648 
+TM Forum Web Page: www.tmforum.org 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice .................................................................................................................... 2 
+Table of Contents .................................................................................................. 4 
+1. 
+Overview ........................................................................................................ 5 
+2. 
+eTOM Processes and SID Data Entities ......................................................... 6 
+2.1. 
+eTOM business activities ................................................................... 6 
+2.2. 
+SID ABEs ........................................................................................... 9 
+2.3. 
+eTOM L2 - SID ABEs links ............................................................... 10 
+3. 
+Functional Framework Functions .................................................................. 11 
+4. 
+TMF OPEN APIs & Events ........................................................................... 14 
+4.1. 
+Exposed APIs .................................................................................. 14 
+4.2. 
+Dependant APIs ............................................................................... 15 
+4.3. 
+Events .............................................................................................. 16 
+5. 
+Machine Readable Component Specification ............................................... 17 
+6. 
+References ................................................................................................... 18 
+6.1. 
+TMF Standards related versions ...................................................... 18 
+6.2. 
+Further resources............................................................................. 18 
+7. 
+Administrative Appendix ............................................................................... 19 
+7.1. 
+Document History ............................................................................ 19 
+7.1.1. Version History............................................................................. 19 
+7.1.2. Release History ............................................................................ 19 
+7.2. 
+Acknowledgments ............................................................................ 20 
+ 
+ 
+ 
+ 
+
+
+1. Overview 
+Component 
+Name 
+ID 
+Description 
+ODA 
+Function 
+Block 
+Product 
+Usage 
+Management 
+TMFC040 The Product Usage Components 
+provides standardized mechanisms 
+for product usage management 
+(creation, update, retrieval, import and 
+export of a collection of usages) and 
+Product Rating & Rate Assignment by 
+assigning a value (monetary or other) 
+to an event in the context of a product, 
+a party (customers and partners) and 
+payer. 
+Core 
+Commerce 
+Management 
+ 
+ 
+ 
+ 
+
+
+2. eTOM Processes and SID Data Entities 
+2.1. eTOM business activities 
+eTOM business activities this ODA Component is responsible for. 
+Identifier 
+Level Business Activity Name 
+Description 
+1.2.16 
+L2 
+Product Usage 
+Management 
+The Product Usage management 
+processes encompass the functions 
+required to guide, distribute, mediate, 
+summarize, accumulate, and analyze 
+Product Usage records. These processes 
+may occur in real-time, near real-time (i.e. 
+just at the end of the usage), or may be 
+executed on a periodic basis. 
+Based on Service Usage, this process aims 
+at identifying Product Usage. For example, 
+for a Video on Demand where you can 
+watch a video as many time as you want 
+during 72 hours, several Service Usages 
+might have been tracked (each time the 
+user watches the video) and only one 
+Product Usage will be identified for all 
+Service Usages in the 72 hours after the 
+first watch. 
+The guiding processes ensures that the 
+Product Usage records used in the billing 
+processes are appropriately related to the 
+correct customer billing account and 
+products. 
+The Product Usage records are edited and 
+if necessary reformatted (mediated) to 
+meet the needs of subsequent processes. 
+The billing event records may also be 
+enriched with additional data during this 
+process. 
+1.2.16.1 
+L3 
+Product Usages 
+The Enrich Product Usages processes will 
+augment the product usage records by 
+adding data to the records from sources 
+such as customer, product,  or other 
+reference data. 
+1.2.16.1.1 L4 
+Add Product Usage Data 
+Add data to the records from sources such 
+as customer, product, or other reference 
+data to augment the product usage 
+records. 
+1.2.16.1.2 L4 
+Assign Product Usage 
+Price 
+Assign a price to product usage without 
+consideration of specific product or 
+customer information. The assigned price 
+
+
+Identifier 
+Level Business Activity Name 
+Description 
+may be used to enrich the product usage 
+record. 
+1.2.16.2 
+L3 
+Guide and Assign 
+Product Usages 
+The Guide Product Usages processes 
+ensure that the event records used in the 
+billing process relate to the correct 
+customer billing account and products.  A 
+specific product usage record may be 
+related to multiple customer billing 
+accounts and subscribed products. 
+Distribution of product usage records to 
+other processes may also occur. 
+1.2.16.2.1 L4 
+Assign Product Usages 
+Ensure that the Product Usages used in 
+the billing process relate to the correct 
+Product. 
+1.2.16.2.2 L4 
+Distribute Product Usage 
+Distribute billing event records to other 
+processes. 
+1.2.16.2.3 L4 
+Guide Product Usages 
+Guide Product Usages process is in charge 
+of identifying Product Usages based on 
+Service Usages. 
+For example, for a Video on Demand 
+where you can watch a video as many time 
+as you want during 72 hours, several 
+Service Usages might have been tracked 
+(each time the user watches the video) and 
+only one Product Usage will be identified 
+for all Service Usages in the 72 hours after 
+the first watch. 
+1.2.16.3 
+L3 
+Mediate Product Usages 
+The Mediate Product Usages process edits 
+and reformats the data record to meet the 
+needs of a recipient application. 
+1.2.16.3.1 L4 
+Edit Product Usages 
+Edit the data record for recipient 
+applications. 
+1.2.16.3.2 L4 
+Reformat Product 
+Usages 
+Reformat the data record for recipient 
+applications. 
+1.2.16.4 
+L3 
+Report Product Usage 
+Records 
+The purpose of the Report Product Usage 
+Record processes is to generate reports on 
+Product Usage records based on requests 
+from other processes. 
+These processes produce reports that may 
+identify abnormalities, which may be 
+caused by fraudulent activity or related to 
+customer complaints. 
+Investigation of problems related to these 
+product usage records is also part of this 
+process. 
+These processes also support other 
+processes such as customer review of 
+
+
+Identifier 
+Level Business Activity Name 
+Description 
+product usages (pre-billing and post-
+billing). 
+1.2.16.4.1 L4 
+Generate Product Usage 
+Report 
+Generate reports on product usage records 
+based on requests from other processes. 
+1.2.16.4.2 L4 
+Investigate Product 
+Usage Related Problem 
+Investigate problems related to product 
+usage records. 
+1.2.16.4.3 L4 
+Support Product Usage 
+Related Process 
+Support other processes such as customer 
+review of product usages (pre-billing and 
+post-billing). 
+1.2.17 
+L2 
+Product Rating & Rate 
+Assignment 
+The purpose of Product Rating & 
+Assignment is to rate a value (monetary or 
+other) to Product Usage or a set of Product 
+Usages and assign the result to a Product 
+and a Billing Account. The charge may be 
+either a credit or a debit and can be 
+handled either online or offline. 
+Online charging is performed in real-time, 
+requiring an authorization component 
+which may affect how the service is 
+rendered and enables an operator to 
+provide prepaid services to its customers. 
+Whereas offline charging is performed after 
+the service is rendered and is not required 
+to be done in real-time and generally 
+relates to subscription based products. 
+1.2.17.1 
+L3 
+Perform Rating 
+Process responsible for calculating the 
+value of a product usage or a set of product 
+usages, before, during or after the 
+rendering of the service, based on 
+parameters of the request (type, quantity, 
+etc.), parameters of the 
+customer/subscriber (tariffs, price plans, 
+accumulated usage, contracts, etc.) and 
+other parameters (time-of-day, taxes, etc.). 
+The same request maybe rated differently 
+for different subscribers based on their 
+purchased offers or agreements. 
+1.2.17.2 
+L3 
+Aggregate Items For 
+Rate Assignment 
+This process is responsible for 
+accumulating contributing items, which can 
+be quantities, values (monetary or other) or 
+both. Aggregation can occur over time or 
+can be initiated to gather a “snapshot” of 
+the items at a point in time. 
+1.2.17.3 
+L3 
+Manage Customer 
+Assignment 
+HierarchyManaging the 
+charging relationships 
+among subscribers. 
+Customer hierarchies are commonly used 
+for corporate customers, family plans or 
+other type of affinity groups. This process 
+manages the assignment relationships 
+among subscribers, e.g. sharing, inheriting 
+or restricting balances, price plans and 
+
+
+Identifier 
+Level Business Activity Name 
+Description 
+discounts. Thereby assuring that a charge 
+is added to or subtracted from the correct 
+account balance. 
+1.2.17.4 
+L3 
+Provide Advice of Rate 
+The activity of Provide Advice of Rate (aka 
+Advice of Charge) is responsible for 
+providing advice on rates, in real-time or 
+offline, an estimate or value of the rate for a 
+specific usage request. The advice is 
+usually based upon performing a full rating 
+process for the request. 
+1.2.17.5 
+L3 
+Apply Rate Level 
+Discounts 
+This process applies discounts to product 
+prices at an individual product level. A 
+discount may be expressed as a monetary 
+amount or percentage, and modifies a price 
+for a product. When a discount is 
+expressed as a percentage, the 
+discounting process determines the 
+discount calculated in relation to the price 
+for the product. 
+The discount may be displayed as a 
+separate entry on the bill or may be 
+combined with the rate for the product to 
+only show as one entry. 
+Discounts may be a one-time event or may 
+have some duration (days, months, life of 
+product, etc.). Discounts may apply to a 
+specific customer or be generally available 
+based on selection of products (for 
+example - bundles). Discounting structures 
+may involve tiers, tapers, or thresholds. 
+ 
+  
+ 
+ 
+2.2. SID ABEs 
+SID ABEs this ODA Component is responsible for: 
+SID ABE Level 1 
+SID ABE Level 2 (or set of BEs)* 
+Product Usage ABE** 
+ 
+Product Price ABE*** 
+ 
+*: if SID ABE Level 2 is not specified this means that all the L2 business entities must 
+be implemented, else the L2 SID ABE Level is specified.  
+** In the context of this component, it relates to the usage events and not the 
+management of the ProductUsageSpecification. The ProductUsageSpecification is 
+maintained by TMFC001 Product Catalog Management component.  
+*** In the context of Usage; related to UsageProdPriceCharge and related 
+ProdPriceAlteration. 
+
+
+2.3.  eTOM L2 - SID ABEs links 
+eTOM L2 vS SID ABEs links for this ODA Component.  
+ 
+ 
+ 
+ 
+
+
+3. Functional Framework Functions 
+ 
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 
+1 
+Aggregate 
+Function Level 
+2 
+253 
+Customer Usage 
+and Charges 
+Report Access  
+Customer Usage and 
+Charges Report Access 
+provides an internet 
+technology driven 
+interface to the 
+customer to access 
+web based reports for 
+(historical) usage and 
+charges directly for 
+themselves. 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Bill Calculation 
+55 
+Price and 
+Discount 
+Calculation 
+Price and Discount 
+Calculation applies 
+pricing and discounting 
+rules and algorithms in 
+the context of the 
+assembled information 
+concerning Products 
+(i.e. instances of 
+Product). 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Tariff Calculation 
+and Rating 
+125 
+Charging Event 
+Accumulation 
+Charging Event 
+Accumulation function 
+accumulates events 
+that provide 
+measurements that will 
+be used in the charge 
+calculation (e.g. used 
+allowance). 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Tariff Calculation 
+and Rating 
+126 
+Event 
+Charge/Credit 
+Calculation 
+Event Charge/Credit 
+Calculation calculates 
+event-level 
+charges/credits (one 
+time, recurring, and 
+usage). 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Tariff Calculation 
+and Rating 
+127 
+Calculated 
+Charges/Credits 
+Proration 
+Calculated 
+Charges/Credits 
+Proration provides 
+proration of calculated 
+charges/credits. The 
+function handles partial 
+rating of a period. 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Tariff Calculation 
+and Rating 
+128 
+Late Arrival 
+Usage 
+Charges/Credits 
+Recalculation 
+Late Arrival Usage 
+Charges/Credits 
+Recalculation provides 
+recalculation of 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Tariff Calculation 
+and Rating 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 
+1 
+Aggregate 
+Function Level 
+2 
+  
+charges/credits based 
+on information received 
+later (e.g. from the 
+Service Level 
+Agreement function, 
+delayed call detail 
+record file arrival, 
+delayed order arrival). 
+Recalculation may be 
+necessary: pre-billing 
+(prior to Bill 
+Calculation), during the 
+Bill Calculation process, 
+and/or post-billing. 
+186 
+Charging/Rating 
+Recalculation  
+Charging/Rating 
+Recalculation function 
+recalculates the 
+charges, when 
+appropriate, across 
+product, location, or 
+customer, and 
+considerations based 
+on business rules. 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Tariff Calculation 
+and Rating 
+300 
+Discounts 
+Calculation 
+Discounts Calculation 
+determines charge 
+discounts based on 
+pricing plan; including 
+discounts on recurring, 
+one time, and usage 
+charges. Discounts 
+may be applied at 
+different levels such as 
+cross product, cross 
+location, or cross 
+customer (all customers 
+that are part of a given 
+group plan – some 
+affiliation). The 
+discounts can be 
+apportioned across 
+multiple events. 
+Product Usage 
+Management 
+Rating and 
+Follow up 
+Rating and 
+Follow up 
+Tariff Calculation 
+and Rating 
+67 
+Usage Summary 
+and Details 
+Presentation 
+Usage Summary and 
+Details Presentation 
+presents usage 
+summary and details 
+(billed and non-billed) 
+for a specific time 
+period.** 
+Invoice 
+Management 
+Invoicing 
+
+
+Function 
+ID 
+Function Name 
+Function Description 
+Aggregate 
+Function Level 
+1 
+Aggregate 
+Function Level 
+2 
+85 
+Billing Event 
+Processing 
+Distribution 
+Billing Event 
+Processing Distribution 
+function for correlation 
+and distribution of 
+usage data for 
+processing of e.g. bill, 
+customer and product. 
+To supply relevant 
+usage data to the 
+Billing System. 
+Invoice 
+Management 
+Invoicing 
+86 
+Billing Event 
+Processing 
+Enrichment 
+Billing Event 
+Processing Enrichment 
+with complementing 
+data e.g. product or 
+location information to 
+supply relevant 
+information to the 
+Billing System. 
+Invoice 
+Management 
+Invoicing 
+** Consumption is exposed through TMF677 and Usage details through TMF635. 
+ 
+ 
+
+
+4.  TMF OPEN APIs & Events 
+ 
+The following part covers the APIs and Events; This part is split in 3: 
+• 
+List of Exposed APIs - This is the list of APIs available from this component.  
+• 
+List of Dependent APIs - In order to satisfy the provided API, the  component 
+could require the usage of this set of required APIs.  
+• 
+List of  Events (generated & consumed ) - The events which the component 
+may generate is listed in this section along with a list of the events which it may 
+consume. Since there is a possibility of multiple sources and receivers for each 
+defined event. 
+ 
+The Product Usage Management Component relate to usage and the API TMF635 
+Usage Managment is in evolution as it mix concerns on product, service and resource 
+levels. With version 5 of Open APIs, there is a major evolution of Usage APIs so that 
+there will be a distinct usage API per Product, Service, and Resource: 
+• 
+TMF767 Product Usage 
+• 
+TMF727 Service Usage 
+• 
+TMF771 Resource Usage 
+ These will replace the existing TMF635 Usage Management that will stop with v4 and 
+not be migrated to v5. The Product Usage Management component relates to the 
+usage on Product Level so in future iterations, the TMF767 will be included. 
+4.1. Exposed APIs 
+Following diagram illustrates API/Resource/Operation: 
+ 
+ 
+ 
+
+
+ 
+API ID 
+API Name 
+Mandatory / 
+Optional 
+Operations 
+TMF635 Usage Management Mandatory   
+usage: GET, GET /id, POST, 
+PATCH/id 
+TMF677 Usage Consumption 
+Management 
+Mandatory 
+queryUsageConsumption: GET, 
+GET /id, POST 
+TMF701 Process Flow 
+Management API 
+Optional 
+processFlow: GET, GET /id, 
+POST, DELETE /id 
+taskFlow: GET, GET /id, PATCH 
+/id 
+4.2. Dependant APIs 
+Following diagram illustrates API/Resource/Operation potentially used by the product 
+catalog component: 
+ 
+ 
+ 
+ 
+
+
+API ID 
+API Name 
+Mandatory 
+/ Optional 
+Operations 
+Rationale 
+TMF632 Party 
+Management 
+Mandatory 
+individual: GET, GET 
+/id 
+organization: GET, 
+GET /id 
+ To be able to 
+guide the 
+Product Usage 
+to the 
+appropriate 
+Party and its 
+related 
+products.  
+TMF669 Party Role 
+Management     
+Optional 
+partyRole: GET, GET 
+/id 
+  
+TMF620 Product Catalog 
+Management 
+API 
+Mandatory 
+Optional 
+productOffering: GET, 
+GET /id 
+productOfferingPrice: 
+GET, GET /id 
+productSpecification: 
+GET, GET /id 
+  
+TMF637 Product 
+Inventory 
+Mandatory 
+product: GET, GET /id 
+ To retrieve 
+installed 
+product and 
+price 
+information to 
+determine the 
+rate to assign. 
+TMF701 Process Flow 
+Management 
+Optional 
+processFlow: GET, 
+GET /id, POST, 
+PATCH 
+  
+4.3. Events 
+The diagram illustrates the Events which the component may publish and the Events 
+that the component may subscribe to and then may receive. Both lists are derived from 
+the APIs listed in the preceding sections. 
+ 
+ 
+ 
+ 
+
+
+5. Machine Readable Component Specification 
+Refer to the ODA Component table for the machine-readable component specification 
+file for this component. 
+ 
+ 
+ 
+
+
+6. References 
+6.1. TMF Standards related versions 
+Standard 
+Version(s) 
+SID 
+24.0 
+eTOM 
+24.0 
+Functional Framework  
+24.0 
+6.2. Further resources 
+1. IG1228: please refer to IG1228 for defined use cases with ODA components 
+interactions. 
+ 
+ 
+
+
+7. Administrative Appendix 
+7.1. Document History 
+7.1.1. 
+ Version History 
+Version 
+Number 
+Date Modified 
+Modified by: 
+Description of changes 
+1.0.0 
+13-Feb-2024 
+Gaetano 
+Biancardi 
+Elisabeth 
+Andersson 
+Final edits prior to publication 
+1.1.0 
+08-Oct-2024  
+Elisabeth 
+Andersson  
+ 
+ 
+Updated to the latest version of the 
+Component Template. 
+Added comment and Jira tickets related 
+to Usage API evolution of v5. 
+Clarified the scope of SID for this 
+component in relation to 
+ProductUsageSpecification. 
+Changed requirements for TMF620 and 
+TMF672 from Mandatory to Optional.  
+Mapped to the latest Frameworks with 
+the follow changes: 
+Functional Framework:  
+• 
+Name change of Aggregation 
+level 1 and 2:  
+253, 55, 125, 126, 127, 128, 
+186, 300 
+• 
+Added functions:  
+65, 85, 86 
+Business Process Framework:  
+• 
+Business Process Name 
+change: 1.2.17.3 
+1.1.0  
+14 Nov 2024 
+Amaia White  
+Final edits prior to publication  
+7.1.2. 
+ Release History 
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production 
+13-Feb-2024 
+Gaetano Biancardi 
+Elisabeth 
+Andersson  
+Initial release of document 
+Production 
+26-Apr-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status. 
+
+
+Release 
+Status 
+Date Modified 
+Modified by: 
+Description of changes 
+Pre-production  14 Nov 2024  
+Amaia White  
+Release of version 1.1.0  
+Production 
+27-Dec-2024 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved 
+status 
+7.2. Acknowledgments 
+Team Member 
+(@mention) 
+Title 
+Company Role* 
+Gaetano Biancardi  
+ODA Component Spec Lead 
+Accenture Lead 
+Editor 
+Sylvie Demarest  
+ODA Component Spec Lead 
+Orange 
+Reviewer 
+Elisabeth Andersson  
+ODA Component Spec 
+Champion 
+MATRIXX 
+Lead 
+Editor 
+*Select from: Project Chair, Project Co-Chair, Author, Editor, Key Contributor, 
+Additional Input, Reviewer 
+
+

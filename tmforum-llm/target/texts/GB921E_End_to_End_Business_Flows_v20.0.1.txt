@@ -1,0 +1,1841 @@
+ 
+ 
+TM Forum Best Practice 
+ 
+ 
+ 
+End-to-End Business Flows 
+ 
+ 
+ 
+ 
+ 
+ 
+GB921E 
+Team Approved Date: 29-May-2020 
+ 
+ 
+Release Status: Production 
+Approval Status: TM Forum Approved 
+Suitable for Conformance 
+Version 20.0.1 
+IPR Mode: RAND 
+ 
+
+
+Notice 
+Copyright © TM Forum 2020. All Rights Reserved. 
+ 
+This document and translations of it may be copied and furnished to others, and derivative works 
+that comment on or otherwise explain it or assist in its implementation may be prepared, copied, 
+published, and distributed, in whole or in part, without restriction of any kind, provided that the 
+above copyright notice and this section are included on all such copies and derivative works. 
+However, this document itself may not be modified in any way, including by removing the 
+copyright notice or references to TM FORUM, except as needed for the purpose of developing any 
+document or deliverable produced by a TM FORUM Collaboration Project Team (in which case the 
+rules applicable to copyrights, as set forth in the TM FORUM IPR Policy, must be followed) or as 
+required to translate it into languages other than English. 
+ 
+The limited permissions granted above are perpetual and will not be revoked by TM FORUM or its 
+successors or assigns.  
+ 
+This document and the information contained herein is provided on an “AS IS” basis and TM 
+FORUM DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP 
+RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
+PURPOSE.  
+ 
+TM FORUM invites any TM FORUM Member or any other party that believes it has patent claims 
+that would necessarily be infringed by implementations of this TM Forum Standards Final 
+Deliverable, to notify the TM FORUM Team Administrator and provide an indication of its 
+willingness to grant patent licenses to such patent claims in a manner consistent with the IPR 
+Mode of the TM FORUM Collaboration Project Team that produced this deliverable. 
+ 
+The TM FORUM invites any party to contact the TM FORUM Team Administrator if it is aware of a 
+claim of ownership of any patent claims that would necessarily be infringed by implementations of 
+this TM FORUM Standards Final Deliverable by a patent holder that is not willing to provide a 
+license to such patent claims in a manner consistent with the IPR Mode of the TM FORUM 
+Collaboration Project Team that produced this TM FORUM Standards Final Deliverable. TM 
+FORUM may include such claims on its website but disclaims any obligation to do so. 
+ 
+TM FORUM takes no position regarding the validity or scope of any intellectual property or other 
+rights that might be claimed to pertain to the implementation or use of the technology described 
+in this TM FORUM Standards Final Deliverable or the extent to which any license under such rights 
+might or might not be available; neither does it represent that it has made any effort to identify 
+any such rights. Information on TM FORUM's procedures with respect to rights in any document or 
+deliverable produced by a TM FORUM Collaboration Project Team can be found on the TM 
+FORUM website. Copies of claims of rights made available for publication and any assurances of 
+licenses to be made available, or the result of an attempt made to obtain a general license or 
+permission for the use of such proprietary rights by implementers or users of this TM FORUM 
+Standards Final Deliverable, can be obtained from the TM FORUM Team Administrator. TM 
+FORUM makes no representation that any information or list of intellectual property rights will at 
+any time be complete, or that any claims in such list are, in fact, Essential Claims. 
+ 
+ 
+
+
+Direct inquiries to the TM Forum office:  
+ 
+4 Century Drive, Suite 100 
+Parsippany, NJ 07054 USA 
+Tel No.  +1 973 944 5100 
+Fax No.  +1 973 998 7916 
+TM Forum Web Page: www.TM Forum.org 
+ 
+ 
+ 
+
+
+Table of Contents 
+Notice ................................................................................................................................... 2 
+Table of Contents ............................................................................................................... 4 
+List of Figures ........................................................................................................................ 8 
+Executive Summary ............................................................................................................. 10 
+Introduction ........................................................................................................................ 11 
+1. End-to-End Business Streams .......................................................................................... 13 
+1.1. 
+Customer-Centric End-to-End Business Streams .......................................... 14 
+1.2. 
+Network End-to-End Business Streams ........................................................ 14 
+1.3. 
+Product End-to-End Business Streams.......................................................... 15 
+1.4. 
+Engaged Party Flows ..................................................................................... 15 
+2. Customer Centric Process Flows ...................................................................................... 16 
+2.1. 
+Process Flows for Request-to-Answer .......................................................... 16 
+2.1.1. 
+Overview ................................................................................................... 16 
+2.1.2. 
+Assumptions: ............................................................................................ 16 
+2.1.3. 
+eTOM Mapping ......................................................................................... 17 
+2.1.4. 
+Detailed Process-Flow (Level 3) ................................................................ 17 
+2.1.5. 
+Detailed Information ................................................................................ 18 
+2.2. 
+Process Flows for Order-to-Payment............................................................ 18 
+2.2.1. 
+Overview ................................................................................................... 18 
+2.2.2. 
+Assumptions: ............................................................................................ 18 
+2.2.3. 
+eTOM Mapping ......................................................................................... 19 
+2.2.4. 
+Detailed Process-Flow (Level 3) ................................................................ 19 
+2.2.5. 
+Detailed Information ................................................................................ 20 
+2.3. 
+Process Flows for Usage-to-Payment ........................................................... 20 
+2.3.1. 
+Overview ................................................................................................... 20 
+2.3.2. 
+Assumptions: ............................................................................................ 20 
+2.3.3. 
+eTOM Mapping ......................................................................................... 21 
+2.3.4. 
+Detailed Process-Flow (Level 3) ................................................................ 21 
+2.3.5. 
+Detailed Information ................................................................................ 22 
+2.4. 
+Process Flows for Request-to-Change .......................................................... 22 
+2.4.1. 
+Overview ................................................................................................... 22 
+
+
+2.4.4. 
+Detailed Process-Flow (Level 3) ................................................................ 23 
+2.4.5. 
+Detailed Information ................................................................................ 24 
+2.5. 
+Process Flows for Termination-to-Confirmation .......................................... 24 
+2.5.1. 
+Overview ................................................................................................... 24 
+2.5.2. 
+Assumptions: ............................................................................................ 24 
+2.5.3. 
+eTOM Mapping ......................................................................................... 25 
+2.5.4. 
+Detailed Process-Flow (Level 3) ................................................................ 25 
+2.5.5. 
+Detailed Information ................................................................................ 26 
+2.6. 
+Process Flows for Problem-to-Solution ........................................................ 26 
+2.6.1. 
+Overview ................................................................................................... 26 
+2.6.2. 
+Assumptions: ............................................................................................ 26 
+2.6.3. 
+eTOM Mapping ......................................................................................... 27 
+2.6.4. 
+Detailed Process-Flow (Level 3) ................................................................ 27 
+2.6.5. 
+Detailed Information ................................................................................ 28 
+2.7. 
+Process Flows for Complaint-to-Solution ..................................................... 28 
+2.7.1. 
+Overview ................................................................................................... 28 
+2.7.2. 
+Assumptions: ............................................................................................ 28 
+2.7.3. 
+eTOM Mapping ......................................................................................... 29 
+2.7.4. 
+Detailed Process-Flow (Level 3) ................................................................ 29 
+2.7.5. 
+Detailed Information ................................................................................ 30 
+3. Network Centric Process Flows ....................................................................................... 31 
+3.1. 
+Production Order-to-Acceptance ................................................................. 31 
+3.1.1. 
+Overview ................................................................................................... 31 
+3.1.2. 
+Assumptions: ............................................................................................ 31 
+3.1.3. 
+eTOM Mapping ......................................................................................... 32 
+3.1.4. 
+Detailed Process-Flow (Level 3) ................................................................ 33 
+3.1.5. 
+Detailed Information ................................................................................ 33 
+3.2. 
+Process Flows for Trouble Ticket-to-Solution ............................................... 34 
+3.2.1. 
+Overview ................................................................................................... 34 
+3.2.2. 
+Assumptions: ............................................................................................ 34 
+3.2.3. 
+eTOM Mapping ......................................................................................... 34 
+3.2.4. 
+Detailed Process-Flow (Level 3) ................................................................ 35 
+3.2.5. 
+Detailed Information ................................................................................ 35 
+
+
+3.3.1. 
+Overview ................................................................................................... 36 
+3.3.2. 
+Assumptions: ............................................................................................ 36 
+3.3.3. 
+eTOM Mapping ......................................................................................... 36 
+3.3.4. 
+Detailed Process-Flow (Level 3) ................................................................ 37 
+3.3.5. 
+Detailed Information ................................................................................ 37 
+3.4. 
+Process Flows for Capacity Management ..................................................... 38 
+3.4.1. 
+Overview ................................................................................................... 38 
+3.4.2. 
+Assumptions: ............................................................................................ 38 
+3.4.3. 
+eTOM Mapping ......................................................................................... 39 
+3.4.4. 
+Detailed Process-Flow (Level 3) ................................................................ 41 
+3.4.5. 
+Detailed Information ................................................................................ 42 
+3.5. 
+Process Flows for Service Lifecycle Management ........................................ 42 
+3.5.1. 
+Overview ................................................................................................... 42 
+3.5.2. 
+Assumptions: ............................................................................................ 43 
+3.5.3. 
+eTOM Mapping ......................................................................................... 43 
+3.5.4. 
+Detailed Process-Flow (Level 3) ................................................................ 44 
+3.5.5. 
+Detailed Information ................................................................................ 45 
+3.6. 
+Process Flows for Resource Lifecycle Management ..................................... 45 
+3.6.1. 
+Overview ................................................................................................... 45 
+3.6.2. 
+Assumptions: ............................................................................................ 45 
+3.6.3. 
+eTOM Mapping ......................................................................................... 46 
+3.6.4. 
+Detailed Process-Flow (Level 3) ................................................................ 47 
+3.6.5. 
+Detailed Information ................................................................................ 47 
+4. End-to-End Product Flow ................................................................................................. 48 
+4.1. 
+Process Flows for Idea-to-Business Plan ....................................................... 48 
+4.1.1. 
+Overview ................................................................................................... 48 
+4.1.2. 
+eTOM Mapping ......................................................................................... 49 
+4.1.3. 
+Detailed Process-Flow (Level 3) ................................................................ 50 
+4.1.4. 
+Detailed Information ................................................................................ 50 
+4.2. 
+Process Flows for Idea-to-Business Proposal ............................................... 51 
+4.2.1. 
+Overview ................................................................................................... 51 
+4.2.2. 
+eTOM Mapping ......................................................................................... 51 
+4.2.3. 
+Detailed Process-Flow (Level 3) ................................................................ 52 
+
+
+4.3. 
+Process Flows for Business Proposal-to-Launch ........................................... 53 
+4.3.1. 
+Overview ................................................................................................... 53 
+4.3.2. 
+eTOM Mapping ......................................................................................... 53 
+4.3.3. 
+Detailed Process-Flow (Level 3) ................................................................ 54 
+4.3.4. 
+Detailed Information ................................................................................ 54 
+4.4. 
+Process Flows for Assessment-to-Relaunch ................................................. 55 
+4.4.1. 
+Overview ................................................................................................... 55 
+4.4.2. 
+eTOM Mapping ......................................................................................... 55 
+4.4.3. 
+Detailed Process-Flow (Level 3) ................................................................ 56 
+4.4.4. 
+Detailed Information ................................................................................ 56 
+4.5. 
+Process Flows for Assessment-to-Retirement .............................................. 57 
+4.5.1. 
+Overview ................................................................................................... 57 
+4.5.2. 
+eTOM Mapping ......................................................................................... 57 
+4.5.3. 
+Detailed Process-Flow (Level 3) ................................................................ 58 
+4.5.4. 
+Detailed Information ................................................................................ 58 
+4.6. 
+Process Flows for Market Strategy-to-Campaign ......................................... 59 
+4.6.1. 
+Overview ................................................................................................... 59 
+4.6.2. 
+eTOM Mapping ......................................................................................... 59 
+4.6.3. 
+Detailed Process-Flow (Level 3) ................................................................ 60 
+4.6.4. 
+Detailed Information ................................................................................ 60 
+5. Engaged Party Flows ........................................................................................................ 61 
+5.1. 
+Process Flows for Procurement using Engaged Party .................................. 61 
+5.1.1. 
+Overview ................................................................................................... 61 
+5.1.2. 
+Assumptions ............................................................................................. 61 
+5.1.3. 
+Phases of procurement: ........................................................................... 61 
+5.1.4. 
+eTOM Mapping ......................................................................................... 62 
+6. Administrative Appendix GB921E .................................................................................... 67 
+6.1. 
+Document History ......................................................................................... 67 
+6.1.1. 
+Version History ......................................................................................... 67 
+6.1.2. 
+Release History ......................................................................................... 68 
+6.2. 
+Acknowledgments ........................................................................................ 69 
+ 
+
+
+List of Figures 
+Figure 1.  Process Model and eTOM Flows ................................................................................. 11 
+Figure 2.  A process view focused on customer-centric processes ............................................. 13 
+Figure 3.  Process domain view – example ................................................................................. 13 
+Figure 4.  Customer-Centric processes........................................................................................ 14 
+Figure 5.  Network processes ...................................................................................................... 14 
+Figure 6.  Product processes ....................................................................................................... 15 
+Figure 7.  eTOM and Customer-Centric processes ...................................................................... 16 
+Figure 8.  Request-to-Answer - Mapping on eTOM Level 2 ........................................................ 17 
+Figure 9.  Request-to-Answer – Process-Flow (Level 3) BPNM ................................................... 17 
+Figure 10.  Request-to-Answer – Detailed Information .............................................................. 18 
+Figure 11.  Order-to-Payment - Mapping on eTOM Level 2 ........................................................ 19 
+Figure 12.  Order-to-Payment – Process-Flow (Level 3) BPNM .................................................. 19 
+Figure 13.  Order-to-Payment – Detailed Information................................................................ 20 
+Figure 14.  Usage-to-Payment - Mapping on eTOM Level 2 ....................................................... 21 
+Figure 15.  Usage-to-Payment – Process-Flow (Level 3) BPNM .................................................. 21 
+Figure 16.  Usage-to-Payment – Detailed Information ............................................................... 22 
+Figure 17.  Request-to-Change - Mapping on eTOM Level 2 ...................................................... 23 
+Figure 18.  Request-to-Change Process-Flow (Level 3) BPNM .................................................... 23 
+Figure 19.  Request-to-Change – Detailed Information .............................................................. 24 
+Figure 20.  Termination-to-Confirmation - Mapping on eTOM Level 2 ...................................... 25 
+Figure 21.  Termination-to-Confirmation – Process-Flow (Level 3) BPNM ................................. 25 
+Figure 22.  Termination-to-Confirmation – Detailed Information .............................................. 26 
+Figure 23.  Problem-to-Solution - Mapping on eTOM Level 2 .................................................... 27 
+Figure 24.  Problem-to-Solution – Process-Flow (Level 3) BPNM ............................................... 27 
+Figure 25.  Problem-to-Solution – Detailed Information ............................................................ 28 
+Figure 26.  Complaint-to-Solution - Mapping on eTOM Level 2 ................................................. 29 
+Figure 27.  Complaint-to-Solution – Process-Flow (Level 3) BPNM ............................................ 29 
+Figure 28.  Complaint-to-Solution – Detailed Information ......................................................... 30 
+Figure 29.  eTOM and Network-Centric processes ..................................................................... 31 
+Figure 30.  Production Order-to-Acceptance - Mapping on eTOM Level 2 ................................ 32 
+Figure 31.  Production Order-to-Acceptance – Process-Flow (Level 3) BPNM ........................... 33 
+Figure 32.  Production Order-to-Acceptance – Detailed Information ........................................ 33 
+Figure 33.  Trouble Ticket-to-Solution - Mapping on eTOM Level 2 ........................................... 34 
+Figure 34.  Trouble Ticket-to-Solution – Process-Flow (Level 3) BPNM ...................................... 35 
+Figure 35.  Trouble Ticket-to-Solution – Detailed Information ................................................... 35 
+Figure 36.  Usage-to-Usage Data - Mapping on eTOM Level 2 ................................................... 36 
+Figure 37.  Usage-to-Usage Data – Process-Flow (Level 3) BPNM .............................................. 37 
+Figure 38.  Usage-to-Usage Data – Detailed Information ........................................................... 37 
+Figure 39.  Capacity Management - Mapping on eTOM Level 2 – Strategy to Readiness .......... 39 
+Figure 40.  Capacity Management - Mapping on eTOM Level 2 – Operations ........................... 40 
+Figure 41.  Capacity Management – Process-Flow (Level 3) BPNM ............................................ 41 
+Figure 42.  Capacity Management – Detailed Information ......................................................... 42 
+Figure 43.  Service Lifecycle Management- Mapping on eTOM Level 2 – Strategy .................... 43 
+Figure 44.  Service Lifecycle Management - Mapping on eTOM Level 2 – Operations .............. 44 
+Figure 45.  Service Lifecycle Management – Process-Flow (Level 3) BPNM ............................... 44 
+Figure 46.  Service Lifecycle Management – Detailed Information ............................................ 45 
+Figure 47.  Resource Lifecycle Management- Mapping on eTOM Level 2 – Strategy................. 46 
+Figure 48.  Resource Lifecycle Management- Mapping on eTOM Level 2 – Operations ............ 46 
+Fi
+49 R
+Lif
+l M
+t
+P
+Fl
+(L
+l 3) BPNM
+47
+
+
+Figure 51.  eTOM and Product-Centric processes ....................................................................... 48 
+Figure 52.  eTOM Mapping for Idea-to-Business Plan ................................................................ 49 
+Figure 53.  Workflow for Idea-to-Business Plan .......................................................................... 50 
+Figure 54.  Details for Idea-to-Business Plan ............................................................................... 50 
+Figure 55.  eTOM Mapping for Idea-to-Business Proposal ......................................................... 51 
+Figure 56.  Workflow for Idea-to-Business Proposal ................................................................... 52 
+Figure 57.  Details for Idea-to-Business Proposal ....................................................................... 52 
+Figure 58.  eTOM Mapping for Business Proposal-to-Launch ..................................................... 53 
+Figure 59.  Workflow for Business Proposal-to-Launch .............................................................. 54 
+Figure 60.  Details for Business Proposal-to-Launch ................................................................... 54 
+Figure 61.  eTOM Mapping for Assessment-to-Relaunch ........................................................... 55 
+Figure 62.  Workflow for Assessment-to-Relaunch .................................................................... 56 
+Figure 63.  Details for Assessment-to-Relaunch ......................................................................... 56 
+Figure 64.  eTOM Mapping for Assessment-to-Retirement ........................................................ 57 
+Figure 65.  Workflow for Assessment-to-Retirement ................................................................. 58 
+Figure 66.  Details for Assessment-to-Retirement ...................................................................... 58 
+Figure 67.  eTOM Mapping for Marketing Strategy-to-Campaign .............................................. 59 
+Figure 68.  Workflow for Marketing Strategy-to-Campaign ....................................................... 60 
+Figure 69.  Details for Marketing Strategy-to-Campaign ............................................................ 60 
+Figure 70.  Phases of Procurement Process ................................................................................ 62 
+Figure 71.  Level 1 Process Framework mapping for procurement process ............................... 63 
+Figure 72.    Identification of Level 2 process in “Engaged Party Domain (L1)” .......................... 63 
+Figure 73.  Identification of Level 3 process in “Party Tender Management (L2)” ..................... 64 
+Figure 74.  Identification of Level 3 process in “Party Engagement Development and Retirement 
+(L2)” ............................................................................................................................................. 64 
+Figure 75.  Identification of Level 3 process in “Party Agreement Management (L2)” .............. 64 
+Figure 76.  Identification of Level 2 process in “Engaged party domain (L1)” ............................ 65 
+Figure 77.  Identification of Level 3 process in “Party Engagement Development & Retirement (L2)”
+ ..................................................................................................................................................... 65 
+Figure 78.  Identification of Level 3 process in “Party Agreement Management (L2)” .............. 66 
+ 
+ 
+ 
+
+
+Executive Summary 
+ 
+Due to increasing competition in the global telecommunication markets, it is essential for telecom 
+operators to continuously improve their cost and quality position. 
+Within this context, the definition of efficient and customer-oriented business processes is a 
+crucial success factor. The Business Process Framework eTOM comprises of functional process 
+structures, i.e. Market/Sales, Product, Customer, Service, Resource and Engaged Party processes. 
+The Process Model discussed in this paper complements eTOM by providing an end-to-end 
+process flow driven view to the different functional groupings. Within the TM Forum Business 
+Process Framework eTOM Levels 1–3 already exists as a standard. However, the implementation 
+of this standard can be facilitated through the further enhancement in terms of process flows at 
+Level 3 as demonstrated in Figure 1. Therefore, this document gives clear recommendations on 
+how to develop the core Customer Centric, Network and Product process flows which are 
+compliant with eTOM Level 1–3. 
+This document is an Application Note, aiming to document an approach based on industry 
+experience that sets out a structure for considering how these flows can be organized against the 
+overall business needs, and provides a number of process flows that address these needs. Note 
+that, as an Application Note, this material should not be read as normative – i.e. a single 
+standardized approach – but rather as a representative mechanism that provides a useful base for 
+others to build on. Other approaches, with different organizational structures which may lead to 
+other process flows, are also possible. It is the goal of work like this to assist convergence for the 
+industry, but not to impose a single approach, where there are other variations and alternatives 
+that make sense. 
+The original process flows were first published in April 2011 (Release 9.1). Since then the original 
+process flows have been redesigned and updated as part of the development of the Releases 13.5, 
+15.0 and 16.0. 
+ 
+ 
+ 
+
+
+Introduction 
+ 
+Due to increasing competition in the global telecommunication markets, it is essential for telecom 
+operators to continuously improve their cost and quality position. One of the most renowned and 
+discussed approaches for improving competitiveness in the last decade is Business Process 
+Management. Business Process Management is about improving organizational performance 
+through the definition, implementation and management of operational, as well as enterprise 
+(management) processes. 
+Over the last years, customer satisfaction has become one of the most critical factors to success in 
+an environment which is characterized by growing market transparency, increasing demands from 
+the customers, and reduced customer loyalty. By improving customer loyalty, existing turnover 
+can be secured or even increased – either through growth in terms of turnover per existing 
+customer, or through new customers. The key to success is, however, not purely a case of clever 
+customer loyalty programs, but also the consistent orientation of the core processes towards 
+customers’ requirements. The benefit of marketing measures will be short term if customer 
+orientation is not taken seriously in terms of the company’s interaction with the customers. 
+ 
+ 
+Figure 1.  Process Model and eTOM Flows 
+  
+Within this context, the definition of efficient and customer-oriented business processes is a 
+crucial success factor. The Business Process Framework eTOM comprises of functional process 
+structures, i.e. Market/Sales, Product, Customer, Service, Resource and Engaged Party processes. 
+The Process Model discussed in this paper complements eTOM by providing an end-to-end 
+process flow driven view to the different functional groupings. 
+Note that this can be considered as a customized extension to the standardized Business Process 
+Framework structure, which may be useful for some areas of application. This does not preclude 
+other such extensions and customized views, where these are found useful, too. In particular, note 
+that the structure shown in Figure 1 and subsequent figures is not a “different” process model, 
+
+
+Business Process Framework, and no changes to the decomposition structure in the Business 
+Process Framework are being introduced here. Instead, the structure shown can be thought of as 
+a view of what happens inside a company’s organization, when the process elements from the 
+Business Process Framework are allocated to departments and business units. The view on the left 
+in Figure 1, which is then shown also in Figure 2, can be considered as such an organizational view, 
+and not in any sense in conflict with the decomposition hierarchy of the Business Process 
+Framework, since this organizational view makes direct use of the process elements from the 
+Business Process Framework. The concepts here are discussed at some length in Addendum G 
+“Guide to Applying the Business Process Framework”, and the approach above is in line with this. 
+Within the TM Forum Business Process Framework, eTOM Level 1–3 already exists as a standard. 
+However, the implementation of this standard can be facilitated through further enhancement in 
+terms of process flows at Level 3 as demonstrated in Figure 1. Therefore, this document gives 
+clear guidance on how to develop the identified core Customer Centric, Network and Product 
+process flows, which are designed to be compliant with eTOM Level 1–3. 
+ 
+ 
+
+
+1. End-to-End Business Streams 
+Generally, a service provider can be structured into core business processes, as well as control and 
+support processes. One perspective that can be useful for the core business processes is to view 
+these as consisting of the Customer Centric processes and three additional process areas: 
+Customer, Product and Network. These can be seen to represent process domains arranged as 
+end-to-end business streams which show a focus across the Service Provider for the area of 
+business activity concerned. Note that the use of the terms “process domains” and “end-to-end 
+business streams” here is just intended to explain this broad business context and is not a new 
+element of structure or terminology within the core Business Process Framework. 
+In this model, the Customer Centric processes are characterized as being initiated by the customer 
+and ending at the customer. Additionally, the processes involved include all other core processes, 
+which are not directly initiated by a customer (e.g. marketing campaign, product lifecycle 
+management, network operations). 
+ 
+ 
+Figure 2.  A process view focused on customer-centric processes 
+ 
+The Customer Centric processes have several interactions with the other three process 
+areas/domains. For instance, they might be initiated by relevant activities in the sense of CRM at 
+the Customer domain, and interactions may include trouble solving in the Network domain and 
+the Product domain. 
+ 
+ 
+Fig re 3 Process domain ie
+e ample
+
+
+1.1. Customer Centric End to End Business Streams 
+A total of seven Customer Centric Processes represent the customer view and interaction with the 
+telecommunication company. These processes start with the customer initiating the contact. They 
+end with the fulfilment of his/her request. Customer Centric processes include activities such as 
+handling information requests, new sale, billing and invoice generation or problem and complaint 
+handling. 
+ 
+ 
+Figure 4.  Customer-Centric processes 
+1.2. Network End-to-End Business Streams 
+This domain consists of six Network processes, which represent the network operations’ view and 
+interaction within the telecommunications company. Network processes include activities such as 
+order handling, trouble ticket management, billing, capacity management, and service lifecycle 
+management. 
+ 
+ 
+Figure 5.  Network processes 
+ 
+
+
+1.3. Product End to End Business Streams 
+In this domain there are six Product related core workflows for an operator and build the basis for 
+the generation of revenues. Product processes include activities such as product development, 
+launch, retirement etc. 
+ 
+ 
+Figure 6.  Product processes 
+1.4. Engaged Party Flows 
+In this section we explore Engaged Party Domain of Business Process Framework and using 
+engaged party processes in real world scenarios. This consists of worked examples of using eTOM 
+processes for various most common processes of the organization. The framework discussed can 
+be used as best practice or guideline to arrive at a good understanding of using Engaged Party 
+Domain. 
+  
+ 
+ 
+
+
+2. Customer Centric Process Flows 
+ 
+This section includes sample process-flows (eTOM level 3) relevant to the Customer Centric focus. 
+The process flows for the seven Customer Centric end-to-end processes recommend how to apply 
+the Operations part of eTOM to a service provider. 
+ 
+ 
+Figure 7.  eTOM and Customer-Centric processes 
+ 
+Remark: The flow illustration uses level 3 process elements of the Business Process Framework 
+eTOM. In some diagrams you will find databases which are added to explain the flow. The 
+Databases: Customer Subscription Inventory, Service Inventory and Resource Inventory are shown 
+to provide a clearer understanding of the relevant process element. They have the following 
+relation to the Information Framework (SID): Subscription Inventory to the ABE “Customer”, 
+Service Inventory to “Service Configuration” and Resource Inventory to “Resource Configuration”. 
+2.1. Process Flows for Request-to-Answer 
+2.1.1. 
+Overview 
+• 
+This process comprises of activities relevant to managing customer requests across all 
+communication channels (customer interfaces). 
+• 
+Specific information requests or product requests from the customer are qualified and 
+addressed. 
+• 
+This could lead to the preparation of a pre-sales offer if the customer shows interest in a 
+particular product. 
+2.1.2. 
+Assumptions: 
+• 
+The offer preparation may or may not lead to a reservation of resources in advance. 
+• 
+Resources might be reserved for some special products or customers depending on the 
+t
+‘
+li i
+d
+d
+
+
+p
+y
+p
+y
+gg
+2.1.3. 
+eTOM Mapping 
+ 
+Figure 8.  Request-to-Answer - Mapping on eTOM Level 2 
+ 
+2.1.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 9.  Request-to-Answer – Process-Flow (Level 3) BPNM 
+ 
+
+
+ 
+Figure 10.  Request-to-Answer – Detailed Information 
+ 
+2.2. Process Flows for Order-to-Payment 
+2.2.1. 
+Overview 
+• 
+This process deals with all activities which convert the customer request or an accepted offer 
+into a ‘Ready for use’ product. 
+• 
+This process involves capturing customer order information, triggering the relevant 
+provisioning process and handing over the order to the Service layer. 
+• 
+Once the product is successfully provisioned, the customer order is closed, and the customer 
+satisfaction is validated. 
+2.2.2. 
+Assumptions: 
+• 
+This scenario is relevant for products offered to the mass customer base. 
+• 
+Pre-order feasibility check verifies whether the requested product can be offered to the 
+customer based on the service / resource availability, the product portfolio, and the 
+customer’s configuration. 
+• 
+Pre-order feasibility check would not generally involve the reservation of resources prior to 
+issuance of customer order. 
+• 
+However, there might be a reservation of some critical resources, depending on the operator‘s 
+policies and procedures. 
+
+
+ 
+Figure 11.  Order-to-Payment - Mapping on eTOM Level 2 
+ 
+2.2.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 12.  Order-to-Payment – Process-Flow (Level 3) BPNM 
+ 
+
+
+ 
+Figure 13.  Order-to-Payment – Detailed Information 
+ 
+2.3. Process Flows for Usage-to-Payment 
+2.3.1. 
+Overview 
+• 
+This process deals with all activities related to the handling of the product/service usage. 
+• 
+The accuracy of pricing is ensured, and all usage data is captured and duly processed for billing 
+information requests and bill generation. 
+2.3.2. 
+Assumptions: 
+• 
+This scenario is relevant for products offered to the mass customer base. 
+• 
+The process elements ‘Mediate Resource Usage Records‘ and ‘Guide Resource Usage Records‘ 
+are not always applicable. 
+• 
+‘Perform Rating’ element is usually under the Customer layer for customized products, and 
+under the Service layer for standardized products. 
+
+
+ 
+Figure 14.  Usage-to-Payment - Mapping on eTOM Level 2 
+ 
+2.3.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 15.  Usage-to-Payment – Process-Flow (Level 3) BPNM 
+ 
+
+
+ 
+Figure 16.  Usage-to-Payment – Detailed Information 
+ 
+2.4. Process Flows for Request-to-Change 
+2.4.1. 
+Overview 
+• 
+This process deals with all activities which convert the customer‘s change request into a 
+‘Ready for use’ product. 
+• 
+This process involves capturing customer order information, triggering the relevant 
+provisioning process and handing over the order to the Service layer. 
+• 
+Once the product is successfully provisioned, the customer order is closed, and the customer 
+satisfaction is validated. 
+2.4.2. 
+Assumptions: 
+• 
+This scenario is relevant for products offered to the mass customer base. 
+• 
+Pre-order feasibility check verifies whether the requested change can be implemented for the 
+customer based on the service / resource availability, the product portfolio, and the 
+customer’s configuration. 
+• 
+Pre-order feasibility check would not generally involve the reservation of resources prior to 
+issuance of customer order. 
+• 
+However, there might be a reservation of some critical resources, depending on the operator‘s 
+policies and procedures. 
+
+
+ 
+Figure 17.  Request-to-Change - Mapping on eTOM Level 2 
+ 
+2.4.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 18.  Request-to-Change Process-Flow (Level 3) BPNM 
+ 
+
+
+ 
+Figure 19.  Request-to-Change – Detailed Information 
+ 
+2.5. Process Flows for Termination-to-Confirmation 
+2.5.1. 
+Overview 
+• 
+This process deals with all activities related to the execution of customer‘s termination 
+request. 
+• 
+This process involves retention activities, capturing customer order information, triggering the 
+relevant provisioning process and handing over the order to the Service layer. 
+• 
+Once the product is successfully terminated, the customer order is closed, and the customer 
+satisfaction is validated. 
+2.5.2. 
+Assumptions: 
+• 
+This scenario is relevant for products offered to the mass customer base. 
+• 
+This process includes the termination of a customer order or a product. 
+• 
+Pre-order feasibility check verifies whether the requested termination can be executed based 
+on the customer’s current configuration. 
+
+
+ 
+Figure 20.  Termination-to-Confirmation - Mapping on eTOM Level 2 
+ 
+2.5.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 21.  Termination-to-Confirmation – Process-Flow (Level 3) BPNM 
+
+
+ 
+Figure 22.  Termination-to-Confirmation – Detailed Information 
+ 
+2.6. Process Flows for Problem-to-Solution 
+2.6.1. 
+Overview 
+• 
+This process deals with a technical complaint (problem) initiated by the customer, analyses it 
+to identify the source of the issue, initiates resolution, monitors progress and closes the 
+trouble ticket. 
+• 
+The basis for a problem is an unplanned interruption to a product / service or reduction in the 
+quality of a product/service. (In comparison, the process “complaint-to-solution” deals with 
+customer inquiries in which the customer is not pleased with a product or handling speed of 
+an inquiry etc.). 
+2.6.2. 
+Assumptions: 
+• 
+This scenario is relevant only for technical complaints which are termed as ‘problems’. 
+• 
+Problems such as no outgoing call or sms and faulty handset, may be resolved at first level 
+support or re-directed to other layers 
+• 
+Non-technical complaints will be dealt by another scenario ‚Complaint-to-Solution‘. 
+
+
+ 
+Figure 23.  Problem-to-Solution - Mapping on eTOM Level 2 
+ 
+2.6.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 24 Problem to Solution – Process Flow (Level 3) BPNM
+
+
+2.6.5. 
+Detailed Information 
+ 
+Figure 25.  Problem-to-Solution – Detailed Information 
+ 
+2.7. Process Flows for Complaint-to-Solution 
+2.7.1. 
+Overview 
+• 
+This process deals with a complaint (problem) initiated by the customer, analyses it to identify 
+the source of the issue, initiates resolution, monitors progress and closes the trouble ticket. 
+• 
+A complaint is a customer inquiry in which the customer is not pleased with a product or the 
+handling speed of an inquiry etc. 
+2.7.2. 
+Assumptions: 
+• 
+This scenario is relevant only for non-technical complaints which are termed as ‘complaints’. 
+• 
+Complaints such as over-due provisioning, quality of customer service and bill adjustments will 
+fall under the scope of this process. 
+
+
+ 
+Figure 26.  Complaint-to-Solution - Mapping on eTOM Level 2 
+ 
+2.7.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 27 Complaint to Solution
+Process Flow (Level 3) BPNM
+
+
+2.7.5. 
+Detailed Information 
+ 
+Figure 28.  Complaint-to-Solution – Detailed Information 
+ 
+ 
+
+
+3. Network Centric Process Flows 
+This section includes sample process-flows (eTOM level 3) relevant to the Network Centric focus. 
+The process-flows for the six network end-to-end processes show how to apply the Operations, 
+Strategy and Enterprise domains of eTOM to a service provider. 
+ 
+ 
+Figure 29.  eTOM and Network-Centric processes 
+3.1. Production Order-to-Acceptance 
+3.1.1. 
+Overview 
+• 
+This scenario manages the provisioning and termination process, starting from the feasibility 
+check and ending with the activation of services and resources. 
+• 
+The order processing includes the verification of service specifications, the availability check 
+for the services and resources, and the identification of critical and uncritical resources. 
+• 
+The reservation or cancellation of critical resources then takes place, followed by the 
+completion of the suborder with relevant parameters. 
+• 
+In the end, an overall acceptance test is executed. 
+3.1.2. 
+Assumptions: 
+• 
+This scenario is relevant for products offered to the mass customer base. 
+• 
+This process can be fully automated, but in some cases manual activities are also in scope. 
+
+
+p
+p
+y
+g
+y
+g
+g
+requirements of this process. 
+• 
+The feasibility check considers service-, resource- and workforce capacities. 
+• 
+The result of the feasibility check is binding for the offer against the customer. 
+• 
+An order cancellation is not possible at all times. After a certain time period has elapsed, the 
+cancellation of the order cannot be executed. 
+3.1.3. 
+eTOM Mapping 
+ 
+ 
+Figure 30.  Production Order-to-Acceptance - Mapping on eTOM Level 2 
+  
+
+
+ 
+Figure 31.  Production Order-to-Acceptance – Process-Flow (Level 3) BPNM 
+3.1.5. 
+Detailed Information 
+ 
+Figure 32.  Production Order-to-Acceptance – Detailed Information 
+  
+
+
+3.2. Process Flows for Trouble Ticket to Solution 
+3.2.1. 
+Overview 
+• 
+This process is either triggered internally through a service or resource alarm, or externally, 
+through a trouble ticket generated based on a complaint of a customer. 
+• 
+The process covers the qualification, classification and the elimination of the service or 
+resource trouble. 
+• 
+The analysis of trouble includes the verification of trouble ticket or request, and a delta 
+analysis based on reference and actual values. 
+• 
+Once the root cause is identified, the trouble eliminated and the acceptance test completed, 
+the trouble ticket is closed. 
+3.2.2. 
+Assumptions: 
+• 
+This scenario is relevant for products offered to the mass customer base. 
+• 
+This process can be fully automated, but in some cases manual activities are also in scope. 
+• 
+This scenario considers the trouble ticket handling triggered by the customer and the event-
+based handling triggered by the network. 
+• 
+The source which opens a ticket is also responsible for closing it. 
+• 
+An error database is established and can be enhanced quickly and easily. 
+• 
+The assurance and fulfillment processes work with the same data and Information. 
+3.2.3. 
+eTOM Mapping 
+ 
+Figure 33.  Trouble Ticket-to-Solution - Mapping on eTOM Level 2 
+ 
+
+
+ 
+Figure 34.  Trouble Ticket-to-Solution – Process-Flow (Level 3) BPNM 
+3.2.5. 
+Detailed Information 
+ 
+Figure 35.  Trouble Ticket-to-Solution – Detailed Information 
+
+
+3.3. Process Flows for Usage to Usage Data 
+3.3.1. 
+Overview 
+• 
+This process focuses on the enabling of usage, the collection of usage records and the 
+monitoring of performance criteria. 
+• 
+It takes into consideration the authentication and authorization of the user, including the 
+initiation of subsequently following steps and the providing of self-service. 
+• 
+During the usage, the collection of usage data records starts. 
+• 
+After the records pass through the mediation, matching and rating steps, the bill is produced 
+and distributed to the customer. 
+3.3.2. 
+Assumptions: 
+• 
+This scenario is relevant for products offered to the mass customer base. 
+• 
+After the authentication and authorization of the user, the usage is enabled when no 
+connection restrictions exist. 
+• 
+During the usage, the customer is provided with the option for self-service or other activities. 
+• 
+The process elements ‘Mediate Resource Usage Records‘ and ‘Guide Resource Usage Records‘ 
+are not always applicable. 
+• 
+‘Perform Rating‘ element is usually under the Customer layer for customized products, and 
+under the Service layer for standardized products. 
+3.3.3. 
+eTOM Mapping 
+  
+Figure 36.  Usage-to-Usage Data - Mapping on eTOM Level 2 
+
+
+ 
+Figure 37.  Usage-to-Usage Data – Process-Flow (Level 3) BPNM 
+3.3.5. 
+Detailed Information 
+ 
+ 
+Figure 38.  Usage-to-Usage Data – Detailed Information 
+
+
+3.4. Process Flows for Capacity Management 
+3.4.1. 
+Overview 
+• 
+This process aims to ensure the timely and cost-efficient provisioning of the accurate capacity 
+of services and components. 
+• 
+There is a collection and qualification of capacity information and the analysis of capacity 
+needs to guarantee adequate levels of capacity for support of operations. 
+• 
+This process can be nearly automated, but in some cases manual activities are also in scope. 
+Data collection and analysis can leverage big data analytics and machine learning algorithms 
+to improve efficiency and accuracy. It may require collecting information from other domains’ 
+processes such as Market, Sales domain or Product domain processes. 
+• 
+This process may require aligning with other domains such as Market, Sales domain, Product 
+domain, Service domain, etc. through “Domain Orchestration” process to provide more 
+precise capacity planning. 
+• 
+Future forecast of business demands regarding capacity may leverage AI to provide more 
+accurate capacity demand. 
+• 
+The scope of capacity management is specified, including the definition of KPIs and 
+measurement methods. 
+• 
+After the planning and design phase, the implementation plan is developed and executed. 
+• 
+Lastly, the results of capacity management are handed over to operations and performance is 
+continuously monitored. 
+3.4.2. 
+Assumptions: 
+• 
+KPIs and performance measurement features are designed and established. 
+• 
+Type of capacity which required to be managed and capacity period are pre-defined.  
+• 
+The resource, sales & marketing, product and service relevant data is available and usable. 
+• 
+This process scenario is integrated in the network expansion planning process and aims to 
+support rolling expansion planning (quarterly, monthly, etc.) requirements. 
+• 
+The process scenario manages the requirements of the fulfillment process. 
+• 
+This scenario is not technically independent. 
+• 
+This scenario takes into consideration the capacity and availability management as per ITIL V3. 
+ 
+
+
+ 
+Figure 39.  Capacity Management - Mapping on eTOM Level 2 – Strategy to Readiness 
+
+
+ 
+Figure 40.  Capacity Management - Mapping on eTOM Level 2 – Operations 
+
+
+ 
+Figure 41.  Capacity Management – Process-Flow (Level 3) BPNM 
+ 
+
+
+ 
+Figure 42.  Capacity Management – Detailed Information 
+3.5. Process Flows for Service Lifecycle Management 
+3.5.1. 
+Overview 
+  
+• 
+This process defines, plans, designs and implements all services in order to support the 
+introduction, operations and retirement of market products. 
+• 
+The process starts with the evaluation of market trends, service specific needs and the 
+definition of the service development and exit strategy. 
+• 
+This is followed by the creation of the business plan and definition of the service architecture 
+and other strategic documents. 
+• 
+The design and development of service solutions are in line with the strategic goals and 
+required service capabilities. 
+• 
+After the implementation and a successful testing phase, the service is handed over to 
+operations. 
+
+
+• 
+The product portfolio requirements are defined as per the input from Product Marketing. 
+• 
+A result of the Service Lifecycle Process may act as an input for the fulfillment process 
+• 
+Further results of this scenario are requirements for the capacity management process. 
+• 
+Direct links between products and services are modeled and stored in the product catalog. 
+• 
+This scenario does not take into consideration the retirement phase. 
+• 
+In some cases, migration scenarios are needed. 
+  
+3.5.3. 
+eTOM Mapping 
+ 
+Figure 43.  Service Lifecycle Management- Mapping on eTOM Level 2 – Strategy 
+ 
+
+
+  
+Figure 44.  Service Lifecycle Management - Mapping on eTOM Level 2 – Operations 
+3.5.4. 
+Detailed Process-Flow (Level 3) 
+ 
+Figure 45.  Service Lifecycle Management – Process-Flow (Level 3) BPNM 
+
+
+ 
+Figure 46.  Service Lifecycle Management – Detailed Information 
+3.6. Process Flows for Resource Lifecycle Management 
+3.6.1. 
+Overview 
+• 
+This process defines, plans, designs and implements all resources in order to support the 
+introduction, operations and retirement of market products. 
+• 
+The process starts with the evaluation of market trends, resource specific needs and the 
+definition of the resource development and exit strategy. 
+• 
+This is followed by the creation of the business plan and definition of the resource 
+architecture and other strategic documents. 
+• 
+The design and development of resource solutions are in line with the strategic goals and 
+required resource capabilities. 
+• 
+After the implementation and a successful testing phase, the resource is handed over to 
+operations.  
+3.6.2. 
+Assumptions: 
+• 
+The product portfolio requirements are defined as per the input from Product Marketing. 
+• 
+A result of the Resource Lifecycle Process may act as an input for the fulfillment process 
+• 
+Further results of this scenario are requirements for the capacity management process. 
+• 
+Direct links between products, services and resources are modeled and stored in the product 
+catalog. 
+• 
+This scenario does not take into consideration the retirement phase. 
+I
+i
+ti
+i
+d d
+
+
+3.6.3. 
+eTOM Mapping 
+ 
+Figure 47.  Resource Lifecycle Management- Mapping on eTOM Level 2 – Strategy 
+  
+  
+Figure 48.  Resource Lifecycle Management- Mapping on eTOM Level 2 – Operations 
+ 
+
+
+ 
+Figure 49.  Resource Lifecycle Management – Process-Flow (Level 3) BPNM 
+ 
+3.6.5. 
+Detailed Information 
+  
+Figure 50.  Resource Lifecycle Management – Detailed Information 
+ 
+ 
+
+
+4. End-to-End Product Flow 
+This section includes sample process-flows (eTOM level 3) relevant to the Product Centric focus. 
+The process flows for the six Product Centric end-to-end processes recommend how to apply the 
+Strategy, Infrastructure and Product domain of eTOM to a service provider. 
+The described examples of end-to-end processes from the product domain are based on Detecon 
+project experience and telco best practices from various operators, and focuses on the following 
+processes: 
+• 
+Idea-to-Business Plan 
+• 
+Idea-to-Business Proposal 
+• 
+Business Proposal-to-Launch 
+• 
+Assessment-to-Relaunch 
+• 
+Assessment-to-Retirement 
+• 
+Market Strategy-to-Campaign 
+ 
+ 
+Figure 51.  eTOM and Product-Centric processes  
+4.1. Process Flows for Idea-to-Business Plan 
+4.1.1. 
+Overview 
+• 
+This process shows the strategic part of portfolio management, starting with monitoring of 
+market trends (external perspective) and gathering product information (internal perspective) 
+and ending with an approved business plan. 
+
+
+g
+y
+p
+g
+g
+q
+partnership requirements deliver inputs to the product portfolio strategy. 
+• 
+An approval of investment in enhancement of available service capabilities may also be part of 
+the process flow 
+• 
+A product portfolio strategy and related business plans are outputs of this process and are the 
+framework for the following management of product offerings  
+4.1.2. 
+eTOM Mapping 
+ 
+Figure 52.  eTOM Mapping for Idea-to-Business Plan 
+ 
+ 
+
+
+4.1.3. 
+Detailed Process-Flow (Level 3) 
+  
+ 
+Figure 53.  Workflow for Idea-to-Business Plan 
+ 
+4.1.4. 
+Detailed Information 
+  
+ 
+Figure 54.  Details for Idea-to-Business Plan 
+
+
+4.2. Process Flows for Idea to Business Proposal 
+4.2.1. 
+Overview 
+• 
+The process describes the activities related to the management of single product offerings, 
+starting with idea generation and with an approved business proposal (incl. product blueprint, 
+forecasts & financial figures) 
+• 
+The main purpose of this process is to develop (high-level) product specifications and assess 
+the feasibility of launching the product 
+• 
+At the end of this process a product committee (or a similar decision making body) takes a 
+Go/No-Go decision for commercial product launch 
+ 
+4.2.2. 
+eTOM Mapping 
+ 
+ 
+Figure 55.  eTOM Mapping for Idea-to-Business Proposal 
+ 
+ 
+
+
+4.2.3. 
+Detailed Process-Flow (Level 3) 
+  
+ 
+Figure 56.  Workflow for Idea-to-Business Proposal 
+ 
+4.2.4. 
+Detailed Information 
+ 
+ 
+
+
+4.3. Process Flows for Business Proposal to Launch 
+4.3.1. 
+Overview 
+• 
+The process describes the activities related to the preparation of product launch, starting with 
+the Go-decision and ending with the commercial launch. 
+• 
+The definition of related service requirements, resources and, if involved, third party services 
+is an essential part of this process. 
+• 
+Service Lifecycle Management and Resource Lifecycle Management are very important 
+interfaces to this process and need to be synchronized carefully 
+4.3.2. 
+eTOM Mapping  
+ 
+ 
+Figure 58.  eTOM Mapping for Business Proposal-to-Launch 
+ 
+
+
+ 
+Figure 59.  Workflow for Business Proposal-to-Launch 
+4.3.4. 
+Detailed Information 
+ 
+Figure 60.  Details for Business Proposal-to-Launch 
+
+
+4.4. Process Flows for Assessment to Relaunch 
+4.4.1. 
+Overview 
+• 
+The goal of this process is the continuous improvement and enhancement of the existing 
+product offerings as a reaction to customer needs or internal commercial, technical or 
+financial decisions 
+• 
+The activities include assessment of product offering performance, identification of issues and 
+updating required aspects like product specification, configuration, etc. 
+• 
+The outcome of the process is a relaunched product offering with enhanced specifications 
+4.4.2. 
+eTOM Mapping  
+ 
+ 
+Figure 61.  eTOM Mapping for Assessment-to-Relaunch 
+
+
+ 
+Figure 62.  Workflow for Assessment-to-Relaunch 
+4.4.4. 
+Detailed Information 
+  
+ 
+Figure 63.  Details for Assessment-to-Relaunch 
+
+
+4.5. Process Flows for Assessment to Retirement 
+4.5.1. 
+Overview 
+• 
+This process describes the activities related to the retirement of product offerings, which have 
+been identified as unviable. 
+• 
+The correct identification of the impact caused by the product exit and the right exit strategy 
+are the most important issues. 
+• 
+Definition of released service and resource capacity is also part of the process; the 
+management of these capacities is executed in Service Lifecycle Management and Resource 
+Lifecycle Management processes 
+4.5.2. 
+eTOM Mapping  
+ 
+ 
+Figure 64.  eTOM Mapping for Assessment-to-Retirement 
+
+
+ 
+Figure 65.  Workflow for Assessment-to-Retirement 
+4.5.4. 
+ Detailed Information 
+ 
+Figure 66.  Details for Assessment-to-Retirement 
+
+
+4.6. Process Flows for Market Strategy to Campaign  
+4.6.1. 
+Overview 
+• 
+The process flow includes activities related to the establishing market strategy and execution 
+of single marketing campaigns. 
+• 
+Portfolio strategy, product delivery feedback and customer feedback are the most critical 
+inputs to the process. 
+4.6.2. 
+eTOM Mapping 
+  
+ 
+Figure 67.  eTOM Mapping for Marketing Strategy-to-Campaign 
+ 
+ 
+
+
+ 
+Figure 68.  Workflow for Marketing Strategy-to-Campaign 
+4.6.4. 
+ Detailed Information 
+  
+ 
+Figure 69.  Details for Marketing Strategy-to-Campaign 
+ 
+ 
+
+
+5. Engaged Party Flows 
+This section includes sample process-flows (eTOM level 3) relevant to the Engaged Party Flows. 
+The process-flows show how to apply the Engaged Party Domain, a part of eTOM to six phases of 
+procurement process. 
+We look at addressing the “Effective management of procurement process using Business 
+Process Framework (eTOM)”.There are various processes in industry to carry out procurement, 
+but doing it in a standard, well known, flexible approach will have a good value addition 
+throughout procurement lifecycle. 
+Hence, we choose to decompose and identify standard business process from Engaged Party of 
+Business Process Framework which can be easily mapped to various phases of procurement 
+process. We may not be able to get one-to-one mapping of procurement phase against eTOM 
+processes, however we can identify the applicable group of processes. 
+5.1. Process Flows for Procurement using Engaged Party 
+5.1.1. 
+Overview 
+• 
+Procurement process is a key activity for any organization which gets complex and challenging 
+with growing need for value addition. Likewise, there is always parallel need of standard, easy 
+to adopt, industry-neutral process definition for procurement. The example defined in this 
+document tries to address this and provide best practice that can be derived from business 
+process framework. 
+• 
+The idea behind this case study is to provide a road map and best practices organizations can 
+use during procurement process using standards defined in Frameworx. 
+• 
+As mentioned, this section decomposes/ identifies process involved till Level 3 of business 
+process framework that can be mapped to various phases of procurement process. 
+  
+5.1.2. 
+Assumptions 
+• 
+In the scope of this example, process involving performance and problem reporting of external 
+parties is not considered. This can be included as part of next versions of document. This case 
+study was originally based on Frameworx 14.5 Model and was updated according to the latest 
+16.0 Model. Engaged party domain is considered throughout the case study (since the Supply 
+partner domain was replaced with Engaged party domain). This process can be fully 
+automated, but in some cases manual activities are also in scope. 
+. 
+5.1.3. 
+Phases of procurement: 
+Below flow depicts procurement process at high level and the idea is to make this model as 
+domain/industry neutral as possible. 
+
+
+ 
+Figure 70.  Phases of Procurement Process 
+ 
+• 
+Phase 1: Define Scope of work/Definition of work: Define and review the definition of work, 
+Intellectual property considerations, vendor selection method etc. 
+• 
+Phase 2: Verify Vendors and Issue RFP – Collect information about the vendors list and 
+issue   RFP stating details. If required, conduct a session on RFP briefing. 
+• 
+Phase 3: Validate RFP response – verify RFP response from vendors including commercials, 
+SOW and technical requirements and other criteria. 
+• 
+Phase 4: Purchase Agreement/ Formal award of contract – Publish contract award notice to 
+selected vendor. Explain the terms and conditions of contract. 
+• 
+Phase 5: Contract Management – Set up a kick-off meeting, conduct regular follow up on 
+progress of work. 
+• 
+Phase 6: Post Contract – review the overall progress and milestones accordingly. 
+5.1.4. 
+eTOM Mapping 
+We can now choose which processes from the Business Process Framework are needed, based on 
+the definition of the business problem set out originally, and based on the various phases of 
+procurement .We inspect the Business Process Framework and identify where the main focus of 
+process activity is for the case concerned . 
+ 
+Procurement – Phase 1 to 4: 
+In this section let us try to map eTOM processes to phase 1,2,3 and 4 of procurement process 
+defined in section 4.1.5. Phase 4 of procurement is spanned across two parts in this document for 
+the ease of understanding and continuity. 
+Identification of L1 process: 
+As we start with Mapping of business process framework with various phases of procurement, it 
+can be observed that L1– Engaged Party Domain is involved. We may not be able to identify one- 
+to-one mapping of procurement phase against eTOM processes; however, we can identify the 
+applicable group of processes. L1 process identified is common for all phases of procurement. 
+  
+
+
+ 
+Figure 71.  Level 1 Process Framework mapping for procurement process 
+ 
+We observe that each of Level1 process identified can further be detailed to L2, L3 and L4 process 
+depending on complexity involved and granularity needed at various stages. Let us identify L2 
+process from identified L1 process. 
+  
+Identification of L2 process:  
+ 
+Figure 72.    Identification of Level 2 process in “Engaged Party Domain (L1)” 
+ 
+Now we have a set of Level 2 process elements that we can use to address each phase of 
+procurement process. These processes can be mapped to phase 1, 2, 3 and 4 of procurement. 
+Level 2 processes identified are: 
+1. Party Strategy and Planning, Party Tender Management, Party Engagement Development and 
+Retirement, Party Agreement Management, Party Settlements & Payments Management from 
+L1- Engaged Party Domain 
+
+
+service provider/vendor. 
+Now, let us identify L3 process from identified L2 processes. 
+Identification of L3 process: 
+ 
+Figure 73.  Identification of Level 3 process in “Party Tender Management (L2)” 
+ 
+  
+Figure 74.  Identification of Level 3 process in “Party Engagement Development and Retirement (L2)” 
+ 
+ 
+Figure 75.  Identification of Level 3 process in “Party Agreement Management (L2)” 
+ 
+Figure above depicts the processes that can be mapped to L3 process under L2 process. This 
+process defines policies, principles and performance standards of the organization which need to 
+be adhere by vendor/external service provider. 
+Example: a process defining SLA for a software system. 
+ 
+Now we have a set of Level 3 process elements that we can use to address each phase of 
+procurement process. These processes can be mapped to phase 1, 2, 3 and 4 of procurement. 
+Level 3 processes identified are  
+1. Determine Sourcing Requirements, Determine Potential Parties, Manage Tender Process from 
+d
+
+
+3. Negotiate Commercial Arrangements, Gain Approval of Commercial Arrangements, and 
+Establish Party Agreement from L2 Party Agreement Management. 
+ 
+Procurement – phase 4, 5 and 6: 
+Processes decomposed in this section are applicable to procurement phase 5 and 6 (defined in 
+section 4.1.5 of this document)  - awarding contract ,contract management and post contract 
+phase. It is to be observed that phase 4 has spanned across two sections as process related to 
+supplier identification /award/maintaining spans across multiple processes. Now, let us identify 
+Level 2 process from identified L1 process. 
+Identification of L2 process: 
+ 
+Figure 76.  Identification of Level 2 process in “Engaged party domain (L1)” 
+ 
+Now we have a set of Level 2 process elements that we can use to address each phase of 
+procurement process. These processes can be mapped to phase 4, 5 and 6 of procurement. 
+Level 2 processes identified are: 
+1. Party Engagement Development & Retirement, Party Support & Readiness, Party Agreement 
+Management, Party Settlements & Payments Management from L1- Engaged Party Domain. 
+ 
+Now, let us identify Level 3 process from identified L2 process. 
+ 
+Identification of L3 process:  
+ 
+ 
+Figure 77.  Identification of Level 3 process in “Party Engagement Development & Retirement (L2)” 
+ 
+
+
+ 
+Figure 78.  Identification of Level 3 process in “Party Agreement Management (L2)” 
+ 
+Now we have a set of Level 3 process elements that we can use to address each phase of 
+procurement process further. These processes can be mapped to phase 4, 5 and 6 of 
+procurement. 
+Level 3 processes identified are   
+1. Manage Party Engagement and Terminate Party Engagement in L2 Party Engagement 
+Development & Retirement. 
+2. Manage Party Agreement Violation and Terminate Party Agreement from L2 Party Agreement 
+Management. 
+3. All of the processes in L2: Party Settlements & Payments Management   
+4. All of the processes in L2: Party Support and Readiness 
+  
+We observe that Manage Party Engagement process addresses various activities involved post–
+awarding contract. Some of the activities can be arranging a kickoff meeting, monitoring and 
+tracking the progress, escalations etc. We can also make use of any other process than ones 
+identified, depending on the nature of the deal/contract. 
+  
+ 
+ 
+
+
+6. Administrative Appendix GB921E 
+6.1. Document History 
+6.1.1. 
+Version History 
+  
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+0.1 
+15./March 
+/2010 
+Georg Vitt 
+first issue of document 
+9.0 
+August 
+2010 
+Mike Kelly 
+Minor formatting and document number updated 
+9.1 
+August 
+2010 
+Alicja Kawecki 
+Minor cosmetic corrections for web posting and ME 
+9.2 
+December 
+2010 
+Mike Kelly 
+Amendments to reflect comments received, to clarify 
+document as Application Note and to explain 
+terminology 
+9.3 
+January 
+2011 
+Mike Kelly 
+Amendment to Appendix to make more generic, and 
+addition of Acknowledgments 
+9.4 
+April 2011 Alicja Kawecki 
+Updated to reflect TM Forum Approved status 
+1.13.0 
+October 
+2013 
+Chin-Gi Hong (+ 
+minor reformatting 
+by Mike Kelly in line 
+with revised 
+document template) 
+Major update of process flows to align to GB921 
+Addendum K (“Construction Guidelines for Process 
+Flows”). 
+1.13.1 
+October 
+2013 
+Mike Kelly 
+Small formatting changes 
+1.13.2 
+October 
+2013 
+Alicja Kawecki 
+Updated cover & header, inserted Notice & list of 
+figures 
+1.13.3 
+March 
+2014 
+Alicja Kawecki 
+Updated cover, copyright year & Notice reflecting 
+TM Forum Approved status 
+13.5.0 
+October 
+2014 
+Avi Talmor 
+Updated Release information and file name 
+16.5.0 
+November 
+2016 
+Johannes Eigenseer  Converted artifact from Word doc to Confluence- 
+Major updates of process mappings and flows to 
+align with eTOM Release 16.5 
+ 16.5.1 
+1 
+December 
+2016 
+Alicja Kawecki 
+Updated cover, minor formatting/style edits prior to 
+publication for Fx16.5 
+
+
+Version 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+17.5.0 
+December 
+2017 
+ Johannes Eigenseer, 
+Jawahar Sajjad 
+Developed Product centric process flows; 
+updated document 
+20.0 
+29-May-
+2020 
+Sepide Sahari, Neil 
+Vincent Lawrence, 
+Huangxiarong 
+Update Capacity Management Process in Network 
+Centric Process Flows to align with latest eTOM 
+Release 19.5 which includes Common Domain. 
+Capacity Management Process Mappings and flow 
+has been updated to support short to mid-term 
+capacity management scenario such as rolling 
+expansion planning (quarterly, monthly, etc.) 
+requirements. 
+20.0.1 
+20-Jul-
+2020 
+Adrienne Walcott 
+Updated to reflect TM Forum Approved Status 
+6.1.2. 
+Release History 
+Release 
+Number 
+Date 
+Modified 
+Modified by: 
+Description of changes 
+9.0 
+August 
+2010 
+Mike Kelly (based on document 
+developed by Georg Vitt) 
+Minor changes to align with detailed 
+GB921 documents. 
+9.1 
+December 
+2010 
+Mike Kelly 
+Amendments to reflect comments 
+received, to clarify document as 
+Application Note and to explain 
+terminology. 
+13.5 
+October 
+2013 
+Chin-Gi Hong (+ minor 
+reformatting by Mike Kelly in 
+line with revised document 
+template) 
+Major update of process flows to align 
+to GB921 Addendum K (“Construction 
+Guidelines for Process Flows”). 
+15.0 
+May 2015 
+Sreepad Kodandapani 
+Adding Procurement Engaged Party 
+ 16.5.0 
+September 
+2016 
+Johannes Eigenseer  
+Major update of process mappings 
+and flows to align with eTOM Release 
+16.5 
+17.5.0 
+December 
+2017 
+Johannes Eigenseer, Jawahar 
+Sajjad 
+Introduction of Chapter 5 
+"Product Centric Process Flows"  
+Pre-
+production 
+29-May-
+2020 
+Sepide Sahari, Neil Vincent 
+Lawrence, Huangxiarong 
+Update Capacity Management Process 
+in Network Centric Process Flows 
+Production 20-Jul-2020 Adrienne Walcott 
+Updated to reflect TM Forum 
+Approved Status 
+
+
+6.2. Acknowledgments 
+ 
+A number of individuals and companies have contributed to the development of this document, 
+through discussion and suggestions in a series of collaborative reviews and walkthroughs of the 
+process flows. 
+ 
+The TM Forum and the Business Process Framework Team would like to express special thanks to 
+Detecon Int. GmbH for providing the initial input and thought leadership in the development of 
+GB921E.  
+ 
+Those participating in the development include: 
+ 
+Johannes Eigenseer 
+Detecon International (activity lead) 
+Jawahar Sajjad 
+Detecon International 
+Chin-Gi Hong 
+Detecon International 
+Georg Vitt 
+Deutsche Telekom 
+Jose Ricardo Formagio Bueno 
+Telefonica Brazil 
+Kevin Scaggs 
+AT&T 
+Robert Bratulic 
+IBM 
+Dirk Rejahl 
+TM Forum 
+Phillip Williams 
+BT 
+Christian Dietze 
+Detecon International 
+Kathrin Hahne 
+Detecon International 
+Christian Czarnecki 
+Detecon International 
+Sebastian Beneloucif  
+Detecon International 
+Ilka Brauer  
+Deutsche Telekom 
+Stephen Gehring 
+Casewise 
+Antiti Lauila 
+Nokia 
+John Wilmes 
+Progress Software 
+Wenjie (Jerry) Zhu 
+Huawei 
+Francis Anderson 
+IBM 
+Jadadish Baddukonda 
+Wipro 
+Sreepad Kodandapani  
+Singtel Optus 
+Liuhongyun 
+Huawei 
+Hanwenyuan 
+Huawei 
+Yuanping 
+Huawei 
+
+
+Neil Vincent Lawrence 
+Huawei 
+Alfred Anaya-Dubernard 
+TMF 
+Marcus Ras 
+TMF 
+ 
+Thanks to all here who attended the discussions or provided input to the flow design and 
+development. 
+ 
+
+
