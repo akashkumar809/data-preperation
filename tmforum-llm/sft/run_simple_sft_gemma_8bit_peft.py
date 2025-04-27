@@ -1,3 +1,4 @@
+import inspect
 import os
 import glob
 from pathlib import Path
@@ -5,7 +6,6 @@ import torch
 import json # To load the Q&A JSON
 
 from datasets import load_dataset, Dataset # To load JSON and create Dataset object
-print(f"Importing transformers from: {transformers.__file__}")
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -107,7 +107,7 @@ def main():
     print(f"Loaded {len(sft_dataset)} Q&A pairs.")
 
     # Optional: Split dataset if needed (e.g., 90% train, 10% eval)
-    sft_dataset = sft_dataset.train_test_split(test_size=0.05)
+    sft_dataset = sft_dataset.train_test_split(test_size=0.1)
     train_dataset = sft_dataset["train"]
     eval_dataset = sft_dataset["test"]
     # train_dataset = sft_dataset # Using all data for training in this example
@@ -185,22 +185,23 @@ def main():
         report_to="tensorboard",
         gradient_checkpointing=GRADIENT_CHECKPOINTING,
         gradient_checkpointing_kwargs={'use_reentrant': False} if GRADIENT_CHECKPOINTING else None,
-        evaluation_strategy="steps",    # Evaluate every `eval_steps`
+        eval_strategy="steps",    # Evaluate every `eval_steps`
         eval_steps=50,                  # How often to evaluate (adjust based on dataset size/save_steps)
         # ddp_find_unused_parameters=False, # Uncomment if needed for multi-GPU issues
     )
 
     # --- Initialize SFTTrainer ---
     print("Initializing SFTTrainer...")
+    
     trainer = SFTTrainer(
         model=model,                      # Pass the PEFT model (with UFT + SFT adapters)
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,    # Optional: Pass eval dataset
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         peft_config=sft_lora_config,      # Pass the SFT config (ensures correct adapter is trained)
         formatting_func=format_instruction, # Function to apply chat template
-        max_seq_length=MAX_SEQ_LENGTH,    # Max sequence length
+        # max_seq_length=MAX_SEQ_LENGTH,    # Max sequence length
         # packing=True,                   # Optional: Pack short sequences together (can speed up)
     )
     model.config.use_cache = False # Disable cache for training
